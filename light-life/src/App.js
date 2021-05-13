@@ -1,8 +1,20 @@
 import React from "react";
-import "./App.css";
+import Profile from "./Pages/cusotmerProfile";
 
 function App() {
-  return <div className="App"></div>;
+  return <Profile />;
 }
+
+// class App
+
+// <Route exact path="/">
+//               <Home />
+//             </Route>
+//             <Route exact path="/dietitian/:id">
+//               <Dietitian />
+//             </Route>
+//             <Route exact path="/customer/:id">
+//               <Customer />
+//             </Route>
 
 export default App;
