@@ -295,7 +295,7 @@ function Analsis() {
   );
 }
 
-function RenderDietaryRecord() {
+function RenderDietaryRecord({ props }) {
   const pathName = useLocation().pathname;
 
   if (pathName.includes("dietitian")) {
@@ -303,13 +303,15 @@ function RenderDietaryRecord() {
       <>
         <input type="date" min="2021-05-14" max="2021-05-26"></input>;
         <Router>
-          <Link to="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary/2021-05-14">
+          <Link
+            to={`/dietitian/${props.dietitian}/customer/${props.id}/dietary/2021-05-14`}
+          >
             確認
           </Link>
           <Switch>
             <Route
               exact
-              path="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary/2021-05-14"
+              path={`/dietitian/${props.dietitian}/customer/${props.id}/dietary/2021-05-14`}
             >
               <DietitianRecord />
               <hr />
@@ -326,13 +328,13 @@ function RenderDietaryRecord() {
       <>
         <input type="date" min="2021-05-14" max="2021-05-26"></input>;
         <Router>
-          <Link to="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/2021-05-14">
+          <Link to="/dietitian/cJUCoL1hZz36cVgf7WRz/customer/9iYZMkuFdZRK9vxgt1zc/2021-05-14">
             確認
           </Link>
           <Switch>
             <Route
               exact
-              path="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/2021-05-14"
+              path="/dietitian/cJUCoL1hZz36cVgf7WRz/customer/9iYZMkuFdZRK9vxgt1zc/2021-05-14"
             >
               <CustomerRecord />
               <hr />

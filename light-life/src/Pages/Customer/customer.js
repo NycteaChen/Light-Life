@@ -30,17 +30,17 @@ function Customer() {
       <h2>我的營養師：</h2>
       <Router>
         <h3>OOO，您好！</h3>
-        <Link to="/customer/id=9iYZMkuFdZRK9vxgt1zc/profile">基本資料</Link>
-        <Link to="/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary">飲食記錄</Link>
-        <Link to="/customer/id=9iYZMkuFdZRK9vxgt1zc/target">目標設定</Link>
+        <Link to="/customer/9iYZMkuFdZRK9vxgt1zc/profile">基本資料</Link>
+        <Link to="/customer/9iYZMkuFdZRK9vxgt1zc/dietary">飲食記錄</Link>
+        <Link to="/customer/9iYZMkuFdZRK9vxgt1zc/target">目標設定</Link>
         <Switch>
-          <Route exact path="/customer/id=9iYZMkuFdZRK9vxgt1zc/profile">
+          <Route exact path="/customer/:cID/profile">
             <Profile profileData={profile} />
           </Route>
-          <Route path="/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary">
+          <Route path="/customer/:cID/dietary">
             <DietrayRecord />
           </Route>
-          <Route exact path="/customer/id=9iYZMkuFdZRK9vxgt1zc/target">
+          <Route exact path="/customer/:cID/target">
             <Target />
           </Route>
         </Switch>
