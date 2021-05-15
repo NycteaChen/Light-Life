@@ -47,7 +47,7 @@ function DietitianTarget() {
           type="date"
           id="target-start"
           min="2021-05-14"
-          max="2021-05-21"
+          max="2021-05-31"
         />
       </label>
       <label>
