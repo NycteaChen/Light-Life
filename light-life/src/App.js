@@ -11,13 +11,13 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Home />
-          <a href="/dietitian">Dietitian</a>
-          <Link to="/customer">Customer</Link>
+          <a href="/dietitian/id=cJUCoL1hZz36cVgf7WRz">Dietitian</a>
+          <Link to="/customer/id=9iYZMkuFdZRK9vxgt1zc">Customer</Link>
         </Route>
-        <Route path="/dietitian">
+        <Route path="/dietitian/id=cJUCoL1hZz36cVgf7WRz">
           <Dietitian />
         </Route>
-        <Route path="/customer">
+        <Route path="/customer/id=9iYZMkuFdZRK9vxgt1zc">
           <Customer />
         </Route>
       </Switch>

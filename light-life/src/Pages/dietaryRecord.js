@@ -303,9 +303,14 @@ function RenderDietaryRecord() {
       <>
         <input type="date" min="2021-05-14" max="2021-05-26"></input>;
         <Router>
-          <Link to="/dietitian/customer1/dietary/2021-05-14">確認</Link>
+          <Link to="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary/2021-05-14">
+            確認
+          </Link>
           <Switch>
-            <Route exact path="/dietitian/customer1/dietary/2021-05-14">
+            <Route
+              exact
+              path="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary/2021-05-14"
+            >
               <DietitianRecord />
               <hr />
               <Analsis />
@@ -321,9 +326,14 @@ function RenderDietaryRecord() {
       <>
         <input type="date" min="2021-05-14" max="2021-05-26"></input>;
         <Router>
-          <Link to="/customer/dietary/2021-05-14">確認</Link>
+          <Link to="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/2021-05-14">
+            確認
+          </Link>
           <Switch>
-            <Route exact path="/customer/dietary/2021-05-14">
+            <Route
+              exact
+              path="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/2021-05-14"
+            >
               <CustomerRecord />
               <hr />
               <Analsis />

@@ -7,7 +7,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 
 function Dietitian() {
-  const [profile, setProfile] = useState();
+  const [profile, setProfile] = useState({});
   useEffect(() => {
     firebase
       .firestore()
@@ -28,22 +28,36 @@ function Dietitian() {
   return (
     <>
       <Router>
-        <Link to="/dietitian/customer1">客戶1</Link>
-        <Link to="/dietitian/customer2">客戶2</Link>
+        <Link to="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc">
+          客戶1
+        </Link>
+        <Link to="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer2">客戶2</Link>
         <Switch>
-          <Route path="/dietitian/customer1">
+          <Route path="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc">
             <Router>
-              <Link to="/dietitian/customer1/profile">基本資料</Link>
-              <Link to="/dietitian/customer1/dietary">飲食記錄</Link>
-              <Link to="/dietitian/customer1/target">目標設定</Link>
+              <Link to="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/profile">
+                基本資料
+              </Link>
+              <Link to="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary">
+                飲食記錄
+              </Link>
+              <Link to="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/target">
+                目標設定
+              </Link>
               <Switch>
-                <Route exact path="/dietitian/customer1/profile">
+                <Route
+                  exact
+                  path="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/profile"
+                >
                   <Profile profileData={profile} />
                 </Route>
-                <Route path="/dietitian/customer1/dietary">
+                <Route path="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary">
                   <DietrayRecord />
                 </Route>
-                <Route exact path="/dietitian/customer1/target">
+                <Route
+                  exact
+                  path="/dietitian/id=cJUCoL1hZz36cVgf7WRz/customer/id=9iYZMkuFdZRK9vxgt1zc/target"
+                >
                   <Target />
                 </Route>
               </Switch>

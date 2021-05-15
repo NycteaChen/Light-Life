@@ -32,7 +32,7 @@ function EditCustomerProfile({ props }) {
 
   async function postImg(image) {
     if (image) {
-      const storageRef = storage.ref("images/" + image.name);
+      const storageRef = storage.ref("9iYZMkuFdZRK9vxgt1zc/" + image.name);
       await storageRef.put(image);
       return image.name;
     } else {
@@ -44,7 +44,7 @@ function EditCustomerProfile({ props }) {
     if (imageName) {
       const storageRef = storage.ref();
       const pathRef = await storageRef
-        .child("images/" + imageName)
+        .child("9iYZMkuFdZRK9vxgt1zc/" + imageName)
         .getDownloadURL();
       return pathRef;
     } else {
@@ -81,7 +81,6 @@ function EditCustomerProfile({ props }) {
       const imageUrl = await getImg(input.imageFile);
       delete input.imageFile;
       delete input.previewImg;
-      console.log(imageUrl);
       setInput({
         ...input,
         image: imageUrl,
@@ -377,15 +376,7 @@ function CustomerProfilte({ props, input }) {
       <div>
         <img
           id="profile-img"
-          src={
-            input.previewImg
-              ? input.previewImg
-              : input.image
-              ? input.image
-              : props
-              ? props.image
-              : noImage
-          }
+          src={input.image ? input.image : props.image ? props.image : noImage}
           alt="customer"
           style={{ width: "200px", height: "200px", borderRadius: "50%" }}
         />
@@ -461,8 +452,10 @@ function CustomerProfilte({ props, input }) {
 function RenderCustomerProfile({ profileData }) {
   const pathName = useLocation().pathname;
 
+  const [test, setTest] = useState({});
+
   if (pathName.includes("dietitian")) {
-    return <CustomerProfilte props={profileData} />;
+    return <CustomerProfilte props={profileData} input={test} />;
   } else {
     return <EditCustomerProfile props={profileData} />;
   }

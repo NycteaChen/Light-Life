@@ -25,30 +25,22 @@ function Customer() {
       });
   }, []);
 
-  // const bingSaveHandler = () => {
-  //   // db.collection("dietitians").doc("9iYZMkuFdZRK9vxgt1zc").update("id", docRef.id);
-
-  //   console.log(profile);
-  //   console.log("hi");
-  // };
-
   return (
     <>
       <h2>我的營養師：</h2>
       <Router>
         <h3>OOO，您好！</h3>
-        <Link to="/customer/profile">基本資料</Link>
-        <Link to="/customer/dietary">飲食記錄</Link>
-        <Link to="/customer/target">目標設定</Link>
+        <Link to="/customer/id=9iYZMkuFdZRK9vxgt1zc/profile">基本資料</Link>
+        <Link to="/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary">飲食記錄</Link>
+        <Link to="/customer/id=9iYZMkuFdZRK9vxgt1zc/target">目標設定</Link>
         <Switch>
-          <Route exact path="/customer/profile">
+          <Route exact path="/customer/id=9iYZMkuFdZRK9vxgt1zc/profile">
             <Profile profileData={profile} />
-            {/* <button onClick={bingSaveHandler}>儲存</button> */}
           </Route>
-          <Route path="/customer/dietary">
+          <Route path="/customer/id=9iYZMkuFdZRK9vxgt1zc/dietary">
             <DietrayRecord />
           </Route>
-          <Route exact path="/customer/target">
+          <Route exact path="/customer/id=9iYZMkuFdZRK9vxgt1zc/target">
             <Target />
           </Route>
         </Switch>
