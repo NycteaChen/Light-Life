@@ -52,7 +52,7 @@ function EditCustomerProfile({ props }) {
     }
   }
 
-  const setInputHandler = (e) => {
+  const getInputHandler = (e) => {
     const { name } = e.target;
     if (name !== "image") {
       setInput({ ...input, [name]: e.target.value });
@@ -126,7 +126,7 @@ function EditCustomerProfile({ props }) {
                 accept="image/*"
                 id="image"
                 name="image"
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
             </div>
           </div>
@@ -138,7 +138,7 @@ function EditCustomerProfile({ props }) {
               type="text"
               id="name"
               value={input.name ? input.name : name ? name : ""}
-              onChange={setInputHandler}
+              onChange={getInputHandler}
             />
           </div>
           <div>
@@ -162,7 +162,7 @@ function EditCustomerProfile({ props }) {
                     ? true
                     : false
                 }
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               男
             </label>
@@ -180,7 +180,7 @@ function EditCustomerProfile({ props }) {
                     ? true
                     : false
                 }
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               女
             </label>
@@ -192,7 +192,7 @@ function EditCustomerProfile({ props }) {
                 type="number"
                 name="age"
                 value={input.age ? input.age : age ? age : ""}
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               歲
             </label>
@@ -204,7 +204,7 @@ function EditCustomerProfile({ props }) {
                 type="number"
                 name="height"
                 value={input.height ? input.height : height ? height : ""}
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               cm
             </label>
@@ -216,7 +216,7 @@ function EditCustomerProfile({ props }) {
                 type="number"
                 name="weight"
                 value={input.weight ? input.weight : weight ? weight : ""}
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               kg
             </label>
@@ -237,7 +237,7 @@ function EditCustomerProfile({ props }) {
                     ? true
                     : false
                 }
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               國小
             </label>
@@ -255,7 +255,7 @@ function EditCustomerProfile({ props }) {
                     ? true
                     : false
                 }
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               國中
             </label>
@@ -273,7 +273,7 @@ function EditCustomerProfile({ props }) {
                     ? true
                     : false
                 }
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               高中職
             </label>
@@ -291,7 +291,7 @@ function EditCustomerProfile({ props }) {
                     ? true
                     : false
                 }
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               大專院校
             </label>
@@ -309,7 +309,7 @@ function EditCustomerProfile({ props }) {
                     ? true
                     : false
                 }
-                onChange={setInputHandler}
+                onChange={getInputHandler}
               />
               研究所
             </label>
@@ -319,7 +319,7 @@ function EditCustomerProfile({ props }) {
             <select
               name="career"
               value={input.career ? input.career : career ? career : ""}
-              onChange={setInputHandler}
+              onChange={getInputHandler}
             >
               <option>軍公教</option>
               <option>工</option>
@@ -339,7 +339,7 @@ function EditCustomerProfile({ props }) {
                   type="textarea"
                   name="sport"
                   value={input.sport ? input.sport : sport ? sport : ""}
-                  onChange={setInputHandler}
+                  onChange={getInputHandler}
                 />
               </div>
             </label>
@@ -352,7 +352,7 @@ function EditCustomerProfile({ props }) {
                   type="textarea"
                   name="other"
                   value={input.other ? input.other : other ? other : ""}
-                  onChange={setInputHandler}
+                  onChange={getInputHandler}
                 />
               </div>
             </label>
