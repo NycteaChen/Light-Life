@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/storage";
 import noImage from "../images/noimage.png";
-import { parseWithOptions } from "date-fns/fp";
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,6 +12,8 @@ import {
 } from "react-router-dom";
 
 function CustomerProfile({ props }) {
+  const db = firebase.firestore();
+  const storage = firebase.storage();
   const [input, setInput] = useState({});
   const {
     name,
@@ -27,26 +29,88 @@ function CustomerProfile({ props }) {
     other,
   } = props;
 
-  const inputChangeHandler = (e) => {
+  async function postImg(image) {
+    if (image) {
+      const storageRef = storage.ref("images/" + image.name);
+      await storageRef.put(image);
+      return image.name;
+    } else {
+      return false;
+    }
+  }
+  async function getImg(image) {
+    const imageName = await postImg(image);
+    if (imageName) {
+      const storageRef = storage.ref();
+      const pathRef = await storageRef
+        .child("images/" + imageName)
+        .getDownloadURL();
+      return pathRef;
+    } else {
+      return "";
+    }
+  }
+
+  const setInputHandler = (e) => {
     const { name } = e.target;
     if (name !== "image") {
       setInput({ ...input, [name]: e.target.value });
+    } else if (e.target.files[0]) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(e.target.files[0]);
+      fileReader.addEventListener("load", (a) => {
+        setInput({
+          ...input,
+          imageFile: e.target.files[0],
+          previewImg: a.target.result,
+        });
+      });
     } else {
-      setInput({ ...input, [name]: e.target.files[0].name });
+      delete input.previewImg;
+      delete input.imageFile;
+      console.log("here");
+      if (!input.image) {
+        setInput({ ...input, image: image });
+      }
     }
   };
 
-  const bindSaveHandler = () => {
-    console.log(input);
+  const bindSaveHandler = async () => {
+    // delete input.previewImg;
+    if (input.imageFile) {
+      const imageUrl = await getImg(input.imageFile);
+      delete input.imageFile;
+      delete input.previewImg;
+      console.log(imageUrl);
+      setInput({
+        ...input,
+        image: imageUrl,
+      });
+      db.collection("customers")
+        .doc("9iYZMkuFdZRK9vxgt1zc")
+        .update({
+          ...input,
+          image: imageUrl,
+        });
+    } else {
+      db.collection("customers").doc("9iYZMkuFdZRK9vxgt1zc").update(input);
+    }
   };
-
   return (
     <>
       <div id="customer-profile">
         <div>客戶資料</div>
         <div>
           <img
-            src={props ? image : noImage}
+            src={
+              input.previewImg
+                ? input.previewImg
+                : input.image
+                ? input.image
+                : image
+                ? image
+                : noImage
+            }
             alt="customer"
             style={{ width: "200px", height: "200px", borderRadius: "50%" }}
           />
@@ -57,7 +121,7 @@ function CustomerProfile({ props }) {
               accept="image/*"
               id="image"
               name="image"
-              onChange={inputChangeHandler}
+              onChange={setInputHandler}
             />
           </div>
         </div>
@@ -68,8 +132,8 @@ function CustomerProfile({ props }) {
             name="name"
             type="text"
             id="name"
-            value={input.name ? input.name : name}
-            onChange={inputChangeHandler}
+            value={input.name ? input.name : name ? name : ""}
+            onChange={setInputHandler}
           />
         </div>
         <div>
@@ -93,7 +157,7 @@ function CustomerProfile({ props }) {
                   ? true
                   : false
               }
-              onChange={inputChangeHandler}
+              onChange={setInputHandler}
             />
             男
           </label>
@@ -111,7 +175,7 @@ function CustomerProfile({ props }) {
                   ? true
                   : false
               }
-              onChange={inputChangeHandler}
+              onChange={setInputHandler}
             />
             女
           </label>
@@ -122,8 +186,8 @@ function CustomerProfile({ props }) {
             <input
               type="number"
               name="age"
-              value={input.age ? input.age : age}
-              onChange={inputChangeHandler}
+              value={input.age ? input.age : age ? age : ""}
+              onChange={setInputHandler}
             />
             歲
           </label>
@@ -134,8 +198,8 @@ function CustomerProfile({ props }) {
             <input
               type="number"
               name="height"
-              value={input.height ? input.height : height}
-              onChange={inputChangeHandler}
+              value={input.height ? input.height : height ? height : ""}
+              onChange={setInputHandler}
             />
             cm
           </label>
@@ -146,8 +210,8 @@ function CustomerProfile({ props }) {
             <input
               type="number"
               name="weight"
-              value={input.weight ? input.weight : weight}
-              onChange={inputChangeHandler}
+              value={input.weight ? input.weight : weight ? weight : ""}
+              onChange={setInputHandler}
             />
             kg
           </label>
@@ -168,7 +232,7 @@ function CustomerProfile({ props }) {
                   ? true
                   : false
               }
-              onChange={inputChangeHandler}
+              onChange={setInputHandler}
             />
             國小
           </label>
@@ -186,7 +250,7 @@ function CustomerProfile({ props }) {
                   ? true
                   : false
               }
-              onChange={inputChangeHandler}
+              onChange={setInputHandler}
             />
             國中
           </label>
@@ -204,7 +268,7 @@ function CustomerProfile({ props }) {
                   ? true
                   : false
               }
-              onChange={inputChangeHandler}
+              onChange={setInputHandler}
             />
             高中職
           </label>
@@ -222,7 +286,7 @@ function CustomerProfile({ props }) {
                   ? true
                   : false
               }
-              onChange={inputChangeHandler}
+              onChange={setInputHandler}
             />
             大專院校
           </label>
@@ -240,7 +304,7 @@ function CustomerProfile({ props }) {
                   ? true
                   : false
               }
-              onChange={inputChangeHandler}
+              onChange={setInputHandler}
             />
             研究所
           </label>
@@ -249,8 +313,8 @@ function CustomerProfile({ props }) {
           職業
           <select
             name="career"
-            value={input.career ? input.career : career}
-            onChange={inputChangeHandler}
+            value={input.career ? input.career : career ? career : ""}
+            onChange={setInputHandler}
           >
             <option>軍公教</option>
             <option>工</option>
@@ -270,7 +334,7 @@ function CustomerProfile({ props }) {
                 type="textarea"
                 name="sport"
                 value={input.sport ? input.sport : sport ? sport : ""}
-                onChange={inputChangeHandler}
+                onChange={setInputHandler}
               />
             </div>
           </label>
@@ -283,7 +347,7 @@ function CustomerProfile({ props }) {
                 type="textarea"
                 name="other"
                 value={input.other ? input.other : other ? other : ""}
-                onChange={inputChangeHandler}
+                onChange={setInputHandler}
               />
             </div>
           </label>
