@@ -69,12 +69,10 @@ function EditCustomerProfile({ props }) {
     } else {
       delete input.previewImg;
       delete input.imageFile;
-      console.log("here");
-      if (!input.image) {
-        setInput({ ...input, image: image });
-      }
+      setInput({ ...input, image: image });
     }
   };
+  console.log(input);
 
   const bindSaveHandler = async () => {
     if (input.imageFile) {
