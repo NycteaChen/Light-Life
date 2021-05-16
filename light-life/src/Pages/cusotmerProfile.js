@@ -458,13 +458,16 @@ function CustomerProfilte({ props, input }) {
       </div>
       <div>
         <div>
-          職業 <span id="career">{props ? props.career : ""}</span>
+          職業{" "}
+          <span id="career">
+            {input.career ? input.career : props ? props.career : ""}
+          </span>
         </div>
       </div>
       <div>
         <div>運動習慣</div>
         <div id="sport">
-          {input.career ? input.career : props ? props.sport : ""}
+          {input.sport ? input.sport : props ? props.sport : ""}
         </div>
       </div>
       <div>
