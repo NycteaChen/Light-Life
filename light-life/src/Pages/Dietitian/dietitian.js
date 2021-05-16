@@ -13,34 +13,6 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 
 function CustomerApi({ customerData }) {
-  // const [target, setTarget] = useState({});
-  // useEffect(() => {
-  //   firebase
-  //     .firestore()
-  //     .collection("customers")
-  //     .get()
-  //     .then((snapshot) => {
-  //       const users = [];
-  //       snapshot.forEach((doc) => {
-  //         if (doc.data().dietitian === "cJUCoL1hZz36cVgf7WRz") {
-  //           users.push(doc.data());
-  //         }
-  //         console.log(users);
-  //       });
-  //       return users[0];
-  //     })
-  //     .then((res) => {
-  //       setProfile(res);
-  //     });
-  // }, []);
-
-  // useEffect(()=>{
-  //   firebase
-  //   .firestore()
-  //   .collection("customers")
-  //   .
-  // }, [])
-
   return (
     <Router>
       <Link
