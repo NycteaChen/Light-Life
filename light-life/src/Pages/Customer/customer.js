@@ -277,6 +277,7 @@ function Customer() {
   const [find, setFind] = useState(false);
   const [index, setIndex] = useState();
   const customerID = useParams().cID;
+  const [dName, setDName] = useState();
   let dID;
   useEffect(() => {
     firebase
@@ -297,6 +298,8 @@ function Customer() {
         snapshot.forEach((doc) => {
           if (doc.data().id !== dID) {
             users.push(doc.data());
+          } else {
+            setDName(doc.data().name);
           }
         });
         return users;
@@ -319,8 +322,6 @@ function Customer() {
       });
   }, []);
 
-  console.log(reserve);
-
   const bindOpenHandler = (e) => {
     setIndex(e.target.id);
     setFind(true);
@@ -329,9 +330,17 @@ function Customer() {
     setFind(false);
   };
 
+  console.log(profile.dietitian);
+
   return (
     <>
-      <h2>我的營養師：</h2>
+      <>
+        {profile.dietitian !== "" ? (
+          <h2>我的營養師：{dName} 營養師</h2>
+        ) : (
+          <h2>目前沒有使用服務喔</h2>
+        )}
+      </>
       <Router>
         <h3>OOO，您好！</h3>
         <Link to="/customer/9iYZMkuFdZRK9vxgt1zc/profile">基本資料</Link>
