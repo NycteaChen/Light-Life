@@ -137,7 +137,9 @@ function EditCustomerProfile({ props }) {
               name="name"
               type="text"
               id="name"
-              value={input.name ? input.name : name ? name : ""}
+              value={
+                input.name || input.name === "" ? input.name : name ? name : ""
+              }
               onChange={getInputHandler}
             />
           </div>
@@ -191,7 +193,9 @@ function EditCustomerProfile({ props }) {
               <input
                 type="number"
                 name="age"
-                value={input.age ? input.age : age ? age : ""}
+                value={
+                  input.age || input.age === "" ? input.age : age ? age : ""
+                }
                 onChange={getInputHandler}
               />
               歲
@@ -203,7 +207,13 @@ function EditCustomerProfile({ props }) {
               <input
                 type="number"
                 name="height"
-                value={input.height ? input.height : height ? height : ""}
+                value={
+                  input.height || input.height === ""
+                    ? input.height
+                    : height
+                    ? height
+                    : ""
+                }
                 onChange={getInputHandler}
               />
               cm
@@ -215,7 +225,13 @@ function EditCustomerProfile({ props }) {
               <input
                 type="number"
                 name="weight"
-                value={input.weight ? input.weight : weight ? weight : ""}
+                value={
+                  input.weight || input.weight === ""
+                    ? input.weight
+                    : weight
+                    ? weight
+                    : ""
+                }
                 onChange={getInputHandler}
               />
               kg
@@ -338,7 +354,13 @@ function EditCustomerProfile({ props }) {
                 <input
                   type="textarea"
                   name="sport"
-                  value={input.sport ? input.sport : sport ? sport : ""}
+                  value={
+                    input.sport || input.sport === ""
+                      ? input.sport
+                      : sport
+                      ? sport
+                      : ""
+                  }
                   onChange={getInputHandler}
                 />
               </div>
@@ -351,7 +373,13 @@ function EditCustomerProfile({ props }) {
                 <input
                   type="textarea"
                   name="other"
-                  value={input.other ? input.other : other ? other : ""}
+                  value={
+                    input.other || input.other === ""
+                      ? input.other
+                      : other
+                      ? other
+                      : ""
+                  }
                   onChange={getInputHandler}
                 />
               </div>

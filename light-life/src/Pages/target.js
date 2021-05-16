@@ -11,45 +11,277 @@ import {
 } from "react-router-dom";
 
 function GetAddedTarget({ target }) {
+  const db = firebase.firestore();
+  const [isEditing, setIsEditing] = useState(false);
+  const [targetIndex, setTargetIndex] = useState(0);
+  const [input, setInput] = useState({});
+  const [date, setDate] = useState({});
+  const [leastEndDate, setLeastEndDate] = useState("");
+  const params = useParams();
+
+  const getInputHandler = (e) => {
+    const { name } = e.target;
+    setInput({ ...input, [name]: e.target.value });
+  };
+
+  const bindChangeDateRange = (e) => {
+    const date = new Date(+new Date() + 8 * 3600 * 1000);
+    date.setDate(parseInt(e.target.value.split("-")[2]) + 1);
+    setLeastEndDate(date.toISOString().substr(0, 10));
+  };
+
+  const bindEditHandler = (e) => {
+    setIsEditing(true);
+    setTargetIndex(e.target.id);
+    setInput({});
+    db.collection("dietitians")
+      .doc(params.dID)
+      .collection("customers")
+      .doc(params.cID)
+      .get()
+      .then((doc) => setDate(doc.data()));
+  };
+
+  const bindSaveHandler = (e) => {
+    const id = parseInt(e.target.id);
+    db.collection("dietitians")
+      .doc(params.dID)
+      .collection("customers")
+      .doc(params.cID)
+      .collection("target")
+      .get()
+      .then((docs) => {
+        const docsArray = [];
+        docs.forEach((doc) => {
+          docsArray.push(doc.id);
+        });
+        const getID = docsArray.find((d, index) => index === id);
+        return getID;
+      })
+      .then((res) => {
+        db.collection("dietitians")
+          .doc(params.dID)
+          .collection("customers")
+          .doc(params.cID)
+          .collection("target")
+          .doc(`${res}`)
+          .update(input);
+      });
+    setIsEditing(false);
+  };
+
   return (
     <>
-      {target.map((t, index) => (
-        <div key={index}>
-          <div>
-            <div>
-              <div>日期</div>
-              <div>
-                建立時間<span>{t.addDate}</span>
+      {isEditing
+        ? target.map((t, index) =>
+            index == targetIndex ? (
+              <div key={index}>
+                <button onClick={bindSaveHandler} id={index}>
+                  儲存
+                </button>
+                <div>
+                  <div>
+                    <div>日期</div>
+                    <div>
+                      建立時間<span>{t.addDate}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <input
+                      type="date"
+                      name="startDate"
+                      min={date.startDate}
+                      max={date.endDate}
+                      value={input.startDate ? input.startDate : t.startDate}
+                      onChange={(e) => {
+                        bindChangeDateRange(e);
+                        getInputHandler(e);
+                      }}
+                    />
+                    <span>至 </span>
+                    <input
+                      type="date"
+                      name="endDate"
+                      min={leastEndDate ? leastEndDate : date.startDate}
+                      max={date.endDate}
+                      value={input.endDate ? input.endDate : t.endDate}
+                      onChange={getInputHandler}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div>目標體重</div>
+                  <div>
+                    <input
+                      type="text"
+                      name="weight"
+                      value={
+                        input.weight || input.weight === ""
+                          ? input.weight
+                          : t.weight
+                      }
+                      onChange={getInputHandler}
+                    />
+                    kg
+                  </div>
+                </div>
+                <div>
+                  <div>目標水分</div>
+                  <div>
+                    <input
+                      type="text"
+                      name="water"
+                      value={
+                        input.water || input.water === ""
+                          ? input.water
+                          : t.water
+                      }
+                      onChange={getInputHandler}
+                    />{" "}
+                    cc
+                  </div>
+                </div>
+                <div>
+                  <div>其他 </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="other"
+                      value={
+                        input.other || input.other === ""
+                          ? input.other
+                          : t.other
+                      }
+                      onChange={getInputHandler}
+                    />
+                  </div>
+                </div>
+                <hr />
               </div>
-            </div>
-            <div>
-              <span>{t.startDate}</span>
-              <span>至 </span>
-              <span>{t.endDate}</span>
-            </div>
-          </div>
-          <div>
-            <div>目標體重</div>
-            <div>
-              <span>{t.weight}</span>
-              kg
-            </div>
-          </div>
-          <div>
-            <div>目標水分</div>
-            <div>
-              <span>{t.water}</span> cc
-            </div>
-          </div>
-          <div>
-            <div>其他 </div>
-            <div>
-              <span>{t.other}</span>
-            </div>
-          </div>
-          <hr />
-        </div>
-      ))}
+            ) : (
+              <div key={index}>
+                <button onClick={bindEditHandler} id={index}>
+                  編輯
+                </button>
+                <div>
+                  <div>
+                    <div>日期</div>
+                    <div>
+                      建立時間<span>{t.addDate}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span>{t.startDate}</span>
+                    <span>至 </span>
+                    <span>{t.endDate}</span>
+                  </div>
+                </div>
+                <div>
+                  <div>目標體重</div>
+                  <div>
+                    <span>{t.weight}</span>
+                    kg
+                  </div>
+                </div>
+                <div>
+                  <div>目標水分</div>
+                  <div>
+                    <span>{t.water}</span> cc
+                  </div>
+                </div>
+                <div>
+                  <div>其他 </div>
+                  <div>
+                    <span>{t.other}</span>
+                  </div>
+                </div>
+                <hr />
+              </div>
+            )
+          )
+        : target.map((t, index) =>
+            index == targetIndex ? (
+              <div key={index}>
+                <button onClick={bindEditHandler} id={index}>
+                  編輯
+                </button>
+                <div>
+                  <div>
+                    <div>日期</div>
+                    <div>
+                      建立時間<span>{t.addDate}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span>
+                      {input.startDate ? input.startDate : t.startDate}
+                    </span>
+                    <span>至 </span>
+                    <span>{input.endDate ? input.endDate : t.endDate}</span>
+                  </div>
+                </div>
+                <div>
+                  <div>目標體重</div>
+                  <div>
+                    <span>{input.weight ? input.weight : t.weight}</span>
+                    kg
+                  </div>
+                </div>
+                <div>
+                  <div>目標水分</div>
+                  <div>
+                    <span>{input.water ? input.water : t.water}</span> cc
+                  </div>
+                </div>
+                <div>
+                  <div>其他 </div>
+                  <div>
+                    <span>{input.other ? input.other : t.other}</span>
+                  </div>
+                </div>
+                <hr />
+              </div>
+            ) : (
+              <div key={index}>
+                <button onClick={bindEditHandler} id={index}>
+                  編輯
+                </button>
+                <div>
+                  <div>
+                    <div>日期</div>
+                    <div>
+                      建立時間<span>{t.addDate}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span>{t.startDate}</span>
+                    <span>至 </span>
+                    <span>{t.endDate}</span>
+                  </div>
+                </div>
+                <div>
+                  <div>目標體重</div>
+                  <div>
+                    <span>{t.weight}</span>
+                    kg
+                  </div>
+                </div>
+                <div>
+                  <div>目標水分</div>
+                  <div>
+                    <span>{t.water}</span> cc
+                  </div>
+                </div>
+                <div>
+                  <div>其他 </div>
+                  <div>
+                    <span>{t.other}</span>
+                  </div>
+                </div>
+                <hr />
+              </div>
+            )
+          )}
     </>
   );
 }
@@ -65,9 +297,7 @@ function DietitianTarget() {
   const db = firebase.firestore();
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("dietitians")
+    db.collection("dietitians")
       .doc(params.dID)
       .collection("customers")
       .doc(params.cID)
@@ -76,9 +306,7 @@ function DietitianTarget() {
   }, []);
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("dietitians")
+    db.collection("dietitians")
       .doc(params.dID)
       .collection("customers")
       .doc(params.cID)
@@ -105,21 +333,19 @@ function DietitianTarget() {
   };
 
   const bindAddTarget = () => {
+    const dateTime = Date.now();
+    const timestamp = Math.floor(dateTime);
     db.collection("dietitians")
       .doc(params.dID)
       .collection("customers")
       .doc(params.cID)
       .collection("target")
-      .doc(`${initStartDate}`)
+      .doc(`${timestamp}`)
       .set(input)
       .catch((error) => {
         console.error("Error:", error);
       });
-    target.map((t, index) =>
-      t.addDate === initStartDate
-        ? setTarget([...target.slice(0, index), input])
-        : false
-    );
+    setTarget([...target, input]);
   };
 
   return (
