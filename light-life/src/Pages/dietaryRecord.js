@@ -6,6 +6,7 @@ import {
   Route,
   Link,
   useLocation,
+  useParams,
 } from "react-router-dom";
 import "firebase/firestore";
 
@@ -120,11 +121,12 @@ function DietitianRecord() {
   );
 }
 
-function CustomerRecord() {
+function CustomerRecord({ date }) {
+  console.log(date);
   return (
     <>
       <div id="dietitian-daily-diet">
-        <h2>今日飲食記錄</h2>
+        <h2>{date}飲食記錄</h2>
         <div className="breakfast">
           <div>早餐</div>
           <div className="diet-record">
@@ -296,23 +298,52 @@ function Analsis() {
 }
 
 function RenderDietaryRecord({ props }) {
+  const [recordDate, setRecordDate] = useState();
+  const [getRecord, setGetRecord] = useState(false);
   const pathName = useLocation().pathname;
+  const params = useParams();
+  // useEffect(() => {
+  //   if (params.dID) {
+  //     firebase
+  //       .firestore()
+  //       .collection("dietitians")
+  //       .doc(dID)
+  //       .get()
+  //       .then((doc) => console.log(doc));
+  //   } else if (params.cID) {
+  //     firebase
+  //       .firestore()
+  //       .collection("customers")
+  //       .doc(params.cID)
+  //       .get()
+  //       .then((doc) => console.log(doc));
+  //   }
+  // });
+  console.log(params);
+  const getDietaryRecordDate = (e) => {
+    console.log(e.target.value);
+    if (e.target.value !== "") {
+      setRecordDate(e.target.value);
+      setGetRecord(true);
+    }
+  };
 
   if (pathName.includes("dietitian")) {
     return (
       <>
-        <input type="date" min="2021-05-14" max="2021-05-26"></input>;
+        <input
+          type="date"
+          min="2021-05-14"
+          max="2021-05-26"
+          onChange={getDietaryRecordDate}
+          required="required"
+        ></input>
         <Router>
           <Link
-            to={`/dietitian/${props.dietitian}/customer/${props.id}/dietary/2021-05-14`}
-          >
-            確認
-          </Link>
+            to={`/dietitian/${props.dietitian}/customer/${props.id}/dietary/`}
+          ></Link>
           <Switch>
-            <Route
-              exact
-              path={`/dietitian/${props.dietitian}/customer/${props.id}/dietary/2021-05-14`}
-            >
+            <Route exact path={`/dietitian/:dID/customer/:cID/dietary/`}>
               <DietitianRecord />
               <hr />
               <Analsis />
@@ -326,22 +357,27 @@ function RenderDietaryRecord({ props }) {
   } else {
     return (
       <>
-        <input type="date" min="2021-05-14" max="2021-05-26"></input>;
+        <input
+          type="date"
+          min="2021-05-14"
+          max="2021-05-26"
+          onChange={getDietaryRecordDate}
+          required="required"
+        ></input>
         <Router>
-          <Link to="/dietitian/cJUCoL1hZz36cVgf7WRz/customer/9iYZMkuFdZRK9vxgt1zc/2021-05-14">
-            確認
-          </Link>
-          <Switch>
-            <Route
-              exact
-              path="/dietitian/cJUCoL1hZz36cVgf7WRz/customer/9iYZMkuFdZRK9vxgt1zc/2021-05-14"
-            >
-              <CustomerRecord />
-              <hr />
-              <Analsis />
-              <hr />
-            </Route>
-          </Switch>
+          <Link to={`/customer/${props.id}/dietary/`}></Link>
+          {getRecord ? (
+            <Switch>
+              <Route exact path="/customer/:cID/dietary/">
+                <CustomerRecord date={recordDate} />
+                <hr />
+                <Analsis />
+                <hr />
+              </Route>
+            </Switch>
+          ) : (
+            ""
+          )}
         </Router>
       </>
     );

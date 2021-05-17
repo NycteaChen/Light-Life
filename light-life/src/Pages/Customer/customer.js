@@ -12,6 +12,15 @@ import Target from "../target.js";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
+function ReverseDetails({ props }) {
+  return (
+    <div>
+      <div>邀請訊息</div>
+      <div>{props.reverseMessage}</div>
+    </div>
+  );
+}
+
 function ReserveList({ reserve, setReserve }) {
   const [isChecked, setIsChecked] = useState(false);
   const [index, setIndex] = useState();
@@ -20,10 +29,13 @@ function ReserveList({ reserve, setReserve }) {
     setIsChecked(true);
   };
 
+  const closeReserveMessage = () => {
+    setIsChecked(false);
+  };
+
   const removeReserveHandler = (e) => {
     const docID = reserve[parseInt(e.target.id)].id;
     setReserve([...reserve.filter((r, index) => index != e.target.id)]);
-    console.log(docID);
     firebase
       .firestore()
       .collection("reserve")
@@ -37,11 +49,12 @@ function ReserveList({ reserve, setReserve }) {
       });
   };
 
-  console.log(reserve);
-
   if (reserve.id || reserve.length > 0) {
     return (
       <>
+        <h3>
+          您有 <span>{reserve.length}</span> 筆預約
+        </h3>
         {reserve.map((r, idx) => (
           <div key={idx}>
             <div style={{ display: "flex", justifyContent: "space-around" }}>
@@ -53,6 +66,10 @@ function ReserveList({ reserve, setReserve }) {
               <div>
                 <div>
                   <span>{r.dietitianName}</span>營養師
+                </div>
+                <div>
+                  <div>建立時間</div>
+                  <div>{r.addDate}</div>
                 </div>
                 <div>
                   <div>預約時間</div>
@@ -71,7 +88,14 @@ function ReserveList({ reserve, setReserve }) {
               <button onClick={removeReserveHandler} id={idx}>
                 取消預約
               </button>
-              {isChecked && index == idx ? <div>test</div> : ""}
+              {isChecked && index == idx ? (
+                <>
+                  <ReverseDetails props={r} />
+                  <button onClick={closeReserveMessage}>確定</button>
+                </>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         ))}
@@ -82,7 +106,7 @@ function ReserveList({ reserve, setReserve }) {
   }
 }
 
-function ReserveForm({ setIsReserve, props, setReserve }) {
+function ReserveForm({ setIsReserve, props, setReserve, profile }) {
   const params = useParams();
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = today.toISOString().substr(0, 10);
@@ -98,16 +122,23 @@ function ReserveForm({ setIsReserve, props, setReserve }) {
       dietitian: props.id,
       dietitianName: props.name,
       image: props.image,
-      inviter: params.cID,
+      inviterID: params.cID,
+      inviterName: profile.name,
+      inviterGender: profile.gender,
       status: "0",
     });
   };
 
   const sendReverseHandler = () => {
+    const dateTime = Date.now();
+    const timestamp = Math.floor(dateTime);
     db.collection("reserve")
-      .add(input)
-      .then((docRef) => {
-        db.collection("reserve").doc(docRef.id).update("id", docRef.id);
+      .doc(`${timestamp}`)
+      .set(input)
+      .then(() => {
+        db.collection("reserve")
+          .doc(`${timestamp}`)
+          .update("id", `${timestamp}`);
       })
       .then(() => {
         db.collection("reserve")
@@ -115,7 +146,7 @@ function ReserveForm({ setIsReserve, props, setReserve }) {
           .then((docs) => {
             const reserveArray = [];
             docs.forEach((doc) => {
-              if (doc.data().inviter === params.cID) {
+              if (doc.data().inviterID === params.cID) {
                 reserveArray.push(doc.data());
               }
             });
@@ -158,7 +189,7 @@ function ReserveForm({ setIsReserve, props, setReserve }) {
   );
 }
 
-function DietitianData({ props, setIsCheck, setReserve }) {
+function DietitianData({ props, setIsCheck, setReserve, profile }) {
   const [isReserve, setIsReserve] = useState(false); //false
   const bindReserveHandler = () => {
     setIsReserve(true);
@@ -209,6 +240,7 @@ function DietitianData({ props, setIsCheck, setReserve }) {
             setIsReserve={setIsReserve}
             props={props}
             setReserve={setReserve}
+            profile={profile}
           />
         ) : (
           ""
@@ -218,7 +250,7 @@ function DietitianData({ props, setIsCheck, setReserve }) {
   );
 }
 
-function GetDietitians({ props, setReserve }) {
+function GetDietitians({ props, setReserve, profile }) {
   const [isCheck, setIsCheck] = useState(false); //false
   const [checkIndex, setCheckIndex] = useState("");
   const bindCheckHandler = (e) => {
@@ -259,6 +291,7 @@ function GetDietitians({ props, setReserve }) {
                 props={d}
                 setIsCheck={setIsCheck}
                 style={{ marginLeft: "20px" }}
+                profile={profile}
               />
             </>
           ) : (
@@ -314,7 +347,7 @@ function Customer() {
       .then((docs) => {
         const reserveArray = [];
         docs.forEach((doc) => {
-          if (doc.data().inviter === customerID) {
+          if (doc.data().inviterID === customerID) {
             reserveArray.push(doc.data());
           }
         });
@@ -330,8 +363,6 @@ function Customer() {
     setFind(false);
   };
 
-  console.log(profile.dietitian);
-
   return (
     <>
       <>
@@ -343,15 +374,15 @@ function Customer() {
       </>
       <Router>
         <h3>OOO，您好！</h3>
-        <Link to="/customer/9iYZMkuFdZRK9vxgt1zc/profile">基本資料</Link>
-        <Link to="/customer/9iYZMkuFdZRK9vxgt1zc/dietary">飲食記錄</Link>
-        <Link to="/customer/9iYZMkuFdZRK9vxgt1zc/target">目標設定</Link>
+        <Link to={`/customer/9iYZMkuFdZRK9vxgt1zc/profile`}>基本資料</Link>
+        <Link to={`/customer/9iYZMkuFdZRK9vxgt1zc/dietary`}>飲食記錄</Link>
+        <Link to={`/customer/9iYZMkuFdZRK9vxgt1zc/target`}>目標設定</Link>
         <Switch>
           <Route exact path="/customer/:cID/profile">
             <Profile profileData={profile} />
           </Route>
           <Route path="/customer/:cID/dietary">
-            <DietrayRecord />
+            <DietrayRecord props={profile} />
           </Route>
           <Route exact path="/customer/:cID/target">
             <Target />
@@ -374,7 +405,11 @@ function Customer() {
       {find && index === "1" ? (
         <>
           <div onClick={bindCloseHandler}>X</div>
-          <GetDietitians props={dietitians} setReserve={setReserve} />
+          <GetDietitians
+            props={dietitians}
+            setReserve={setReserve}
+            profile={profile}
+          />
         </>
       ) : (
         ""
