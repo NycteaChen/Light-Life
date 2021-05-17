@@ -22,15 +22,16 @@ function ReverseDetails({ props }) {
 }
 
 function ReserveList({ reserve, setReserve }) {
-  const [isChecked, setIsChecked] = useState(false);
+  // const [isChecked, setIsChecked] = useState(false);
   const [index, setIndex] = useState();
   const checkReserveMessage = (e) => {
     setIndex(e.target.id);
-    setIsChecked(true);
+    // setIsChecked(true);
   };
 
   const closeReserveMessage = () => {
-    setIsChecked(false);
+    // setIsChecked(false);
+    setIndex();
   };
 
   const removeReserveHandler = (e) => {
@@ -88,7 +89,7 @@ function ReserveList({ reserve, setReserve }) {
               <button onClick={removeReserveHandler} id={idx}>
                 取消預約
               </button>
-              {isChecked && index == idx ? (
+              {index == idx ? (
                 <>
                   <ReverseDetails props={r} />
                   <button onClick={closeReserveMessage}>確定</button>
@@ -384,7 +385,7 @@ function Customer() {
               <Profile profileData={profile} />
             </Route>
             <Route path="/customer/:cID/dietary">
-              <DietrayRecord props={profile} />
+              <DietrayRecord />
             </Route>
             <Route exact path="/customer/:cID/target">
               <Target />

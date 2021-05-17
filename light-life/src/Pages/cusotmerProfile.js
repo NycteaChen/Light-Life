@@ -29,10 +29,9 @@ function EditCustomerProfile({ props }) {
     sport,
     other,
   } = props;
-  console.log(id);
   async function postImg(image) {
     if (image) {
-      const storageRef = storage.ref("9iYZMkuFdZRK9vxgt1zc/" + image.name);
+      const storageRef = storage.ref(`${id}/` + image.name);
       await storageRef.put(image);
       return image.name;
     } else {
@@ -44,7 +43,7 @@ function EditCustomerProfile({ props }) {
     if (imageName) {
       const storageRef = storage.ref();
       const pathRef = await storageRef
-        .child("9iYZMkuFdZRK9vxgt1zc/" + imageName)
+        .child(`${id}/` + imageName)
         .getDownloadURL();
       return pathRef;
     } else {
@@ -72,7 +71,6 @@ function EditCustomerProfile({ props }) {
       setInput({ ...input, image: image });
     }
   };
-  console.log(input);
 
   const bindSaveHandler = async () => {
     if (input.imageFile) {

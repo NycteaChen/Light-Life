@@ -121,68 +121,527 @@ function DietitianRecord() {
   );
 }
 
-function CustomerRecord({ date }) {
-  console.log(date);
+function CustomerRecord({ date, isChecked, setIsChecked }) {
+  const [input, setInput] = useState("");
+  const [meal, setMeal] = useState("");
+  const [dID, setDID] = useState();
+  const [mealDetails, setMealDetails] = useState("");
+  const cID = useParams().cID;
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("customers")
+      .doc(cID)
+      .get()
+      .then((doc) => {
+        setDID(doc.data().dietitian);
+      });
+  }, [date]);
+
+  const getMealHandler = (e) => {
+    setIsChecked(true);
+    setMeal(e.target.className);
+
+    setInput("");
+    setMealDetails("");
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dID)
+      .collection("customers")
+      .doc(cID)
+      .collection("diet")
+      .doc(date)
+      .get()
+      .then((doc) => {
+        if (doc.exists && doc.data()[e.target.className]) {
+          setMealDetails(doc.data()[e.target.className]);
+        } else {
+          setMealDetails("");
+        }
+      });
+  };
+
+  console.log(mealDetails);
+
+  const getInputHandler = (e) => {
+    const { name } = e.target;
+    console.log(e.target.value);
+    if (name !== "image") {
+      setInput({ ...input, [name]: e.target.value });
+    } else if (e.target.files[0]) {
+      // const fileReader = new FileReader();
+      // fileReader.readAsDataURL(e.target.files[0]);
+      // fileReader.addEventListener("load", (a) => {
+      setInput({
+        ...input,
+        image: e.target.files[0],
+      });
+    } else {
+      delete input.image;
+      setInput({ ...input });
+    }
+  };
+
+  const removeImageHandler = (e) => {
+    console.log("delete");
+    console.log(e.target.id);
+    setMealDetails({
+      ...mealDetails,
+      images: [...mealDetails.images.filter((i, idx) => idx != e.target.id)],
+    });
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dID)
+      .collection("customers")
+      .doc(cID)
+      .collection("diet")
+      .doc(date)
+      .set({ [meal]: input }, { merge: true });
+  };
+
+  const bindSaveHandler = (e) => {
+    if (meal === e.target.className) {
+      firebase
+        .firestore()
+        .collection("dietitians")
+        .doc(dID)
+        .collection("customers")
+        .doc(cID)
+        .collection("diet")
+        .doc(date)
+        .set({ [meal]: input }, { merge: true });
+    }
+  };
+  console.log(mealDetails);
   return (
     <>
       <div id="dietitian-daily-diet">
         <h2>{date}飲食記錄</h2>
         <div className="breakfast">
-          <div>早餐</div>
-          <div className="diet-record">
-            <label>
-              進食時間 <input type="textarea" placeholder="8:00~8:30" />
-            </label>
-            <div>
-              <div>照片記錄</div>
-              <input type="file" accept="image/*" id="image" />
-              <input type="file" accept="image/*" id="image" />
-            </div>
-            <div>
-              <div>請描述飲食內容，越完整越好</div>
-              <input type="textarea" />
-            </div>
-            <button>儲存</button>
+          <div className="customerBreakfast" onClick={getMealHandler}>
+            早餐
           </div>
-          <table className="dietitian-record">
-            <thead>
-              <tr>
-                <th>品項</th>
-                <th>單位:100g</th>
-                <th>熱量</th>
-                <th>蛋白質</th>
-                <th>脂質</th>
-                <th>碳水化合物</th>
-                <th>膳食纖維</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>牛肉</th>
-                <th>0</th>
-                <th>0</th>
-                <th>0</th>
-                <th>0</th>
-                <th>0</th>
-                <th>0</th>
-              </tr>
-            </tbody>
-          </table>
+          {meal === "customerBreakfast" && isChecked ? (
+            <>
+              <div className="diet-record">
+                <label>
+                  進食時間{" "}
+                  <input
+                    type="time"
+                    name="eatTime"
+                    value={
+                      input.eatTime || input.eatTime === ""
+                        ? input.eatTime
+                        : mealDetails && mealDetails.eatTime
+                        ? mealDetails.eatTime
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </label>
+                <div>
+                  <div>照片記錄</div>
+                  {mealDetails && mealDetails.images
+                    ? mealDetails.images.map((i, index) => (
+                        <div key={index}>
+                          <div id={index} onClick={removeImageHandler}>
+                            X
+                          </div>
+                          <a href={i} target="_blank">
+                            <img
+                              src={i}
+                              alt="customer"
+                              style={{ width: "200px", height: "200px" }}
+                            />
+                          </a>
+                        </div>
+                      ))
+                    : ""}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="image"
+                    id="0"
+                    onChange={getInputHandler}
+                  />
+                  {/* <input
+                type="file"
+                accept="image/*"
+                id="image"
+                onChange={getInputHandler}
+              /> */}
+                </div>
+                <div>
+                  <div>請描述飲食內容，越完整越好</div>
+                  <input
+                    type="textarea"
+                    name="description"
+                    value={
+                      input.description || input.description === ""
+                        ? input.description
+                        : mealDetails && mealDetails.description
+                        ? mealDetails.description
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </div>
+                <button className="customerBreakfast" onClick={bindSaveHandler}>
+                  儲存
+                </button>
+              </div>
+              <table className="dietitian-record">
+                <thead>
+                  <tr>
+                    <th>品項</th>
+                    <th>單位:100g</th>
+                    <th>熱量</th>
+                    <th>蛋白質</th>
+                    <th>脂質</th>
+                    <th>碳水化合物</th>
+                    <th>膳食纖維</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>牛肉</th>
+                    <th>0</th>
+                    <th>0</th>
+                    <th>0</th>
+                    <th>0</th>
+                    <th>0</th>
+                    <th>0</th>
+                  </tr>
+                </tbody>
+              </table>
+            </>
+          ) : (
+            ""
+          )}
         </div>
         <div className="morning-snack">
-          <div>早點</div>
+          <div className="customerMorning-snack" onClick={getMealHandler}>
+            早點
+          </div>
+          {meal === "customerMorning-snack" && isChecked ? (
+            <>
+              {" "}
+              <div className="diet-record">
+                <label>
+                  進食時間{" "}
+                  <input
+                    type="time"
+                    name="eatTime"
+                    value={
+                      input.eatTime || input.eatTime === ""
+                        ? input.eatTime
+                        : mealDetails && mealDetails.eatTime
+                        ? mealDetails.eatTime
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </label>
+                <div>
+                  <div>照片記錄</div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="image"
+                    id="0"
+                    onChange={getInputHandler}
+                  />
+                  {/* <input
+                type="file"
+                accept="image/*"
+                id="image"
+                onChange={getInputHandler}
+              /> */}
+                </div>
+                <div>
+                  <div>請描述飲食內容，越完整越好</div>
+                  <input
+                    type="textarea"
+                    name="description"
+                    value={
+                      input.description || input.description === ""
+                        ? input.description
+                        : mealDetails && mealDetails.description
+                        ? mealDetails.description
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </div>
+                <button
+                  className="customerMorning-snack"
+                  onClick={bindSaveHandler}
+                >
+                  儲存
+                </button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
         <div className="lunch">
-          <div>午餐</div>
+          <div className="customerLunch" onClick={getMealHandler}>
+            午餐
+          </div>
+          {meal === "customerLunch" && isChecked ? (
+            <>
+              {" "}
+              <div className="diet-record">
+                <label>
+                  進食時間{" "}
+                  <input
+                    type="time"
+                    name="eatTime"
+                    value={
+                      input.eatTime || input.eatTime === ""
+                        ? input.eatTime
+                        : mealDetails && mealDetails.eatTime
+                        ? mealDetails.eatTime
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </label>
+                <div>
+                  <div>照片記錄</div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="image"
+                    id="0"
+                    onChange={getInputHandler}
+                  />
+                  {/* <input
+                type="file"
+                accept="image/*"
+                id="image"
+                onChange={getInputHandler}
+              /> */}
+                </div>
+                <div>
+                  <div>請描述飲食內容，越完整越好</div>
+                  <input
+                    type="textarea"
+                    name="description"
+                    value={
+                      input.description || input.description === ""
+                        ? input.description
+                        : mealDetails && mealDetails.description
+                        ? mealDetails.description
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </div>
+                <button className="customerLunch" onClick={bindSaveHandler}>
+                  儲存
+                </button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
         <div className="afternoon-snack">
-          <div>午點</div>
+          <div className="customerAfternoon-snack" onClick={getMealHandler}>
+            午點
+          </div>
+          {meal === "customerAfternoon-snack" && isChecked ? (
+            <>
+              <div className="diet-record">
+                <label>
+                  進食時間{" "}
+                  <input
+                    type="time"
+                    name="eatTime"
+                    value={
+                      input.eatTime || input.eatTime === ""
+                        ? input.eatTime
+                        : mealDetails && mealDetails.eatTime
+                        ? mealDetails.eatTime
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </label>
+                <div>
+                  <div>照片記錄</div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="image"
+                    id="0"
+                    onChange={getInputHandler}
+                  />
+                  {/* <input
+                type="file"
+                accept="image/*"
+                id="image"
+                onChange={getInputHandler}
+              /> */}
+                </div>
+                <div>
+                  <div>請描述飲食內容，越完整越好</div>
+                  <input
+                    type="textarea"
+                    name="description"
+                    value={
+                      input.description || input.description === ""
+                        ? input.description
+                        : mealDetails && mealDetails.description
+                        ? mealDetails.description
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </div>
+                <button
+                  className="customerAfternoon-snack"
+                  onClick={bindSaveHandler}
+                >
+                  儲存
+                </button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
         <div className="dinner">
-          <div>晚餐</div>
+          <div className="customerDinner" onClick={getMealHandler}>
+            晚餐
+          </div>
+          {meal === "customerDinner" && isChecked ? (
+            <>
+              <div className="diet-record">
+                <label>
+                  進食時間{" "}
+                  <input
+                    type="time"
+                    name="eatTime"
+                    value={
+                      input.eatTime || input.eatTime === ""
+                        ? input.eatTime
+                        : mealDetails && mealDetails.eatTime
+                        ? mealDetails.eatTime
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </label>
+                <div>
+                  <div>照片記錄</div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="image"
+                    id="0"
+                    onChange={getInputHandler}
+                  />
+                  {/* <input
+                type="file"
+                accept="image/*"
+                id="image"
+                onChange={getInputHandler}
+              /> */}
+                </div>
+                <div>
+                  <div>請描述飲食內容，越完整越好</div>
+                  <input
+                    type="textarea"
+                    name="description"
+                    value={
+                      input.description || input.description === ""
+                        ? input.description
+                        : mealDetails && mealDetails.description
+                        ? mealDetails.description
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </div>
+                <button className="customerDinner" onClick={bindSaveHandler}>
+                  儲存
+                </button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
         <div className="night-snack">
-          <div>晚點</div>
+          <div className="customerNight-snack" onClick={getMealHandler}>
+            晚點
+          </div>
+          {meal === "customerNight-snack" && isChecked ? (
+            <>
+              <div className="diet-record">
+                <label>
+                  進食時間{" "}
+                  <input
+                    type="time"
+                    name="eatTime"
+                    value={
+                      input.eatTime || input.eatTime === ""
+                        ? input.eatTime
+                        : mealDetails && mealDetails.eatTime
+                        ? mealDetails.eatTime
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </label>
+                <div>
+                  <div>照片記錄</div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="image"
+                    id="0"
+                    onChange={getInputHandler}
+                  />
+                  {/* <input
+                type="file"
+                accept="image/*"
+                id="image"
+                onChange={getInputHandler}
+              /> */}
+                </div>
+                <div>
+                  <div>請描述飲食內容，越完整越好</div>
+                  <input
+                    type="textarea"
+                    name="description"
+                    value={
+                      input.description || input.description === ""
+                        ? input.description
+                        : mealDetails && mealDetails.description
+                        ? mealDetails.description
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  />
+                </div>
+                <button
+                  className="customerNight-snack"
+                  onClick={bindSaveHandler}
+                >
+                  儲存
+                </button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </>
@@ -297,38 +756,20 @@ function Analsis() {
   );
 }
 
-function RenderDietaryRecord({ props }) {
+function RenderDietaryRecord() {
   const [recordDate, setRecordDate] = useState();
-  const [getRecord, setGetRecord] = useState(false);
-  const pathName = useLocation().pathname;
+  const [getRecord, setGetRecord] = useState(false); //false
+  const [isChecked, setIsChecked] = useState(false);
   const params = useParams();
-  // useEffect(() => {
-  //   if (params.dID) {
-  //     firebase
-  //       .firestore()
-  //       .collection("dietitians")
-  //       .doc(dID)
-  //       .get()
-  //       .then((doc) => console.log(doc));
-  //   } else if (params.cID) {
-  //     firebase
-  //       .firestore()
-  //       .collection("customers")
-  //       .doc(params.cID)
-  //       .get()
-  //       .then((doc) => console.log(doc));
-  //   }
-  // });
-  console.log(params);
+
   const getDietaryRecordDate = (e) => {
-    console.log(e.target.value);
     if (e.target.value !== "") {
       setRecordDate(e.target.value);
+      setIsChecked(false);
       setGetRecord(true);
     }
   };
-
-  if (pathName.includes("dietitian")) {
+  if (params.dID) {
     return (
       <>
         <input
@@ -340,7 +781,7 @@ function RenderDietaryRecord({ props }) {
         ></input>
         <Router>
           <Link
-            to={`/dietitian/${props.dietitian}/customer/${props.id}/dietary/`}
+            to={`/dietitian/${params.dID}/customer/${params.cID}/dietary/`}
           ></Link>
           <Switch>
             <Route exact path={`/dietitian/:dID/customer/:cID/dietary/`}>
@@ -362,14 +803,17 @@ function RenderDietaryRecord({ props }) {
           min="2021-05-14"
           max="2021-05-31"
           onChange={getDietaryRecordDate}
-          required="required"
         ></input>
         <Router>
-          <Link to={`/customer/${props.id}/dietary/`}></Link>
+          <Link to={`/customer/${params.cID}/dietary/`}></Link>
           {getRecord ? (
             <Switch>
               <Route exact path="/customer/:cID/dietary/">
-                <CustomerRecord date={recordDate} />
+                <CustomerRecord
+                  date={recordDate}
+                  isChecked={isChecked}
+                  setIsChecked={setIsChecked}
+                />
                 <hr />
                 <Analsis />
                 <hr />

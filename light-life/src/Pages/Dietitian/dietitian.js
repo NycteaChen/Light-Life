@@ -35,7 +35,7 @@ function CustomerApi({ customerData }) {
           <Profile profileData={customerData} />
         </Route>
         <Route path={`/dietitian/:dID/customer/:cID/dietary`}>
-          <DietrayRecord props={customerData} />
+          <DietrayRecord />
         </Route>
         <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
           <Target />
