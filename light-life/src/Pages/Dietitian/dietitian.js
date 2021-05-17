@@ -241,7 +241,6 @@ function Dietitian() {
         setInvitedList(invitedArray);
       });
   }, []);
-  console.log(invitedList);
 
   const checkInvitedList = () => {
     setIsInvited(true);
@@ -250,29 +249,32 @@ function Dietitian() {
   const clostInvitedList = () => {
     setIsInvited(false);
   };
-
-  return (
-    <>
-      <Customers customers={users} />
-      <div>找客戶</div>
-      {/* <div>
+  if (users.length > 0) {
+    return (
+      <>
+        <Customers customers={users} />
+        <div>找客戶</div>
+        {/* <div>
         <div>找客戶</div>
         <div>邀請中</div>
       </div> */}
-      <div onClick={checkInvitedList}>誰找我</div>
-      {isInvited ? (
-        <div>
-          <div onClick={clostInvitedList}>X</div>
-          <InvitedList
-            invitedList={invitedList}
-            setInvitedList={setInvitedList}
-          />
-        </div>
-      ) : (
-        ""
-      )}
-    </>
-  );
+        <div onClick={checkInvitedList}>誰找我</div>
+        {isInvited ? (
+          <div>
+            <div onClick={clostInvitedList}>X</div>
+            <InvitedList
+              invitedList={invitedList}
+              setInvitedList={setInvitedList}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+      </>
+    );
+  } else {
+    return <div>loading</div>;
+  }
 }
 
 export default Dietitian;
