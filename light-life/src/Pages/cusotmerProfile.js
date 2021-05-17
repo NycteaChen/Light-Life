@@ -29,7 +29,7 @@ function EditCustomerProfile({ props }) {
     sport,
     other,
   } = props;
-
+  console.log(id);
   async function postImg(image) {
     if (image) {
       const storageRef = storage.ref("9iYZMkuFdZRK9vxgt1zc/" + image.name);

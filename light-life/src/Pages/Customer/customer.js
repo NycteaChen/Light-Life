@@ -362,71 +362,76 @@ function Customer() {
   const bindCloseHandler = () => {
     setFind(false);
   };
-
-  return (
-    <>
+  if (profile.dietitian) {
+    return (
       <>
-        {profile.dietitian !== "" ? (
-          <h2>我的營養師：{dName} 營養師</h2>
+        <>
+          {profile.dietitian !== "" ? (
+            <h2>我的營養師：{dName} 營養師</h2>
+          ) : (
+            <h2>目前沒有使用服務喔</h2>
+          )}
+        </>
+        <Router>
+          <h3>{profile.name}，您好！</h3>
+          <>
+            <Link to={`/customer/${profile.id}/profile`}>基本資料</Link>
+            <Link to={`/customer/${profile.id}/dietary`}>飲食記錄</Link>
+            <Link to={`/customer/${profile.id}/target`}>目標設定</Link>
+          </>
+          <Switch>
+            <Route exact path="/customer/:cID/profile">
+              <Profile profileData={profile} />
+            </Route>
+            <Route path="/customer/:cID/dietary">
+              <DietrayRecord props={profile} />
+            </Route>
+            <Route exact path="/customer/:cID/target">
+              <Target />
+            </Route>
+          </Switch>
+        </Router>
+        <div onClick={bindOpenHandler} id="0">
+          刊登需求
+        </div>
+        {find && index === "0" ? (
+          <>
+            <div onClick={bindCloseHandler}>X</div>
+          </>
         ) : (
-          <h2>目前沒有使用服務喔</h2>
+          ""
+        )}
+        <div onClick={bindOpenHandler} id="1">
+          找營養師
+        </div>
+        {find && index === "1" ? (
+          <>
+            <div onClick={bindCloseHandler}>X</div>
+            <GetDietitians
+              props={dietitians}
+              setReserve={setReserve}
+              profile={profile}
+            />
+          </>
+        ) : (
+          ""
+        )}
+        <div onClick={bindOpenHandler} id="2">
+          預約清單
+        </div>
+        {find && index === "2" ? (
+          <>
+            <div onClick={bindCloseHandler}>X</div>
+            <ReserveList reserve={reserve} setReserve={setReserve} />
+          </>
+        ) : (
+          ""
         )}
       </>
-      <Router>
-        <h3>OOO，您好！</h3>
-        <Link to={`/customer/9iYZMkuFdZRK9vxgt1zc/profile`}>基本資料</Link>
-        <Link to={`/customer/9iYZMkuFdZRK9vxgt1zc/dietary`}>飲食記錄</Link>
-        <Link to={`/customer/9iYZMkuFdZRK9vxgt1zc/target`}>目標設定</Link>
-        <Switch>
-          <Route exact path="/customer/:cID/profile">
-            <Profile profileData={profile} />
-          </Route>
-          <Route path="/customer/:cID/dietary">
-            <DietrayRecord props={profile} />
-          </Route>
-          <Route exact path="/customer/:cID/target">
-            <Target />
-          </Route>
-        </Switch>
-      </Router>
-      <div onClick={bindOpenHandler} id="0">
-        刊登需求
-      </div>
-      {find && index === "0" ? (
-        <>
-          <div onClick={bindCloseHandler}>X</div>
-        </>
-      ) : (
-        ""
-      )}
-      <div onClick={bindOpenHandler} id="1">
-        找營養師
-      </div>
-      {find && index === "1" ? (
-        <>
-          <div onClick={bindCloseHandler}>X</div>
-          <GetDietitians
-            props={dietitians}
-            setReserve={setReserve}
-            profile={profile}
-          />
-        </>
-      ) : (
-        ""
-      )}
-      <div onClick={bindOpenHandler} id="2">
-        預約清單
-      </div>
-      {find && index === "2" ? (
-        <>
-          <div onClick={bindCloseHandler}>X</div>
-          <ReserveList reserve={reserve} setReserve={setReserve} />
-        </>
-      ) : (
-        ""
-      )}
-    </>
-  );
+    );
+  } else {
+    return <div>loading</div>;
+  }
 }
 
 export default Customer;

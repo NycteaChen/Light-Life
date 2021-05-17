@@ -360,7 +360,7 @@ function RenderDietaryRecord({ props }) {
         <input
           type="date"
           min="2021-05-14"
-          max="2021-05-26"
+          max="2021-05-31"
           onChange={getDietaryRecordDate}
           required="required"
         ></input>
