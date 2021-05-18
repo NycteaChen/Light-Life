@@ -127,7 +127,7 @@ function DietitianRecord({ date, isChecked, setIsChecked }) {
           </div>
         </div>
         <hr />
-        <Analsis date={date} dID={dID} cID={cID} />
+        <Analysis date={date} dID={dID} cID={cID} />
         <button>儲存</button>
       </div>
     </>
@@ -1263,40 +1263,117 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
         </div>
 
         <hr />
-        <Analsis date={date} dID={dID} cID={cID} />
+        <Analysis date={date} cID={cID} />
         <hr />
       </div>
     </>
   );
 }
 
-function Analsis({ date, dID, cID }) {
+function Analysis({ date, cID }) {
   const pathName = useLocation().pathname;
-  const [breakFast, setBreakFast] = useState("");
+  const [breakfast, setBreakfast] = useState("");
+  const [morning, setMorning] = useState("");
+  const [lunch, setLunch] = useState("");
+  const [afternoon, setAfternoon] = useState("");
+  const [dinner, setDinner] = useState("");
+  const [night, setNight] = useState("");
+  const [dID, setDID] = useState("");
   const [advice, setAdvice] = useState("");
+
   useEffect(() => {
     firebase
       .firestore()
-      .collection("dietitians")
-      .doc(dID)
       .collection("customers")
       .doc(cID)
-      .collection("diet")
-      .doc(date)
       .get()
       .then((doc) => {
-        if (doc.exists && doc.data().advice) {
-          setAdvice(doc.data().advice);
-        } else {
-          setAdvice("");
-        }
-        if (doc.exists && doc.data()["breakfast"]) {
-          console.log(doc.data()["breakfast"]);
-        } else {
-          console.log("not added yet");
-        }
+        setDID(doc.data().dietitian);
+        return doc.data().dietitian;
+      })
+      .then((res) => {
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .doc(res)
+          .collection("customers")
+          .doc(cID)
+          .collection("diet")
+          .doc(date)
+          .get()
+          .then((doc) => {
+            console.log(doc.data());
+            if (doc.exists && doc.data()["advice"]) {
+              console.log(doc.data()["advice"]);
+              setAdvice(doc.data()["advice"]);
+            } else {
+              setAdvice("");
+            }
+            if (doc.exists) {
+              if (doc.data()["breakfast"]) {
+              } else {
+                setBreakfast("");
+              }
+              if (doc.data()["morning-snack"]) {
+              } else {
+                setMorning("");
+              }
+              if (doc.data()["lunch"]) {
+              } else {
+                setLunch("");
+              }
+              if (doc.data()["afternoon-snack"]) {
+              } else {
+                setAfternoon("");
+              }
+              if (doc.data()["dinner"]) {
+              } else {
+                setDinner("");
+              }
+              if (doc.data()["night-snack"]) {
+              } else {
+                setNight("");
+              }
+              // doc.data()["breakfast"]
+              //   ? setBreakfast(doc.data()["breakfast"])
+              //   : setBreakfast("");
+              // doc.data()["morning-snack"]
+              //   ? setMorning(doc.data()["morning-snack"])
+              //   : setMorning("");
+              // doc.data()["lunch"]
+              //   ? setLunch(doc.data()["lunch"])
+              //   : setLunch("");
+              // doc.data()["afternoon-snack"]
+              //   ? setAfternoon(doc.data()["afternoon-snack"])
+              //   : setAfternoon("");
+              // doc.data()["dinner"]
+              //   ? setDinner(doc.data()["dinner"])
+              //   : setDinner("");
+              // doc.data()["night-snack"]
+              //   ? setNight(doc.data()["night-snack"])
+              //   : setNight("");
+            } else {
+              console.log("not added yet");
+            }
+          });
       });
-  });
+    calculator();
+  }, [date]);
+
+  const calculator = (target) => {
+    target.forEach((t) => {
+      console.log(t.item);
+      console.log(t.kcal);
+      console.log(t.protein);
+      console.log(t.lipid);
+      console.log(t.carbohydrate);
+      console.log(t.fiber);
+    });
+    console.log("test");
+  };
+
+  console.log(breakfast);
+
   const tess = (e) => {
     console.log(e.target);
   };
