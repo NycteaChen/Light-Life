@@ -9,7 +9,6 @@ import {
   useParams,
 } from "react-router-dom";
 import "firebase/firestore";
-import { setDate } from "date-fns";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
@@ -61,11 +60,11 @@ function DietitianRecord({ date, count, setCount }) {
       setInput({
         ...input,
         [name]: parseFloat(e.target.value),
-        kcal: 0,
-        protein: 0,
-        fiber: 0,
-        carbohydrate: 0,
-        lipid: 0,
+        kcal: 100,
+        protein: 5,
+        fiber: 2,
+        carbohydrate: 1,
+        lipid: 50,
       });
     } else {
       setInput({
@@ -240,7 +239,6 @@ function DietitianRecord({ date, count, setCount }) {
                     </tr>
                   </tfoot>
                 </table>
-                <button>儲存</button>
               </div>
             </>
           ) : (
@@ -355,7 +353,6 @@ function DietitianRecord({ date, count, setCount }) {
                     </tr>
                   </tfoot>
                 </table>
-                <button>儲存</button>
               </div>
             </>
           ) : (
@@ -391,7 +388,7 @@ function DietitianRecord({ date, count, setCount }) {
           </div>
         </div>
         <hr />
-        <Analysis date={date} dID={dID} cID={cID} />
+        <Analysis date={date} dID={dID} cID={cID} data={dataAnalysis} />
       </div>
     </>
   );
@@ -1591,14 +1588,14 @@ function CustomerRecord({ date, count, setCount }) {
         </div>
 
         <hr />
-        <Analysis date={date} cID={cID} />
+        <Analysis date={date} cID={cID} data={dataAnalysis} />
         <hr />
       </div>
     </>
   );
 }
 
-function Analysis({ date, cID }) {
+function Analysis({ date, cID, data }) {
   const pathName = useLocation().pathname;
   const [breakfast, setBreakfast] = useState({});
   const [morning, setMorning] = useState({});
@@ -1653,7 +1650,7 @@ function Analysis({ date, cID }) {
             }
           });
       });
-  }, [date]);
+  }, [date, data]);
 
   const calculator = (target, setMealNutrients) => {
     const reducer = (acc, cur) => acc + cur;
