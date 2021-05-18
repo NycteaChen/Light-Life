@@ -121,11 +121,78 @@ function DietitianRecord() {
   );
 }
 
+// function ShowImages({ mealDetails, input, removeImageHandler }) {
+//   if (!input.images) {
+//     return (
+//       <>
+//         {mealDetails.images.map((i, index) => (
+//           <div key={index}>
+//             <div id={index} onClick={removeImageHandler}>
+//               X
+//             </div>
+//             <a href={i} target="_blank">
+//               <img
+//                 src={i}
+//                 alt="customer"
+//                 style={{ width: "200px", height: "200px" }}
+//               />
+//             </a>
+//           </div>
+//         ))}
+//         {input.imageUrl.map((i, index) => (
+//           <div key={index}>
+//             <a href={i} target="_blank">
+//               <img
+//                 src={i}
+//                 alt="customer"
+//                 style={{ width: "200px", height: "200px" }}
+//               />
+//             </a>
+//           </div>
+//         ))}
+//       </>
+//     );
+//   } else {
+//     return (
+//       <>
+//         {input.images.map((i, index) => (
+//           <div key={index}>
+//             <div id={index} onClick={removeImageHandler}>
+//               X
+//             </div>
+//             <a href={i} target="_blank">
+//               <img
+//                 src={i}
+//                 alt="customer"
+//                 style={{ width: "200px", height: "200px" }}
+//               />
+//             </a>
+//           </div>
+//         ))}
+//         {input.imageUrl.map((i, index) => (
+//           <div key={index}>
+//             <a href={i} target="_blank">
+//               <img
+//                 src={i}
+//                 alt="customer"
+//                 style={{ width: "200px", height: "200px" }}
+//               />
+//             </a>
+//           </div>
+//         ))}
+//       </>
+//     );
+//   }
+// }
+
 function CustomerRecord({ date, isChecked, setIsChecked }) {
+  const storage = firebase.storage();
   const [input, setInput] = useState("");
   const [meal, setMeal] = useState("");
   const [dID, setDID] = useState();
   const [mealDetails, setMealDetails] = useState("");
+  const [value, setValue] = useState("");
+  // const [images, setImages] = useState([]);
   const cID = useParams().cID;
 
   useEffect(() => {
@@ -137,6 +204,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
       .then((doc) => {
         setDID(doc.data().dietitian);
       });
+    console.log("here");
   }, [date]);
 
   const getMealHandler = (e) => {
@@ -144,6 +212,12 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
     setMeal(e.target.className);
 
     setInput("");
+    // if (mealDetails.images) {
+    //   setMealDetails({ images: mealDetails.images });
+    // }
+    // else {
+    //   setMealDetails("");
+    // }
     setMealDetails("");
     firebase
       .firestore()
@@ -163,30 +237,63 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
       });
   };
 
-  console.log(mealDetails);
-
+  async function postImg(image) {
+    if (image) {
+      const storageRef = storage.ref(`${cID}/${date}/${meal}/` + image.name);
+      await storageRef.put(image);
+      return image.name;
+    } else {
+      return false;
+    }
+  }
+  async function getImg(image) {
+    const imageName = await postImg(image);
+    if (imageName) {
+      const storageRef = storage.ref();
+      const pathRef = await storageRef
+        .child(`${cID}/${date}/${meal}/` + imageName)
+        .getDownloadURL();
+      return await pathRef;
+    } else {
+      return "";
+    }
+  }
+  console.log(value);
   const getInputHandler = (e) => {
+    console.log(e.target);
     const { name } = e.target;
-    console.log(e.target.value);
     if (name !== "image") {
       setInput({ ...input, [name]: e.target.value });
     } else if (e.target.files[0]) {
-      // const fileReader = new FileReader();
-      // fileReader.readAsDataURL(e.target.files[0]);
-      // fileReader.addEventListener("load", (a) => {
+      // const imageUrlArray = [];
+      const imagesArray = [];
+      for (let i = 0; i < e.target.files.length; i++) {
+        // const imageUrl = window.URL.createObjectURL(e.target.files[i]);
+        // imageUrlArray.push(imageUrl);
+        imagesArray.push(e.target.files[i]);
+      }
+      setValue(e.target.value);
+      // if (mealDetails.images) {
+      //   mealDetails.images.forEach((m) => {
+      //     imageUrlArray.push(m);
+      //   });
+      // }
+
       setInput({
         ...input,
-        image: e.target.files[0],
+        // imageUrl: imageUrlArray,
+        imageFile: imagesArray,
       });
     } else {
-      delete input.image;
-      setInput({ ...input });
+      // delete input.image;
+      // setInput({ ...input });
+      setValue("");
     }
   };
 
+  console.log(input);
+  console.log(mealDetails);
   const removeImageHandler = (e) => {
-    console.log("delete");
-    console.log(e.target.id);
     setMealDetails({
       ...mealDetails,
       images: [...mealDetails.images.filter((i, idx) => idx != e.target.id)],
@@ -199,23 +306,91 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
       .doc(cID)
       .collection("diet")
       .doc(date)
-      .set({ [meal]: input }, { merge: true });
+      .set(
+        {
+          [meal]: {
+            images: [
+              ...mealDetails.images.filter((i, idx) => idx != e.target.id),
+            ],
+          },
+        },
+        { merge: true }
+      );
+    // .update({
+    //   [meal]: {
+    //     ...mealDetails,
+    //     images: [
+    //       ...mealDetails.images.filter((i, idx) => idx != e.target.id),
+    //     ],
+    //   },
+    // });
   };
-
-  const bindSaveHandler = (e) => {
+  const bindSaveHandler = async (e) => {
     if (meal === e.target.className) {
-      firebase
-        .firestore()
-        .collection("dietitians")
-        .doc(dID)
-        .collection("customers")
-        .doc(cID)
-        .collection("diet")
-        .doc(date)
-        .set({ [meal]: input }, { merge: true });
+      if (input.imageFile) {
+        let valid = 0;
+        input.imageFile.forEach((i, index) => {
+          if (i.size >= 2097152) {
+            if (input.imageFile.length > 1) {
+              alert(`您想上傳的第${index + 1}張圖片超過2MB囉!`);
+            } else {
+              alert(`圖片超過2MB囉!`);
+            }
+            valid++;
+          }
+        });
+        if (valid === 0) {
+          const imageUrlsArray = [];
+          if (mealDetails.images && mealDetails.images.length > 0) {
+            mealDetails.images.forEach((m) => {
+              imageUrlsArray.push(m);
+            });
+            setMealDetails({ ...mealDetails, images: imageUrlsArray });
+          }
+          input.imageFile.forEach(async (i) => {
+            const imageUrl = await getImg(i);
+            imageUrlsArray.push(imageUrl);
+            setInput({
+              ...input,
+              images: imageUrlsArray,
+            });
+            delete input.imageFile;
+            // delete input.imageUrl;
+            // delete mealDetails.images;
+            firebase
+              .firestore()
+              .collection("dietitians")
+              .doc(dID)
+              .collection("customers")
+              .doc(cID)
+              .collection("diet")
+              .doc(date)
+              .set(
+                { [meal]: { ...input, images: imageUrlsArray } },
+                { merge: true }
+              );
+            setMealDetails({ ...mealDetails, images: imageUrlsArray });
+            setValue("");
+          });
+          alert("儲存囉!");
+        }
+      } else {
+        delete input.imageFile;
+        // delete input.imageUrl;
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .doc(dID)
+          .collection("customers")
+          .doc(cID)
+          .collection("diet")
+          .doc(date)
+          .set({ [meal]: input }, { merge: true });
+        alert("儲存囉!");
+      }
     }
   };
-  console.log(mealDetails);
+
   return (
     <>
       <div id="dietitian-daily-diet">
@@ -244,7 +419,9 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                 </label>
                 <div>
                   <div>照片記錄</div>
-                  {mealDetails && mealDetails.images
+                  {mealDetails &&
+                  mealDetails.images &&
+                  mealDetails.images.length > 0
                     ? mealDetails.images.map((i, index) => (
                         <div key={index}>
                           <div id={index} onClick={removeImageHandler}>
@@ -260,19 +437,66 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         </div>
                       ))
                     : ""}
+                  {/* {mealDetails && mealDetails.images && input.imageUrl ? (
+                    <ShowImages
+                      mealDetails={mealDetails}
+                      input={input}
+                      removeImageHandler={removeImageHandler}
+                    />
+                  ) : mealDetails && mealDetails.images && !input.imageUrl ? (
+                    mealDetails.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.imageUrl ? (
+                    input.imageUrl.map((i, index) => (
+                      <div key={index}>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.images ? (
+                    input.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    ""
+                  )} */}
                   <input
                     type="file"
                     accept="image/*"
                     name="image"
+                    value={value}
                     id="0"
+                    multiple="multiple"
                     onChange={getInputHandler}
                   />
-                  {/* <input
-                type="file"
-                accept="image/*"
-                id="image"
-                onChange={getInputHandler}
-              /> */}
                 </div>
                 <div>
                   <div>請描述飲食內容，越完整越好</div>
@@ -347,19 +571,83 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                 </label>
                 <div>
                   <div>照片記錄</div>
+                  {mealDetails &&
+                  mealDetails.images &&
+                  mealDetails.images.length > 0
+                    ? mealDetails.images.map((i, index) => (
+                        <div key={index}>
+                          <div id={index} onClick={removeImageHandler}>
+                            X
+                          </div>
+                          <a href={i} target="_blank">
+                            <img
+                              src={i}
+                              alt="customer"
+                              style={{ width: "200px", height: "200px" }}
+                            />
+                          </a>
+                        </div>
+                      ))
+                    : ""}
+                  {/* {mealDetails && mealDetails.images && input.imageUrl ? (
+                    <ShowImages
+                      mealDetails={mealDetails}
+                      input={input}
+                      removeImageHandler={removeImageHandler}
+                    />
+                  ) : mealDetails && mealDetails.images && !input.imageUrl ? (
+                    mealDetails.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.imageUrl ? (
+                    input.imageUrl.map((i, index) => (
+                      <div key={index}>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.images ? (
+                    input.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    ""
+                  )} */}
                   <input
                     type="file"
                     accept="image/*"
                     name="image"
                     id="0"
+                    multiple="multiple"
                     onChange={getInputHandler}
                   />
-                  {/* <input
-                type="file"
-                accept="image/*"
-                id="image"
-                onChange={getInputHandler}
-              /> */}
                 </div>
                 <div>
                   <div>請描述飲食內容，越完整越好</div>
@@ -413,19 +701,83 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                 </label>
                 <div>
                   <div>照片記錄</div>
+                  {mealDetails &&
+                  mealDetails.images &&
+                  mealDetails.images.length > 0
+                    ? mealDetails.images.map((i, index) => (
+                        <div key={index}>
+                          <div id={index} onClick={removeImageHandler}>
+                            X
+                          </div>
+                          <a href={i} target="_blank">
+                            <img
+                              src={i}
+                              alt="customer"
+                              style={{ width: "200px", height: "200px" }}
+                            />
+                          </a>
+                        </div>
+                      ))
+                    : ""}
+                  {/* {mealDetails && mealDetails.images && input.imageUrl ? (
+                    <ShowImages
+                      mealDetails={mealDetails}
+                      input={input}
+                      removeImageHandler={removeImageHandler}
+                    />
+                  ) : mealDetails && mealDetails.images && !input.imageUrl ? (
+                    mealDetails.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.imageUrl ? (
+                    input.imageUrl.map((i, index) => (
+                      <div key={index}>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.images ? (
+                    input.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    ""
+                  )} */}
                   <input
                     type="file"
                     accept="image/*"
                     name="image"
                     id="0"
+                    multiple="multiple"
                     onChange={getInputHandler}
                   />
-                  {/* <input
-                type="file"
-                accept="image/*"
-                id="image"
-                onChange={getInputHandler}
-              /> */}
                 </div>
                 <div>
                   <div>請描述飲食內容，越完整越好</div>
@@ -475,19 +827,92 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                 </label>
                 <div>
                   <div>照片記錄</div>
+                  {mealDetails &&
+                  mealDetails.images &&
+                  mealDetails.images.length > 0
+                    ? mealDetails.images.map((i, index) => (
+                        <div key={index}>
+                          <div id={index} onClick={removeImageHandler}>
+                            X
+                          </div>
+                          <a href={i} target="_blank">
+                            <img
+                              src={i}
+                              alt="customer"
+                              style={{ width: "200px", height: "200px" }}
+                            />
+                          </a>
+                        </div>
+                      ))
+                    : ""}
+                  {/* {mealDetails && mealDetails.images && input.imageUrl ? (
+                    <ShowImages
+                      mealDetails={mealDetails}
+                      input={input}
+                      removeImageHandler={removeImageHandler}
+                    />
+                  ) : mealDetails && mealDetails.images && !input.imageUrl ? (
+                    mealDetails.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.images && input.imageUrl ? (
+                    <ShowImages
+                      mealDetails={mealDetails}
+                      input={input}
+                      removeImageHandler={removeImageHandler}
+                    />
+                  ) : input.images && !input.imageUrl ? (
+                    input.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.imageUrl ? (
+                    input.imageUrl.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    ""
+                  )} */}
                   <input
                     type="file"
                     accept="image/*"
                     name="image"
                     id="0"
+                    multiple="multiple"
                     onChange={getInputHandler}
                   />
-                  {/* <input
-                type="file"
-                accept="image/*"
-                id="image"
-                onChange={getInputHandler}
-              /> */}
                 </div>
                 <div>
                   <div>請描述飲食內容，越完整越好</div>
@@ -540,19 +965,83 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                 </label>
                 <div>
                   <div>照片記錄</div>
+                  {mealDetails &&
+                  mealDetails.images &&
+                  mealDetails.images.length > 0
+                    ? mealDetails.images.map((i, index) => (
+                        <div key={index}>
+                          <div id={index} onClick={removeImageHandler}>
+                            X
+                          </div>
+                          <a href={i} target="_blank">
+                            <img
+                              src={i}
+                              alt="customer"
+                              style={{ width: "200px", height: "200px" }}
+                            />
+                          </a>
+                        </div>
+                      ))
+                    : ""}
+                  {/* {mealDetails && mealDetails.images && input.imageUrl ? (
+                    <ShowImages
+                      mealDetails={mealDetails}
+                      input={input}
+                      removeImageHandler={removeImageHandler}
+                    />
+                  ) : mealDetails && mealDetails.images && !input.imageUrl ? (
+                    mealDetails.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.imageUrl ? (
+                    input.imageUrl.map((i, index) => (
+                      <div key={index}>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.images ? (
+                    input.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    ""
+                  )} */}
                   <input
                     type="file"
                     accept="image/*"
                     name="image"
                     id="0"
+                    multiple="multiple"
                     onChange={getInputHandler}
                   />
-                  {/* <input
-                type="file"
-                accept="image/*"
-                id="image"
-                onChange={getInputHandler}
-              /> */}
                 </div>
                 <div>
                   <div>請描述飲食內容，越完整越好</div>
@@ -602,19 +1091,83 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                 </label>
                 <div>
                   <div>照片記錄</div>
+                  {mealDetails &&
+                  mealDetails.images &&
+                  mealDetails.images.length > 0
+                    ? mealDetails.images.map((i, index) => (
+                        <div key={index}>
+                          <div id={index} onClick={removeImageHandler}>
+                            X
+                          </div>
+                          <a href={i} target="_blank">
+                            <img
+                              src={i}
+                              alt="customer"
+                              style={{ width: "200px", height: "200px" }}
+                            />
+                          </a>
+                        </div>
+                      ))
+                    : ""}
+                  {/* {mealDetails && mealDetails.images && input.imageUrl ? (
+                    <ShowImages
+                      mealDetails={mealDetails}
+                      input={input}
+                      removeImageHandler={removeImageHandler}
+                    />
+                  ) : mealDetails && mealDetails.images && !input.imageUrl ? (
+                    mealDetails.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.imageUrl ? (
+                    input.imageUrl.map((i, index) => (
+                      <div key={index}>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : input.images ? (
+                    input.images.map((i, index) => (
+                      <div key={index}>
+                        <div id={index} onClick={removeImageHandler}>
+                          X
+                        </div>
+                        <a href={i} target="_blank">
+                          <img
+                            src={i}
+                            alt="customer"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    ""
+                  )} */}
                   <input
                     type="file"
                     accept="image/*"
                     name="image"
                     id="0"
+                    multiple="multiple"
                     onChange={getInputHandler}
                   />
-                  {/* <input
-                type="file"
-                accept="image/*"
-                id="image"
-                onChange={getInputHandler}
-              /> */}
                 </div>
                 <div>
                   <div>請描述飲食內容，越完整越好</div>
