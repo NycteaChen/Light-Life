@@ -1272,12 +1272,12 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
 
 function Analysis({ date, cID }) {
   const pathName = useLocation().pathname;
-  const [breakfast, setBreakfast] = useState("");
-  const [morning, setMorning] = useState("");
-  const [lunch, setLunch] = useState("");
-  const [afternoon, setAfternoon] = useState("");
-  const [dinner, setDinner] = useState("");
-  const [night, setNight] = useState("");
+  const [breakfast, setBreakfast] = useState({});
+  const [morning, setMorning] = useState({});
+  const [lunch, setLunch] = useState({});
+  const [afternoon, setAfternoon] = useState({});
+  const [dinner, setDinner] = useState({});
+  const [night, setNight] = useState({});
   const [dID, setDID] = useState("");
   const [advice, setAdvice] = useState("");
 
@@ -1302,35 +1302,39 @@ function Analysis({ date, cID }) {
           .doc(date)
           .get()
           .then((doc) => {
-            console.log(doc.data());
             if (doc.exists && doc.data()["advice"]) {
-              console.log(doc.data()["advice"]);
               setAdvice(doc.data()["advice"]);
             } else {
               setAdvice("");
             }
             if (doc.exists) {
               if (doc.data()["breakfast"]) {
+                calculator(doc.data()["breakfast"], setBreakfast);
               } else {
                 setBreakfast("");
               }
               if (doc.data()["morning-snack"]) {
+                calculator(doc.data()["morning-snack"]);
               } else {
                 setMorning("");
               }
               if (doc.data()["lunch"]) {
+                calculator(doc.data()["lunch"]);
               } else {
                 setLunch("");
               }
               if (doc.data()["afternoon-snack"]) {
+                calculator(doc.data()["afternoon-snack"]);
               } else {
                 setAfternoon("");
               }
               if (doc.data()["dinner"]) {
+                calculator(doc.data()["dinner"]);
               } else {
                 setDinner("");
               }
               if (doc.data()["night-snack"]) {
+                calculator(doc.data()["night-snack"]);
               } else {
                 setNight("");
               }
@@ -1357,22 +1361,24 @@ function Analysis({ date, cID }) {
             }
           });
       });
-    calculator();
   }, [date]);
-
-  const calculator = (target) => {
-    target.forEach((t) => {
-      console.log(t.item);
-      console.log(t.kcal);
-      console.log(t.protein);
-      console.log(t.lipid);
-      console.log(t.carbohydrate);
-      console.log(t.fiber);
-    });
-    console.log("test");
-  };
-
   console.log(breakfast);
+  const calculator = (target, setTotal) => {
+    const reducer = (acc, cur) => acc + cur;
+
+    const kcalTotal = target.map((i) => i.kcal).reduce(reducer);
+    const proteinTotal = target.map((i) => i.protein).reduce(reducer);
+    const lipidTotal = target.map((i) => i.lipid).reduce(reducer);
+    const carbohydrateTotal = target.map((i) => i.carbohydrate).reduce(reducer);
+    const fiberTotal = target.map((i) => i.fiber).reduce(reducer);
+    setTotal({
+      kcal: kcalTotal,
+      protein: proteinTotal,
+      lipid: lipidTotal,
+      carbohydrate: carbohydrateTotal,
+      fiber: fiberTotal,
+    });
+  };
 
   const tess = (e) => {
     console.log(e.target);
@@ -1396,26 +1402,51 @@ function Analysis({ date, cID }) {
           <tbody>
             <tr id="breakfast">
               <th>早餐</th>
-              <th>e</th>
-              <th>e</th>
-              <th>e</th>
-              <th>e</th>
-              <th>e</th>
+              <th>{breakfast.kcal ? breakfast.kcal : "-"}</th>
+              <th>{breakfast.protein ? breakfast.protein : "-"}</th>
+              <th>{breakfast.lipid ? breakfast.lipid : "-"}</th>
+              <th>{breakfast.carbohydrate ? breakfast.carbohydrate : "-"}</th>
+              <th>{breakfast.fiber ? breakfast.fiber : "-"}</th>
             </tr>
             <tr id="morning-snack">
               <th>早點</th>
+              <th>{morning.kcal ? morning.kcal : "-"}</th>
+              <th>{morning.protein ? morning.protein : "-"}</th>
+              <th>{morning.lipid ? morning.lipid : "-"}</th>
+              <th>{morning.carbohydrate ? morning.carbohydrate : "-"}</th>
+              <th>{morning.fiber ? morning.fiber : "-"}</th>
             </tr>
             <tr id="lunch">
               <th>午餐</th>
+              <th>{lunch.kcal ? lunch.kcal : "-"}</th>
+              <th>{lunch.protein ? lunch.protein : "-"}</th>
+              <th>{lunch.lipid ? lunch.lipid : "-"}</th>
+              <th>{lunch.carbohydrate ? lunch.carbohydrate : "-"}</th>
+              <th>{lunch.fiber ? lunch.fiber : "-"}</th>
             </tr>
             <tr id="afternoon-snack">
               <th>午點</th>
+              <th>{afternoon.kcal ? afternoon.kcal : "-"}</th>
+              <th>{afternoon.protein ? afternoon.protein : "-"}</th>
+              <th>{afternoon.lipid ? afternoon.lipid : "-"}</th>
+              <th>{afternoon.carbohydrate ? afternoon.carbohydrate : "-"}</th>
+              <th>{afternoon.fiber ? afternoon.fiber : "-"}</th>
             </tr>
             <tr id="dinner">
               <th>晚餐</th>
+              <th>{dinner.kcal ? dinner.kcal : "-"}</th>
+              <th>{dinner.protein ? dinner.protein : "-"}</th>
+              <th>{dinner.lipid ? dinner.lipid : "-"}</th>
+              <th>{dinner.carbohydrate ? dinner.carbohydrate : "-"}</th>
+              <th>{dinner.fiber ? dinner.fiber : "-"}</th>
             </tr>
             <tr id="night-snack">
               <th>晚點</th>
+              <th>{night.kcal ? night.kcal : "-"}</th>
+              <th>{night.protein ? night.protein : "-"}</th>
+              <th>{night.lipid ? night.lipid : "-"}</th>
+              <th>{night.carbohydrate ? night.carbohydrate : "-"}</th>
+              <th>{night.fiber ? night.fiber : "-"}</th>
             </tr>
             <tr id="table-total">
               <th>總和</th>
