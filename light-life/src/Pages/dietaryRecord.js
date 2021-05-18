@@ -10,15 +10,25 @@ import {
 } from "react-router-dom";
 import "firebase/firestore";
 
-function DietitianRecord() {
+function DietitianRecord({ date, isChecked, setIsChecked }) {
+  const params = useParams();
+  const dID = params.dID;
+  const cID = params.cID;
+  const getMealHandler = (e) => {
+    console.log(e.target.className);
+    console.log(e.target.id);
+  };
   return (
     <>
       <div id="dietitian-daily-diet">
-        <h2>今日飲食記錄</h2>
-        <div className="breakfast">
-          <div>
-            <span>早餐</span>
-            <button>儲存</button>
+        <h2>{date}飲食記錄</h2>
+        <div>
+          <div
+            className="customerBreakfast"
+            id="breakfast"
+            onClick={getMealHandler}
+          >
+            早餐
           </div>
           <div className="diet-record">
             <div>
@@ -33,89 +43,92 @@ function DietitianRecord() {
               <div>sample</div>
             </div>
           </div>
-          <table className="dietitian-record">
-            <thead>
-              <tr>
-                <th>品項</th>
-                <th>單位:100g</th>
-                <th>熱量</th>
-                <th>蛋白質</th>
-                <th>脂質</th>
-                <th>碳水化合物</th>
-                <th>膳食纖維</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>牛肉</th>
-                <th>
-                  <input type="number" min="0" defaultValue="0" />
-                </th>
-                <th>
-                  <input type="number" min="0" defaultValue="0" />
-                </th>
-                <th>
-                  <input type="number" min="0" defaultValue="0" />
-                </th>
-                <th>
-                  <input type="number" min="0" defaultValue="0" />
-                </th>
-                <th>
-                  <input type="number" min="0" defaultValue="0" />
-                </th>
-                <th>
-                  <input type="number" min="0" defaultValue="0" />
-                </th>
-              </tr>
-              <tr>
-                <th>
-                  <input type="text" placeholder="請輸入食材"></input>
-                </th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th>+</th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <div className="morning-snack">
           <div>
-            <span>早點</span>
+            <table className="dietitian-record">
+              <thead>
+                <tr>
+                  <th>品項</th>
+                  <th>單位:100g</th>
+                  <th>熱量</th>
+                  <th>蛋白質</th>
+                  <th>脂質</th>
+                  <th>碳水化合物</th>
+                  <th>膳食纖維</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>牛肉</th>
+                  <th>
+                    <input type="number" min="0" defaultValue="0" />
+                  </th>
+                  <th>0</th>
+                  <th>0</th>
+                  <th>0</th>
+                  <th>0</th>
+                  <th>0</th>
+                </tr>
+                <tr>
+                  <th>
+                    <input type="text" placeholder="請輸入食材"></input>
+                  </th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>+</th>
+                </tr>
+              </tfoot>
+            </table>
             <button>儲存</button>
           </div>
         </div>
-        <div className="lunch">
-          <div>
-            <span>午餐</span>
-            <button>儲存</button>
+        <div className="meal">
+          <div
+            className="customerMorning-snack"
+            id="morning-snack"
+            onClick={getMealHandler}
+          >
+            早點
           </div>
         </div>
-        <div className="afternoon-snack">
-          <div>
-            <span>午點</span>
-            <button>儲存</button>
+        <div className="meal">
+          <div className="customerLunch" id="lunch" onClick={getMealHandler}>
+            午餐
           </div>
         </div>
-        <div className="dinner">
-          <div>
-            <span>晚餐</span>
-            <button>儲存</button>
+        <div className="meal">
+          <div
+            className="customerAfternoon-snack "
+            id="afternoon-snack"
+            onClick={getMealHandler}
+          >
+            午點
           </div>
         </div>
-        <div className="night-snack">
-          <div>
-            <span>晚點</span>
-            <button>儲存</button>
+        <div className="meal">
+          <div className="customerDinner" id="dinner" onClick={getMealHandler}>
+            晚餐
           </div>
         </div>
+        <div className="meal">
+          <div
+            className="customerNight-snack "
+            id="night-snack"
+            onClick={getMealHandler}
+          >
+            晚點
+          </div>
+        </div>
+        <hr />
+        <Analsis date={date} dID={dID} cID={cID} />
+        <button>儲存</button>
       </div>
     </>
   );
@@ -130,7 +143,7 @@ function DietitianRecord() {
 //             <div id={index} onClick={removeImageHandler}>
 //               X
 //             </div>
-//             <a href={i} target="_blank">
+//             <a href={i} target="_blank" rel="noreferrer noopener">
 //               <img
 //                 src={i}
 //                 alt="customer"
@@ -141,7 +154,7 @@ function DietitianRecord() {
 //         ))}
 //         {input.imageUrl.map((i, index) => (
 //           <div key={index}>
-//             <a href={i} target="_blank">
+//             <a href={i} target="_blank" rel="noreferrer noopener">
 //               <img
 //                 src={i}
 //                 alt="customer"
@@ -160,7 +173,7 @@ function DietitianRecord() {
 //             <div id={index} onClick={removeImageHandler}>
 //               X
 //             </div>
-//             <a href={i} target="_blank">
+//             <a href={i} target="_blank" rel="noreferrer noopener">
 //               <img
 //                 src={i}
 //                 alt="customer"
@@ -171,7 +184,7 @@ function DietitianRecord() {
 //         ))}
 //         {input.imageUrl.map((i, index) => (
 //           <div key={index}>
-//             <a href={i} target="_blank">
+//             <a href={i} target="_blank" rel="noreferrer noopener">
 //               <img
 //                 src={i}
 //                 alt="customer"
@@ -192,6 +205,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
   const [dID, setDID] = useState();
   const [mealDetails, setMealDetails] = useState("");
   const [value, setValue] = useState("");
+  const [dateAnalysis, setDateAnalysis] = useState(false);
   // const [images, setImages] = useState([]);
   const cID = useParams().cID;
 
@@ -204,13 +218,12 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
       .then((doc) => {
         setDID(doc.data().dietitian);
       });
-    console.log("here");
-  }, [date]);
+  }, []);
 
   const getMealHandler = (e) => {
     setIsChecked(true);
     setMeal(e.target.className);
-
+    console.log(e.target.id);
     setInput("");
     // if (mealDetails.images) {
     //   setMealDetails({ images: mealDetails.images });
@@ -234,9 +247,16 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
         } else {
           setMealDetails("");
         }
+        if (doc.exists && doc.data()[e.target.id]) {
+          console.log(doc.data()[e.target.id]);
+          setDateAnalysis(doc.data()[e.target.id]);
+        } else {
+          console.log("no");
+          setDateAnalysis(false);
+        }
       });
   };
-
+  console.log(dateAnalysis);
   async function postImg(image) {
     if (image) {
       const storageRef = storage.ref(`${cID}/${date}/${meal}/` + image.name);
@@ -258,9 +278,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
       return "";
     }
   }
-  console.log(value);
   const getInputHandler = (e) => {
-    console.log(e.target);
     const { name } = e.target;
     if (name !== "image") {
       setInput({ ...input, [name]: e.target.value });
@@ -290,9 +308,6 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
       setValue("");
     }
   };
-
-  console.log(input);
-  console.log(mealDetails);
   const removeImageHandler = (e) => {
     setMealDetails({
       ...mealDetails,
@@ -395,8 +410,12 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
     <>
       <div id="dietitian-daily-diet">
         <h2>{date}飲食記錄</h2>
-        <div className="breakfast">
-          <div className="customerBreakfast" onClick={getMealHandler}>
+        <div className="meal">
+          <div
+            className="customerBreakfast"
+            id="breakfast"
+            onClick={getMealHandler}
+          >
             早餐
           </div>
           {meal === "customerBreakfast" && isChecked ? (
@@ -427,7 +446,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                           <div id={index} onClick={removeImageHandler}>
                             X
                           </div>
-                          <a href={i} target="_blank">
+                          <a href={i} target="_blank" rel="noreferrer noopener">
                             <img
                               src={i}
                               alt="customer"
@@ -449,7 +468,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -461,7 +480,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   ) : input.imageUrl ? (
                     input.imageUrl.map((i, index) => (
                       <div key={index}>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -476,7 +495,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -517,37 +536,47 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   儲存
                 </button>
               </div>
-              <table className="dietitian-record">
-                <thead>
-                  <tr>
-                    <th>品項</th>
-                    <th>單位:100g</th>
-                    <th>熱量</th>
-                    <th>蛋白質</th>
-                    <th>脂質</th>
-                    <th>碳水化合物</th>
-                    <th>膳食纖維</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th>牛肉</th>
-                    <th>0</th>
-                    <th>0</th>
-                    <th>0</th>
-                    <th>0</th>
-                    <th>0</th>
-                    <th>0</th>
-                  </tr>
-                </tbody>
-              </table>
+              {dateAnalysis ? (
+                <table className="dietitian-record">
+                  <thead>
+                    <tr>
+                      <th>品項</th>
+                      <th>單位:100g</th>
+                      <th>熱量</th>
+                      <th>蛋白質</th>
+                      <th>脂質</th>
+                      <th>碳水化合物</th>
+                      <th>膳食纖維</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dateAnalysis.map((a, index) => (
+                      <tr key={index} id={index}>
+                        <th>{a.item}</th>
+                        <th>{a.per}</th>
+                        <th>{a.kcal}</th>
+                        <th>{a.protein}</th>
+                        <th>{a.lipid}</th>
+                        <th>{a.carbohydrate}</th>
+                        <th>{a.fiber}</th>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
           )}
         </div>
-        <div className="morning-snack">
-          <div className="customerMorning-snack" onClick={getMealHandler}>
+        <div className="meal">
+          <div
+            className="customerMorning-snack"
+            id="morning-snack"
+            onClick={getMealHandler}
+          >
             早點
           </div>
           {meal === "customerMorning-snack" && isChecked ? (
@@ -579,7 +608,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                           <div id={index} onClick={removeImageHandler}>
                             X
                           </div>
-                          <a href={i} target="_blank">
+                          <a href={i} target="_blank" rel="noreferrer noopener">
                             <img
                               src={i}
                               alt="customer"
@@ -601,7 +630,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -613,7 +642,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   ) : input.imageUrl ? (
                     input.imageUrl.map((i, index) => (
                       <div key={index}>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -628,7 +657,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -671,13 +700,41 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   儲存
                 </button>
               </div>
+              {dateAnalysis ? (
+                <table className="dietitian-record">
+                  <thead>
+                    <tr>
+                      <th>品項</th>
+                      <th>單位:100g</th>
+                      <th>熱量</th>
+                      <th>蛋白質</th>
+                      <th>脂質</th>
+                      <th>碳水化合物</th>
+                      <th>膳食纖維</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>牛肉</th>
+                      <th>0</th>
+                      <th>0</th>
+                      <th>0</th>
+                      <th>0</th>
+                      <th>0</th>
+                      <th>0</th>
+                    </tr>
+                  </tbody>
+                </table>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
           )}
         </div>
-        <div className="lunch">
-          <div className="customerLunch" onClick={getMealHandler}>
+        <div className="meal">
+          <div className="customerLunch" id="lunch" onClick={getMealHandler}>
             午餐
           </div>
           {meal === "customerLunch" && isChecked ? (
@@ -709,7 +766,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                           <div id={index} onClick={removeImageHandler}>
                             X
                           </div>
-                          <a href={i} target="_blank">
+                          <a href={i} target="_blank" rel="noreferrer noopener">
                             <img
                               src={i}
                               alt="customer"
@@ -731,7 +788,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -743,7 +800,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   ) : input.imageUrl ? (
                     input.imageUrl.map((i, index) => (
                       <div key={index}>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -758,7 +815,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -803,8 +860,12 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
             ""
           )}
         </div>
-        <div className="afternoon-snack">
-          <div className="customerAfternoon-snack" onClick={getMealHandler}>
+        <div className="meal">
+          <div
+            className="customerAfternoon-snack"
+            id="afternoon-snack"
+            onClick={getMealHandler}
+          >
             午點
           </div>
           {meal === "customerAfternoon-snack" && isChecked ? (
@@ -835,7 +896,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                           <div id={index} onClick={removeImageHandler}>
                             X
                           </div>
-                          <a href={i} target="_blank">
+                          <a href={i} target="_blank" rel="noreferrer noopener">
                             <img
                               src={i}
                               alt="customer"
@@ -857,7 +918,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -878,7 +939,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -893,7 +954,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -941,8 +1002,8 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
             ""
           )}
         </div>
-        <div className="dinner">
-          <div className="customerDinner" onClick={getMealHandler}>
+        <div className="meal">
+          <div className="customerDinner" id="dinner" onClick={getMealHandler}>
             晚餐
           </div>
           {meal === "customerDinner" && isChecked ? (
@@ -973,7 +1034,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                           <div id={index} onClick={removeImageHandler}>
                             X
                           </div>
-                          <a href={i} target="_blank">
+                          <a href={i} target="_blank" rel="noreferrer noopener">
                             <img
                               src={i}
                               alt="customer"
@@ -995,7 +1056,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -1007,7 +1068,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   ) : input.imageUrl ? (
                     input.imageUrl.map((i, index) => (
                       <div key={index}>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -1022,7 +1083,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -1067,8 +1128,12 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
             ""
           )}
         </div>
-        <div className="night-snack">
-          <div className="customerNight-snack" onClick={getMealHandler}>
+        <div className="meal">
+          <div
+            className="customerNight-snack"
+            id="night-snack"
+            onClick={getMealHandler}
+          >
             晚點
           </div>
           {meal === "customerNight-snack" && isChecked ? (
@@ -1099,7 +1164,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                           <div id={index} onClick={removeImageHandler}>
                             X
                           </div>
-                          <a href={i} target="_blank">
+                          <a href={i} target="_blank" rel="noreferrer noopener">
                             <img
                               src={i}
                               alt="customer"
@@ -1121,7 +1186,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -1133,7 +1198,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   ) : input.imageUrl ? (
                     input.imageUrl.map((i, index) => (
                       <div key={index}>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -1148,7 +1213,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                         <div id={index} onClick={removeImageHandler}>
                           X
                         </div>
-                        <a href={i} target="_blank">
+                        <a href={i} target="_blank" rel="noreferrer noopener">
                           <img
                             src={i}
                             alt="customer"
@@ -1196,18 +1261,50 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
             ""
           )}
         </div>
+
+        <hr />
+        <Analsis date={date} dID={dID} cID={cID} />
+        <hr />
       </div>
     </>
   );
 }
 
-function Analsis() {
+function Analsis({ date, dID, cID }) {
   const pathName = useLocation().pathname;
+  const [breakFast, setBreakFast] = useState("");
+  const [advice, setAdvice] = useState("");
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dID)
+      .collection("customers")
+      .doc(cID)
+      .collection("diet")
+      .doc(date)
+      .get()
+      .then((doc) => {
+        if (doc.exists && doc.data().advice) {
+          setAdvice(doc.data().advice);
+        } else {
+          setAdvice("");
+        }
+        if (doc.exists && doc.data()["breakfast"]) {
+          console.log(doc.data()["breakfast"]);
+        } else {
+          console.log("not added yet");
+        }
+      });
+  });
+  const tess = (e) => {
+    console.log(e.target);
+  };
 
   return (
     <>
       <div id="diet-analysis">
-        <h2>今日飲食分析</h2>
+        <h2>{date}飲食分析</h2>
         <table>
           <thead>
             <tr id="table-title">
@@ -1222,72 +1319,35 @@ function Analsis() {
           <tbody>
             <tr id="breakfast">
               <th>早餐</th>
-              <th className="calories"></th>
-              <th className="protein"></th>
-              <th className="fat"></th>
-              <th className="carbohydrate"></th>
-              <th className="dietary-fiber"></th>
+              <th>e</th>
+              <th>e</th>
+              <th>e</th>
+              <th>e</th>
+              <th>e</th>
             </tr>
             <tr id="morning-snack">
               <th>早點</th>
-              <th className="calories"></th>
-              <th className="protein"></th>
-              <th className="fat"></th>
-              <th className="carbohydrate"></th>
-              <th className="dietary-fiber"></th>
             </tr>
             <tr id="lunch">
               <th>午餐</th>
-              <th className="calories"></th>
-              <th className="protein"></th>
-              <th className="fat"></th>
-              <th className="carbohydrate"></th>
-              <th className="dietary-fiber"></th>
             </tr>
             <tr id="afternoon-snack">
               <th>午點</th>
-              <th className="calories"></th>
-              <th className="protein"></th>
-              <th className="fat"></th>
-              <th className="carbohydrate"></th>
-              <th className="dietary-fiber"></th>
             </tr>
             <tr id="dinner">
               <th>晚餐</th>
-              <th className="calories"></th>
-              <th className="protein"></th>
-              <th className="fat"></th>
-              <th className="carbohydrate"></th>
-              <th className="dietary-fiber"></th>
             </tr>
             <tr id="night-snack">
               <th>晚點</th>
-              <th className="calories"></th>
-              <th className="protein"></th>
-              <th className="fat"></th>
-              <th className="carbohydrate"></th>
-              <th className="dietary-fiber"></th>
             </tr>
             <tr id="table-total">
               <th>總和</th>
-              <th className="total-calories"></th>
-              <th className="total-protein"></th>
-              <th className="total-fat"></th>
-              <th className="total-carbohydrate"></th>
             </tr>
             <tr id="target">
               <th>目標</th>
-              <th className="target-calories"></th>
-              <th className="target-protein"></th>
-              <th className="target-fat"></th>
-              <th className="target-carbohydrate"></th>
             </tr>
             <tr id="resr">
               <th>剩餘</th>
-              <th className="rest-calories"></th>
-              <th className="rest-protein"></th>
-              <th className="rest-fat"></th>
-              <th className="rest-carbohydrate"></th>
             </tr>
           </tbody>
         </table>
@@ -1295,13 +1355,13 @@ function Analsis() {
           <div>
             <label>
               給予建議
-              <input type="textarea" />
+              <input type="textarea" value={advice} />
             </label>
           </div>
         ) : (
           <div>
             <div>營養師建議</div>
-            <div id="advice"></div>
+            <div id="advice">{advice}</div>
           </div>
         )}
       </div>
@@ -1336,15 +1396,19 @@ function RenderDietaryRecord() {
           <Link
             to={`/dietitian/${params.dID}/customer/${params.cID}/dietary/`}
           ></Link>
-          <Switch>
-            <Route exact path={`/dietitian/:dID/customer/:cID/dietary/`}>
-              <DietitianRecord />
-              <hr />
-              <Analsis />
-              <hr />
-              <button>儲存</button>
-            </Route>
-          </Switch>
+          {getRecord ? (
+            <Switch>
+              <Route exact path={`/dietitian/:dID/customer/:cID/dietary/`}>
+                <DietitianRecord
+                  date={recordDate}
+                  isChecked={isChecked}
+                  setIsChecked={setIsChecked}
+                />
+              </Route>
+            </Switch>
+          ) : (
+            ""
+          )}
         </Router>
       </>
     );
@@ -1367,9 +1431,6 @@ function RenderDietaryRecord() {
                   isChecked={isChecked}
                   setIsChecked={setIsChecked}
                 />
-                <hr />
-                <Analsis />
-                <hr />
               </Route>
             </Switch>
           ) : (
