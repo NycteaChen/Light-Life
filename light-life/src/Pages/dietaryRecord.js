@@ -119,7 +119,7 @@ function DietitianRecord({ date, isChecked, setIsChecked }) {
         </div>
         <div className="meal">
           <div
-            className="customerNight-snack "
+            className="customerNight-snack"
             id="night-snack"
             onClick={getMealHandler}
           >
@@ -542,11 +542,11 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                     <tr>
                       <th>品項</th>
                       <th>單位:100g</th>
-                      <th>熱量</th>
-                      <th>蛋白質</th>
-                      <th>脂質</th>
-                      <th>碳水化合物</th>
-                      <th>膳食纖維</th>
+                      <th>熱量(kcal)</th>
+                      <th>蛋白質(g)</th>
+                      <th>脂質(g)</th>
+                      <th>碳水化合物(g)</th>
+                      <th>膳食纖維(g)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -706,11 +706,11 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                     <tr>
                       <th>品項</th>
                       <th>單位:100g</th>
-                      <th>熱量</th>
-                      <th>蛋白質</th>
-                      <th>脂質</th>
-                      <th>碳水化合物</th>
-                      <th>膳食纖維</th>
+                      <th>熱量(kcal)</th>
+                      <th>蛋白質(g)</th>
+                      <th>脂質(g)</th>
+                      <th>碳水化合物(g)</th>
+                      <th>膳食纖維(g)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1123,6 +1123,36 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   儲存
                 </button>
               </div>
+              {dateAnalysis ? (
+                <table className="dietitian-record">
+                  <thead>
+                    <tr>
+                      <th>品項</th>
+                      <th>單位:100g</th>
+                      <th>熱量(kcal)</th>
+                      <th>蛋白質(g)</th>
+                      <th>脂質(g)</th>
+                      <th>碳水化合物(g)</th>
+                      <th>膳食纖維(g)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dateAnalysis.map((a, index) => (
+                      <tr key={index} id={index}>
+                        <th>{a.item}</th>
+                        <th>{a.per}</th>
+                        <th>{a.kcal}</th>
+                        <th>{a.protein}</th>
+                        <th>{a.lipid}</th>
+                        <th>{a.carbohydrate}</th>
+                        <th>{a.fiber}</th>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
@@ -1256,6 +1286,36 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   儲存
                 </button>
               </div>
+              {dateAnalysis ? (
+                <table className="dietitian-record">
+                  <thead>
+                    <tr>
+                      <th>品項</th>
+                      <th>單位:100g</th>
+                      <th>熱量(kcal)</th>
+                      <th>蛋白質(g)</th>
+                      <th>脂質(g)</th>
+                      <th>碳水化合物(g)</th>
+                      <th>膳食纖維(g)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dateAnalysis.map((a, index) => (
+                      <tr key={index} id={index}>
+                        <th>{a.item}</th>
+                        <th>{a.per}</th>
+                        <th>{a.kcal}</th>
+                        <th>{a.protein}</th>
+                        <th>{a.lipid}</th>
+                        <th>{a.carbohydrate}</th>
+                        <th>{a.fiber}</th>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
@@ -1308,62 +1368,26 @@ function Analysis({ date, cID }) {
               setAdvice("");
             }
             if (doc.exists) {
-              if (doc.data()["breakfast"]) {
-                calculator(doc.data()["breakfast"], setBreakfast);
-              } else {
-                setBreakfast("");
-              }
-              if (doc.data()["morning-snack"]) {
-                calculator(doc.data()["morning-snack"]);
-              } else {
-                setMorning("");
-              }
-              if (doc.data()["lunch"]) {
-                calculator(doc.data()["lunch"]);
-              } else {
-                setLunch("");
-              }
-              if (doc.data()["afternoon-snack"]) {
-                calculator(doc.data()["afternoon-snack"]);
-              } else {
-                setAfternoon("");
-              }
-              if (doc.data()["dinner"]) {
-                calculator(doc.data()["dinner"]);
-              } else {
-                setDinner("");
-              }
-              if (doc.data()["night-snack"]) {
-                calculator(doc.data()["night-snack"]);
-              } else {
-                setNight("");
-              }
-              // doc.data()["breakfast"]
-              //   ? setBreakfast(doc.data()["breakfast"])
-              //   : setBreakfast("");
-              // doc.data()["morning-snack"]
-              //   ? setMorning(doc.data()["morning-snack"])
-              //   : setMorning("");
-              // doc.data()["lunch"]
-              //   ? setLunch(doc.data()["lunch"])
-              //   : setLunch("");
-              // doc.data()["afternoon-snack"]
-              //   ? setAfternoon(doc.data()["afternoon-snack"])
-              //   : setAfternoon("");
-              // doc.data()["dinner"]
-              //   ? setDinner(doc.data()["dinner"])
-              //   : setDinner("");
-              // doc.data()["night-snack"]
-              //   ? setNight(doc.data()["night-snack"])
-              //   : setNight("");
+              getMealAnalysis(doc.data()["breakfast"], setBreakfast);
+              getMealAnalysis(doc.data()["morning-snack"], setMorning);
+              getMealAnalysis(doc.data()["lunch"], setLunch);
+              getMealAnalysis(doc.data()["afternoon-snack"], setAfternoon);
+              getMealAnalysis(doc.data()["dinner"], setDinner);
+              getMealAnalysis(doc.data()["night-snack"], setNight);
             } else {
               console.log("not added yet");
+              setBreakfast("");
+              setMorning("");
+              setLunch("");
+              setAfternoon("");
+              setDinner("");
+              setNight("");
             }
           });
       });
   }, [date]);
-  console.log(breakfast);
-  const calculator = (target, setTotal) => {
+
+  const calculator = (target, setMealNutrients) => {
     const reducer = (acc, cur) => acc + cur;
 
     const kcalTotal = target.map((i) => i.kcal).reduce(reducer);
@@ -1371,7 +1395,7 @@ function Analysis({ date, cID }) {
     const lipidTotal = target.map((i) => i.lipid).reduce(reducer);
     const carbohydrateTotal = target.map((i) => i.carbohydrate).reduce(reducer);
     const fiberTotal = target.map((i) => i.fiber).reduce(reducer);
-    setTotal({
+    setMealNutrients({
       kcal: kcalTotal,
       protein: proteinTotal,
       lipid: lipidTotal,
@@ -1380,8 +1404,28 @@ function Analysis({ date, cID }) {
     });
   };
 
-  const tess = (e) => {
-    console.log(e.target);
+  const getMealAnalysis = (data, setTotal) => {
+    if (data) {
+      calculator(data, setTotal);
+    } else {
+      setTotal("");
+    }
+  };
+
+  const getNutrientTotal = (item) => {
+    const nutritiendArray = [];
+    nutritiendArray.push(
+      breakfast[item],
+      morning[item],
+      lunch[item],
+      afternoon[item],
+      dinner[item],
+      night[item]
+    );
+
+    return nutritiendArray
+      .filter((i) => typeof i === "number")
+      .reduce((acc, cur) => acc + cur, 0);
   };
 
   return (
@@ -1450,13 +1494,32 @@ function Analysis({ date, cID }) {
             </tr>
             <tr id="table-total">
               <th>總和</th>
+              <th>
+                {getNutrientTotal("kcal") ? getNutrientTotal("kcal") : "-"}
+              </th>
+              <th>
+                {getNutrientTotal("protein")
+                  ? getNutrientTotal("protein")
+                  : "-"}
+              </th>
+              <th>
+                {getNutrientTotal("lipid") ? getNutrientTotal("lipid") : "-"}
+              </th>
+              <th>
+                {getNutrientTotal("carbohydrate")
+                  ? getNutrientTotal("carbohydrate")
+                  : "-"}
+              </th>
+              <th>
+                {getNutrientTotal("fiber") ? getNutrientTotal("fiber") : "-"}
+              </th>
             </tr>
-            <tr id="target">
+            {/* <tr id="target">
               <th>目標</th>
             </tr>
             <tr id="resr">
               <th>剩餘</th>
-            </tr>
+            </tr> */}
           </tbody>
         </table>
         {pathName.includes("dietitian") ? (
