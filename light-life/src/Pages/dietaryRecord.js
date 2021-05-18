@@ -9,15 +9,131 @@ import {
   useParams,
 } from "react-router-dom";
 import "firebase/firestore";
+import { setDate } from "date-fns";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-function DietitianRecord({ date, isChecked, setIsChecked }) {
+function DietitianRecord({ date, count, setCount }) {
   const params = useParams();
+  const [meal, setMeal] = useState([]);
+  const [mealDetails, setMealDetails] = useState("");
+  const [input, setInput] = useState({});
   const dID = params.dID;
   const cID = params.cID;
+  const [dataAnalysis, setDataAnalysis] = useState(false);
+
   const getMealHandler = (e) => {
-    console.log(e.target.className);
-    console.log(e.target.id);
+    if (meal[0] !== e.target.className) {
+      setCount(2);
+    } else {
+      setCount(count + 1);
+    }
+    setMeal([e.target.className, e.target.id]);
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dID)
+      .collection("customers")
+      .doc(cID)
+      .collection("diet")
+      .doc(date)
+      .get()
+      .then((doc) => {
+        if (doc.exists && doc.data()[e.target.className]) {
+          setMealDetails(doc.data()[e.target.className]);
+        } else {
+          setMealDetails("");
+        }
+        if (doc.exists && doc.data()[e.target.id]) {
+          console.log(doc.data()[e.target.id]);
+          setDataAnalysis(doc.data()[e.target.id]);
+        } else {
+          console.log("no");
+          setDataAnalysis(false);
+        }
+      });
   };
+
+  const getInputHandler = (e) => {
+    const { name } = e.target;
+    console.log(e.target);
+    if (name === "per") {
+      setInput({
+        ...input,
+        [name]: parseFloat(e.target.value),
+        kcal: 0,
+        protein: 0,
+        fiber: 0,
+        carbohydrate: 0,
+        lipid: 0,
+      });
+    } else {
+      setInput({
+        ...input,
+        [name]: e.target.value,
+        kcal: 0,
+        protein: 0,
+        fiber: 0,
+        carbohydrate: 0,
+        lipid: 0,
+      });
+    }
+  };
+  console.log(input);
+
+  console.log(dataAnalysis);
+  const addNewFoodTable = () => {
+    if (input.item === "" || !input.item) {
+      alert("請填入食材");
+      return;
+    } else if (input.per === "0" || !input.per) {
+      alert("請填入單位數");
+    } else {
+      console.log("OK");
+      firebase
+        .firestore()
+        .collection("dietitians")
+        .doc(dID)
+        .collection("customers")
+        .doc(cID)
+        .collection("diet")
+        .doc(date)
+        .set(
+          {
+            [meal[1]]: [...dataAnalysis, input],
+          },
+          { merge: true }
+        );
+
+      setDataAnalysis([...dataAnalysis, input]);
+      setInput({});
+    }
+  };
+
+  const removeItemHandler = (e) => {
+    setDataAnalysis([
+      ...dataAnalysis.filter((d, index) => index != e.target.id),
+    ]);
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dID)
+      .collection("customers")
+      .doc(cID)
+      .collection("diet")
+      .doc(date)
+      .set(
+        {
+          [meal[1]]: [
+            ...dataAnalysis.filter((d, index) => index != e.target.id),
+          ],
+        },
+        { merge: true }
+      );
+  };
+
+  console.log(dataAnalysis);
+
   return (
     <>
       <div id="dietitian-daily-diet">
@@ -30,65 +146,108 @@ function DietitianRecord({ date, isChecked, setIsChecked }) {
           >
             早餐
           </div>
-          <div className="diet-record">
-            <div>
-              進食時間 <span id="eat-time"></span>
-            </div>
-            <div>
-              <div>照片記錄</div>
-              <img src="" style={{ width: "200px" }} alt="meal" />
-            </div>
-            <div>
-              <div>飲食內容</div>
-              <div>sample</div>
-            </div>
-          </div>
-          <div>
-            <table className="dietitian-record">
-              <thead>
-                <tr>
-                  <th>品項</th>
-                  <th>單位:100g</th>
-                  <th>熱量</th>
-                  <th>蛋白質</th>
-                  <th>脂質</th>
-                  <th>碳水化合物</th>
-                  <th>膳食纖維</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>牛肉</th>
-                  <th>
-                    <input type="number" min="0" defaultValue="0" />
-                  </th>
-                  <th>0</th>
-                  <th>0</th>
-                  <th>0</th>
-                  <th>0</th>
-                  <th>0</th>
-                </tr>
-                <tr>
-                  <th>
-                    <input type="text" placeholder="請輸入食材"></input>
-                  </th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>+</th>
-                </tr>
-              </tfoot>
-            </table>
-            <button>儲存</button>
-          </div>
+          {meal[0] === "customerBreakfast" && count % 2 === 0 ? (
+            <>
+              <div className="diet-record">
+                <div>
+                  進食時間{" "}
+                  <span id="eat-time">{mealDetails.eatTime || ""}</span>
+                </div>
+                <div>
+                  <div>照片記錄</div>
+                  {mealDetails &&
+                  mealDetails.images &&
+                  mealDetails.images.length > 0
+                    ? mealDetails.images.map((i, index) => (
+                        <div key={index}>
+                          <a href={i} target="_blank" rel="noreferrer noopener">
+                            <img
+                              src={i}
+                              alt="customer"
+                              style={{ width: "200px", height: "200px" }}
+                            />
+                          </a>
+                        </div>
+                      ))
+                    : ""}
+                </div>
+                <div>
+                  <div>飲食內容</div>
+                  <div>{mealDetails.description || ""}</div>
+                </div>
+              </div>
+              <div>
+                <table className="dietitian-record">
+                  <thead>
+                    <tr>
+                      <th>品項</th>
+                      <th>單位:100g</th>
+                      <th>熱量(kcal)</th>
+                      <th>蛋白質(g)</th>
+                      <th>脂質(g)</th>
+                      <th>碳水化合物(g)</th>
+                      <th>膳食纖維(g)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dataAnalysis
+                      ? dataAnalysis.map((a, index) => (
+                          <tr key={index}>
+                            <th>{a.item}</th>
+                            <th>{a.per}</th>
+                            <th>{a.kcal}</th>
+                            <th>{a.protein}</th>
+                            <th>{a.lipid}</th>
+                            <th>{a.carbohydrate}</th>
+                            <th>{a.fiber}</th>
+                            <th id={index} onClick={removeItemHandler}>
+                              x
+                            </th>
+                          </tr>
+                        ))
+                      : null}
+                    <tr>
+                      <th>
+                        <input
+                          type="text"
+                          name="item"
+                          value={input.item ? input.item : ""}
+                          placeholder="請輸入食材"
+                          style={{ width: "120px" }}
+                          onChange={getInputHandler}
+                        />
+                      </th>
+                      <th>
+                        <input
+                          type="number"
+                          name="per"
+                          value={input.per ? input.per : "0"}
+                          min="0"
+                          onChange={getInputHandler}
+                          style={{ width: "50px" }}
+                        />
+                      </th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th onClick={addNewFoodTable}>+</th>
+                    </tr>
+                  </tfoot>
+                </table>
+                <button>儲存</button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
+
         <div className="meal">
           <div
             className="customerMorning-snack"
@@ -97,6 +256,111 @@ function DietitianRecord({ date, isChecked, setIsChecked }) {
           >
             早點
           </div>
+          {meal[0] === "customerMorning-snack" && count % 2 === 0 ? (
+            <>
+              <div className="diet-record">
+                <div>
+                  進食時間{" "}
+                  <span id="eat-time">{mealDetails.eatTime || ""}</span>
+                </div>
+                <div>
+                  <div>照片記錄</div>
+                  {mealDetails &&
+                  mealDetails.images &&
+                  mealDetails.images.length > 0
+                    ? mealDetails.images.map((i, index) => (
+                        <div key={index}>
+                          <a href={i} target="_blank" rel="noreferrer noopener">
+                            <img
+                              src={i}
+                              alt="customer"
+                              style={{ width: "200px", height: "200px" }}
+                            />
+                          </a>
+                        </div>
+                      ))
+                    : ""}
+                </div>
+                <div>
+                  <div>飲食內容</div>
+                  <div>{mealDetails.description || ""}</div>
+                </div>
+              </div>
+              <div>
+                <table className="dietitian-record">
+                  <thead>
+                    <tr>
+                      <th>品項</th>
+                      <th>單位:100g</th>
+                      <th>熱量(kcal)</th>
+                      <th>蛋白質(g)</th>
+                      <th>脂質(g)</th>
+                      <th>碳水化合物(g)</th>
+                      <th>膳食纖維(g)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dataAnalysis
+                      ? dataAnalysis.map((a, index) => (
+                          <tr key={index}>
+                            <th>{a.item}</th>
+                            <th>{a.per}</th>
+                            <th>{a.kcal}</th>
+                            <th>{a.protein}</th>
+                            <th>{a.lipid}</th>
+                            <th>{a.carbohydrate}</th>
+                            <th>{a.fiber}</th>
+                            <th id={index} onClick={removeItemHandler}>
+                              x
+                            </th>
+                          </tr>
+                        ))
+                      : null}
+                    <tr>
+                      <th>
+                        <input
+                          type="text"
+                          name="item"
+                          placeholder="請輸入食材"
+                          style={{ width: "120px" }}
+                          onChange={getInputHandler}
+                        />
+                      </th>
+                      <th>
+                        <input
+                          type="number"
+                          name="per"
+                          placeholder="0"
+                          min="0"
+                          onChange={getInputHandler}
+                          style={{ width: "50px" }}
+                        />
+                      </th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th
+                        id={dataAnalysis ? dataAnalysis.length : "0"}
+                        onClick={removeItemHandler}
+                      >
+                        x
+                      </th>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th>+</th>
+                    </tr>
+                  </tfoot>
+                </table>
+                <button>儲存</button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
         <div className="meal">
           <div className="customerLunch" id="lunch" onClick={getMealHandler}>
@@ -128,7 +392,6 @@ function DietitianRecord({ date, isChecked, setIsChecked }) {
         </div>
         <hr />
         <Analysis date={date} dID={dID} cID={cID} />
-        <button>儲存</button>
       </div>
     </>
   );
@@ -198,14 +461,15 @@ function DietitianRecord({ date, isChecked, setIsChecked }) {
 //   }
 // }
 
-function CustomerRecord({ date, isChecked, setIsChecked }) {
+function CustomerRecord({ date, count, setCount }) {
   const storage = firebase.storage();
   const [input, setInput] = useState("");
   const [meal, setMeal] = useState("");
   const [dID, setDID] = useState();
   const [mealDetails, setMealDetails] = useState("");
   const [value, setValue] = useState("");
-  const [dateAnalysis, setDateAnalysis] = useState(false);
+  const [dataAnalysis, setDataAnalysis] = useState(false);
+
   // const [images, setImages] = useState([]);
   const cID = useParams().cID;
 
@@ -218,10 +482,14 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
       .then((doc) => {
         setDID(doc.data().dietitian);
       });
-  }, []);
+  }, [date]);
 
   const getMealHandler = (e) => {
-    setIsChecked(true);
+    if (meal !== e.target.className) {
+      setCount(2);
+    } else {
+      setCount(count + 1);
+    }
     setMeal(e.target.className);
     console.log(e.target.id);
     setInput("");
@@ -249,14 +517,14 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
         }
         if (doc.exists && doc.data()[e.target.id]) {
           console.log(doc.data()[e.target.id]);
-          setDateAnalysis(doc.data()[e.target.id]);
+          setDataAnalysis(doc.data()[e.target.id]);
         } else {
           console.log("no");
-          setDateAnalysis(false);
+          setDataAnalysis(false);
         }
       });
   };
-  console.log(dateAnalysis);
+  console.log(dataAnalysis);
   async function postImg(image) {
     if (image) {
       const storageRef = storage.ref(`${cID}/${date}/${meal}/` + image.name);
@@ -418,7 +686,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
           >
             早餐
           </div>
-          {meal === "customerBreakfast" && isChecked ? (
+          {meal === "customerBreakfast" && count % 2 === 0 ? (
             <>
               <div className="diet-record">
                 <label>
@@ -536,7 +804,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   儲存
                 </button>
               </div>
-              {dateAnalysis ? (
+              {dataAnalysis ? (
                 <table className="dietitian-record">
                   <thead>
                     <tr>
@@ -550,7 +818,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {dateAnalysis.map((a, index) => (
+                    {dataAnalysis.map((a, index) => (
                       <tr key={index} id={index}>
                         <th>{a.item}</th>
                         <th>{a.per}</th>
@@ -579,7 +847,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
           >
             早點
           </div>
-          {meal === "customerMorning-snack" && isChecked ? (
+          {meal === "customerMorning-snack" && count % 2 === 0 ? (
             <>
               {" "}
               <div className="diet-record">
@@ -700,7 +968,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   儲存
                 </button>
               </div>
-              {dateAnalysis ? (
+              {dataAnalysis ? (
                 <table className="dietitian-record">
                   <thead>
                     <tr>
@@ -737,7 +1005,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
           <div className="customerLunch" id="lunch" onClick={getMealHandler}>
             午餐
           </div>
-          {meal === "customerLunch" && isChecked ? (
+          {meal === "customerLunch" && count % 2 === 0 ? (
             <>
               {" "}
               <div className="diet-record">
@@ -868,7 +1136,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
           >
             午點
           </div>
-          {meal === "customerAfternoon-snack" && isChecked ? (
+          {meal === "customerAfternoon-snack" && count % 2 === 0 ? (
             <>
               <div className="diet-record">
                 <label>
@@ -1006,7 +1274,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
           <div className="customerDinner" id="dinner" onClick={getMealHandler}>
             晚餐
           </div>
-          {meal === "customerDinner" && isChecked ? (
+          {meal === "customerDinner" && count % 2 === 0 ? (
             <>
               <div className="diet-record">
                 <label>
@@ -1123,7 +1391,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   儲存
                 </button>
               </div>
-              {dateAnalysis ? (
+              {dataAnalysis ? (
                 <table className="dietitian-record">
                   <thead>
                     <tr>
@@ -1137,7 +1405,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {dateAnalysis.map((a, index) => (
+                    {dataAnalysis.map((a, index) => (
                       <tr key={index} id={index}>
                         <th>{a.item}</th>
                         <th>{a.per}</th>
@@ -1166,7 +1434,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
           >
             晚點
           </div>
-          {meal === "customerNight-snack" && isChecked ? (
+          {meal === "customerNight-snack" && count % 2 === 0 ? (
             <>
               <div className="diet-record">
                 <label>
@@ -1286,7 +1554,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                   儲存
                 </button>
               </div>
-              {dateAnalysis ? (
+              {dataAnalysis ? (
                 <table className="dietitian-record">
                   <thead>
                     <tr>
@@ -1300,7 +1568,7 @@ function CustomerRecord({ date, isChecked, setIsChecked }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {dateAnalysis.map((a, index) => (
+                    {dataAnalysis.map((a, index) => (
                       <tr key={index} id={index}>
                         <th>{a.item}</th>
                         <th>{a.per}</th>
@@ -1404,11 +1672,11 @@ function Analysis({ date, cID }) {
     });
   };
 
-  const getMealAnalysis = (data, setTotal) => {
+  const getMealAnalysis = (data, setMealNutrients) => {
     if (data) {
-      calculator(data, setTotal);
+      calculator(data, setMealNutrients);
     } else {
-      setTotal("");
+      setMealNutrients("");
     }
   };
 
@@ -1426,6 +1694,24 @@ function Analysis({ date, cID }) {
     return nutritiendArray
       .filter((i) => typeof i === "number")
       .reduce((acc, cur) => acc + cur, 0);
+  };
+
+  const bindAdviceHandler = (e) => {
+    setAdvice(e.target.value);
+  };
+
+  const bindSaveAdviceHandler = () => {
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dID)
+      .collection("customers")
+      .doc(cID)
+      .collection("diet")
+      .doc(date)
+      .update({
+        advice: advice,
+      });
   };
 
   return (
@@ -1494,25 +1780,15 @@ function Analysis({ date, cID }) {
             </tr>
             <tr id="table-total">
               <th>總和</th>
-              <th>
-                {getNutrientTotal("kcal") ? getNutrientTotal("kcal") : "-"}
-              </th>
+              <th>{getNutrientTotal("kcal") || "-"}</th>
               <th>
                 {getNutrientTotal("protein")
                   ? getNutrientTotal("protein")
                   : "-"}
               </th>
-              <th>
-                {getNutrientTotal("lipid") ? getNutrientTotal("lipid") : "-"}
-              </th>
-              <th>
-                {getNutrientTotal("carbohydrate")
-                  ? getNutrientTotal("carbohydrate")
-                  : "-"}
-              </th>
-              <th>
-                {getNutrientTotal("fiber") ? getNutrientTotal("fiber") : "-"}
-              </th>
+              <th>{getNutrientTotal("lipid") || "-"}</th>
+              <th>{getNutrientTotal("carbohydrate") || "-"}</th>
+              <th>{getNutrientTotal("fiber") || "-"}</th>
             </tr>
             {/* <tr id="target">
               <th>目標</th>
@@ -1524,10 +1800,17 @@ function Analysis({ date, cID }) {
         </table>
         {pathName.includes("dietitian") ? (
           <div>
-            <label>
-              給予建議
-              <input type="textarea" value={advice} />
-            </label>
+            <div>
+              <label>
+                給予建議
+                <input
+                  type="textarea"
+                  value={advice}
+                  onChange={bindAdviceHandler}
+                />
+              </label>
+            </div>
+            <button onClick={bindSaveAdviceHandler}>儲存</button>
           </div>
         ) : (
           <div>
@@ -1543,13 +1826,13 @@ function Analysis({ date, cID }) {
 function RenderDietaryRecord() {
   const [recordDate, setRecordDate] = useState();
   const [getRecord, setGetRecord] = useState(false); //false
-  const [isChecked, setIsChecked] = useState(false);
+  const [count, setCount] = useState(1);
   const params = useParams();
 
   const getDietaryRecordDate = (e) => {
     if (e.target.value !== "") {
       setRecordDate(e.target.value);
-      setIsChecked(false);
+      setCount(1);
       setGetRecord(true);
     }
   };
@@ -1572,8 +1855,8 @@ function RenderDietaryRecord() {
               <Route exact path={`/dietitian/:dID/customer/:cID/dietary/`}>
                 <DietitianRecord
                   date={recordDate}
-                  isChecked={isChecked}
-                  setIsChecked={setIsChecked}
+                  count={count}
+                  setCount={setCount}
                 />
               </Route>
             </Switch>
@@ -1599,8 +1882,8 @@ function RenderDietaryRecord() {
               <Route exact path="/customer/:cID/dietary/">
                 <CustomerRecord
                   date={recordDate}
-                  isChecked={isChecked}
-                  setIsChecked={setIsChecked}
+                  count={count}
+                  setCount={setCount}
                 />
               </Route>
             </Switch>
