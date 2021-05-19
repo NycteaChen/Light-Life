@@ -33,7 +33,6 @@ function DietitianRecord({ date, count, setCount }) {
     fiber: 0,
   };
   const [input, setInput] = useState(initInput);
-
   useEffect(async () => {
     await getIngrediensData().then((res) => {
       setIngredients(res);
@@ -73,13 +72,73 @@ function DietitianRecord({ date, count, setCount }) {
       });
   };
 
+  console.log(input);
   const getInputHandler = (e) => {
-    console.log(e.target.value);
-    console.log(inputValue);
-
     const { name } = e.target;
     const { type } = e.target;
-    if (type === "number") {
+    if (isSelect && type === "number") {
+      let kcal;
+      let protein;
+      let lipid;
+      let carbohydrate;
+      let fiber;
+      let per = parseFloat(e.target.value);
+      ingredients
+        .filter((i) => i["樣品名稱"] === input.item)
+        .forEach((n) => {
+          // const number = parseFloat(n["每單位含量"])
+          //   ? parseFloat(
+          //       parseFloat(n["每單位含量"]) * parseFloat(e.target.value)
+          //     ).toFixed(1)
+          //   : 0;
+          switch (n["分析項"]) {
+            case "修正熱量":
+              kcal =
+                parseFloat(n["每單位含量"]) && per > 0
+                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
+                  : 0;
+              // console.log("kcal:" + number);
+              break;
+            case "粗蛋白":
+              protein =
+                parseFloat(n["每單位含量"]) && per > 0
+                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
+                  : 0;
+              // console.log("protein:" + number);
+              break;
+            case "粗脂肪":
+              lipid =
+                parseFloat(n["每單位含量"]) && per > 0
+                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
+                  : 0;
+              // console.log("lipid:" + number);
+              break;
+            case "總碳水化合物":
+              carbohydrate =
+                parseFloat(n["每單位含量"]) && per > 0
+                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
+                  : 0;
+              // console.log("carbohydrate:" + number);
+              break;
+            case "膳食纖維":
+              fiber =
+                parseFloat(n["每單位含量"]) && per > 0
+                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
+                  : 0;
+              // console.log("fiber:" + number);
+              break;
+          }
+        });
+      setInput({
+        ...input,
+        kcal: parseFloat(kcal),
+        protein: parseFloat(protein),
+        lipid: parseFloat(lipid),
+        carbohydrate: parseFloat(carbohydrate),
+        fiber: parseFloat(fiber),
+        per: parseFloat(per),
+      });
+    } else if (type === "number") {
       setInput({
         ...input,
         [name]: parseFloat(e.target.value),
@@ -87,7 +146,7 @@ function DietitianRecord({ date, count, setCount }) {
     } else {
       setIsSelected(false);
       setInput({
-        ...input,
+        ...initInput,
         [name]: e.target.value,
       });
     }
@@ -114,7 +173,7 @@ function DietitianRecord({ date, count, setCount }) {
   };
 
   const addNewFoodTable = () => {
-    setIsSelected(false);
+    // setIsSelected(false);
     if (input.item === "" || !input.item) {
       alert("請填入食材");
       return;
@@ -293,11 +352,11 @@ function DietitianRecord({ date, count, setCount }) {
                       </th>
                       {isSelect ? (
                         <>
-                          <th>0</th>
-                          <th>0</th>
-                          <th>0</th>
-                          <th>0</th>
-                          <th>0</th>
+                          <th>{input.kcal}</th>
+                          <th>{input.protein}</th>
+                          <th>{input.lipid}</th>
+                          <th>{input.carbohydrate}</th>
+                          <th>{input.fiber}</th>
                         </>
                       ) : (
                         <>
@@ -1777,7 +1836,7 @@ function Analysis({ date, cID, data }) {
   }, [date, data]);
 
   const calculator = (target, setMealNutrients) => {
-    const reducer = (acc, cur) => acc + cur;
+    const reducer = (acc, cur) => parseFloat(acc + cur);
 
     const kcalTotal = target.map((i) => i.kcal).reduce(reducer);
     const proteinTotal = target.map((i) => i.protein).reduce(reducer);
@@ -1814,7 +1873,7 @@ function Analysis({ date, cID, data }) {
 
     return nutritiendArray
       .filter((i) => typeof i === "number")
-      .reduce((acc, cur) => acc + cur, 0);
+      .reduce((acc, cur) => parseFloat(acc + cur), 0);
   };
 
   const bindAdviceHandler = (e) => {
