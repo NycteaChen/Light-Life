@@ -9,7 +9,6 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
-import { set } from "date-fns";
 
 function GetAddedTarget({ target, setTarget }) {
   const db = firebase.firestore();
