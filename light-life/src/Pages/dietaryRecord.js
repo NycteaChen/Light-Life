@@ -9,6 +9,7 @@ import {
   useParams,
 } from "react-router-dom";
 import "firebase/firestore";
+import getIngrediensData from "../utils/ingredientsAPI.js";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
@@ -16,12 +17,31 @@ function DietitianRecord({ date, count, setCount }) {
   const params = useParams();
   const [meal, setMeal] = useState([]);
   const [mealDetails, setMealDetails] = useState("");
-  const [input, setInput] = useState({});
   const dID = params.dID;
   const cID = params.cID;
   const [dataAnalysis, setDataAnalysis] = useState(false);
+  const [ingredients, setIngredients] = useState({});
+  const [inputValue, setInputValue] = useState([]);
+  const [isSelect, setIsSelected] = useState(false);
+  const [isDisplay, setIsDisplay] = useState(false);
+  const initInput = {
+    per: 0,
+    kcal: 0,
+    carbohydrate: 0,
+    lipid: 0,
+    protein: 0,
+    fiber: 0,
+  };
+  const [input, setInput] = useState(initInput);
 
+  useEffect(async () => {
+    await getIngrediensData().then((res) => {
+      setIngredients(res);
+    });
+  }, []);
   const getMealHandler = (e) => {
+    setInput(initInput);
+    setIsSelected(false);
     if (meal[0] !== e.target.className) {
       setCount(2);
     } else {
@@ -54,34 +74,47 @@ function DietitianRecord({ date, count, setCount }) {
   };
 
   const getInputHandler = (e) => {
+    console.log(e.target.value);
+    console.log(inputValue);
+
     const { name } = e.target;
-    console.log(e.target);
-    if (name === "per") {
+    const { type } = e.target;
+    if (type === "number") {
       setInput({
         ...input,
         [name]: parseFloat(e.target.value),
-        kcal: 100,
-        protein: 5,
-        fiber: 2,
-        carbohydrate: 1,
-        lipid: 50,
       });
     } else {
+      setIsSelected(false);
       setInput({
         ...input,
         [name]: e.target.value,
-        kcal: 0,
-        protein: 0,
-        fiber: 0,
-        carbohydrate: 0,
-        lipid: 0,
       });
     }
   };
-  console.log(input);
+  console.log(inputValue);
+  const getSearchHandler = (e) => {
+    // setInputValue(e.target.value);
+    const array = ingredients
+      .filter(
+        (i) =>
+          i["樣品名稱"].includes(`${e.target.value}`) && e.target.value !== ""
+      )
+      .map((e) => e["樣品名稱"])
+      .filter((n, index, arr) => arr.indexOf(n) === index);
+    setInputValue(array);
+    setIsDisplay(true);
+    console.log(array);
+  };
 
-  console.log(dataAnalysis);
+  const selectIngredientHandler = (e) => {
+    setInput({ ...input, item: e.target.textContent });
+    setInputValue([]);
+    setIsSelected(true);
+  };
+
   const addNewFoodTable = () => {
+    setIsSelected(false);
     if (input.item === "" || !input.item) {
       alert("請填入食材");
       return;
@@ -105,9 +138,15 @@ function DietitianRecord({ date, count, setCount }) {
         );
 
       setDataAnalysis([...dataAnalysis, input]);
-      setInput({});
+      setInput(initInput);
     }
   };
+
+  window.addEventListener("click", (e) => {
+    if (e.target.className !== "searchBox") {
+      setIsDisplay(false);
+    }
+  });
 
   const removeItemHandler = (e) => {
     setDataAnalysis([
@@ -130,9 +169,6 @@ function DietitianRecord({ date, count, setCount }) {
         { merge: true }
       );
   };
-
-  console.log(dataAnalysis);
-
   return (
     <>
       <div id="dietitian-daily-diet">
@@ -206,15 +242,44 @@ function DietitianRecord({ date, count, setCount }) {
                         ))
                       : null}
                     <tr>
-                      <th>
+                      <th style={{ position: "relative" }}>
                         <input
                           type="text"
                           name="item"
                           value={input.item ? input.item : ""}
                           placeholder="請輸入食材"
-                          style={{ width: "120px" }}
+                          style={{ width: "150px" }}
+                          autoComplete="off"
                           onChange={getInputHandler}
+                          onInput={getSearchHandler}
                         />
+                        {inputValue.length > 0 && isDisplay ? (
+                          <div
+                            className="searchBox"
+                            style={{
+                              width: "150px",
+                              height: "100px",
+                              backgroundColor: "white",
+                              border: "1px solid black",
+                              position: "absolute",
+                              textAlign: "left",
+                              fontWeight: "500",
+                              fontSize: "14px",
+                              overflowY: "scroll",
+                              overflowX: "hidden",
+                              padding: "7px 10px",
+                            }}
+                          >
+                            {inputValue.map((i, index) => (
+                              <div
+                                key={index}
+                                onClick={selectIngredientHandler}
+                              >
+                                {i}
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
                       </th>
                       <th>
                         <input
@@ -226,11 +291,70 @@ function DietitianRecord({ date, count, setCount }) {
                           style={{ width: "50px" }}
                         />
                       </th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
+                      {isSelect ? (
+                        <>
+                          <th>0</th>
+                          <th>0</th>
+                          <th>0</th>
+                          <th>0</th>
+                          <th>0</th>
+                        </>
+                      ) : (
+                        <>
+                          <th>
+                            <input
+                              type="number"
+                              name="kcal"
+                              value={input.kcal ? input.kcal : "0"}
+                              min="0"
+                              onChange={getInputHandler}
+                              style={{ width: "50px" }}
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="number"
+                              name="protein"
+                              value={input.protein ? input.protein : "0"}
+                              min="0"
+                              onChange={getInputHandler}
+                              style={{ width: "50px" }}
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="number"
+                              name="lipid"
+                              value={input.lipid ? input.lipid : "0"}
+                              min="0"
+                              onChange={getInputHandler}
+                              style={{ width: "50px" }}
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="number"
+                              name="carbohydrate"
+                              value={
+                                input.carbohydrate ? input.carbohydrate : "0"
+                              }
+                              min="0"
+                              onChange={getInputHandler}
+                              style={{ width: "50px" }}
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="number"
+                              name="fiber"
+                              value={input.fiber ? input.fiber : "0"}
+                              min="0"
+                              onChange={getInputHandler}
+                              style={{ width: "50px" }}
+                            />
+                          </th>
+                        </>
+                      )}
                     </tr>
                   </tbody>
                   <tfoot>
@@ -319,8 +443,10 @@ function DietitianRecord({ date, count, setCount }) {
                         <input
                           type="text"
                           name="item"
+                          value={input.item ? input.item : ""}
                           placeholder="請輸入食材"
                           style={{ width: "120px" }}
+                          autoComplete="off"
                           onChange={getInputHandler}
                         />
                       </th>
@@ -328,7 +454,7 @@ function DietitianRecord({ date, count, setCount }) {
                         <input
                           type="number"
                           name="per"
-                          placeholder="0"
+                          value={input.per ? input.per : "0"}
                           min="0"
                           onChange={getInputHandler}
                           style={{ width: "50px" }}
@@ -488,7 +614,6 @@ function CustomerRecord({ date, count, setCount }) {
       setCount(count + 1);
     }
     setMeal(e.target.className);
-    console.log(e.target.id);
     setInput("");
     // if (mealDetails.images) {
     //   setMealDetails({ images: mealDetails.images });
@@ -521,7 +646,6 @@ function CustomerRecord({ date, count, setCount }) {
         }
       });
   };
-  console.log(dataAnalysis);
   async function postImg(image) {
     if (image) {
       const storageRef = storage.ref(`${cID}/${date}/${meal}/` + image.name);
@@ -1854,6 +1978,7 @@ function RenderDietaryRecord() {
                   date={recordDate}
                   count={count}
                   setCount={setCount}
+                  style={{ boxSizing: "border-box" }}
                 />
               </Route>
             </Switch>
