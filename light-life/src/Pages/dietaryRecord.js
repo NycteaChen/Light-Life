@@ -2029,15 +2029,17 @@ function CustomerRecord({ date, count, setCount }) {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th>牛肉</th>
-                      <th>0</th>
-                      <th>0</th>
-                      <th>0</th>
-                      <th>0</th>
-                      <th>0</th>
-                      <th>0</th>
-                    </tr>
+                    {dataAnalysis.map((a, index) => (
+                      <tr key={index} id={index}>
+                        <th>{a.item}</th>
+                        <th>{a.per}</th>
+                        <th>{a.kcal}</th>
+                        <th>{a.protein}</th>
+                        <th>{a.lipid}</th>
+                        <th>{a.carbohydrate}</th>
+                        <th>{a.fiber}</th>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               ) : (
@@ -2170,6 +2172,36 @@ function CustomerRecord({ date, count, setCount }) {
                   儲存
                 </button>
               </div>
+              {dataAnalysis ? (
+                <table className="dietitian-record">
+                  <thead>
+                    <tr>
+                      <th>品項</th>
+                      <th>單位:100g</th>
+                      <th>熱量(kcal)</th>
+                      <th>蛋白質(g)</th>
+                      <th>脂質(g)</th>
+                      <th>碳水化合物(g)</th>
+                      <th>膳食纖維(g)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dataAnalysis.map((a, index) => (
+                      <tr key={index} id={index}>
+                        <th>{a.item}</th>
+                        <th>{a.per}</th>
+                        <th>{a.kcal}</th>
+                        <th>{a.protein}</th>
+                        <th>{a.lipid}</th>
+                        <th>{a.carbohydrate}</th>
+                        <th>{a.fiber}</th>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
@@ -2312,6 +2344,36 @@ function CustomerRecord({ date, count, setCount }) {
                   儲存
                 </button>
               </div>
+              {dataAnalysis ? (
+                <table className="dietitian-record">
+                  <thead>
+                    <tr>
+                      <th>品項</th>
+                      <th>單位:100g</th>
+                      <th>熱量(kcal)</th>
+                      <th>蛋白質(g)</th>
+                      <th>脂質(g)</th>
+                      <th>碳水化合物(g)</th>
+                      <th>膳食纖維(g)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dataAnalysis.map((a, index) => (
+                      <tr key={index} id={index}>
+                        <th>{a.item}</th>
+                        <th>{a.per}</th>
+                        <th>{a.kcal}</th>
+                        <th>{a.protein}</th>
+                        <th>{a.lipid}</th>
+                        <th>{a.carbohydrate}</th>
+                        <th>{a.fiber}</th>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
