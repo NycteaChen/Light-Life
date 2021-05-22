@@ -20,7 +20,7 @@
   }
 }
 
-header {
+.home-header {
   background: #ffffff00;
   padding: 10px 15px;
   div {
@@ -62,7 +62,7 @@ header {
 
 // $header-height: 77px;
 // height: calc(100vh - #{$header-height});
-main {
+.home-main {
   flex-grow: 1;
   @media (min-width: 768px) {
     background-color: #8bcfd171;
