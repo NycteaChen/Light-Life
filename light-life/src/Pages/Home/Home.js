@@ -21,8 +21,8 @@ import $ from "jquery";
 function Home() {
   return (
     <>
-      <header>
-        <div>
+      <header className="home-header">
+        <div className="logo-nav">
           <a href="/">
             <img src={logo} alt="LightLifeLogo" id="logo" />
           </a>
@@ -33,7 +33,7 @@ function Home() {
           </nav>
         </div>
       </header>
-      <main>
+      <main className="home-main">
         <div id="cover">
           <div className="main-title">
             <h2>Bring you to light life</h2>

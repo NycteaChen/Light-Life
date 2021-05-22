@@ -5,7 +5,6 @@ import Dietitian from "./Pages/Dietitian/Dietitian.js";
 import Customer from "./Pages/Customer/Customer.js";
 import styled from "styled-components";
 import logo from "./images/lightlife-horizontal.svg";
-import "./style/home.scss";
 
 function App() {
   const dID = "cJUCoL1hZz36cVgf7WRz";
@@ -22,20 +21,22 @@ function App() {
           </Route>
           <Route path="/dietitian/:dID">
             <header>
-              <div style={{ maxWidth: "unset" }}>
+              <div className="logo-nav">
                 <a href="/">
-                  <img src={logo} alt="LightLifeLogo" id="logo" />
+                  <img src={logo} id="logo" />
                 </a>
+                <div id="menu" style={{ width: "24px", height: "24px" }}></div>
               </div>
             </header>
             <Dietitian />
           </Route>
           <Route path="/customer/:cID">
             <header>
-              <div style={{ maxWidth: "unset" }}>
+              <div className="logo-nav">
                 <a href="/">
-                  <img src={logo} alt="LightLifeLogo" id="logo" />
+                  <img src={logo} id="logo" />
                 </a>
+                <div id="menu" style={{ width: "24px", height: "24px" }}></div>
               </div>
             </header>
             <Customer />
