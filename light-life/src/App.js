@@ -20,7 +20,7 @@ function App() {
             <Home />
           </Route>
           <Route path="/dietitian/:dID">
-            <header>
+            <header className="m-header">
               <div className="logo-nav">
                 <a href="/">
                   <img src={logo} id="logo" />
@@ -31,7 +31,7 @@ function App() {
             <Dietitian />
           </Route>
           <Route path="/customer/:cID">
-            <header>
+            <header className="m-header">
               <div className="logo-nav">
                 <a href="/">
                   <img src={logo} id="logo" />

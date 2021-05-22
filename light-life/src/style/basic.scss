@@ -4,7 +4,7 @@
   box-sizing: border-box;
   scroll-behavior: smooth;
   font-family: Lexend, "Microsoft JhengHei";
-  color: #4d4d4d;
+
   a {
     text-decoration: none;
     color: #4d4d4d;
@@ -13,8 +13,9 @@
   }
 }
 
-header {
+.m-header {
   background: #ffffff00;
+  color: #4d4d4d;
   padding: 10px 15px;
   .logo-nav {
     margin: auto;
@@ -23,7 +24,7 @@ header {
     align-items: center;
     display: flex;
     #logo {
-      width: 100px;
+      width: 150px;
       transition: all 0.5s;
       &:hover,
       &:active {
@@ -62,14 +63,21 @@ header {
   }
 }
 
-main {
+.d-main {
+  background-color: #a3ffdc79;
+  padding: 20px;
+  @media (min-width: 1024px) {
+    height: calc(100vh - 77px);
+    overflow: auto;
+  }
   nav {
     position: fixed;
+    z-index: 2px;
     top: 0;
     left: 0;
     width: 70%;
-    height: 100vh;
-    background-color: #dcfff5;
+    height: 150vh;
+    background-color: #b3f5e1;
     text-align: center;
     display: none;
     font-size: 14px;
@@ -81,22 +89,22 @@ main {
     .mobile-nav {
       .nav-title {
         display: block;
-        margin-top: 15px;
+        margin-top: 10px;
         padding: 10px 0;
         background-color: rgb(142, 235, 238);
       }
       #logout {
         width: 30px;
         position: absolute;
-        bottom: 0;
+        bottom: 50 !important;
         right: 0;
       }
       ul {
         div {
           &.customerList {
-            max-height: 141px;
+            height: 141px;
             overflow: auto;
-            display: none;
+            // display: none;
           }
         }
         li {
@@ -114,8 +122,8 @@ main {
       & {
         font-size: 18px;
         width: 200px;
-        height: calc(100% - 62px);
-        margin-top: 62px;
+        height: calc(100% - 77px);
+        margin-top: 77px;
         display: block !important;
         .mobile-nav {
           margin-top: 60px;
@@ -131,7 +139,8 @@ main {
     font-size: 12px;
     text-align: center;
     margin: 0 20px 20px;
-    border-bottom: 1px solid #0db3f5;
+    padding: 15px;
+    border-bottom: 2px solid #04552f;
     div {
       margin: 10px;
     }
@@ -170,10 +179,11 @@ main {
       & {
         border-bottom: unset;
         display: flex;
+        align-items: center;
         margin: 0;
         position: fixed;
         top: 80px;
-        left: 30px;
+        left: 20px;
         img {
           width: 50px;
           height: 50px;
