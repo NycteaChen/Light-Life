@@ -1,13 +1,8 @@
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import React from "react";
-import cover from "../../images/cover.png";
-import about from "../../images/about.png";
-import service from "../../images/service.png";
-import plan from "../../images/plan.png";
-import styled from "styled-components";
 import logo from "../../images/lightlife-horizontal.svg";
 import "../../style/home.scss";
-
+import $ from "jquery";
 // const Cover = styled.div`
 //   background: url(${cover});
 //   background-size: cover;
@@ -66,9 +61,7 @@ function Home() {
               <section>
                 <div className="sectionText">
                   <h3 className="subtitle">您想尋找營養師嗎？</h3>
-                  <p>
-                    本站配合來自各地的專業營養師，讓客戶能選擇自己的營養管家。
-                  </p>
+                  <p>本站有來自各地的專業營養師，讓您能選擇自己的營養管家。</p>
                   <p>
                     每次服務時間最長為兩週，可以續約，期間內營養師將為您分析每日飲食狀況，此外您可以向您的營養師詢問各類營養資訊。
                   </p>
@@ -79,9 +72,9 @@ function Home() {
             </article>
           </div>
         </div>
-        <div className="contact">
+        <div className="contact" id="contact">
           <div className="contact-title">
-            <h2 id="contact">聯絡我們</h2>
+            <h2>聯絡我們</h2>
             <p>對本站有任何疑問或回饋請告訴我們！</p>
           </div>
           <section>
@@ -124,11 +117,18 @@ function Home() {
         </section>
       </main>
       <aside>
-        <a href="#top" id="toTop"></a>
+        <a href="#top" id="toTop">
+          {""}
+        </a>
       </aside>
       <footer>
         <div>
-          <a href="https://github.com/NycteaChen" target="_blank">
+          <a
+            href="https://github.com/NycteaChen"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {""}
             <i className="fa fa-github" aria-hidden="true"></i>
           </a>
           <p>jungturn01tw@gmail.com</p>
