@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import noImage from "../../../images/noimage.png";
 import firebase from "firebase/app";
 
 function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
@@ -29,68 +30,76 @@ function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
   return (
     <div>
       <div>
-        <h2>
+        <div className="reserve-time">
           預約服務時間：
           <span>
             {props.reverseStartDate}~{props.reverseEndDate}
           </span>
-        </h2>
-        <h2>客戶資料</h2>
-        <img
-          src={inviterData.image}
-          alt="customer"
-          style={{ width: "200px", height: "200px", borderRadius: "50%" }}
-        />
-        <div>
-          <div>姓名</div>
-          <div>{inviterData.name}</div>
         </div>
-        <div>
-          <div>性別</div>
-          <div>{inviterData.gender}</div>
-        </div>
-        <div>
-          <div>年齡</div>
+        <h4 className="data-title">客戶資料</h4>
+        <div className="flexbox">
+          <img
+            src={inviterData.image ? inviterData.image : noImage}
+            alt="customer"
+          />
           <div>
-            <span>{inviterData.age}</span> 歲
+            <div className="data-item">
+              <div className="title">姓名</div>
+              <div>{inviterData.name}</div>
+            </div>
+            <div className="data-item">
+              <div className="title">性別</div>
+              <div>{inviterData.gender}</div>
+            </div>
+            <div className="data-item">
+              <div className="title">年齡</div>
+              <div>
+                <span>{inviterData.age}</span> 歲
+              </div>
+            </div>
           </div>
         </div>
-        <div>
-          <div>身高</div>
-          <div>
-            <span>{inviterData.height}</span> cm
+        <div className="flexbox">
+          <div className="data-item">
+            <div className="title">身高</div>
+            <div>
+              <span>{inviterData.height}</span> cm
+            </div>
+          </div>
+          <div className="data-item">
+            <div className="title">體重</div>
+            <div>
+              <span>{inviterData.weight}</span> kg
+            </div>
           </div>
         </div>
-        <div>
-          <div>體重</div>
-          <div>
-            <span>{inviterData.weight}</span> kg
+        <div className="flexbox">
+          <div className="data-item">
+            <div className="title">教育程度</div>
+            <div>
+              <span>{inviterData.education}</span>
+            </div>
+          </div>
+          <div className="data-item">
+            <div className="title">職業</div>
+            <div>
+              <span>{inviterData.career}</span>
+            </div>
           </div>
         </div>
-        <div>
-          <div>教育程度</div>
-          <div>
-            <span>{inviterData.education}</span>
-          </div>
-        </div>
-        <div>
-          <div>職業</div>
-          <div>
-            <span>{inviterData.career}</span>
-          </div>
-        </div>
-        <div>
-          <div>其他</div>
+
+        <div className="col">
+          <div className="title">其他</div>
           <div>
             <span>{inviterData.other}</span>
           </div>
         </div>
-        <div>
-          <div>預約訊息</div>
+        <div className="col">
+          <div className="title">預約訊息</div>
           <div>{props.reverseMessage}</div>
         </div>
       </div>
-      <div>
+      <div className="choose">
         <button onClick={inviteButtonHandler} id="accept">
           接受
         </button>
