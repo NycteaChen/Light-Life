@@ -14,6 +14,7 @@ import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import "firebase/firestore";
 import "../../style/basic.scss";
+import "../../style/customerData.scss";
 import Profile from "../Components/CustomerProfile/CusotmerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
@@ -85,7 +86,11 @@ function Dietitian() {
               <Link to={`/dietitian/${dietitianID}/profile`}>編輯會員資料</Link>
             </div>
             <ul>
-              <div className="nav-title list" onClick={bindListHandler}>
+              <div
+                className="nav-title list"
+                style={{ cursor: "pointer" }}
+                onClick={bindListHandler}
+              >
                 客戶清單
               </div>
               <div className="customerList list" style={{ display: display }}>
@@ -156,28 +161,21 @@ function Dietitian() {
                 客戶清單
               </Link>
             </div>
-            <div onClick={bindListHandler}>誰找我</div>
+            <div onClick={bindListHandler}>
+              <Link to={`/dietitian/${dietitianID}/inviteMe`}>誰找我 </Link>
+            </div>
           </div>
         </div>
 
         <Switch>
-          <Route exact path={`/dietitian/:dID/inviteMe`}>
-            <div>
-              <InvitedList
-                invitedList={invitedList}
-                setInvitedList={setInvitedList}
-              />
-            </div>
-          </Route>
-        </Switch>
-        <Switch>
           <Route exact path="/dietitian/:dID">
-            <div style={{ marginLeft: "250px" }}>
-              {profile.name}營養師，歡迎回來！
-            </div>
+            <div className="indexWelcome">{profile.name}營養師，歡迎回來！</div>
+          </Route>
+          <Route exact path={`/dietitian/:dID/profile`}>
+            <DietitianProfile profile={profile} />
           </Route>
           <Route exact path={`/dietitian/:dID/customers`}>
-            <div className="customerList" style={{ display: display }}>
+            <div className="mobileCustomerList" style={{ display: display }}>
               {users.map((c, index) => (
                 <li key={index} className={c.id} onClick={getSelectedCustomer}>
                   <Link
@@ -190,50 +188,63 @@ function Dietitian() {
               ))}
             </div>
           </Route>
-        </Switch>
-
-        <Switch>
-          <Route exact path={`/dietitian/:dID/profile`}>
-            <DietitianProfile profile={profile} />
+          <Route exact path={`/dietitian/:dID/inviteMe`}>
+            <div>
+              <InvitedList
+                invitedList={invitedList}
+                setInvitedList={setInvitedList}
+              />
+            </div>
           </Route>
         </Switch>
-        <div style={{ marginLeft: "250px", overflow: "auto" }}>
-          <Switch>
-            <Route
-              exact
-              path={`/dietitian/${dietitianID}/customer/${selectedID}`}
-            >
-              <Router>
-                <Link
-                  to={`/dietitian/${dietitianID}/customer/${selectedID}/profile`}
-                >
-                  基本資料
-                </Link>
-                <Link
-                  to={`/dietitian/${dietitianID}/customer/${selectedID}/dietary`}
-                >
-                  飲食記錄
-                </Link>
-                <Link
-                  to={`/dietitian/${dietitianID}/customer/${selectedID}/target`}
-                >
-                  目標設定
-                </Link>
-                <Switch>
-                  <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
-                    <Profile props={users[0]} input={input} />
-                  </Route>
-                  <Route path={`/dietitian/:dID/customer/:cID/dietary`}>
-                    <DietrayRecord />
-                  </Route>
-                  <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
-                    <DietitianTarget />
-                  </Route>
-                </Switch>
-              </Router>
-            </Route>
-          </Switch>
-        </div>
+
+        {/* <div style={{ marginLeft: "250px", overflow: "auto" }}> */}
+
+        <Switch>
+          <Route
+            exact
+            path={`/dietitian/${dietitianID}/customer/${selectedID}`}
+          >
+            <Router>
+              <div className="customer-data">
+                <div className="customer-name">
+                  <span>陳安妮</span>
+                </div>
+                <div className="customer-dataSelect">
+                  <Link
+                    className="link-select"
+                    to={`/dietitian/${dietitianID}/customer/${selectedID}/profile`}
+                  >
+                    基本資料
+                  </Link>
+                  <Link
+                    className="link-select"
+                    to={`/dietitian/${dietitianID}/customer/${selectedID}/dietary`}
+                  >
+                    飲食記錄
+                  </Link>
+                  <Link
+                    className="link-select"
+                    to={`/dietitian/${dietitianID}/customer/${selectedID}/target`}
+                  >
+                    目標設定
+                  </Link>
+                </div>
+              </div>
+              <Switch>
+                <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
+                  <Profile props={users[0]} input={input} />
+                </Route>
+                <Route path={`/dietitian/:dID/customer/:cID/dietary`}>
+                  <DietrayRecord />
+                </Route>
+                <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
+                  <DietitianTarget />
+                </Route>
+              </Switch>
+            </Router>
+          </Route>
+        </Switch>
       </main>
     );
   } else {
