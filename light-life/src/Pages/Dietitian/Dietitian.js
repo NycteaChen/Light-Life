@@ -15,7 +15,7 @@ import exit from "../../images/exit.png";
 import "firebase/firestore";
 import "../../style/basic.scss";
 import "../../style/customerData.scss";
-import Profile from "../Components/CustomerProfile/CusotmerProfile.js";
+import CusotmerProfile from "../Components/CustomerProfile/CusotmerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
 
@@ -81,16 +81,15 @@ function Dietitian() {
           <a href="/">
             <img src={logo} id="menu-logo" />
           </a>
-          <div className="mobile-nav">
-            <div className="nav-title" onClick={bindListHandler}>
-              <Link to={`/dietitian/${dietitianID}/profile`}>編輯會員資料</Link>
-            </div>
+          <div className="straight-nav">
+            <Link
+              className="nav-title"
+              to={`/dietitian/${dietitianID}/profile`}
+            >
+              <div onClick={bindListHandler}>編輯會員資料</div>
+            </Link>
             <ul>
-              <div
-                className="nav-title list"
-                style={{ cursor: "pointer" }}
-                onClick={bindListHandler}
-              >
+              <div className="nav-title list" onClick={bindListHandler}>
                 客戶清單
               </div>
               <div className="customerList list" style={{ display: display }}>
@@ -103,6 +102,7 @@ function Dietitian() {
                     <Link
                       to={`/dietitian/${c.dietitian}/customer/${c.id}`}
                       className={c.id}
+                      style={{ fontSize: "16px" }}
                     >
                       {c.name}
                     </Link>
@@ -113,10 +113,12 @@ function Dietitian() {
             <div className="nav-title" onClick={bindListHandler}>
               找客戶
             </div>
-            <div className="nav-title" onClick={bindListHandler}>
-              <Link to={`/dietitian/${dietitianID}/inviteMe`}>誰找我 </Link>
-            </div>
-
+            <Link
+              className="nav-title"
+              to={`/dietitian/${dietitianID}/inviteMe`}
+            >
+              <div onClick={bindListHandler}>誰找我</div>
+            </Link>
             <Link
               className="nav-title"
               onClick={bindListHandler}
@@ -127,6 +129,7 @@ function Dietitian() {
             <a href="/">
               <img src={exit} alt="logout" id="logout" />
             </a>
+            <div class="copyright">&copy;2021 Light Life</div>
           </div>
         </nav>
         <div className="profile">
@@ -198,8 +201,6 @@ function Dietitian() {
           </Route>
         </Switch>
 
-        {/* <div style={{ marginLeft: "250px", overflow: "auto" }}> */}
-
         <Switch>
           <Route
             exact
@@ -233,7 +234,7 @@ function Dietitian() {
               </div>
               <Switch>
                 <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
-                  <Profile props={users[0]} input={input} />
+                  <CusotmerProfile props={users[0]} input={input} />
                 </Route>
                 <Route path={`/dietitian/:dID/customer/:cID/dietary`}>
                   <DietrayRecord />

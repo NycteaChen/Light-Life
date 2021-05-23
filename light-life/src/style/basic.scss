@@ -11,6 +11,9 @@
     padding-top: 7px;
     display: inline-block;
   }
+  button {
+    cursor: pointer;
+  }
 }
 
 .m-header {
@@ -99,18 +102,24 @@
       max-width: 200px;
       margin: 10px;
     }
-    .mobile-nav {
+    .straight-nav {
       .nav-title {
         display: block;
         margin-top: 10px;
         padding: 10px 0;
         background-color: rgb(142, 235, 238);
+        cursor: pointer;
       }
       #logout {
         width: 30px;
-        position: absolute;
-        bottom: 50 !important;
-        right: 0;
+        position: fixed;
+        bottom: 0 !important;
+        left: 150px;
+      }
+      .copyright {
+        position: fixed;
+        left: 12px;
+        bottom: 15px;
       }
       ul {
         div {
@@ -137,7 +146,7 @@
         height: calc(100% - 77px);
         margin-top: 77px;
         display: block !important;
-        .mobile-nav {
+        .straight-nav {
           margin-top: 60px;
         }
         #menu-logo {
