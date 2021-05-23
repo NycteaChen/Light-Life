@@ -23,6 +23,7 @@ function Dietitian() {
   const [invitedList, setInvitedList] = useState([]);
   const [profile, setProfile] = useState({});
   const [selectedID, setSelectedID] = useState("");
+  const [display, setDisplay] = useState("none");
   const dietitianID = useParams().dID;
   const input = {};
   useEffect(() => {
@@ -64,6 +65,14 @@ function Dietitian() {
     setSelectedID(e.target.className);
   };
 
+  const bindListHandler = (e) => {
+    if (e.target.className.includes("list")) {
+      setDisplay("block");
+    } else {
+      setDisplay("none");
+    }
+  };
+
   if (users.length > 0) {
     return (
       <main className="d-main">
@@ -72,12 +81,14 @@ function Dietitian() {
             <img src={logo} id="menu-logo" />
           </a>
           <div className="mobile-nav">
-            <div className="nav-title">
+            <div className="nav-title" onClick={bindListHandler}>
               <Link to={`/dietitian/${dietitianID}/profile`}>編輯會員資料</Link>
             </div>
             <ul>
-              <div className="nav-title">客戶清單</div>
-              <div className="customerList" style={{ display: "block" }}>
+              <div className="nav-title list" onClick={bindListHandler}>
+                客戶清單
+              </div>
+              <div className="customerList list" style={{ display: display }}>
                 {users.map((c, index) => (
                   <li
                     key={index}
@@ -94,12 +105,18 @@ function Dietitian() {
                 ))}
               </div>
             </ul>
-            <div className="nav-title">找客戶</div>
-            <div className="nav-title">
+            <div className="nav-title" onClick={bindListHandler}>
+              找客戶
+            </div>
+            <div className="nav-title" onClick={bindListHandler}>
               <Link to={`/dietitian/${dietitianID}/inviteMe`}>誰找我 </Link>
             </div>
 
-            <Link className="nav-title" to={`/dietitian/${dietitianID}`}>
+            <Link
+              className="nav-title"
+              onClick={bindListHandler}
+              to={`/dietitian/${dietitianID}`}
+            >
               返回會員主頁
             </Link>
             <a href="/">
@@ -122,15 +139,27 @@ function Dietitian() {
           </div>
           <div className="selectList">
             <div>
-              <Link to={`/dietitian/${dietitianID}/profile`}>編輯會員資料</Link>
+              <Link
+                to={`/dietitian/${dietitianID}/profile`}
+                onClick={bindListHandler}
+              >
+                編輯會員資料
+              </Link>
             </div>
-            <div>找客戶</div>
-            <div>
-              <Link to={`/dietitian/${dietitianID}/customers`}>客戶清單</Link>
+            <div onClick={bindListHandler}>找客戶</div>
+            <div className="list">
+              <Link
+                className="list"
+                to={`/dietitian/${dietitianID}/customers`}
+                onClick={bindListHandler}
+              >
+                客戶清單
+              </Link>
             </div>
-            <div>誰找我</div>
+            <div onClick={bindListHandler}>誰找我</div>
           </div>
         </div>
+
         <Switch>
           <Route exact path={`/dietitian/:dID/inviteMe`}>
             <div>
@@ -142,8 +171,13 @@ function Dietitian() {
           </Route>
         </Switch>
         <Switch>
+          <Route exact path="/dietitian/:dID">
+            <div style={{ marginLeft: "250px" }}>
+              {profile.name}營養師，歡迎回來！
+            </div>
+          </Route>
           <Route exact path={`/dietitian/:dID/customers`}>
-            <div className="customerList" style={{ display: "block" }}>
+            <div className="customerList" style={{ display: display }}>
               {users.map((c, index) => (
                 <li key={index} className={c.id} onClick={getSelectedCustomer}>
                   <Link

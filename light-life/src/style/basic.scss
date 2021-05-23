@@ -102,9 +102,8 @@
       ul {
         div {
           &.customerList {
-            height: 141px;
+            max-height: 141px;
             overflow: auto;
-            // display: none;
           }
         }
         li {
