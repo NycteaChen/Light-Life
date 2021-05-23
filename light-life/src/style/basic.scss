@@ -161,6 +161,8 @@
       grid-template-columns: repeat(2, 1fr);
 
       div {
+        padding: 0 5px;
+        margin: 0 5px 10px;
         line-height: 50px;
         background-color: rgb(165, 170, 170);
       }

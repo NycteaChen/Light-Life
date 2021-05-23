@@ -1,15 +1,7 @@
-import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
+import React from "react";
 import "firebase/firestore";
 import "firebase/storage";
 import noImage from "../../../images/noimage.png";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useLocation,
-} from "react-router-dom";
 
 function CustomerProfile({ props, input }) {
   return (
@@ -93,17 +85,5 @@ function CustomerProfile({ props, input }) {
     </div>
   );
 }
-
-// function RenderCustomerProfile({ profileData }) {
-//   const pathName = useLocation().pathname;
-
-//   const input = {};
-
-//   if (pathName.includes("dietitian")) {
-//     return <CustomerProfile props={profileData} input={input} />;
-//   } else {
-//     return <EditCustomerProfile props={profileData} />;
-//   }
-// }
 
 export default CustomerProfile;

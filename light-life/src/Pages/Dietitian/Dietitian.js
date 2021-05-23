@@ -20,7 +20,6 @@ import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
 
 function Dietitian() {
   const [users, setUsers] = useState([]);
-  const [isInvited, setIsInvited] = useState(false);
   const [invitedList, setInvitedList] = useState([]);
   const [profile, setProfile] = useState({});
   const [selectedID, setSelectedID] = useState("");
@@ -61,14 +60,6 @@ function Dietitian() {
       .then((res) => setProfile(res.data()));
   }, []);
 
-  const checkInvitedList = () => {
-    setIsInvited(true);
-  };
-
-  const clostInvitedList = () => {
-    setIsInvited(false);
-  };
-
   const getSelectedCustomer = (e) => {
     setSelectedID(e.target.className);
   };
@@ -104,20 +95,10 @@ function Dietitian() {
               </div>
             </ul>
             <div className="nav-title">找客戶</div>
-            <div className="nav-title" onClick={checkInvitedList}>
-              誰找我
+            <div className="nav-title">
+              <Link to={`/dietitian/${dietitianID}/inviteMe`}>誰找我 </Link>
             </div>
-            {isInvited ? (
-              <div>
-                <div onClick={clostInvitedList}>X</div>
-                <InvitedList
-                  invitedList={invitedList}
-                  setInvitedList={setInvitedList}
-                />
-              </div>
-            ) : (
-              ""
-            )}
+
             <Link className="nav-title" to={`/dietitian/${dietitianID}`}>
               返回會員主頁
             </Link>
@@ -144,10 +125,39 @@ function Dietitian() {
               <Link to={`/dietitian/${dietitianID}/profile`}>編輯會員資料</Link>
             </div>
             <div>找客戶</div>
-            <div>客戶清單</div>
+            <div>
+              <Link to={`/dietitian/${dietitianID}/customers`}>客戶清單</Link>
+            </div>
             <div>誰找我</div>
           </div>
         </div>
+        <Switch>
+          <Route exact path={`/dietitian/:dID/inviteMe`}>
+            <div>
+              <InvitedList
+                invitedList={invitedList}
+                setInvitedList={setInvitedList}
+              />
+            </div>
+          </Route>
+        </Switch>
+        <Switch>
+          <Route exact path={`/dietitian/:dID/customers`}>
+            <div className="customerList" style={{ display: "block" }}>
+              {users.map((c, index) => (
+                <li key={index} className={c.id} onClick={getSelectedCustomer}>
+                  <Link
+                    to={`/dietitian/${c.dietitian}/customer/${c.id}`}
+                    className={c.id}
+                  >
+                    {c.name}
+                  </Link>
+                </li>
+              ))}
+            </div>
+          </Route>
+        </Switch>
+
         <Switch>
           <Route exact path={`/dietitian/:dID/profile`}>
             <DietitianProfile profile={profile} />

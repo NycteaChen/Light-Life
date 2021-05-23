@@ -9,7 +9,7 @@ import {
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "../../../style/basic.scss";
-import "../../../style/member.scss";
+import "../../../style/dietitianProfile.scss";
 
 function DietitianProfile({ profile }) {
   return (
