@@ -26,8 +26,6 @@ function DietitianProfile({ profile }) {
               <div className="determined">
                 <div className="title">帳號</div>
                 <div className="email">jaoasfg@emgia.com</div>
-                <div className="title number">會員編號</div>
-                <div className="id">{profile.id}</div>
               </div>
               <div className="basic">
                 <label className="name">姓名</label>

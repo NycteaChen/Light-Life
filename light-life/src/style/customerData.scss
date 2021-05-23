@@ -5,6 +5,7 @@
     padding: 10px 15px;
     background-color: wheat;
     width: 100px;
+    cursor: default;
   }
   .customer-dataSelect {
     .link-select {
@@ -49,6 +50,7 @@
         width: unset;
         max-width: unset;
         height: 40px;
+        padding-bottom: 2px;
       }
       .customer-dataSelect {
         width: unset;
@@ -59,12 +61,14 @@
         .link-select {
           border-radius: 0;
           border-top-right-radius: 15px;
+          border-right: 2px solid #014b38;
+          border-bottom: 2px solid #014b38;
           margin: 10px 0;
           background-color: #c6f3f3;
           transform: unset;
           width: 120px;
           height: 40px;
-          line-height: unset;
+          line-height: 30px;
         }
       }
     }

@@ -2,84 +2,104 @@ import React from "react";
 import "firebase/firestore";
 import "firebase/storage";
 import noImage from "../../../images/noimage.png";
+import "../../../style/customerProfile.scss";
 
 function CustomerProfile({ props, input }) {
   return (
-    <div id="personal-profile">
-      <div>個人資料</div>
-      <div>
-        <img
-          id="profile-img"
-          src={input.image ? input.image : props.image ? props.image : noImage}
-          alt="customer"
-          style={{ width: "200px", height: "200px", borderRadius: "50%" }}
-        />
-      </div>
-      <div>
-        姓名
-        <span id="name">
-          {input.name ? input.name : props ? props.name : ""}
-        </span>
-      </div>
-      <div>
-        <div>
-          系統編號<span id="number">{props ? props.id : ""}</span>
+    <div id="personal-profile" class="customer-profile">
+      <div class="profile-data">
+        <div class="flexbox">
+          <img
+            id="profile-img"
+            src={
+              input.image ? input.image : props.image ? props.image : noImage
+            }
+            alt="customer"
+          />
+          <div>
+            <div class="data-item">
+              <div class="title">姓名</div>
+              <div id="name">
+                {input.name ? input.name : props ? props.name : ""}
+              </div>
+            </div>
+            <div class="data-item">
+              <div class="title">性別</div>
+              <div id="gender">
+                {input.gender ? input.gender : props ? props.gender : ""}
+              </div>
+            </div>
+            <div class="data-item">
+              <div class="title">年齡</div>
+              <div id="age">
+                <span>{input.age ? input.age : props ? props.age : ""}</span> 歲
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div>
-        <div>
-          性別{" "}
-          <span id="gender">
-            {input.gender ? input.gender : props ? props.gender : ""}
-          </span>
+        <div class="flexbox">
+          <div class="data-item">
+            <div class="title">身高</div>
+            <div id="height">
+              <span>
+                {input.height ? input.height : props ? props.height : ""}
+              </span>{" "}
+              cm
+            </div>
+          </div>
+          <div class="data-item">
+            <div class="title">體重</div>
+            <div id="weight">
+              <span>
+                {input.weight ? input.weight : props ? props.weight : ""}
+              </span>{" "}
+              kg
+            </div>
+          </div>
         </div>
-      </div>
-      <div>
-        <div>
-          年齡{" "}
-          <span id="age">{input.age ? input.age : props ? props.age : ""}</span>
+        <div class="flexbox">
+          <div class="data-item">
+            <div class="title">教育程度</div>
+            <div id="education">
+              <span>
+                {input.education
+                  ? input.education
+                  : props
+                  ? props.education
+                  : ""}
+              </span>
+            </div>
+          </div>
+          <div class="data-item">
+            <div class="title">職業</div>
+            <div id="career">
+              <span>
+                {input.career ? input.career : props ? props.career : ""}
+              </span>
+            </div>
+          </div>
         </div>
-        <div>
-          身高{" "}
-          <span id="height">
-            {input.height ? input.height : props ? props.height : ""}
-          </span>{" "}
-          cm
-        </div>
-        <div>
-          體重{" "}
-          <span id="weight">
-            {input.weight ? input.weight : props ? props.weight : ""}
-          </span>{" "}
-          kg{" "}
-        </div>
-      </div>
-      <div>
-        <div>
-          教育程度{" "}
-          <span id="education">
-            {input.education ? input.education : props ? props.education : ""}
-          </span>
-        </div>
-      </div>
-      <div>
-        <div>
-          職業{" "}
-          <span id="career">
-            {input.career ? input.career : props ? props.career : ""}
-          </span>
-        </div>
-      </div>
-      <div>
-        <div>運動習慣</div>
-        <div id="sport">
-          {input.sport ? input.sport : props ? props.sport : ""}
-        </div>
-      </div>
-      <div>
-        <div>其他（例：自身狀況、特別需求）</div>
-        <div id="other">
-          {input.other ? input.other : props ? props.other : ""}
+        <div class="flexcol">
+          <div class="col">
+            <div class="data-item">
+              <div class="title">運動習慣</div>
+              <div id="sport">
+                <span>
+                  {input.sport ? input.sport : props ? props.sport : ""}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="data-item">
+              <div class="title">其他</div>
+              <div id="other">
+                <span>
+                  {input.other ? input.other : props ? props.other : ""}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

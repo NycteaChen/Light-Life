@@ -134,11 +134,6 @@ function EditCustomerProfile({ props }) {
             />
           </div>
           <div>
-            <div>
-              系統編號<span id="number">{id}</span>
-            </div>
-          </div>
-          <div>
             <label>性別 </label>
             <input
               type="radio"
