@@ -4,7 +4,7 @@ import Home from "./Pages/Home/Home.js";
 import Dietitian from "./Pages/Dietitian/Dietitian.js";
 import Customer from "./Pages/Customer/Customer.js";
 import styled from "styled-components";
-import logo from "./images/lightlife-horizontal.svg";
+import logo from "./images/lightlife-horizontal.png";
 
 function App() {
   const dID = "cJUCoL1hZz36cVgf7WRz";
@@ -23,7 +23,7 @@ function App() {
             <header className="m-header">
               <div className="logo-nav">
                 <a href="/">
-                  <img src={logo} id="logo" />
+                  <img src={logo} id="logo" alt="logo" />
                 </a>
                 <div id="menu" style={{ width: "24px", height: "24px" }}></div>
               </div>
@@ -34,7 +34,7 @@ function App() {
             <header className="m-header">
               <div className="logo-nav">
                 <a href="/">
-                  <img src={logo} id="logo" />
+                  <img src={logo} id="logo" alt="logo" />
                 </a>
                 <div id="menu" style={{ width: "24px", height: "24px" }}></div>
               </div>

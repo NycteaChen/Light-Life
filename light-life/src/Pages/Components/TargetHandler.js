@@ -240,9 +240,7 @@ function TargetHandler({ target, setTarget }) {
                     }
                     onChange={getInputHandler}
                     class="set-content"
-                  >
-                    要運動喔
-                  </textarea>
+                  ></textarea>
                 </div>
               </div>
             ) : (

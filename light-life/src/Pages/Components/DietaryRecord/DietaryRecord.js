@@ -11,6 +11,7 @@ import {
 import "firebase/firestore";
 import DietitianRecord from "./DietitianRecord.js";
 import CustomerRecord from "./CustomerRecord.js";
+import style from "../../../style/dietary.module.scss";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
@@ -93,14 +94,16 @@ function RenderDietaryRecord() {
   };
   if (params.dID) {
     return (
-      <>
-        <input
-          type="date"
-          min="2021-05-14"
-          max="2021-05-26"
-          onChange={getDietaryRecordDate}
-          required="required"
-        ></input>
+      <div className={style["daily-diet"]}>
+        <div className={style["date-selector"]}>
+          <input
+            type="date"
+            min="2021-05-14"
+            max="2021-05-26"
+            onChange={getDietaryRecordDate}
+            required="required"
+          ></input>
+        </div>
         <Router>
           <Link
             to={`/dietitian/${params.dID}/customer/${params.cID}/dietary/`}
@@ -120,7 +123,7 @@ function RenderDietaryRecord() {
             ""
           )}
         </Router>
-      </>
+      </div>
     );
   } else {
     return (

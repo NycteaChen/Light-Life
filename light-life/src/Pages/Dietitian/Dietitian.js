@@ -9,7 +9,7 @@ import {
 import InvitedList from "./Invite/InvitedList.js";
 import DietitianProfile from "../Dietitian/DietitianProfile/DietitianProfile.js";
 import firebase from "firebase/app";
-import logo from "../../images/lightlife-straight.svg";
+import logo from "../../images/lightlife-straight.png";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import "firebase/firestore";
@@ -129,7 +129,7 @@ function Dietitian() {
             <a href="/">
               <img src={exit} alt="logout" id="logout" />
             </a>
-            <div class="copyright">&copy;2021 Light Life</div>
+            <div className="copyright">&copy;2021 Light Life</div>
           </div>
         </nav>
         <div className="profile">

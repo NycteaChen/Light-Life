@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import React from "react";
-import logo from "../../images/lightlife-horizontal.svg";
+import logo from "../../images/lightlife-horizontal.png";
 import "../../style/home.scss";
 import $ from "jquery";
 // const Cover = styled.div`
