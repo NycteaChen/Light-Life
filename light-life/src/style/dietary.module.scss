@@ -41,6 +41,14 @@
               width: 100px;
               height: 100px;
             }
+            i {
+              transition: all 0.5s;
+              cursor: pointer;
+              &:hover {
+                transform: scale(1.2);
+                color: red;
+              }
+            }
           }
         }
         .image-record {
@@ -111,7 +119,7 @@
           }
         }
         tbody {
-          tr:nth-child(odd) {
+          tr:nth-child(even) {
             background-color: aqua;
           }
 
@@ -151,6 +159,35 @@
             width: 20px;
             height: 20px;
             content: "";
+          }
+        }
+      }
+    }
+
+    .customer-table {
+      font-size: 12px;
+
+      table {
+        text-align: center;
+        padding: 2px 2px 20px;
+        display: block;
+        overflow-x: auto;
+        border-collapse: collapse;
+        th {
+          padding: 5px 0;
+          min-width: 120px;
+        }
+        th + th {
+          border-left: 1px solid #2c2a28;
+        }
+        thead {
+          .item-title {
+            background-color: aquamarine;
+          }
+        }
+        tbody {
+          tr:nth-child(even) {
+            background-color: aqua;
           }
         }
       }
@@ -222,6 +259,17 @@
             }
           }
         }
+        .customer-table {
+          text-align: center;
+          margin: auto;
+          width: 80%;
+          font-size: 1rem;
+          table {
+            th {
+              padding: 10px 0;
+            }
+          }
+        }
       }
     }
   }
@@ -278,6 +326,18 @@
         }
 
         .dietitian-record {
+          width: 95%;
+          display: inline;
+          table {
+            th {
+              padding: 10px 0;
+            }
+            input {
+              font-size: 16px;
+            }
+          }
+        }
+        .customer-table {
           width: 95%;
           display: inline;
           table {
