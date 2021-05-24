@@ -167,7 +167,7 @@
   }
   @media (min-width: 1024px) {
     & {
-      margin-left: 200px;
+      margin-left: 250px;
       text-align: left;
       .invite-number {
         font-size: 20px;
@@ -175,7 +175,9 @@
       }
       .inviters {
         background-color: #fcffd4;
-        height: calc(100vh - 160px);
+        padding-bottom: 10px;
+        max-height: calc(100vh - 160px);
+        width: 800px;
         max-height: unset;
         overflow: auto;
         .inviter:first-of-type {
