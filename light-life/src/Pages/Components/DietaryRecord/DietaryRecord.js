@@ -127,13 +127,16 @@ function RenderDietaryRecord() {
     );
   } else {
     return (
-      <>
-        <input
-          type="date"
-          min="2021-05-14"
-          max="2021-05-31"
-          onChange={getDietaryRecordDate}
-        ></input>
+      <div className={style["daily-diet"]}>
+        <div className={style["date-selector"]}>
+          <input
+            type="date"
+            min="2021-05-14"
+            max="2021-05-26"
+            onChange={getDietaryRecordDate}
+            required="required"
+          ></input>
+        </div>
         <Router>
           <Link to={`/customer/${params.cID}/dietary/`}></Link>
           {getRecord ? (
@@ -150,7 +153,7 @@ function RenderDietaryRecord() {
             ""
           )}
         </Router>
-      </>
+      </div>
     );
   }
 }

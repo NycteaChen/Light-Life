@@ -249,7 +249,7 @@ function DietitianRecord({ date, count, setCount }) {
             {" "}
             {m[0]}
           </div>
-          {meal[0] === `${m[1]}` && count % 2 === 0 ? (
+          {meal[0] === m[1] && count % 2 === 0 ? (
             <>
               <div className={`${style["diet-record"]} ${style.col}`}>
                 <label className={style["eat-time"]}>
@@ -275,6 +275,7 @@ function DietitianRecord({ date, count, setCount }) {
                     )}
                   </div>
                 </div>
+
                 <div className={`${style.col} ${style["meal-content"]}`}>
                   <div className={style["content-title"]}>飲食內容</div>
                   <div className={style["content-text"]}>
