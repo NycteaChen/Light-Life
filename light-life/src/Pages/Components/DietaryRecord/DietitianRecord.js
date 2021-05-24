@@ -11,6 +11,7 @@ import {
 import "firebase/firestore";
 import getIngrediensData from "../../../utils/IngredientsAPI.js";
 import Analysis from "./Analysis.js";
+import style from "../../../style/dietary.module.scss";
 
 function DietitianRecord({ date, count, setCount }) {
   const params = useParams();
@@ -38,14 +39,15 @@ function DietitianRecord({ date, count, setCount }) {
     });
   }, []);
   const getMealHandler = (e) => {
+    const mealClass = e.target.className.split(" ")[1];
     setInput(initInput);
     setIsSelected(false);
-    if (meal[0] !== e.target.className) {
+    if (meal[0] !== mealClass) {
       setCount(2);
     } else {
       setCount(count + 1);
     }
-    setMeal([e.target.className, e.target.id]);
+    setMeal([mealClass, e.target.id]);
     firebase
       .firestore()
       .collection("dietitians")
@@ -56,8 +58,8 @@ function DietitianRecord({ date, count, setCount }) {
       .doc(date)
       .get()
       .then((doc) => {
-        if (doc.exists && doc.data()[e.target.className]) {
-          setMealDetails(doc.data()[e.target.className]);
+        if (doc.exists && doc.data()[mealClass]) {
+          setMealDetails(doc.data()[mealClass]);
         } else {
           setMealDetails("");
         }
@@ -156,7 +158,7 @@ function DietitianRecord({ date, count, setCount }) {
   };
 
   const addNewFoodTable = (e) => {
-    if (meal[0] === e.target.className) {
+    if (meal[0] === e.target.className.split(" ")[1]) {
       if (input.item === "" || !input.item) {
         alert("請填入食材");
         return;
@@ -189,7 +191,6 @@ function DietitianRecord({ date, count, setCount }) {
       ingredients.find((i) =>
         i["樣品名稱"] === e.target.value ? setIsSelected(true) : null
       );
-      console.log("test");
     }
   };
 
@@ -225,257 +226,68 @@ function DietitianRecord({ date, count, setCount }) {
         { merge: true }
       );
   };
+
+  const mealKeywords = [
+    ["早餐", "customerBreakfast", "breakfast"],
+    ["早點", "customerMorning-snack", "morning-snack"],
+    ["午餐", "customerLunch", "lunch"],
+    ["午點", "customerAfternoon-snack", "afternoon-snack"],
+    ["晚餐", "customerDinner", "dinner"],
+    ["晚點", "customerNight-snack", "night-snack"],
+  ];
+
   return (
     <>
-      <div id="dietitian-daily-diet">
-        <h2>{date}飲食記錄</h2>
-        <div>
+      <h3>{date} 飲食記錄</h3>
+      {mealKeywords.map((m) => (
+        <div className={style.meal}>
           <div
-            className="customerBreakfast"
-            id="breakfast"
+            className={`${style["meal-title"]} ${m[1]}`}
+            id={`${m[2]}`}
             onClick={getMealHandler}
           >
-            早餐
+            {" "}
+            {m[0]}
           </div>
-          {meal[0] === "customerBreakfast" && count % 2 === 0 ? (
+          {meal[0] === `${m[1]}` && count % 2 === 0 ? (
             <>
-              <div className="diet-record">
-                <div>
-                  進食時間{" "}
-                  <span id="eat-time">{mealDetails.eatTime || ""}</span>
-                </div>
-                <div>
-                  <div>照片記錄</div>
-                  {mealDetails &&
-                  mealDetails.images &&
-                  mealDetails.images.length > 0
-                    ? mealDetails.images.map((i, index) => (
-                        <div key={index}>
-                          <a href={i} target="_blank" rel="noreferrer noopener">
-                            <img
-                              src={i}
-                              alt="customer"
-                              style={{ width: "200px", height: "200px" }}
-                            />
-                          </a>
-                        </div>
-                      ))
-                    : ""}
-                </div>
-                <div>
-                  <div>飲食內容</div>
-                  <div>{mealDetails.description || ""}</div>
-                </div>
-              </div>
-              <div>
-                <table className="dietitian-record">
-                  <thead>
-                    <tr>
-                      <th>品項</th>
-                      <th>單位:100g</th>
-                      <th>熱量(kcal)</th>
-                      <th>蛋白質(g)</th>
-                      <th>脂質(g)</th>
-                      <th>碳水化合物(g)</th>
-                      <th>膳食纖維(g)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataAnalysis
-                      ? dataAnalysis.map((a, index) => (
-                          <tr key={index}>
-                            <th>{a.item}</th>
-                            <th>{a.per}</th>
-                            <th>{a.kcal}</th>
-                            <th>{a.protein}</th>
-                            <th>{a.lipid}</th>
-                            <th>{a.carbohydrate}</th>
-                            <th>{a.fiber}</th>
-                            <th id={index} onClick={removeItemHandler}>
-                              x
-                            </th>
-                          </tr>
-                        ))
-                      : null}
-                    <tr>
-                      <th style={{ position: "relative" }}>
-                        <input
-                          type="text"
-                          name="item"
-                          value={input.item ? input.item : ""}
-                          placeholder="請輸入食材"
-                          style={{ width: "150px" }}
-                          autoComplete="off"
-                          onBlur={inputItemHandler}
-                          onClick={inputItemHandler}
-                          onChange={getInputHandler}
-                          onInput={getSearchHandler}
-                        />
-                        {inputValue.length > 0 && isDisplay ? (
-                          <div
-                            className="searchBox"
-                            style={{
-                              zIndex: "1",
-                              width: "150px",
-                              height: "100px",
-                              backgroundColor: "white",
-                              border: "1px solid black",
-                              position: "absolute",
-                              textAlign: "left",
-                              fontWeight: "500",
-                              fontSize: "14px",
-                              overflowY: "scroll",
-                              overflowX: "hidden",
-                              padding: "7px 10px",
-                            }}
-                          >
-                            {inputValue.map((i, index) => (
-                              <div
-                                key={index}
-                                onClick={selectIngredientHandler}
-                              >
-                                {i}
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                      </th>
-                      <th>
-                        <input
-                          type="number"
-                          name="per"
-                          value={input.per ? input.per : "0"}
-                          min="0"
-                          onChange={getInputHandler}
-                          style={{ width: "50px" }}
-                        />
-                      </th>
-                      {isSelect ? (
-                        <>
-                          <th>{input.kcal}</th>
-                          <th>{input.protein}</th>
-                          <th>{input.lipid}</th>
-                          <th>{input.carbohydrate}</th>
-                          <th>{input.fiber}</th>
-                        </>
-                      ) : (
-                        <>
-                          <th>
-                            <input
-                              type="number"
-                              name="kcal"
-                              value={input.kcal ? input.kcal : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="protein"
-                              value={input.protein ? input.protein : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="lipid"
-                              value={input.lipid ? input.lipid : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="carbohydrate"
-                              value={
-                                input.carbohydrate ? input.carbohydrate : "0"
-                              }
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="fiber"
-                              value={input.fiber ? input.fiber : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                        </>
-                      )}
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th
-                        className="customerBreakfast"
-                        onClick={addNewFoodTable}
-                      >
-                        +
-                      </th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </>
-          ) : (
-            ""
-          )}
-        </div>
+              <div className={`${style["diet-record"]} ${style.col}`}>
+                <label className={style["eat-time"]}>
+                  <div className={style.title}>進食時間</div>
+                  <div id="eat-time">{mealDetails.eatTime || ""}</div>
+                </label>
 
-        <div className="meal">
-          <div
-            className="customerMorning-snack"
-            id="morning-snack"
-            onClick={getMealHandler}
-          >
-            早點
-          </div>
-          {meal[0] === "customerMorning-snack" && count % 2 === 0 ? (
-            <>
-              <div className="diet-record">
-                <div>
-                  進食時間{" "}
-                  <span id="eat-time">{mealDetails.eatTime || ""}</span>
-                </div>
-                <div>
-                  <div>照片記錄</div>
-                  {mealDetails &&
-                  mealDetails.images &&
-                  mealDetails.images.length > 0
-                    ? mealDetails.images.map((i, index) => (
-                        <div key={index}>
+                <div className={style.col}>
+                  <div className={style["image-record"]}>照片記錄</div>
+                  <div className={style["food-images"]}>
+                    {mealDetails &&
+                    mealDetails.images &&
+                    mealDetails.images.length > 0 ? (
+                      mealDetails.images.map((i, index) => (
+                        <div className={style["food-image"]} key={index}>
                           <a href={i} target="_blank" rel="noreferrer noopener">
-                            <img
-                              src={i}
-                              alt="customer"
-                              style={{ width: "200px", height: "200px" }}
-                            />
+                            <img src={i} alt="customer" />
                           </a>
                         </div>
                       ))
-                    : ""}
+                    ) : (
+                      <div>尚未上傳照片</div>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <div>飲食內容</div>
-                  <div>{mealDetails.description || ""}</div>
+                <div className={`${style.col} ${style["meal-content"]}`}>
+                  <div className={style["content-title"]}>飲食內容</div>
+                  <div className={style["content-text"]}>
+                    {mealDetails.description || ""}
+                  </div>
                 </div>
               </div>
-              <div>
-                <table className="dietitian-record">
+
+              <div className={style["dietitian-record"]}>
+                <table>
                   <thead>
-                    <tr>
+                    <tr className={style["item-title"]}>
+                      <th></th>
                       <th>品項</th>
                       <th>單位:100g</th>
                       <th>熱量(kcal)</th>
@@ -489,6 +301,16 @@ function DietitianRecord({ date, count, setCount }) {
                     {dataAnalysis
                       ? dataAnalysis.map((a, index) => (
                           <tr key={index}>
+                            <th>
+                              <div style={{ width: "30px" }}>
+                                <i
+                                  id={index}
+                                  className="fa fa-trash"
+                                  aria-hidden="true"
+                                  onClick={removeItemHandler}
+                                ></i>
+                              </div>
+                            </th>
                             <th>{a.item}</th>
                             <th>{a.per}</th>
                             <th>{a.kcal}</th>
@@ -496,21 +318,19 @@ function DietitianRecord({ date, count, setCount }) {
                             <th>{a.lipid}</th>
                             <th>{a.carbohydrate}</th>
                             <th>{a.fiber}</th>
-                            <th id={index} onClick={removeItemHandler}>
-                              x
-                            </th>
                           </tr>
                         ))
                       : null}
-                    <tr>
+                    <tr className={style["food-input"]}>
+                      <th></th>
                       <th style={{ position: "relative" }}>
                         <input
                           type="text"
                           name="item"
                           value={input.item ? input.item : ""}
                           placeholder="請輸入食材"
-                          style={{ width: "150px" }}
                           autoComplete="off"
+                          className={style["input-item"]}
                           onBlur={inputItemHandler}
                           onClick={inputItemHandler}
                           onChange={getInputHandler}
@@ -522,7 +342,7 @@ function DietitianRecord({ date, count, setCount }) {
                             style={{
                               zIndex: "1",
                               width: "150px",
-                              height: "100px",
+                              maxHeight: "100px",
                               backgroundColor: "white",
                               border: "1px solid black",
                               position: "absolute",
@@ -545,14 +365,15 @@ function DietitianRecord({ date, count, setCount }) {
                           </div>
                         ) : null}
                       </th>
+
                       <th>
                         <input
                           type="number"
                           name="per"
-                          value={input.per ? input.per : "0"}
+                          value={input.per ? input.per : ""}
                           min="0"
                           onChange={getInputHandler}
-                          style={{ width: "50px" }}
+                          className={style["input-number"]}
                         />
                       </th>
                       {isSelect ? (
@@ -569,30 +390,30 @@ function DietitianRecord({ date, count, setCount }) {
                             <input
                               type="number"
                               name="kcal"
-                              value={input.kcal ? input.kcal : "0"}
+                              value={input.kcal ? input.kcal : ""}
                               min="0"
                               onChange={getInputHandler}
-                              style={{ width: "50px" }}
+                              className={style["input-number"]}
                             />
                           </th>
                           <th>
                             <input
                               type="number"
                               name="protein"
-                              value={input.protein ? input.protein : "0"}
+                              value={input.protein ? input.protein : ""}
                               min="0"
                               onChange={getInputHandler}
-                              style={{ width: "50px" }}
+                              className={style["input-number"]}
                             />
                           </th>
                           <th>
                             <input
                               type="number"
                               name="lipid"
-                              value={input.lipid ? input.lipid : "0"}
+                              value={input.lipid ? input.lipid : ""}
                               min="0"
                               onChange={getInputHandler}
-                              style={{ width: "50px" }}
+                              className={style["input-number"]}
                             />
                           </th>
                           <th>
@@ -600,21 +421,21 @@ function DietitianRecord({ date, count, setCount }) {
                               type="number"
                               name="carbohydrate"
                               value={
-                                input.carbohydrate ? input.carbohydrate : "0"
+                                input.carbohydrate ? input.carbohydrate : ""
                               }
                               min="0"
                               onChange={getInputHandler}
-                              style={{ width: "50px" }}
+                              className={style["input-number"]}
                             />
                           </th>
                           <th>
                             <input
                               type="number"
                               name="fiber"
-                              value={input.fiber ? input.fiber : "0"}
+                              value={input.fiber ? input.fiber : ""}
                               min="0"
                               onChange={getInputHandler}
-                              style={{ width: "50px" }}
+                              className={style["input-number"]}
                             />
                           </th>
                         </>
@@ -623,12 +444,11 @@ function DietitianRecord({ date, count, setCount }) {
                   </tbody>
                   <tfoot>
                     <tr>
+                      <th></th>
                       <th
-                        className="customerMorning-snack"
+                        className={`${style["meal-plus"]} ${m[1]}`}
                         onClick={addNewFoodTable}
-                      >
-                        +
-                      </th>
+                      ></th>
                     </tr>
                   </tfoot>
                 </table>
@@ -638,811 +458,8 @@ function DietitianRecord({ date, count, setCount }) {
             ""
           )}
         </div>
-        <div className="meal">
-          <div className="customerLunch" id="lunch" onClick={getMealHandler}>
-            午餐
-          </div>
-          {meal[0] === "customerLunch" && count % 2 === 0 ? (
-            <>
-              <div className="diet-record">
-                <div>
-                  進食時間{" "}
-                  <span id="eat-time">{mealDetails.eatTime || ""}</span>
-                </div>
-                <div>
-                  <div>照片記錄</div>
-                  {mealDetails &&
-                  mealDetails.images &&
-                  mealDetails.images.length > 0
-                    ? mealDetails.images.map((i, index) => (
-                        <div key={index}>
-                          <a href={i} target="_blank" rel="noreferrer noopener">
-                            <img
-                              src={i}
-                              alt="customer"
-                              style={{ width: "200px", height: "200px" }}
-                            />
-                          </a>
-                        </div>
-                      ))
-                    : ""}
-                </div>
-                <div>
-                  <div>飲食內容</div>
-                  <div>{mealDetails.description || ""}</div>
-                </div>
-              </div>
-              <div>
-                <table className="dietitian-record">
-                  <thead>
-                    <tr>
-                      <th>品項</th>
-                      <th>單位:100g</th>
-                      <th>熱量(kcal)</th>
-                      <th>蛋白質(g)</th>
-                      <th>脂質(g)</th>
-                      <th>碳水化合物(g)</th>
-                      <th>膳食纖維(g)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataAnalysis
-                      ? dataAnalysis.map((a, index) => (
-                          <tr key={index}>
-                            <th>{a.item}</th>
-                            <th>{a.per}</th>
-                            <th>{a.kcal}</th>
-                            <th>{a.protein}</th>
-                            <th>{a.lipid}</th>
-                            <th>{a.carbohydrate}</th>
-                            <th>{a.fiber}</th>
-                            <th id={index} onClick={removeItemHandler}>
-                              x
-                            </th>
-                          </tr>
-                        ))
-                      : null}
-                    <tr>
-                      <th style={{ position: "relative" }}>
-                        <input
-                          type="text"
-                          name="item"
-                          value={input.item ? input.item : ""}
-                          placeholder="請輸入食材"
-                          style={{ width: "150px" }}
-                          autoComplete="off"
-                          onBlur={inputItemHandler}
-                          onClick={inputItemHandler}
-                          onChange={getInputHandler}
-                          onInput={getSearchHandler}
-                        />
-                        {inputValue.length > 0 && isDisplay ? (
-                          <div
-                            className="searchBox"
-                            style={{
-                              zIndex: "1",
-                              width: "150px",
-                              height: "100px",
-                              backgroundColor: "white",
-                              border: "1px solid black",
-                              position: "absolute",
-                              textAlign: "left",
-                              fontWeight: "500",
-                              fontSize: "14px",
-                              overflowY: "scroll",
-                              overflowX: "hidden",
-                              padding: "7px 10px",
-                            }}
-                          >
-                            {inputValue.map((i, index) => (
-                              <div
-                                key={index}
-                                onClick={selectIngredientHandler}
-                              >
-                                {i}
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                      </th>
-                      <th>
-                        <input
-                          type="number"
-                          name="per"
-                          value={input.per ? input.per : "0"}
-                          min="0"
-                          onChange={getInputHandler}
-                          style={{ width: "50px" }}
-                        />
-                      </th>
-                      {isSelect ? (
-                        <>
-                          <th>{input.kcal}</th>
-                          <th>{input.protein}</th>
-                          <th>{input.lipid}</th>
-                          <th>{input.carbohydrate}</th>
-                          <th>{input.fiber}</th>
-                        </>
-                      ) : (
-                        <>
-                          <th>
-                            <input
-                              type="number"
-                              name="kcal"
-                              value={input.kcal ? input.kcal : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="protein"
-                              value={input.protein ? input.protein : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="lipid"
-                              value={input.lipid ? input.lipid : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="carbohydrate"
-                              value={
-                                input.carbohydrate ? input.carbohydrate : "0"
-                              }
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="fiber"
-                              value={input.fiber ? input.fiber : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                        </>
-                      )}
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th className="customerLunch" onClick={addNewFoodTable}>
-                        +
-                      </th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </>
-          ) : (
-            ""
-          )}
-        </div>
-        <div className="meal">
-          <div
-            className="customerAfternoon-snack"
-            id="afternoon-snack"
-            onClick={getMealHandler}
-          >
-            午點
-          </div>
-          {meal[0] === "customerAfternoon-snack" && count % 2 === 0 ? (
-            <>
-              <div className="diet-record">
-                <div>
-                  進食時間{" "}
-                  <span id="eat-time">{mealDetails.eatTime || ""}</span>
-                </div>
-                <div>
-                  <div>照片記錄</div>
-                  {mealDetails &&
-                  mealDetails.images &&
-                  mealDetails.images.length > 0
-                    ? mealDetails.images.map((i, index) => (
-                        <div key={index}>
-                          <a href={i} target="_blank" rel="noreferrer noopener">
-                            <img
-                              src={i}
-                              alt="customer"
-                              style={{ width: "200px", height: "200px" }}
-                            />
-                          </a>
-                        </div>
-                      ))
-                    : ""}
-                </div>
-                <div>
-                  <div>飲食內容</div>
-                  <div>{mealDetails.description || ""}</div>
-                </div>
-              </div>
-              <div>
-                <table className="dietitian-record">
-                  <thead>
-                    <tr>
-                      <th>品項</th>
-                      <th>單位:100g</th>
-                      <th>熱量(kcal)</th>
-                      <th>蛋白質(g)</th>
-                      <th>脂質(g)</th>
-                      <th>碳水化合物(g)</th>
-                      <th>膳食纖維(g)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataAnalysis
-                      ? dataAnalysis.map((a, index) => (
-                          <tr key={index}>
-                            <th>{a.item}</th>
-                            <th>{a.per}</th>
-                            <th>{a.kcal}</th>
-                            <th>{a.protein}</th>
-                            <th>{a.lipid}</th>
-                            <th>{a.carbohydrate}</th>
-                            <th>{a.fiber}</th>
-                            <th id={index} onClick={removeItemHandler}>
-                              x
-                            </th>
-                          </tr>
-                        ))
-                      : null}
-                    <tr>
-                      <th style={{ position: "relative" }}>
-                        <input
-                          type="text"
-                          name="item"
-                          value={input.item ? input.item : ""}
-                          placeholder="請輸入食材"
-                          style={{ width: "150px" }}
-                          autoComplete="off"
-                          onBlur={inputItemHandler}
-                          onClick={inputItemHandler}
-                          onChange={getInputHandler}
-                          onInput={getSearchHandler}
-                        />
-                        {inputValue.length > 0 && isDisplay ? (
-                          <div
-                            className="searchBox"
-                            style={{
-                              zIndex: "1",
-                              width: "150px",
-                              height: "100px",
-                              backgroundColor: "white",
-                              border: "1px solid black",
-                              position: "absolute",
-                              textAlign: "left",
-                              fontWeight: "500",
-                              fontSize: "14px",
-                              overflowY: "scroll",
-                              overflowX: "hidden",
-                              padding: "7px 10px",
-                            }}
-                          >
-                            {inputValue.map((i, index) => (
-                              <div
-                                key={index}
-                                onClick={selectIngredientHandler}
-                              >
-                                {i}
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                      </th>
-                      <th>
-                        <input
-                          type="number"
-                          name="per"
-                          value={input.per ? input.per : "0"}
-                          min="0"
-                          onChange={getInputHandler}
-                          style={{ width: "50px" }}
-                        />
-                      </th>
-                      {isSelect ? (
-                        <>
-                          <th>{input.kcal}</th>
-                          <th>{input.protein}</th>
-                          <th>{input.lipid}</th>
-                          <th>{input.carbohydrate}</th>
-                          <th>{input.fiber}</th>
-                        </>
-                      ) : (
-                        <>
-                          <th>
-                            <input
-                              type="number"
-                              name="kcal"
-                              value={input.kcal ? input.kcal : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="protein"
-                              value={input.protein ? input.protein : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="lipid"
-                              value={input.lipid ? input.lipid : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="carbohydrate"
-                              value={
-                                input.carbohydrate ? input.carbohydrate : "0"
-                              }
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="fiber"
-                              value={input.fiber ? input.fiber : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                        </>
-                      )}
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th
-                        className="customerAfternoon-snack"
-                        onClick={addNewFoodTable}
-                      >
-                        +
-                      </th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </>
-          ) : (
-            ""
-          )}
-        </div>
-        <div className="meal">
-          <div className="customerDinner" id="dinner" onClick={getMealHandler}>
-            晚餐
-          </div>
-          {meal[0] === "customerDinner" && count % 2 === 0 ? (
-            <>
-              <div className="diet-record">
-                <div>
-                  進食時間{" "}
-                  <span id="eat-time">{mealDetails.eatTime || ""}</span>
-                </div>
-                <div>
-                  <div>照片記錄</div>
-                  {mealDetails &&
-                  mealDetails.images &&
-                  mealDetails.images.length > 0
-                    ? mealDetails.images.map((i, index) => (
-                        <div key={index}>
-                          <a href={i} target="_blank" rel="noreferrer noopener">
-                            <img
-                              src={i}
-                              alt="customer"
-                              style={{ width: "200px", height: "200px" }}
-                            />
-                          </a>
-                        </div>
-                      ))
-                    : ""}
-                </div>
-                <div>
-                  <div>飲食內容</div>
-                  <div>{mealDetails.description || ""}</div>
-                </div>
-              </div>
-              <div>
-                <table className="dietitian-record">
-                  <thead>
-                    <tr>
-                      <th>品項</th>
-                      <th>單位:100g</th>
-                      <th>熱量(kcal)</th>
-                      <th>蛋白質(g)</th>
-                      <th>脂質(g)</th>
-                      <th>碳水化合物(g)</th>
-                      <th>膳食纖維(g)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataAnalysis
-                      ? dataAnalysis.map((a, index) => (
-                          <tr key={index}>
-                            <th>{a.item}</th>
-                            <th>{a.per}</th>
-                            <th>{a.kcal}</th>
-                            <th>{a.protein}</th>
-                            <th>{a.lipid}</th>
-                            <th>{a.carbohydrate}</th>
-                            <th>{a.fiber}</th>
-                            <th id={index} onClick={removeItemHandler}>
-                              x
-                            </th>
-                          </tr>
-                        ))
-                      : null}
-                    <tr>
-                      <th style={{ position: "relative" }}>
-                        <input
-                          type="text"
-                          name="item"
-                          value={input.item ? input.item : ""}
-                          placeholder="請輸入食材"
-                          style={{ width: "150px" }}
-                          autoComplete="off"
-                          onBlur={inputItemHandler}
-                          onClick={inputItemHandler}
-                          onChange={getInputHandler}
-                          onInput={getSearchHandler}
-                        />
-                        {inputValue.length > 0 && isDisplay ? (
-                          <div
-                            className="searchBox"
-                            style={{
-                              zIndex: "1",
-                              width: "150px",
-                              height: "100px",
-                              backgroundColor: "white",
-                              border: "1px solid black",
-                              position: "absolute",
-                              textAlign: "left",
-                              fontWeight: "500",
-                              fontSize: "14px",
-                              overflowY: "scroll",
-                              overflowX: "hidden",
-                              padding: "7px 10px",
-                            }}
-                          >
-                            {inputValue.map((i, index) => (
-                              <div
-                                key={index}
-                                onClick={selectIngredientHandler}
-                              >
-                                {i}
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                      </th>
-                      <th>
-                        <input
-                          type="number"
-                          name="per"
-                          value={input.per ? input.per : "0"}
-                          min="0"
-                          onChange={getInputHandler}
-                          style={{ width: "50px" }}
-                        />
-                      </th>
-                      {isSelect ? (
-                        <>
-                          <th>{input.kcal}</th>
-                          <th>{input.protein}</th>
-                          <th>{input.lipid}</th>
-                          <th>{input.carbohydrate}</th>
-                          <th>{input.fiber}</th>
-                        </>
-                      ) : (
-                        <>
-                          <th>
-                            <input
-                              type="number"
-                              name="kcal"
-                              value={input.kcal ? input.kcal : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="protein"
-                              value={input.protein ? input.protein : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="lipid"
-                              value={input.lipid ? input.lipid : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="carbohydrate"
-                              value={
-                                input.carbohydrate ? input.carbohydrate : "0"
-                              }
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="fiber"
-                              value={input.fiber ? input.fiber : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                        </>
-                      )}
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th className="customerDinner" onClick={addNewFoodTable}>
-                        +
-                      </th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </>
-          ) : (
-            ""
-          )}
-        </div>
-        <div className="meal">
-          <div
-            className="customerNight-snack"
-            id="night-snack"
-            onClick={getMealHandler}
-          >
-            晚點
-          </div>
-          {meal[0] === "customerNight-snack" && count % 2 === 0 ? (
-            <>
-              <div className="diet-record">
-                <div>
-                  進食時間{" "}
-                  <span id="eat-time">{mealDetails.eatTime || ""}</span>
-                </div>
-                <div>
-                  <div>照片記錄</div>
-                  {mealDetails &&
-                  mealDetails.images &&
-                  mealDetails.images.length > 0
-                    ? mealDetails.images.map((i, index) => (
-                        <div key={index}>
-                          <a href={i} target="_blank" rel="noreferrer noopener">
-                            <img
-                              src={i}
-                              alt="customer"
-                              style={{ width: "200px", height: "200px" }}
-                            />
-                          </a>
-                        </div>
-                      ))
-                    : ""}
-                </div>
-                <div>
-                  <div>飲食內容</div>
-                  <div>{mealDetails.description || ""}</div>
-                </div>
-              </div>
-              <div>
-                <table className="dietitian-record">
-                  <thead>
-                    <tr>
-                      <th>品項</th>
-                      <th>單位:100g</th>
-                      <th>熱量(kcal)</th>
-                      <th>蛋白質(g)</th>
-                      <th>脂質(g)</th>
-                      <th>碳水化合物(g)</th>
-                      <th>膳食纖維(g)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataAnalysis
-                      ? dataAnalysis.map((a, index) => (
-                          <tr key={index}>
-                            <th>{a.item}</th>
-                            <th>{a.per}</th>
-                            <th>{a.kcal}</th>
-                            <th>{a.protein}</th>
-                            <th>{a.lipid}</th>
-                            <th>{a.carbohydrate}</th>
-                            <th>{a.fiber}</th>
-                            <th id={index} onClick={removeItemHandler}>
-                              x
-                            </th>
-                          </tr>
-                        ))
-                      : null}
-                    <tr>
-                      <th style={{ position: "relative" }}>
-                        <input
-                          type="text"
-                          name="item"
-                          value={input.item ? input.item : ""}
-                          placeholder="請輸入食材"
-                          style={{ width: "150px" }}
-                          autoComplete="off"
-                          onBlur={inputItemHandler}
-                          onClick={inputItemHandler}
-                          onChange={getInputHandler}
-                          onInput={getSearchHandler}
-                        />
-                        {inputValue.length > 0 && isDisplay ? (
-                          <div
-                            className="searchBox"
-                            style={{
-                              zIndex: "1",
-                              width: "150px",
-                              height: "100px",
-                              backgroundColor: "white",
-                              border: "1px solid black",
-                              position: "absolute",
-                              textAlign: "left",
-                              fontWeight: "500",
-                              fontSize: "14px",
-                              overflowY: "scroll",
-                              overflowX: "hidden",
-                              padding: "7px 10px",
-                            }}
-                          >
-                            {inputValue.map((i, index) => (
-                              <div
-                                key={index}
-                                onClick={selectIngredientHandler}
-                              >
-                                {i}
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                      </th>
-                      <th>
-                        <input
-                          type="number"
-                          name="per"
-                          value={input.per ? input.per : "0"}
-                          min="0"
-                          onChange={getInputHandler}
-                          style={{ width: "50px" }}
-                        />
-                      </th>
-                      {isSelect ? (
-                        <>
-                          <th>{input.kcal}</th>
-                          <th>{input.protein}</th>
-                          <th>{input.lipid}</th>
-                          <th>{input.carbohydrate}</th>
-                          <th>{input.fiber}</th>
-                        </>
-                      ) : (
-                        <>
-                          <th>
-                            <input
-                              type="number"
-                              name="kcal"
-                              value={input.kcal ? input.kcal : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="protein"
-                              value={input.protein ? input.protein : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="lipid"
-                              value={input.lipid ? input.lipid : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="carbohydrate"
-                              value={
-                                input.carbohydrate ? input.carbohydrate : "0"
-                              }
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="fiber"
-                              value={input.fiber ? input.fiber : "0"}
-                              min="0"
-                              onChange={getInputHandler}
-                              style={{ width: "50px" }}
-                            />
-                          </th>
-                        </>
-                      )}
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th
-                        className="customerNight-snack"
-                        onClick={addNewFoodTable}
-                      >
-                        +
-                      </th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </>
-          ) : (
-            ""
-          )}
-        </div>
-        <hr />
-        <Analysis date={date} dID={dID} cID={cID} data={dataAnalysis} />
-      </div>
+      ))}
+      <Analysis date={date} dID={dID} cID={cID} data={dataAnalysis} />
     </>
   );
 }

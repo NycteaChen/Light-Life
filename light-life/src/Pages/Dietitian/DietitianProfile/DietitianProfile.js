@@ -18,7 +18,9 @@ function DietitianProfile({ profile }) {
         <div className="basic-profile">
           <div className="flexbox">
             <div className="img">
-              <img src={profile.image} />
+              <a href={profile.image} target="_blank">
+                <img src={profile.image} alt="profile" />
+              </a>
               <input type="file" accept="image/*" name="image" />
               <div>專業形象將為您加分</div>
             </div>
