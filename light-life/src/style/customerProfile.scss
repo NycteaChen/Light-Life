@@ -112,8 +112,9 @@
   }
   @media (min-width: 1024px) {
     & {
-      margin-left: 200px;
-      height: calc(100vh - 180px);
+      margin-top: 20px;
+      margin-left: 330px;
+      max-height: calc(100vh - 180px);
       overflow: auto;
       overflow-x: hidden;
       .profile-data {

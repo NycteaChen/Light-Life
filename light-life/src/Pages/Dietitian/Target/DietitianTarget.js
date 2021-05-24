@@ -10,6 +10,7 @@ import {
   useParams,
 } from "react-router-dom";
 import TargetHandler from "../../Components/TargetHandler.js";
+import "../../../style/target.scss";
 
 function DietitianTarget() {
   const params = useParams();
@@ -74,59 +75,82 @@ function DietitianTarget() {
   };
 
   return (
-    <div id="dietitian-target">
-      <h2>目標設定</h2>
+    <div className="target-setting" id="dietitian-target">
       <h3>已設立目標</h3>
-      <div id="customer-target">
+      <div className="customer-targets">
         <TargetHandler target={target} setTarget={setTarget} />
+        {/* <div
+          className="customer-target"
+          id="customer-target"
+          style={{ maxHeight: "300px", overflow: "auto" }}
+        >
+          
+        </div> */}
       </div>
       <h3>新增目標</h3>
-      <label>
-        時間範圍
-        <input
-          type="date"
-          id="target-start"
-          name="startDate"
-          min={initStartDate}
-          max={date.endDate ? `${date.endDate}` : ""}
-          onChange={(e) => {
-            bindChangeDateRange(e);
-            getInputHandler(e);
-          }}
-        />
-      </label>
-      <label>
-        至
-        <input
-          type="date"
-          id="target-end"
-          name="endDate"
-          min={leastEndDate ? leastEndDate : initStartDate}
-          max={date.endDate ? `${date.endDate}` : ""}
-          onChange={getInputHandler}
-        />
-      </label>
-      <div>
-        <label>
-          目標體重
-          <input type="text" name="weight" onChange={getInputHandler} />
-          kg
-        </label>
+      <div className="add-new-target">
+        <div className="col">
+          <label className="flexbox">
+            <div>開始日期</div>
+            <input
+              type="date"
+              id="target-start"
+              name="startDate"
+              className="set-content"
+              min={initStartDate}
+              max={date.endDate ? `${date.endDate}` : ""}
+              onChange={(e) => {
+                bindChangeDateRange(e);
+                getInputHandler(e);
+              }}
+            />
+          </label>
+          <label className="flexbox">
+            <div>結束日期</div>
+            <input
+              type="date"
+              id="target-end"
+              name="endDate"
+              className="set-content"
+              min={leastEndDate ? leastEndDate : initStartDate}
+              max={date.endDate ? `${date.endDate}` : ""}
+              onChange={getInputHandler}
+            />
+          </label>
+        </div>
+        <div className="col">
+          <label className="flexbox">
+            <div>目標體重</div>
+            <input
+              type="text"
+              name="weight"
+              className="set-content"
+              onChange={getInputHandler}
+            />
+          </label>
+
+          <label className="flexbox">
+            <div>目標水分</div>
+            <input
+              type="text"
+              name="water"
+              className="set-content"
+              onChange={getInputHandler}
+            />
+          </label>
+        </div>
+        <div className="target-other">
+          <label className="flexbox">
+            <div>其他</div>
+            <textarea
+              name="other"
+              className="set-content"
+              onChange={getInputHandler}
+            />
+          </label>
+        </div>
+        <button onClick={bindAddTarget}>新增</button>
       </div>
-      <div>
-        <label>
-          目標水分
-          <input type="text" name="water" onChange={getInputHandler} />
-          cc
-        </label>
-      </div>
-      <div>
-        <label>
-          其他
-          <input type="textarea" name="other" onChange={getInputHandler} />
-        </label>
-      </div>
-      <button onClick={bindAddTarget}>新增</button>
     </div>
   );
 }

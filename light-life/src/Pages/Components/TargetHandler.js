@@ -9,6 +9,7 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
+import "../../style/target.scss";
 
 function TargetHandler({ target, setTarget }) {
   const db = firebase.firestore();
@@ -160,12 +161,12 @@ function TargetHandler({ target, setTarget }) {
                 </button>
                 <div>
                   <div>
-                    <div>日期</div>
                     <div>
                       建立時間<span>{t.addDate}</span>
                     </div>
                   </div>
                   <div>
+                    <div>日期</div>
                     <input
                       type="date"
                       name="startDate"
@@ -220,8 +221,7 @@ function TargetHandler({ target, setTarget }) {
                 <div>
                   <div>其他 </div>
                   <div>
-                    <input
-                      type="text"
+                    <textarea
                       name="other"
                       value={
                         input.other || input.other === ""
@@ -236,18 +236,17 @@ function TargetHandler({ target, setTarget }) {
               </div>
             ) : (
               <div key={index}>
-                {}
                 <button onClick={bindEditHandler} id={index}>
                   編輯
                 </button>
                 <div>
                   <div>
-                    <div>日期</div>
                     <div>
                       建立時間<span>{t.addDate}</span>
                     </div>
                   </div>
                   <div>
+                    <div>日期</div>
                     <span>{t.startDate}</span>
                     <span>至 </span>
                     <span>{t.endDate}</span>
@@ -293,12 +292,12 @@ function TargetHandler({ target, setTarget }) {
                 )}
                 <div>
                   <div>
-                    <div>日期</div>
                     <div>
                       建立時間<span>{t.addDate}</span>
                     </div>
                   </div>
                   <div>
+                    <div>日期</div>
                     <span>
                       {input.startDate ? input.startDate : t.startDate}
                     </span>
@@ -328,53 +327,52 @@ function TargetHandler({ target, setTarget }) {
                 <hr />
               </div>
             ) : (
-              <div key={index}>
-                {pathName.includes("dietitian") ? (
-                  <>
-                    <button onClick={bindEditHandler} id={index}>
-                      編輯
-                    </button>
-                    <div onClick={bindRemoveTarget} id={index}>
-                      X
+              <div key={index} className="customer-target">
+                <div className="target-header">
+                  {pathName.includes("dietitian") ? (
+                    <div className="alter-button">
+                      <button onClick={bindEditHandler} id={index}>
+                        編輯
+                      </button>
+                      <i
+                        id={index}
+                        className="fa fa-trash-o"
+                        aria-hidden="true"
+                        onClick={bindRemoveTarget}
+                      ></i>
                     </div>
-                  </>
-                ) : (
-                  ""
-                )}
-
-                <div>
-                  <div>
-                    <div>日期</div>
-                    <div>
-                      建立時間<span>{t.addDate}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <span>{t.startDate}</span>
-                    <span>至 </span>
-                    <span>{t.endDate}</span>
+                  ) : (
+                    ""
+                  )}
+                  <div className="flexbox">
+                    <div className="title">建立時間</div>
+                    <div className="set-content">{t.addDate}</div>
                   </div>
                 </div>
-                <div>
-                  <div>目標體重</div>
-                  <div>
-                    <span>{t.weight}</span>
-                    kg
+                <div className="col">
+                  <div className="flexbox">
+                    <div className="title">開始日期</div>
+                    <div className="set-content">{t.startDate}</div>
+                  </div>
+                  <div className="flexbox">
+                    <div className="title">結束日期</div>
+                    <div className="set-content">{t.endDate}</div>
                   </div>
                 </div>
-                <div>
-                  <div>目標水分</div>
-                  <div>
-                    <span>{t.water}</span> cc
+                <div className="col">
+                  <div className="flexbox">
+                    <div className="title">目標體重</div>
+                    <div className="set-content">{t.weight} kg</div>
+                  </div>
+                  <div className="flexbox">
+                    <div className="title">目標水分</div>
+                    <div className="set-content">{t.water} cc</div>
                   </div>
                 </div>
-                <div>
-                  <div>其他 </div>
-                  <div>
-                    <span>{t.other}</span>
-                  </div>
+                <div className="flexbox">
+                  <div className="title">其他</div>
+                  <div className="set-content">{t.other}</div>
                 </div>
-                <hr />
               </div>
             )
           )}
