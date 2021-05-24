@@ -155,18 +155,24 @@ function TargetHandler({ target, setTarget }) {
       {isEditing
         ? target.map((t, index) =>
             index == targetIndex ? (
-              <div key={index}>
-                <button onClick={bindSaveHandler} id={index}>
-                  儲存
-                </button>
-                <div>
-                  <div>
-                    <div>
-                      建立時間<span>{t.addDate}</span>
-                    </div>
+              <div key={index} class="customer-target">
+                <div class="target-header">
+                  <div class="alter-button">
+                    <button onClick={bindSaveHandler} id={index}>
+                      儲存
+                    </button>
+                    {/* <i class="fa fa-trash-o" aria-hidden="true"></i> */}
+                    {/* <i class="fa fa-trash" aria-hidden="true"></i> */}
                   </div>
-                  <div>
-                    <div>日期</div>
+                  <div class="flexbox">
+                    <div class="title">建立時間</div>
+                    <div class="set-content">{t.addDate}</div>
+                  </div>
+                </div>
+
+                <div class="col">
+                  <div class="flexbox">
+                    <div class="title">開始日期</div>
                     <input
                       type="date"
                       name="startDate"
@@ -174,8 +180,11 @@ function TargetHandler({ target, setTarget }) {
                       max={date.endDate}
                       value={input.startDate ? input.startDate : t.startDate}
                       onChange={getInputHandler}
+                      class="set-content"
                     />
-                    <span>至 </span>
+                  </div>
+                  <div class="flexbox">
+                    <div class="title">結束日期</div>
                     <input
                       type="date"
                       name="endDate"
@@ -183,101 +192,176 @@ function TargetHandler({ target, setTarget }) {
                       max={date.endDate}
                       value={input.endDate ? input.endDate : t.endDate}
                       onChange={getInputHandler}
+                      class="set-content"
                     />
                   </div>
                 </div>
-                <div>
-                  <div>目標體重</div>
-                  <div>
-                    <input
-                      type="text"
-                      name="weight"
-                      value={
-                        input.weight || input.weight === ""
-                          ? input.weight
-                          : t.weight
-                      }
-                      onChange={getInputHandler}
-                    />
-                    kg
-                  </div>
-                </div>
-                <div>
-                  <div>目標水分</div>
-                  <div>
-                    <input
-                      type="text"
-                      name="water"
-                      value={
-                        input.water || input.water === ""
-                          ? input.water
-                          : t.water
-                      }
-                      onChange={getInputHandler}
-                    />{" "}
-                    cc
-                  </div>
-                </div>
-                <div>
-                  <div>其他 </div>
-                  <div>
-                    <textarea
-                      name="other"
-                      value={
-                        input.other || input.other === ""
-                          ? input.other
-                          : t.other
-                      }
-                      onChange={getInputHandler}
-                    />
-                  </div>
-                </div>
-                <hr />
-              </div>
-            ) : (
-              <div key={index}>
-                <button onClick={bindEditHandler} id={index}>
-                  編輯
-                </button>
-                <div>
-                  <div>
+
+                <div class="col">
+                  <div class="flexbox">
+                    <div class="title">目標體重</div>
                     <div>
-                      建立時間<span>{t.addDate}</span>
+                      <input
+                        type="text"
+                        name="weight"
+                        value={
+                          input.weight || input.weight === ""
+                            ? input.weight
+                            : t.weight
+                        }
+                        onChange={getInputHandler}
+                        class="set-content"
+                      />
                     </div>
                   </div>
-                  <div>
-                    <div>日期</div>
-                    <span>{t.startDate}</span>
-                    <span>至 </span>
-                    <span>{t.endDate}</span>
+                  <div class="flexbox">
+                    <div class="title">目標水分</div>
+                    <div>
+                      <input
+                        type="text"
+                        name="water"
+                        value={
+                          input.water || input.water === ""
+                            ? input.water
+                            : t.water
+                        }
+                        onChange={getInputHandler}
+                        class="set-content"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <div>目標體重</div>
-                  <div>
-                    <span>{t.weight}</span>
-                    kg
+                <div class="flexbox">
+                  <div class="title">其他</div>
+                  <textarea
+                    name="other"
+                    value={
+                      input.other || input.other === "" ? input.other : t.other
+                    }
+                    onChange={getInputHandler}
+                    class="set-content"
+                  >
+                    要運動喔
+                  </textarea>
+                </div>
+              </div>
+            ) : (
+              <div key={index} className="customer-target">
+                <div className="target-header">
+                  <div className="alter-button">
+                    <button onClick={bindEditHandler} id={index}>
+                      編輯
+                    </button>
+                    <i
+                      id={index}
+                      className="fa fa-trash-o"
+                      aria-hidden="true"
+                      onClick={bindRemoveTarget}
+                    ></i>
+                  </div>
+                  <div className="flexbox">
+                    <div className="title">建立時間</div>
+                    <div className="set-content">{t.addDate}</div>
                   </div>
                 </div>
-                <div>
-                  <div>目標水分</div>
-                  <div>
-                    <span>{t.water}</span> cc
+                <div className="col">
+                  <div className="flexbox">
+                    <div className="title">開始日期</div>
+                    <div className="set-content">
+                      {input.startDate ? input.startDate : t.startDate}
+                    </div>
+                  </div>
+                  <div className="flexbox">
+                    <div className="title">結束日期</div>
+                    <div className="set-content">
+                      {input.endDate ? input.endDate : t.endDate}
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <div>其他 </div>
-                  <div>
-                    <span>{t.other}</span>
+                <div className="col">
+                  <div className="flexbox">
+                    <div className="title">目標體重</div>
+                    <div className="set-content">
+                      {input.weight ? input.weight : t.weight} kg
+                    </div>
+                  </div>
+                  <div className="flexbox">
+                    <div className="title">目標水分</div>
+                    <div className="set-content">
+                      {input.water ? input.water : t.water} cc
+                    </div>
                   </div>
                 </div>
-                <hr />
+                <div className="flexbox">
+                  <div className="title">其他</div>
+                  <div className="set-content">
+                    {input.other ? input.other : t.other}
+                  </div>
+                </div>
               </div>
             )
           )
         : target.map((t, index) =>
             index == targetIndex ? (
-              <div key={index}>
+              <>
+                <div key={index} className="customer-target">
+                  <div className="target-header">
+                    {pathName.includes("dietitian") ? (
+                      <div className="alter-button">
+                        <button onClick={bindEditHandler} id={index}>
+                          編輯
+                        </button>
+                        <i
+                          id={index}
+                          className="fa fa-trash-o"
+                          aria-hidden="true"
+                          onClick={bindRemoveTarget}
+                        ></i>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <div className="flexbox">
+                      <div className="title">建立時間</div>
+                      <div className="set-content">{t.addDate}</div>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="flexbox">
+                      <div className="title">開始日期</div>
+                      <div className="set-content">
+                        {input.startDate ? input.startDate : t.startDate}
+                      </div>
+                    </div>
+                    <div className="flexbox">
+                      <div className="title">結束日期</div>
+                      <div className="set-content">
+                        {input.endDate ? input.endDate : t.endDate}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="flexbox">
+                      <div className="title">目標體重</div>
+                      <div className="set-content">
+                        {input.weight ? input.weight : t.weight} kg
+                      </div>
+                    </div>
+                    <div className="flexbox">
+                      <div className="title">目標水分</div>
+                      <div className="set-content">
+                        {input.water ? input.water : t.water} cc
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flexbox">
+                    <div className="title">其他</div>
+                    <div className="set-content">
+                      {input.other ? input.other : t.other}
+                    </div>
+                  </div>
+                </div>
+                {/* <div key={index}>
                 {pathName.includes("dietitian") ? (
                   <>
                     <button onClick={bindEditHandler} id={index}>
@@ -325,7 +409,8 @@ function TargetHandler({ target, setTarget }) {
                   </div>
                 </div>
                 <hr />
-              </div>
+              </div> */}
+              </>
             ) : (
               <div key={index} className="customer-target">
                 <div className="target-header">

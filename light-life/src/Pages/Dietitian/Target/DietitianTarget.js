@@ -79,13 +79,6 @@ function DietitianTarget() {
       <h3>已設立目標</h3>
       <div className="customer-targets">
         <TargetHandler target={target} setTarget={setTarget} />
-        {/* <div
-          className="customer-target"
-          id="customer-target"
-          style={{ maxHeight: "300px", overflow: "auto" }}
-        >
-          
-        </div> */}
       </div>
       <h3>新增目標</h3>
       <div className="add-new-target">
