@@ -103,7 +103,7 @@
       width: 130px;
     }
     .customer-targets {
-      max-height: 200px;
+      max-height: 230px;
       max-width: 560px;
       .customer-target {
         & > .flexbox:last-of-type {
@@ -152,9 +152,6 @@
     & > h3 {
       margin: 0;
       margin-left: 330px;
-    }
-    .customer-targets {
-      max-height: 180px;
     }
     .add-new-target {
       margin-top: 10px;
