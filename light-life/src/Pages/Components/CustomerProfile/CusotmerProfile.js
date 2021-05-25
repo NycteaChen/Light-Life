@@ -2,13 +2,13 @@ import React from "react";
 import "firebase/firestore";
 import "firebase/storage";
 import noImage from "../../../images/noimage.png";
-import "../../../style/customerProfile.scss";
+import style from "../../../style/customerProfile.module.scss";
 
 function CustomerProfile({ props, input }) {
   return (
-    <div id="personal-profile" class="customer-profile">
-      <div class="profile-data">
-        <div class="flexbox">
+    <div id="personal-profile" className={style["customer-profile"]}>
+      <div className={style["profile-data"]}>
+        <div className={style.flexbox}>
           <img
             id="profile-img"
             src={
@@ -17,29 +17,29 @@ function CustomerProfile({ props, input }) {
             alt="customer"
           />
           <div>
-            <div class="data-item">
-              <div class="title">姓名</div>
+            <div className={style["data-item"]}>
+              <div className={style.title}>姓名</div>
               <div id="name">
                 {input.name ? input.name : props ? props.name : ""}
               </div>
             </div>
-            <div class="data-item">
-              <div class="title">性別</div>
+            <div className={style["data-item"]}>
+              <div className={style.title}>性別</div>
               <div id="gender">
                 {input.gender ? input.gender : props ? props.gender : ""}
               </div>
             </div>
-            <div class="data-item">
-              <div class="title">年齡</div>
+            <div className={style["data-item"]}>
+              <div className={style.title}>年齡</div>
               <div id="age">
                 <span>{input.age ? input.age : props ? props.age : ""}</span> 歲
               </div>
             </div>
           </div>
         </div>
-        <div class="flexbox">
-          <div class="data-item">
-            <div class="title">身高</div>
+        <div className={style.flexbox}>
+          <div className={style["data-item"]}>
+            <div className={style.title}>身高</div>
             <div id="height">
               <span>
                 {input.height ? input.height : props ? props.height : ""}
@@ -47,8 +47,8 @@ function CustomerProfile({ props, input }) {
               cm
             </div>
           </div>
-          <div class="data-item">
-            <div class="title">體重</div>
+          <div className={style["data-item"]}>
+            <div className={style.title}>體重</div>
             <div id="weight">
               <span>
                 {input.weight ? input.weight : props ? props.weight : ""}
@@ -57,9 +57,9 @@ function CustomerProfile({ props, input }) {
             </div>
           </div>
         </div>
-        <div class="flexbox">
-          <div class="data-item">
-            <div class="title">教育程度</div>
+        <div className={style.flexbox}>
+          <div className={style["data-item"]}>
+            <div className={style.title}>教育程度</div>
             <div id="education">
               <span>
                 {input.education
@@ -70,8 +70,8 @@ function CustomerProfile({ props, input }) {
               </span>
             </div>
           </div>
-          <div class="data-item">
-            <div class="title">職業</div>
+          <div className={style["data-item"]}>
+            <div className={style.title}>職業</div>
             <div id="career">
               <span>
                 {input.career ? input.career : props ? props.career : ""}
@@ -79,10 +79,10 @@ function CustomerProfile({ props, input }) {
             </div>
           </div>
         </div>
-        <div class="flexcol">
-          <div class="col">
-            <div class="data-item">
-              <div class="title">運動習慣</div>
+        <div className={style.flexcol}>
+          <div className={style.col}>
+            <div className={style["data-item"]}>
+              <div className={style.title}>運動習慣</div>
               <div id="sport">
                 <span>
                   {input.sport ? input.sport : props ? props.sport : ""}
@@ -90,9 +90,9 @@ function CustomerProfile({ props, input }) {
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="data-item">
-              <div class="title">其他</div>
+          <div className={style.col}>
+            <div className={style["data-item"]}>
+              <div className={style.title}>其他</div>
               <div id="other">
                 <span>
                   {input.other ? input.other : props ? props.other : ""}

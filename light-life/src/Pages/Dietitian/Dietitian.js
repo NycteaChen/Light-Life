@@ -14,8 +14,8 @@ import logo from "../../images/lightlife-straight.png";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import "firebase/firestore";
-import "../../style/basic.scss";
-import "../../style/customerData.scss";
+import basic from "../../style/basic.module.scss";
+import style from "../../style/customerData.module.scss";
 import CusotmerProfile from "../Components/CustomerProfile/CusotmerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
@@ -79,23 +79,29 @@ function Dietitian() {
 
   if (users.length > 0) {
     return (
-      <main className="d-main">
+      <main className={basic["d-main"]}>
         <nav>
           <a href="/">
-            <img src={logo} id="menu-logo" />
+            <img src={logo} id={basic["menu-logo"]} />
           </a>
-          <div className="straight-nav">
+          <div className={basic["straight-nav"]}>
             <Link
-              className="nav-title"
+              className={basic["nav-title"]}
               to={`/dietitian/${dietitianID}/profile`}
             >
               <div onClick={bindListHandler}>編輯會員資料</div>
             </Link>
             <ul>
-              <div className="nav-title list" onClick={bindListHandler}>
+              <div
+                className={`${basic["nav-title"]} list`}
+                onClick={bindListHandler}
+              >
                 客戶清單
               </div>
-              <div className="customerList list" style={{ display: display }}>
+              <div
+                className={`${basic.customerList} list`}
+                style={{ display: display }}
+              >
                 {users.map((c, index) => (
                   <li
                     key={index}
@@ -113,43 +119,43 @@ function Dietitian() {
                 ))}
               </div>
             </ul>
-            <div className="nav-title" onClick={bindListHandler}>
+            <div className={basic["nav-title"]} onClick={bindListHandler}>
               找客戶
             </div>
             <Link
-              className="nav-title"
+              className={basic["nav-title"]}
               to={`/dietitian/${dietitianID}/inviteMe`}
             >
               <div onClick={bindListHandler}>誰找我</div>
             </Link>
             <Link
-              className="nav-title"
+              className={basic["nav-title"]}
               onClick={bindListHandler}
               to={`/dietitian/${dietitianID}`}
             >
               返回會員主頁
             </Link>
             <a href="/">
-              <img src={exit} alt="logout" id="logout" />
+              <img src={exit} alt="logout" id={basic.logout} />
             </a>
-            <div className="copyright">&copy;2021 Light Life</div>
+            <div className={basic.copyright}>&copy;2021 Light Life</div>
           </div>
         </nav>
 
-        <div className="profile">
+        <div className={basic.profile}>
           <img src={profile ? profile.image : noImage} />
-          <div className="welcome">
+          <div className={basic.welcome}>
             <div>
               <span>{profile ? profile.name : ""}</span>，您好
             </div>
-            <div className="service-status">
+            <div className={basic["service-status"]}>
               <div>服務開放中</div>
               <label>
                 <input type="checkbox" />
               </label>
             </div>
           </div>
-          <div className="selectList">
+          <div className={basic.selectList}>
             <div>
               <Link
                 to={`/dietitian/${dietitianID}/profile`}
@@ -176,13 +182,18 @@ function Dietitian() {
 
         <Switch>
           <Route exact path="/dietitian/:dID">
-            <div className="indexWelcome">{profile.name}營養師，歡迎回來！</div>
+            <div className={basic.indexWelcome}>
+              {profile.name}營養師，歡迎回來！
+            </div>
           </Route>
           <Route exact path={`/dietitian/:dID/profile`}>
             <DietitianProfile profile={profile} />
           </Route>
           <Route exact path={`/dietitian/:dID/customers`}>
-            <div className="mobileCustomerList" style={{ display: display }}>
+            <div
+              className={basic.mobileCustomerList}
+              style={{ display: display }}
+            >
               {users.map((c, index) => (
                 <li key={index} className={c.id} onClick={getSelectedCustomer}>
                   <Link
@@ -212,13 +223,20 @@ function Dietitian() {
             }`}
           >
             <Router>
-              <div className="customer-data">
-                <div className="customer-name">
-                  <span>陳安妮</span>
-                </div>
-                <div className="customer-dataSelect">
+              <div className={style["customer-data"]}>
+                <div>
                   <Link
-                    className="link-select"
+                    className={style["customer-name"]}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }`}
+                  >
+                    陳安妮
+                  </Link>
+                </div>
+                <div className={style["customer-dataSelect"]}>
+                  <Link
+                    className={style["link-select"]}
                     to={`/dietitian/${dietitianID}/customer/${
                       customerID ? customerID : selectedID
                     }/profile`}
@@ -226,7 +244,7 @@ function Dietitian() {
                     基本資料
                   </Link>
                   <Link
-                    className="link-select"
+                    className={style["link-select"]}
                     to={`/dietitian/${dietitianID}/customer/${
                       customerID ? customerID : selectedID
                     }/dietary`}
@@ -234,7 +252,7 @@ function Dietitian() {
                     飲食記錄
                   </Link>
                   <Link
-                    className="link-select"
+                    className={style["link-select"]}
                     to={`/dietitian/${dietitianID}/customer/${
                       customerID ? customerID : selectedID
                     }/target`}
@@ -244,7 +262,7 @@ function Dietitian() {
                 </div>
               </div>
               <Switch>
-                <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
+                <Route exact path={`/dietitian/:dID/customer/:cID/`}>
                   <div style={{ marginLeft: "300px" }}>服務時間</div>
                 </Route>
                 <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>

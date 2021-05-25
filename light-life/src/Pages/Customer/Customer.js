@@ -12,8 +12,8 @@ import Profile from "../Components/CustomerProfile/EditCustomerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import CustomerTarget from "./Target/CustomerTarget.js";
 import firebase from "firebase/app";
-import "../../style/basic.scss";
 import "firebase/firestore";
+import style from "../../style/basic.module.scss";
 import logo from "../../images/lightlife-straight.png";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
@@ -70,53 +70,65 @@ function Customer() {
 
   if (profile.id) {
     return (
-      <main className="d-main">
+      <main className={style["d-main"]}>
         <nav>
           <a href="/">
-            <img src={logo} id="menu-logo" />
+            <img src={logo} id={style["menu-logo"]} />
           </a>
-          <div className="straight-nav">
-            <Link className="nav-title" to={`/customer/${profile.id}/profile`}>
+          <div className={style["straight-nav"]}>
+            <Link
+              className={style["nav-title"]}
+              to={`/customer/${profile.id}/profile`}
+            >
               基本資料
             </Link>
-            <Link className="nav-title" to={`/customer/${profile.id}/dietary`}>
+            <Link
+              className={style["nav-title"]}
+              to={`/customer/${profile.id}/dietary`}
+            >
               飲食記錄
             </Link>
-            <Link className="nav-title" to={`/customer/${profile.id}/target`}>
+            <Link
+              className={style["nav-title"]}
+              to={`/customer/${profile.id}/target`}
+            >
               目標設定
             </Link>
 
-            <Link className="nav-title" to={`/customer/${customerID}/publish`}>
+            <Link
+              className={style["nav-title"]}
+              to={`/customer/${customerID}/publish`}
+            >
               <div id="publish">刊登需求</div>
             </Link>
 
             <Link
-              className="nav-title"
+              className={style["nav-title"]}
               to={`/customer/${customerID}/findDietitian`}
             >
               <div id="findDietitian">找營養師</div>
             </Link>
 
             <Link
-              className="nav-title"
+              className={style["nav-title"]}
               to={`/customer/${customerID}/reserve-list`}
             >
               <div>預約清單</div>
             </Link>
             <a href="/">
-              <img src={exit} alt="logout" id="logout" />
+              <img src={exit} alt="logout" id={style.logout} />
             </a>
-            <div className="copyright">&copy;2021 Light Life</div>
+            <div className={style["copyright"]}>&copy;2021 Light Life</div>
           </div>
         </nav>
 
-        <div className="profile">
+        <div className={style.profile}>
           <img src={profile ? profile.image : noImage} />
-          <div className="welcome">
+          <div className={style.welcome}>
             <div>
               <h4>{profile.name}，您好！</h4>
             </div>
-            <div className="service-status">
+            <div className={style["service-status"]}>
               {profile.dietitian !== "" ? (
                 <h5>我的營養師：{dName} 營養師</h5>
               ) : (
@@ -125,30 +137,42 @@ function Customer() {
             </div>
           </div>
 
-          <div className="selectList">
-            <Link className="nav-title" to={`/customer/${profile.id}/profile`}>
+          <div className={style["selectList"]}>
+            <Link
+              className={style["nav-title"]}
+              to={`/customer/${profile.id}/profile`}
+            >
               基本資料
             </Link>
-            <Link className="nav-title" to={`/customer/${profile.id}/dietary`}>
+            <Link
+              className={style["nav-title"]}
+              to={`/customer/${profile.id}/dietary`}
+            >
               飲食記錄
             </Link>
-            <Link className="nav-title" to={`/customer/${profile.id}/target`}>
+            <Link
+              className={style["nav-title"]}
+              to={`/customer/${profile.id}/target`}
+            >
               目標設定
             </Link>
 
-            <Link className="nav-title" to={`/customer/${customerID}/publish`}>
+            <Link
+              className={style["nav-title"]}
+              to={`/customer/${customerID}/publish`}
+            >
               <div id="publish">刊登需求</div>
             </Link>
 
             <Link
-              className="nav-title"
+              className={style["nav-title"]}
               to={`/customer/${customerID}/findDietitian`}
             >
               <div id="findDietitian">找營養師</div>
             </Link>
 
             <Link
-              className="nav-title"
+              className={style["nav-title"]}
               to={`/customer/${customerID}/reserve-list`}
             >
               <div>預約清單</div>
@@ -158,7 +182,7 @@ function Customer() {
 
         <Switch>
           <Route exact path="/customer/:cID">
-            <div className="indexWelcome">{profile.name}，歡迎回來！</div>
+            <div className={style.indexWelcome}>{profile.name}，歡迎回來！</div>
           </Route>
           <Route exact path="/customer/:cID/profile">
             <Profile props={profile} />
@@ -187,7 +211,7 @@ function Customer() {
     );
   } else {
     return (
-      <main className="d-main">
+      <main className={style["d-main"]}>
         <div style={{ marginLeft: "360px" }}>loading</div>
       </main>
     );
