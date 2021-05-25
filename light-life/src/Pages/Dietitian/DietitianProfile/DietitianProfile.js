@@ -8,16 +8,15 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import "../../../style/basic.scss";
-import "../../../style/dietitianProfile.scss";
+import style from "../../../style/dietitianProfile.module.scss";
 
 function DietitianProfile({ profile }) {
   return (
     <>
-      <div className="edit-Dprofile">
-        <div className="basic-profile">
-          <div className="flexbox">
-            <div className="img">
+      <div className={style["edit-Dprofile"]}>
+        <div className={style["basic-profile"]}>
+          <div className={style.flexbox}>
+            <div className={style.img}>
               <a href={profile.image} target="_blank">
                 <img src={profile.image} alt="profile" />
               </a>
@@ -25,11 +24,11 @@ function DietitianProfile({ profile }) {
               <div>專業形象將為您加分</div>
             </div>
             <div>
-              <div className="determined">
-                <div className="title">帳號</div>
+              <div className={style.determined}>
+                <div className={style.title}>帳號</div>
                 <div className="email">jaoasfg@emgia.com</div>
               </div>
-              <div className="basic">
+              <div className={style.basic}>
                 <label className="name">姓名</label>
                 <input type="text" name="name" id="name" value={profile.name} />
                 <label className="gender">生理性別</label>
@@ -51,9 +50,9 @@ function DietitianProfile({ profile }) {
             </div>
           </div>
           <div>
-            <div className="education">
-              <label id="highestDegree">最高學歷</label>
-              <div className="edu-select">
+            <div className={style.education}>
+              <label id={style.highestDegree}>最高學歷</label>
+              <div className={style["edu-select"]}>
                 <input
                   type="text"
                   name="school"
@@ -115,29 +114,29 @@ function DietitianProfile({ profile }) {
                 </div>
               </div>
             </div>
-            <div className="skills">
-              <label id="skill">專長</label>
-              <div className="select-skill">
+            <div className={style.skills}>
+              <label className={style.skill}>專長</label>
+              <div className={style["select-skill"]}>
                 <label>
-                  <input className="skill" type="checkbox" value="體重管理" />
+                  <input type="checkbox" value="體重管理" />
                   體重管理
                 </label>
                 <label>
-                  <input className="skill" type="checkbox" value="運動營養" />
+                  <input type="checkbox" value="運動營養" />
                   運動營養
                 </label>
                 <label>
-                  <input className="skill" type="checkbox" value="血糖控制" />
+                  <input type="checkbox" value="血糖控制" />
                   血糖控制
                 </label>
                 <label>
-                  <input className="skill" type="checkbox" value="三高控制" />
+                  <input type="checkbox" value="三高控制" />
                   三高控制
                 </label>
               </div>
             </div>
 
-            <div className="other">
+            <div className={style.other}>
               <label>其他</label>
               <p>補充更多資訊讓客戶更了解你！（例：經歷、證照、其他專長）</p>
               <textarea cols="40" rows="6">
