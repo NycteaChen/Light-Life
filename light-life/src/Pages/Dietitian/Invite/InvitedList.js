@@ -19,7 +19,7 @@ function InvitedList({ invitedList, setInvitedList }) {
     <div className={style.whoInvite}>
       {invitedList.length > 0 ? (
         <div className={style["invite-number"]}>
-          有<span>{invitedList.length}</span> 位客人預約您的服務
+          有 <span>{invitedList.length}</span> 位客人預約您的服務
         </div>
       ) : (
         <div className={style["invite-number"]}>目前沒有預約喔</div>

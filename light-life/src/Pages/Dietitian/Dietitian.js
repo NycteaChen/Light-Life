@@ -71,12 +71,14 @@ function Dietitian() {
   };
 
   const bindListHandler = (e) => {
+    console.log(e.target.className);
     if (e.target.className.includes("list")) {
       setDisplay("block");
     } else {
       setDisplay("none");
     }
   };
+  console.log(display);
 
   if (users.length > 0) {
     return (
@@ -159,7 +161,6 @@ function Dietitian() {
             </div>
             <div className={basic["d-List"]}>
               <Link
-                className="list"
                 to={`/dietitian/${dietitianID}/profile`}
                 onClick={bindListHandler}
               >
@@ -173,7 +174,7 @@ function Dietitian() {
                 to={`/dietitian/${dietitianID}/customers`}
                 onClick={bindListHandler}
               >
-                <div>客戶清單</div>
+                <div className="list">客戶清單</div>
               </Link>
 
               <Link
