@@ -289,7 +289,7 @@ function CustomerRecord({ date, count, setCount }) {
                       <div>尚未上傳照片</div>
                     )}
                   </div>
-                  <label className={style["uploadImg"]}>
+                  <label className={style.uploadImg}>
                     <input
                       type="file"
                       accept="image/*"
@@ -299,7 +299,7 @@ function CustomerRecord({ date, count, setCount }) {
                       multiple="multiple"
                       onChange={getInputHandler}
                     />
-                    <i className="fa fa-cloud-upload" aria-hidden="true"></i>
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
                     上傳照片
                   </label>
                 </div>
