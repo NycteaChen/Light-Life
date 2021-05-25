@@ -248,6 +248,7 @@
     & {
       text-align: left;
       .date-selector {
+        text-align: center;
         max-width: 720px;
         margin: auto;
         input[type="date"] {
@@ -346,6 +347,7 @@
       }
       .date-selector {
         margin: 0;
+        text-align: left;
         input[type="date"] {
           margin: 20px 0 10px;
           padding-left: 4px;
