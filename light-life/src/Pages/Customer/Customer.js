@@ -80,33 +80,33 @@ function Customer() {
               className={style["nav-title"]}
               to={`/customer/${profile.id}/profile`}
             >
-              基本資料
+              <div>基本資料</div>
             </Link>
             <Link
               className={style["nav-title"]}
               to={`/customer/${profile.id}/dietary`}
             >
-              飲食記錄
+              <div>飲食記錄</div>
             </Link>
             <Link
               className={style["nav-title"]}
               to={`/customer/${profile.id}/target`}
             >
-              目標設定
+              <div>目標設定</div>
             </Link>
 
             <Link
               className={style["nav-title"]}
               to={`/customer/${customerID}/publish`}
             >
-              <div id="publish">刊登需求</div>
+              <div>刊登需求</div>
             </Link>
 
             <Link
               className={style["nav-title"]}
               to={`/customer/${customerID}/findDietitian`}
             >
-              <div id="findDietitian">找營養師</div>
+              <div>找營養師</div>
             </Link>
 
             <Link
@@ -142,33 +142,33 @@ function Customer() {
               className={style["nav-title"]}
               to={`/customer/${profile.id}/profile`}
             >
-              基本資料
+              <div>基本資料</div>
             </Link>
             <Link
               className={style["nav-title"]}
               to={`/customer/${profile.id}/dietary`}
             >
-              飲食記錄
+              <div>飲食記錄</div>
             </Link>
             <Link
               className={style["nav-title"]}
               to={`/customer/${profile.id}/target`}
             >
-              目標設定
+              <div>目標設定</div>
             </Link>
 
             <Link
               className={style["nav-title"]}
               to={`/customer/${customerID}/publish`}
             >
-              <div id="publish">刊登需求</div>
+              <div>刊登需求</div>
             </Link>
 
             <Link
               className={style["nav-title"]}
               to={`/customer/${customerID}/findDietitian`}
             >
-              <div id="findDietitian">找營養師</div>
+              <div>找營養師</div>
             </Link>
 
             <Link

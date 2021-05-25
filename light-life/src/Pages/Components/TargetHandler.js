@@ -265,36 +265,26 @@ function TargetHandler({ target, setTarget }) {
                 <div className={style.col}>
                   <div className={style.flexbox}>
                     <div className={style.title}>開始日期</div>
-                    <div className={style["set-content"]}>
-                      {input.startDate ? input.startDate : t.startDate}
-                    </div>
+                    <div className={style["set-content"]}>{t.startDate}</div>
                   </div>
                   <div className={style.flexbox}>
                     <div className={style.title}>結束日期</div>
-                    <div className={style["set-content"]}>
-                      {input.endDate ? input.endDate : t.endDate}
-                    </div>
+                    <div className={style["set-content"]}>{t.endDate}</div>
                   </div>
                 </div>
                 <div className={style.col}>
                   <div className={style.flexbox}>
                     <div className={style.title}>目標體重</div>
-                    <div className={style["set-content"]}>
-                      {input.weight ? input.weight : t.weight} kg
-                    </div>
+                    <div className={style["set-content"]}>{t.weight} kg</div>
                   </div>
                   <div className={style.flexbox}>
                     <div className={style.title}>目標水分</div>
-                    <div className={style["set-content"]}>
-                      {input.water ? input.water : t.water} cc
-                    </div>
+                    <div className={style["set-content"]}>{t.water} cc</div>
                   </div>
                 </div>
                 <div className={style.flexbox}>
                   <div className={style.title}>其他</div>
-                  <div className={style["set-content"]}>
-                    {input.other ? input.other : t.other}
-                  </div>
+                  <div className={style["set-content"]}>{t.other}</div>
                 </div>
               </div>
             )
@@ -359,55 +349,55 @@ function TargetHandler({ target, setTarget }) {
                     </div>
                   </div>
                 </div>
-                {/* <div key={index}>
-                {pathName.includes("dietitian") ? (
-                  <>
-                    <button onClick={bindEditHandler} id={index}>
-                      編輯
-                    </button>
-                    <div onClick={bindRemoveTarget} id={index}>
-                      X
-                    </div>
-                  </>
-                ) : (
-                  ""
-                )}
-                <div>
+                <div key={index}>
+                  {pathName.includes("dietitian") ? (
+                    <>
+                      <button onClick={bindEditHandler} id={index}>
+                        編輯
+                      </button>
+                      <div onClick={bindRemoveTarget} id={index}>
+                        X
+                      </div>
+                    </>
+                  ) : (
+                    ""
+                  )}
                   <div>
                     <div>
-                      建立時間<span>{t.addDate}</span>
+                      <div>
+                        建立時間<span>{t.addDate}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div>日期</div>
+                      <span>
+                        {input.startDate ? input.startDate : t.startDate}
+                      </span>
+                      <span>至 </span>
+                      <span>{input.endDate ? input.endDate : t.endDate}</span>
                     </div>
                   </div>
                   <div>
-                    <div>日期</div>
-                    <span>
-                      {input.startDate ? input.startDate : t.startDate}
-                    </span>
-                    <span>至 </span>
-                    <span>{input.endDate ? input.endDate : t.endDate}</span>
+                    <div>目標體重</div>
+                    <div>
+                      <span>{input.weight ? input.weight : t.weight}</span>
+                      kg
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div>目標體重</div>
                   <div>
-                    <span>{input.weight ? input.weight : t.weight}</span>
-                    kg
+                    <div>目標水分</div>
+                    <div>
+                      <span>{input.water ? input.water : t.water}</span> cc
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div>目標水分</div>
                   <div>
-                    <span>{input.water ? input.water : t.water}</span> cc
+                    <div>其他 </div>
+                    <div>
+                      <span>{input.other ? input.other : t.other}</span>
+                    </div>
                   </div>
+                  <hr />
                 </div>
-                <div>
-                  <div>其他 </div>
-                  <div>
-                    <span>{input.other ? input.other : t.other}</span>
-                  </div>
-                </div>
-                <hr />
-              </div> */}
               </>
             ) : (
               <div key={index} className={style["customer-target"]}>

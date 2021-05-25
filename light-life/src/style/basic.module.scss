@@ -17,7 +17,7 @@
 }
 
 .m-header {
-  background: #ffffff00;
+  background: #ffffff;
   color: #4d4d4d;
   padding: 10px 15px;
   .logo-nav {
@@ -67,9 +67,7 @@
 }
 
 .d-main {
-  background-color: #a3ffdc79;
   padding: 20px;
-
   .indexWelcome {
     display: none;
   }
@@ -180,21 +178,26 @@
       margin: auto;
       display: grid;
       max-width: 300px;
-      grid-template-columns: repeat(2, 1fr);
 
       div {
-        padding: 0 5px;
         margin: 0 5px 10px;
         line-height: 50px;
         background-color: rgb(165, 170, 170);
       }
+      @media (min-width: 320px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
       @media (min-width: 520px) {
         & {
+          max-width: unset;
           display: flex;
           justify-content: center;
           div {
             line-height: unset;
             padding: 10px;
+            width: 120px;
+            height: 50px;
+            line-height: 30px;
           }
         }
       }
