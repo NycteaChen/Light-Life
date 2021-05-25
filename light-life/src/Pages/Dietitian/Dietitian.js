@@ -5,6 +5,7 @@ import {
   Route,
   Link,
   useParams,
+  useLocation,
 } from "react-router-dom";
 import InvitedList from "./Invite/InvitedList.js";
 import DietitianProfile from "../Dietitian/DietitianProfile/DietitianProfile.js";
@@ -26,6 +27,8 @@ function Dietitian() {
   const [selectedID, setSelectedID] = useState("");
   const [display, setDisplay] = useState("none");
   const dietitianID = useParams().dID;
+  const customerID = useLocation().pathname.split("/")[4];
+
   const input = {};
   useEffect(() => {
     firebase
@@ -132,6 +135,7 @@ function Dietitian() {
             <div className="copyright">&copy;2021 Light Life</div>
           </div>
         </nav>
+
         <div className="profile">
           <img src={profile ? profile.image : noImage} />
           <div className="welcome">
@@ -203,8 +207,9 @@ function Dietitian() {
 
         <Switch>
           <Route
-            exact
-            path={`/dietitian/${dietitianID}/customer/${selectedID}`}
+            path={`/dietitian/${dietitianID}/customer/${
+              customerID ? customerID : selectedID
+            }`}
           >
             <Router>
               <div className="customer-data">
@@ -214,19 +219,25 @@ function Dietitian() {
                 <div className="customer-dataSelect">
                   <Link
                     className="link-select"
-                    to={`/dietitian/${dietitianID}/customer/${selectedID}/profile`}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }/profile`}
                   >
                     基本資料
                   </Link>
                   <Link
                     className="link-select"
-                    to={`/dietitian/${dietitianID}/customer/${selectedID}/dietary`}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }/dietary`}
                   >
                     飲食記錄
                   </Link>
                   <Link
                     className="link-select"
-                    to={`/dietitian/${dietitianID}/customer/${selectedID}/target`}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }/target`}
                   >
                     目標設定
                   </Link>
@@ -234,9 +245,12 @@ function Dietitian() {
               </div>
               <Switch>
                 <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
+                  <div style={{ marginLeft: "300px" }}>服務時間</div>
+                </Route>
+                <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
                   <CusotmerProfile props={users[0]} input={input} />
                 </Route>
-                <Route path={`/dietitian/:dID/customer/:cID/dietary`}>
+                <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
                   <DietrayRecord />
                 </Route>
                 <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
@@ -249,7 +263,11 @@ function Dietitian() {
       </main>
     );
   } else {
-    return <div>loading</div>;
+    return (
+      <main className="d-main">
+        <div style={{ marginLeft: "360px" }}>loading</div>
+      </main>
+    );
   }
 }
 
