@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DietitianData from "./DietitianData.js";
+import style from "../../../style/findDietitian.scss";
 
 function GetDietitiansData({ props, setReserve, profile }) {
   const [isCheck, setIsCheck] = useState(false); //false

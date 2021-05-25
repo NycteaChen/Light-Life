@@ -16,6 +16,7 @@ import exit from "../../images/exit.png";
 import "firebase/firestore";
 import basic from "../../style/basic.module.scss";
 import style from "../../style/customerData.module.scss";
+import customer from "../../style/customerProfile.module.scss";
 import CusotmerProfile from "../Components/CustomerProfile/CusotmerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
@@ -156,7 +157,7 @@ function Dietitian() {
                 </label>
               </div>
             </div>
-            <div className={basic.selectList}>
+            <div className={basic["d-List"]}>
               <Link
                 className="list"
                 to={`/dietitian/${dietitianID}/profile`}
@@ -274,7 +275,14 @@ function Dietitian() {
                     <div style={{ marginLeft: "300px" }}>服務時間</div>
                   </Route>
                   <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
-                    <CusotmerProfile props={users[0]} input={input} />
+                    <div
+                      id="customer-profile"
+                      className={customer["customer-profile"]}
+                    >
+                      <div className={customer["profile-data"]}>
+                        <CusotmerProfile props={users[0]} input={input} />
+                      </div>
+                    </div>
                   </Route>
                   <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
                     <DietrayRecord />
