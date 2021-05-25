@@ -1,0 +1,169 @@
+.target-setting {
+  & > h3 {
+    margin: 20px auto 10px;
+    width: 95%;
+  }
+  button {
+    cursor: pointer;
+  }
+  text-align: center;
+  .set-content {
+    width: 100px;
+    margin-left: 10px;
+  }
+  .customer-targets {
+    max-height: 250px;
+    overflow: auto;
+    margin: 10px auto;
+    width: 95%;
+    .customer-target + .customer-target {
+      border-top: 1px solid black;
+    }
+    .customer-target {
+      padding: 10px 0;
+      background-color: aquamarine;
+      .alter-button {
+        margin: 10px 20px auto auto;
+        text-align: right;
+
+        i {
+          font-size: 20px;
+          transition: all 0.5s;
+          cursor: pointer;
+          &:hover {
+            transform: scale(1.2);
+            color: red;
+          }
+        }
+        button {
+          margin-right: 10px;
+          padding: 2px 8px;
+        }
+      }
+      .flexbox {
+        margin: 10px 0;
+        padding-left: 15px;
+      }
+      .flexbox > div {
+        display: inline-block;
+        &.title {
+          text-align: right;
+        }
+        &:last-of-type {
+          text-align: left;
+        }
+      }
+      & > .flexbox:last-of-type {
+        .title {
+          margin-left: 31px;
+          vertical-align: top;
+        }
+        .set-content {
+          max-height: 80px;
+          overflow: auto;
+          overflow-x: hidden;
+        }
+      }
+    }
+  }
+  .add-new-target {
+    padding: 20px 0;
+    width: 95%;
+    margin: 20px auto;
+    background-color: aquamarine;
+
+    @media (min-width: 244px) {
+      .flexbox {
+        display: flex;
+        justify-content: center;
+        margin: 10px auto;
+        padding-left: 15px;
+      }
+    }
+    .target-other {
+      .flexbox > div {
+        vertical-align: top;
+        @media (min-width: 244px) {
+          margin-left: 31px;
+        }
+      }
+    }
+    button {
+      padding: 5px 15px;
+      border: 1px solid black;
+      background-color: wheat;
+    }
+  }
+  @media (min-width: 520px) {
+    & > h3 {
+      max-width: 560px;
+      text-align: left;
+    }
+    .set-content {
+      width: 130px;
+    }
+    .customer-targets {
+      max-height: 230px;
+      max-width: 560px;
+      .customer-target {
+        & > .flexbox:last-of-type {
+          text-align: left;
+          .set-content {
+            width: 80%;
+          }
+          textarea {
+            max-width: 400px;
+            height: 5em;
+          }
+        }
+        .target-header {
+          display: flex;
+          flex-direction: row-reverse;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .col {
+          display: flex;
+        }
+      }
+    }
+    .add-new-target {
+      max-width: 560px;
+      .col {
+        display: flex;
+      }
+      .flexbox {
+        margin: 10px 0;
+        justify-content: unset;
+      }
+      .target-other {
+        .set-content {
+          width: 80%;
+          max-width: 400px;
+          height: 5em;
+        }
+      }
+    }
+  }
+  @media (min-width: 1024px) {
+    max-height: calc(100vh - 190px);
+    overflow: auto;
+    text-align: unset;
+    & > h3 {
+      margin: 0;
+      margin-left: 330px;
+    }
+    .add-new-target {
+      margin-top: 10px;
+      button {
+        margin-left: 88px;
+      }
+    }
+    .customer-targets,
+    .add-new-target {
+      margin-left: 330px;
+      max-width: unset;
+      width: 600px;
+    }
+  }
+}
