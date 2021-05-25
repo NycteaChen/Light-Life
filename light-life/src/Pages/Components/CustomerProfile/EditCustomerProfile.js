@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import noImage from "../../../images/noimage.png";
 import CustomerProfile from "./CusotmerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
+import { param } from "jquery";
 
 function EditCustomerProfile({ props }) {
   const db = firebase.firestore();
@@ -24,6 +33,7 @@ function EditCustomerProfile({ props }) {
     sport,
     other,
   } = props;
+
   async function postImg(image) {
     if (image) {
       const storageRef = storage.ref(`${id}/` + image.name);
@@ -48,7 +58,8 @@ function EditCustomerProfile({ props }) {
 
   const getInputHandler = (e) => {
     const { name } = e.target;
-    if (name !== "image") {
+    console.log(e.target);
+    if (name !== "customerImage") {
       setInput({ ...input, [name]: e.target.value });
     } else if (e.target.files[0]) {
       const fileReader = new FileReader();
@@ -77,7 +88,7 @@ function EditCustomerProfile({ props }) {
         image: imageUrl,
       });
       db.collection("customers")
-        .doc("9iYZMkuFdZRK9vxgt1zc")
+        .doc(id)
         .update({
           ...input,
           image: imageUrl,
@@ -90,12 +101,22 @@ function EditCustomerProfile({ props }) {
   const bindEditHandler = () => {
     setIsEditing(true);
   };
+  const bindCancelHandler = () => {
+    setIsEditing(false);
+  };
 
   return (
     <div id="customer-profile" className={style["customer-profile"]}>
       {isEditing ? (
         <div className={style["edit-mode"]}>
-          <button onClick={bindSaveHandler}>儲存</button>
+          <div className={style.buttons}>
+            <button onClick={bindSaveHandler} className={style.save}>
+              儲存
+            </button>
+            <button onClick={bindCancelHandler} className={style.cancel}>
+              取消
+            </button>
+          </div>
           <div className={style.flexbox}>
             <div>
               <img
@@ -116,8 +137,8 @@ function EditCustomerProfile({ props }) {
                     hidden
                     type="file"
                     accept="image/*"
-                    id="image"
                     name="customerImage"
+                    id="image"
                     onChange={getInputHandler}
                   />
                   <i className="fa fa-picture-o" aria-hidden="true"></i>
@@ -460,7 +481,9 @@ function EditCustomerProfile({ props }) {
         </div>
       ) : (
         <div className={style["profile-data"]}>
-          <button onClick={bindEditHandler}>編輯</button>
+          <div className={style.edit}>
+            <button onClick={bindEditHandler}>編輯</button>
+          </div>
           <CustomerProfile props={props} input={input} />
         </div>
       )}

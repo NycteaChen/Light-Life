@@ -203,6 +203,34 @@
         }
       }
     }
+
+    .d-List {
+      margin: auto;
+      display: grid;
+      max-width: 300px;
+      grid-template-columns: repeat(2, 1fr);
+      div {
+        margin: 0 5px 10px;
+        line-height: 50px;
+        background-color: rgb(165, 170, 170);
+      }
+
+      @media (min-width: 520px) {
+        & {
+          max-width: 500px;
+          display: flex;
+          justify-content: center;
+          div {
+            line-height: unset;
+            padding: 10px;
+            width: 120px;
+            height: 50px;
+            line-height: 30px;
+          }
+        }
+      }
+    }
+
     @media (min-width: 1024px) {
       & {
         border-bottom: unset;
@@ -232,6 +260,7 @@
         .welcome {
           margin-left: 10px;
         }
+        .d-List,
         .selectList {
           display: none;
         }
