@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import GetDietitiansData from "./FindDietitians/GetDietitinasData.js";
 import ReserveList from "./Reverse/ReserveList.js";
-import Profile from "../Components/CustomerProfile/EditCustomerProfile.js";
+import CustomerProfile from "../Components/CustomerProfile/EditCustomerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import CustomerTarget from "./Target/CustomerTarget.js";
 import firebase from "firebase/app";
@@ -185,7 +185,7 @@ function Customer() {
             <div className={style.indexWelcome}>{profile.name}，歡迎回來！</div>
           </Route>
           <Route exact path="/customer/:cID/profile">
-            <Profile props={profile} />
+            <CustomerProfile props={profile} />
           </Route>
           <Route exact path="/customer/:cID/dietary">
             <DietrayRecord />

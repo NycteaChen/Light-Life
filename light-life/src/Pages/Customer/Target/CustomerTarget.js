@@ -45,12 +45,17 @@ function CustomerTarget() {
       });
   }, []);
   console.log(target);
+
   return (
     <>
       <div className={style["target-setting"]} id="dietitian-target">
         <h3>已設立目標</h3>
         <div className={style["customer-targets"]}>
-          <TargetHandler target={target} />
+          {target.length > 0 ? (
+            <TargetHandler target={target} />
+          ) : (
+            <div>沒有設立目標喔</div>
+          )}
         </div>
       </div>
     </>

@@ -189,7 +189,8 @@
       }
       @media (min-width: 520px) {
         & {
-          max-width: unset;
+          max-width: 500px;
+          flex-wrap: wrap;
           display: flex;
           justify-content: center;
           div {
