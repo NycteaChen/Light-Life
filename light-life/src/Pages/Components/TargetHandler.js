@@ -349,55 +349,6 @@ function TargetHandler({ target, setTarget }) {
                     </div>
                   </div>
                 </div>
-                <div key={index}>
-                  {pathName.includes("dietitian") ? (
-                    <>
-                      <button onClick={bindEditHandler} id={index}>
-                        編輯
-                      </button>
-                      <div onClick={bindRemoveTarget} id={index}>
-                        X
-                      </div>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                  <div>
-                    <div>
-                      <div>
-                        建立時間<span>{t.addDate}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <div>日期</div>
-                      <span>
-                        {input.startDate ? input.startDate : t.startDate}
-                      </span>
-                      <span>至 </span>
-                      <span>{input.endDate ? input.endDate : t.endDate}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div>目標體重</div>
-                    <div>
-                      <span>{input.weight ? input.weight : t.weight}</span>
-                      kg
-                    </div>
-                  </div>
-                  <div>
-                    <div>目標水分</div>
-                    <div>
-                      <span>{input.water ? input.water : t.water}</span> cc
-                    </div>
-                  </div>
-                  <div>
-                    <div>其他 </div>
-                    <div>
-                      <span>{input.other ? input.other : t.other}</span>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
               </>
             ) : (
               <div key={index} className={style["customer-target"]}>
