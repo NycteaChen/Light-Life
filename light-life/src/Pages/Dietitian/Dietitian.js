@@ -78,7 +78,6 @@ function Dietitian() {
       setDisplay("none");
     }
   };
-  console.log(display);
 
   if (users.length > 0) {
     return (

@@ -1,0 +1,72 @@
+.dietitianList {
+  text-align: center;
+  display: grid;
+  margin: auto;
+  .dietitian {
+    width: 100%;
+    max-width: 220px;
+    padding: 20px 20px 10px;
+    margin: 15px auto;
+    background-color: white;
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+    }
+    .info {
+      display: none;
+    }
+    .col {
+      margin: 10px 0;
+      .name {
+        margin-bottom: 5px;
+      }
+      button {
+        padding: 4px 7px;
+        border: 1px solid blue;
+        background-color: aqua;
+      }
+    }
+  }
+  @media (min-width: 520px) {
+    max-width: 500px;
+    margin: auto;
+    grid-template-columns: repeat(2, 1fr);
+
+    .dietitian {
+      img {
+        width: 180px;
+        height: 180px;
+      }
+    }
+  }
+  @media (min-width: 768px) {
+    max-width: 850px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 1024px) {
+    display: block;
+    margin-left: 300px;
+    .dietitian {
+      max-width: unset;
+      display: grid;
+      grid-template-columns: 25% 75%;
+      .col {
+        display: flex;
+        margin-left: 30px;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px dotted blue;
+        height: 50px;
+        padding-bottom: 5px;
+      }
+      .info {
+        display: block;
+        margin-left: 30px;
+        & > div:first-of-type {
+          margin: 20px 0 10px;
+        }
+      }
+    }
+  }
+}

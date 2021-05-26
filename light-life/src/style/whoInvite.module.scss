@@ -191,12 +191,11 @@
       }
       .invite-data {
         text-align: center;
-        height: calc(100vh - 20px);
+        max-height: calc(100vh - 50px);
         overflow: auto;
         position: fixed;
-        top: 10px;
+        top: 20px;
         right: 0;
-        bottom: 10px;
         left: 0;
         margin: auto;
         .reserve-time,
