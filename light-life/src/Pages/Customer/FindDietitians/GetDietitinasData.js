@@ -41,9 +41,12 @@ function GetDietitiansData({ props, setReserve, profile }) {
               </div>
               <div>
                 專長：
-                {d.skills.map((s, index) =>
-                  d.skills[index + 1] ? <span>{s}、</span> : <span>{s}</span>
-                )}
+                {d.skills.map((s, index) => (
+                  <span key={index}>
+                    {s}
+                    {d.skills[index + 1] ? "、" : ""}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
