@@ -83,7 +83,7 @@ function ReserveList({ reserve, setReserve }) {
                       id={idx}
                       className={style.check}
                     >
-                      查看詳情
+                      查看訊息
                     </button>
                     <button
                       onClick={removeReserveHandler}
@@ -93,17 +93,19 @@ function ReserveList({ reserve, setReserve }) {
                       取消預約
                     </button>
                   </div>
-                  {/* {parseInt(index) === idx ? (
-                <>
-                  <div>
-                    <div>邀請訊息</div>
-                    <div>{r.reverseMessage}</div>
-                  </div>
-                  <button onClick={closeReserveMessage}>確定</button>
-                </>
-              ) : (
-                ""
-              )}</div> */}
+
+                  {parseInt(index) === idx ? (
+                    <div className={style.message}>
+                      <div className={style.addDate}>建立時間：{r.addDate}</div>
+                      <div className={style.content}>
+                        <h3>邀請訊息</h3>
+                        <div>{r.reverseMessage}</div>
+                      </div>
+                      <button onClick={closeReserveMessage}>確定</button>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               ))}
             </div>
@@ -118,38 +120,21 @@ function ReserveList({ reserve, setReserve }) {
           <div className={style.reservations}>
             <div className={style.reservation}>
               <div className={style.content}>
-                <div className={style.dietitian}>
-                  營養師：{reserve[0].dietitianName}
-                </div>
-                <div className={style.startDate}>
-                  預約開始時間：{reserve[0].reverseStartDate}
-                </div>
+                <div className={style.dietitian}>營養師：Admin</div>
+                <div className={style.startDate}>預約開始時間：2021-05-27</div>
               </div>
               <div className={style["reservation-state"]}>
-                <button
-                  onClick={checkReserveMessage}
-                  id="0"
-                  className={style.check}
-                >
-                  查看詳情
-                </button>
                 <span className={style.success}>預約成功</span>
               </div>
             </div>
 
             <div className={style.reservation}>
               <div className={style.content}>
-                <div className={style.dietitian}>
-                  營養師：{reserve[1].dietitianName}
-                </div>
-                <div className={style.startDate}>
-                  預約開始時間：{reserve[1].reverseStartDate}
-                </div>
+                <div className={style.dietitian}>營養師：王曉明</div>
+                <div className={style.startDate}>預約開始時間：2021-05-27</div>
               </div>
               <div className={style["reservation-state"]}>
-                <button onClick={checkReserveMessage} id="1">
-                  查看詳情
-                </button>
+                <button>查看訊息</button>
                 <span className={style.decline}>婉拒</span>
               </div>
             </div>

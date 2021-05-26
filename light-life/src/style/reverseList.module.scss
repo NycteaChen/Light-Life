@@ -83,6 +83,40 @@
     }
   }
 
+  .message {
+    background-color: white;
+    position: fixed;
+    width: 80%;
+    max-width: 500px;
+    top: 30%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    padding: 15px 0 20px;
+    .content {
+      h3 {
+        margin-top: 10px;
+      }
+      div {
+        max-height: 80px;
+        overflow: auto;
+        padding: 5px;
+        text-align: left;
+        border: 1px solid violet;
+        width: 80%;
+        margin: 20px auto;
+      }
+    }
+    button {
+      background-color: #b8ffea;
+      outline: none;
+      border-radius: 5px;
+      border: 2px solid #094231;
+      text-shadow: 0 1px 1px #6ae499;
+    }
+  }
+
   @media (min-width: 520px) {
     h3,
     h4 {
@@ -108,6 +142,21 @@
     .checked .reservation-state {
       margin: 5px 0;
       font-size: 14px;
+    }
+  }
+
+  .message {
+    h3 {
+      text-align: center;
+    }
+    .addDate {
+      text-align: right;
+      margin-right: 10px;
+    }
+    .content {
+      div {
+        max-height: 100px;
+      }
     }
   }
 
