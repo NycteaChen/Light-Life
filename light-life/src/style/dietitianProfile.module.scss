@@ -88,7 +88,7 @@
           margin-top: 2px;
         }
       }
-      input[tyle="text"] {
+      input[type="text"] {
         width: 90%;
         max-width: 150px;
       }
@@ -235,7 +235,7 @@
       @media (min-width: 520px) {
         & {
           display: flex;
-          #skill {
+          .skill {
             display: block;
             margin-left: 35px;
             margin-right: 18px;
@@ -254,7 +254,7 @@
       @media (min-width: 1024px) {
         & {
           width: 750px;
-          #skill {
+          .skill {
             margin-left: 48px;
           }
           .select-skill {

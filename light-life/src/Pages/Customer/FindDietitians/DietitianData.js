@@ -3,10 +3,6 @@ import ReserveForm from "../Reverse/ReserveForm.js";
 import style from "../../../style/findDietitian.module.scss";
 
 function DietitianData({ props, setIsCheck, setReserve, profile }) {
-  const [isReserve, setIsReserve] = useState(false); //false
-  const bindReserveHandler = () => {
-    setIsReserve(true);
-  };
   const bindCloseHandler = () => {
     setIsCheck(false);
   };
@@ -22,11 +18,7 @@ function DietitianData({ props, setIsCheck, setReserve, profile }) {
       <div>
         <div className={style.name}>{props.name}營養師</div>
         <div className={style.img}>
-          <img
-            src={props.image}
-            alt="dietitian"
-            style={{ width: "150px", height: "150px", borderRadius: "50%" }}
-          />
+          <img src={props.image} alt="dietitian" />
         </div>
       </div>
       <div className={style.content}>
@@ -56,11 +48,7 @@ function DietitianData({ props, setIsCheck, setReserve, profile }) {
           <div>{props.other}</div>
         </div>
       </div>
-      {/* {isReserve ? ( */}
       <ReserveForm props={props} setReserve={setReserve} profile={profile} />
-      {/* // ) : (
-      //   ""
-      // )} */}
     </div>
   );
 }
