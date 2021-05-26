@@ -11,6 +11,7 @@ import ReserveList from "./Reverse/ReserveList.js";
 import CustomerProfile from "../Components/CustomerProfile/EditCustomerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import CustomerTarget from "./Target/CustomerTarget.js";
+import Publish from "./Publish/Publish.js";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../style/basic.module.scss";
@@ -115,6 +116,12 @@ function Customer() {
             >
               <div>預約清單</div>
             </Link>
+            <Link
+              className={style["nav-title"]}
+              to={`/customer/${customerID}/`}
+            >
+              <div>返回會員首頁</div>
+            </Link>
             <a href="/">
               <img src={exit} alt="logout" id={style.logout} />
             </a>
@@ -194,7 +201,7 @@ function Customer() {
             <CustomerTarget />
           </Route>
           <Route exact path="/customer/:cID/publish">
-            <div style={{ marginLeft: "300px" }}>預約</div>
+            <Publish />
           </Route>
           <Route exact path="/customer/:cID/findDietitian">
             <GetDietitiansData

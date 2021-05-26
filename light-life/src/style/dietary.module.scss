@@ -153,6 +153,10 @@
             width: 20px;
             height: 20px;
             content: "";
+            cursor: pointer;
+            &:hover {
+              transform: scale(1.3);
+            }
           }
         }
       }
