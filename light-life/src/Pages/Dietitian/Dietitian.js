@@ -27,6 +27,7 @@ function Dietitian() {
   const [profile, setProfile] = useState({});
   const [selectedID, setSelectedID] = useState("");
   const [display, setDisplay] = useState("none");
+  const [date, setDate] = useState({});
   const dietitianID = useParams().dID;
   const customerID = useLocation().pathname.split("/")[4];
 
@@ -64,10 +65,50 @@ function Dietitian() {
       .doc(dietitianID)
       .get()
       .then((res) => setProfile(res.data()));
+
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dietitianID)
+      .collection("customers")
+      .get()
+      .then((doc) => {
+        console.log(doc);
+      });
+
+    if (customerID) {
+      firebase
+        .firestore()
+        .collection("dietitians")
+        .doc(dietitianID)
+        .collection("customers")
+        .doc(customerID)
+        .get()
+        .then((doc) => {
+          setDate({
+            start: doc.data().startDate,
+            end: doc.data().endDate,
+          });
+        });
+    }
   }, []);
 
   const getSelectedCustomer = (e) => {
     setSelectedID(e.target.className);
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dietitianID)
+      .collection("customers")
+      .doc(e.target.className)
+      .get()
+      .then((doc) => {
+        console.log(doc.data());
+        setDate({
+          start: doc.data().startDate,
+          end: doc.data().endDate,
+        });
+      });
   };
 
   const bindListHandler = (e) => {
@@ -272,7 +313,10 @@ function Dietitian() {
                 </div>
                 <Switch>
                   <Route exact path={`/dietitian/:dID/customer/:cID/`}>
-                    <div style={{ marginLeft: "300px" }}>服務時間</div>
+                    <div className={style["service-time"]}>
+                      服務時間：{date.start ? date.start : ""}~
+                      {date.end ? date.end : ""}
+                    </div>
                   </Route>
                   <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
                     <div
