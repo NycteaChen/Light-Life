@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import style from "../../../style/findDietitian.module.scss";
 
 function ReserveForm({ setIsReserve, props, setReserve, profile }) {
   const params = useParams();
@@ -50,37 +51,36 @@ function ReserveForm({ setIsReserve, props, setReserve, profile }) {
             setReserve(reserveArray);
           });
       })
+      .then(() => {
+        alert("已發送!");
+      })
       .catch((error) => "Error:" + error);
   };
 
-  const bindCancelHandler = () => {
-    setIsReserve(false);
-  };
-
   return (
-    <div>
-      <label>
-        開始
-        <input type="date" name="reverseStartDate" onChange={getInputHandler} />
-      </label>
-      <label>
-        結束
-        <input type="date" name="reverseEndDate" onChange={getInputHandler} />
-      </label>
-
-      <div>
-        <label>邀請訊息</label>
-        <div>
+    <div className={style["reserve-form"]}>
+      <div className={style["form-title"]}>現在預約</div>
+      <div className={style.form}>
+        <label>
+          <div>開始</div>
           <input
-            type="textarea"
-            name="reverseMessage"
+            type="date"
+            name="reverseStartDate"
             onChange={getInputHandler}
           />
+        </label>
+        <label>
+          <div>結束</div>
+          <input type="date" name="reverseEndDate" onChange={getInputHandler} />
+        </label>
+
+        <label>
+          <div>邀請訊息</div>
+          <textarea name="reverseMessage" onChange={getInputHandler}></textarea>
+        </label>
+        <div>
+          <button onClick={sendReverseHandler}>發送預約邀請</button>
         </div>
-      </div>
-      <div>
-        <button onClick={sendReverseHandler}>發送</button>
-        <button onClick={bindCancelHandler}>取消</button>
       </div>
     </div>
   );

@@ -11,57 +11,56 @@ function DietitianData({ props, setIsCheck, setReserve, profile }) {
     setIsCheck(false);
   };
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: "10%",
-        left: "10%",
-        right: "10%",
-        width: "80%",
-        height: "80%",
-        backgroundColor: "blue",
-      }}
-    >
-      <div onClick={bindCloseHandler}>X</div>
+    <div className={style["dietitian-details"]}>
       <div>
-        <span>{props.name}</span> 營養師
+        <i
+          className={`${style.close} fa fa-times`}
+          aria-hidden="true"
+          onClick={bindCloseHandler}
+        ></i>
       </div>
       <div>
-        性別：<span>{props.gender}</span>
+        <div className={style.name}>{props.name}營養師</div>
+        <div className={style.img}>
+          <img
+            src={props.image}
+            alt="dietitian"
+            style={{ width: "150px", height: "150px", borderRadius: "50%" }}
+          />
+        </div>
       </div>
-      <div>
-        最高學歷：
-        <span>
-          {props.education.school}
-          {props.education.department} {props.education.degree}
-        </span>
+      <div className={style.content}>
+        <div className={style.gender}>
+          性別：<span>{props.gender}</span>
+        </div>
+        <div className={style.education}>
+          <div>最高學歷：{props.education.school}</div>
+          <div>
+            <span>{props.education.department} </span>
+            <span>{props.education.degree}</span>
+          </div>
+        </div>
+        <div className={style.skills}>
+          專長：
+          <span>
+            {props.skills.map((s, index) => (
+              <span key={index}>
+                {s}
+                {props.skills[index + 1] ? "、" : ""}
+              </span>
+            ))}
+          </span>
+        </div>
+        <div className={style.other}>
+          <div>其他</div>
+          <div>{props.other}</div>
+        </div>
       </div>
-      <div>
-        專長：
-        <span>
-          {props.skills.map((s, index) => (
-            <span key={index}>
-              {s}
-              {props.skills[index + 1] ? "、" : ""}
-            </span>
-          ))}
-        </span>
-      </div>
-      <div>
-        <div>其他</div>
-        <div>{props.other}</div>
-      </div>
-      <button onClick={bindReserveHandler}>發送預約邀請</button>
-      {isReserve ? (
-        <ReserveForm
-          setIsReserve={setIsReserve}
-          props={props}
-          setReserve={setReserve}
-          profile={profile}
-        />
-      ) : (
-        ""
-      )}
+      {/* {isReserve ? ( */}
+      <ReserveForm props={props} setReserve={setReserve} profile={profile} />
+      {/* // ) : (
+      //   ""
+      // )} */}
     </div>
   );
 }
