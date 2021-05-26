@@ -12,6 +12,7 @@
       width: 150px;
       height: 150px;
       border-radius: 50%;
+      margin-bottom: 27px;
     }
     .title {
       font-weight: 700;
@@ -54,6 +55,7 @@
         img {
           width: 180px;
           height: 180px;
+          margin-bottom: 35px;
         }
         .data-item {
           div {
@@ -211,10 +213,6 @@
       }
     }
 
-    .memberNumber {
-      background-color: white;
-      white-space: nowrap;
-    }
     .col {
       .title + div {
         max-height: 100px;

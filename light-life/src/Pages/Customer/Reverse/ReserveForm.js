@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/findDietitian.module.scss";
 
-function ReserveForm({ setIsReserve, props, setReserve, profile }) {
+function ReserveForm({ props, setReserve, profile }) {
   const params = useParams();
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = today.toISOString().substr(0, 10);
@@ -61,18 +61,24 @@ function ReserveForm({ setIsReserve, props, setReserve, profile }) {
     <div className={style["reserve-form"]}>
       <div className={style["form-title"]}>現在預約</div>
       <div className={style.form}>
-        <label>
-          <div>開始</div>
-          <input
-            type="date"
-            name="reverseStartDate"
-            onChange={getInputHandler}
-          />
-        </label>
-        <label>
-          <div>結束</div>
-          <input type="date" name="reverseEndDate" onChange={getInputHandler} />
-        </label>
+        <div>
+          <label>
+            <div>開始</div>
+            <input
+              type="date"
+              name="reverseStartDate"
+              onChange={getInputHandler}
+            />
+          </label>
+          <label>
+            <div>結束</div>
+            <input
+              type="date"
+              name="reverseEndDate"
+              onChange={getInputHandler}
+            />
+          </label>
+        </div>
 
         <label>
           <div>邀請訊息</div>

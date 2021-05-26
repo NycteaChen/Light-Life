@@ -30,8 +30,17 @@
     border: 1.5px solid #035322;
     border-radius: 5px;
     box-shadow: 0 1px 2px #035322;
-    margin: 20px 0;
-    position: relative;
+    margin: 20px;
+    width: 90%;
+    max-height: calc(100vh - 50px);
+    overflow: auto;
+    position: fixed;
+    top: 20px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    transition: all 0.5s;
+
     i {
       color: red;
       position: absolute;
@@ -39,6 +48,7 @@
       right: 10px;
     }
     .reserve-time {
+      transition: all 0.5s;
       font-weight: 800;
       span {
         display: block;
@@ -46,11 +56,13 @@
     }
     .data-title {
       margin: 10px 0;
+      transition: all 0.5s;
     }
     img {
       width: 100px;
       height: 100px;
       border-radius: 50%;
+      transition: all 0.5s;
     }
     .title {
       font-weight: 700;
@@ -177,7 +189,7 @@
         background-color: #fcffd4;
         padding-bottom: 10px;
         max-height: calc(100vh - 160px);
-        width: 800px;
+        max-width: 800px;
         max-height: unset;
         overflow: auto;
         .inviter:first-of-type {
@@ -191,13 +203,6 @@
       }
       .invite-data {
         text-align: center;
-        max-height: calc(100vh - 50px);
-        overflow: auto;
-        position: fixed;
-        top: 20px;
-        right: 0;
-        left: 0;
-        margin: auto;
         .reserve-time,
         .data-title {
           font-size: 20px;

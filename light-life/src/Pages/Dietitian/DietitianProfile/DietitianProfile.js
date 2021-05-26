@@ -30,7 +30,12 @@ function DietitianProfile({ profile }) {
               </div>
               <div className={style.basic}>
                 <label className="name">姓名</label>
-                <input type="text" name="name" id="name" value={profile.name} />
+                <input
+                  type="text"
+                  name="name"
+                  id={style.name}
+                  value={profile.name}
+                />
                 <label className="gender">生理性別</label>
                 <div>
                   <input
