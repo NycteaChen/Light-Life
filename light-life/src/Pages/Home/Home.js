@@ -1,26 +1,34 @@
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams,
+  useLocation,
+} from "react-router-dom";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import Login from "./Login.js";
 import logo from "../../images/lightlife-horizontal.png";
 import style from "../../style/home.module.scss";
 import $ from "jquery";
-// const Cover = styled.div`
-//   background: url(${cover});
-//   background-size: cover;
-//   background-position: center;
-//   height: 600px;
-//   margin-top: 78px;
-//   position: relative;
-//   /* &::after {
-//     content: "";
-//     position: absolute;
-//     background: rgba(255, 255, 255, 0.5);
-//     height: 700px;
-//   } */
-// `;
-
+import { set } from "date-fns";
 function Home() {
+  const [display, setDisplay] = useState("none");
+  const bindLoginButton = () => {
+    console.log("1");
+    setDisplay("flex");
+  };
   return (
     <>
+      <div
+        className={style.mask}
+        style={{
+          display: display,
+        }}
+      ></div>
+      <Login display={display} setDisplay={setDisplay} />
       <header className={style["home-header"]}>
         <div>
           <a href="/">
@@ -29,7 +37,9 @@ function Home() {
           <nav className={style["header-nav"]}>
             <a href="#about">關於本站</a>
             <a href="#contact">聯絡我們</a>
-            <a href="/">登入</a>
+            <a href="#" onClick={bindLoginButton}>
+              登入
+            </a>
           </nav>
         </div>
       </header>

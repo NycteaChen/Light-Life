@@ -1,0 +1,254 @@
+.login-col {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  white-space: nowrap;
+  width: 800px;
+  .close {
+    transition: all 0.5s;
+    cursor: pointer;
+    &:hover {
+      color: red;
+      transform: scale(1.2);
+    }
+  }
+  img {
+    width: 120px;
+    height: 120px;
+    margin-top: 15px;
+  }
+  .disappear {
+    transform: translateY(600px);
+    opacity: 0;
+  }
+  .appear {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  .login,
+  .signup {
+    width: 80%;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 2px 5px 10px 3px #818181;
+    text-align: center;
+    padding-bottom: 15px;
+    transition: all 0.5s;
+    position: fixed;
+    z-index: 10;
+    height: 600px;
+    text-align: center;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    background-color: white;
+
+    .close {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      font-size: 20px;
+    }
+    .title {
+      margin: 20px 0;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    ul {
+      width: 100%;
+      &.nav-tabs {
+        border-bottom: 1px solid #037570;
+      }
+      & > li {
+        width: 40%;
+
+        margin-left: auto;
+
+        &:last-of-type {
+          margin-left: 0;
+          margin-right: auto;
+        }
+
+        & > a {
+          color: #929292;
+          transition: all 0.3s;
+        }
+        & > .active {
+          background-color: #037570;
+          color: white;
+          border: 1px solid #037570;
+        }
+        & > .nav-link {
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+          border: 1px solid #037570;
+          &:hover {
+            border: 1px solid black;
+          }
+        }
+      }
+    }
+    button {
+      display: block;
+      margin: 15px auto;
+      width: 80%;
+      padding: 5px 0;
+      border-radius: 5px;
+      border: none;
+      background-color: cadetblue;
+      color: white;
+      transition: all 0.5s;
+      &:hover {
+        background-color: #163031;
+        transform: scale(1.1);
+      }
+      &:first-of-type {
+        margin-top: 20px;
+      }
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+
+      input {
+        width: 90%;
+        transition: all 0.5s;
+        border: 1px solid black;
+        padding-left: 7px;
+        border-radius: 5px;
+        &:valid {
+          background-color: white !important;
+        }
+      }
+      div {
+        width: 90%;
+        transition: all 0.5s;
+        margin: auto;
+        text-align: left;
+      }
+    }
+    .hint {
+      text-align: right;
+      margin-right: 32px;
+      margin-top: 5px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      a {
+        color: #3b8176;
+        text-decoration: none;
+        &:hover {
+          color: #022e30;
+          font-weight: 800;
+        }
+      }
+    }
+  }
+
+  .login-image {
+    display: none;
+  }
+
+  @media (min-width: 320px) {
+    .login,
+    .signup {
+      max-width: 350px;
+      label {
+        transition: all 0.5s;
+        margin-top: 20px;
+        input {
+          width: 80%;
+        }
+        div {
+          width: 80%;
+          margin: auto;
+          text-align: left;
+        }
+      }
+    }
+  }
+  @media (min-width: 520px) {
+    .login,
+    .signup {
+      max-width: 400px;
+      label {
+        margin: 30px 0 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        input {
+          height: 35px;
+          max-width: 280px;
+        }
+        div {
+          margin: 0;
+          width: unset;
+          margin-right: 10px;
+        }
+      }
+      button {
+        width: 65%;
+      }
+    }
+  }
+
+  @media (min-width: 1024px) {
+    position: fixed;
+    z-index: 10;
+    height: 600px;
+    text-align: center;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+
+    .login-image {
+      display: block;
+      width: 420px;
+      height: 630px;
+      background-image: url("../images/food.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: top 25% right 10%;
+      border-radius: 15px;
+      position: absolute;
+      top: -15px;
+      z-index: 15;
+      transition: all 0.5s;
+    }
+
+    .right {
+      transform: translateX(210px);
+    }
+    .left {
+      transform: translate(-210px);
+    }
+
+    .login,
+    .signup {
+      transition: opacity 0.5s;
+      position: static;
+      border-radius: 0;
+    }
+
+    .signup {
+      .close {
+        position: absolute;
+        left: -30px;
+        top: 15px;
+        font-size: 20px;
+      }
+    }
+    .disappear {
+      transform: unset;
+      opacity: 0;
+    }
+    .appear {
+      transform: unset;
+      opacity: 1;
+    }
+  }
+}
