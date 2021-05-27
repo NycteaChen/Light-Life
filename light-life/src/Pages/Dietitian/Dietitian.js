@@ -163,9 +163,14 @@ function Dietitian() {
                   ))}
                 </div>
               </ul>
-              <div className={basic["nav-title"]} onClick={bindListHandler}>
-                找客戶
-              </div>
+
+              <Link
+                className={basic["nav-title"]}
+                to={`/dietitian/${dietitianID}/findCustomers`}
+              >
+                <div onClick={bindListHandler}>找客戶</div>
+              </Link>
+
               <Link
                 className={basic["nav-title"]}
                 to={`/dietitian/${dietitianID}/inviteMe`}
@@ -206,9 +211,13 @@ function Dietitian() {
               >
                 <div>編輯會員資料</div>
               </Link>
-              <Link to="#" onClick={bindListHandler}>
+              <Link
+                to={`/dietitian/${dietitianID}/findCustomers`}
+                onClick={bindListHandler}
+              >
                 <div>找客戶</div>
               </Link>
+
               <Link
                 className="list"
                 to={`/dietitian/${dietitianID}/customers`}
@@ -235,6 +244,11 @@ function Dietitian() {
             <Route exact path={`/dietitian/:dID/profile`}>
               <DietitianProfile profile={profile} />
             </Route>
+
+            <Route exact path={`/dietitian/:dID/findCustomers`}>
+              <div>找客戶</div>
+            </Route>
+
             <Route exact path={`/dietitian/:dID/customers`}>
               <div
                 className={basic.mobileCustomerList}

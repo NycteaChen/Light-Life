@@ -70,6 +70,7 @@
         display: inline-block;
         margin-left: 10px;
         &.success {
+          margin-left: 0;
           background-color: #b8ffea;
           border-radius: 5px;
           text-shadow: 0 1px 1px #6ae499;
@@ -167,10 +168,6 @@
     .waiting {
       border: none;
       padding-bottom: 10px;
-      .reservations {
-        height: 200px;
-        max-height: 300px;
-      }
     }
     .checked {
       border-top: 2px solid black;
@@ -182,6 +179,9 @@
 
       .reservation:first-of-type {
         margin-top: 0;
+      }
+      .reservations {
+        max-height: 320px;
       }
     }
   }
