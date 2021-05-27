@@ -37,9 +37,7 @@ function Home() {
           <nav className={style["header-nav"]}>
             <a href="#about">關於本站</a>
             <a href="#contact">聯絡我們</a>
-            <a href="#" onClick={bindLoginButton}>
-              登入
-            </a>
+            <a onClick={bindLoginButton}>登入</a>
           </nav>
         </div>
       </header>
@@ -47,9 +45,7 @@ function Home() {
         <div className={style.cover}>
           <div className={style["main-title"]}>
             <h2>Bring you to light life</h2>
-            <a href="/">
-              <button>使用服務</button>
-            </a>
+            <button onClick={bindLoginButton}>使用服務</button>
           </div>
         </div>
         <div className={style.col}>
@@ -121,9 +117,7 @@ function Home() {
         </div>
         <section className={style.service}>
           <p>We will bring you to light life!</p>
-          <a href="/">
-            <button>使用服務</button>
-          </a>
+          <button onClick={bindLoginButton}>使用服務</button>
         </section>
       </main>
       <aside>

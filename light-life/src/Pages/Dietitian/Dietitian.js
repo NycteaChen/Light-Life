@@ -195,9 +195,7 @@ function Dietitian() {
           <div className={basic.profile}>
             <img src={profile ? profile.image : noImage} />
             <div className={basic.welcome}>
-              <div>
-                <span>{profile ? profile.name : ""}</span>，您好
-              </div>
+              <div>{profile ? profile.name : ""}，您好</div>
               <div className={basic["service-status"]}>
                 <div>服務開放中</div>
                 <label>

@@ -132,14 +132,12 @@ function Customer() {
         <div className={style.profile}>
           <img src={profile ? profile.image : noImage} />
           <div className={style.welcome}>
-            <div>
-              <h4>{profile.name}，您好！</h4>
-            </div>
+            <div>{profile.name}，您好！</div>
             <div className={style["service-status"]}>
               {profile.dietitian !== "" ? (
-                <h5>我的營養師：{dName} 營養師</h5>
+                <div>我的營養師：{dName} 營養師</div>
               ) : (
-                <h5>目前沒有使用服務喔</h5>
+                <div>目前沒有使用服務喔</div>
               )}
             </div>
           </div>
