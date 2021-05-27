@@ -7,20 +7,20 @@ import {
   useParams,
   useLocation,
 } from "react-router-dom";
-import InvitedList from "./Invite/InvitedList.js";
-import DietitianProfile from "../Dietitian/DietitianProfile/DietitianProfile.js";
 import firebase from "firebase/app";
+import "firebase/firestore";
 import logo from "../../images/lightlife-straight.png";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
-import "firebase/firestore";
-import basic from "../../style/basic.module.scss";
-import style from "../../style/customerData.module.scss";
-import customer from "../../style/customerProfile.module.scss";
+import InvitedList from "./Invite/InvitedList.js";
+import DietitianProfile from "../Dietitian/DietitianProfile/DietitianProfile.js";
 import CusotmerProfile from "../Components/CustomerProfile/CusotmerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
-import GetPublicationData from "../Dietitian/FindCustomers/GetPublicationData.js";
+import GetPublication from "../Dietitian/FindCustomers/GetPublication.js";
+import basic from "../../style/basic.module.scss";
+import style from "../../style/customerData.module.scss";
+import customer from "../../style/customerProfile.module.scss";
 
 function Dietitian() {
   const [users, setUsers] = useState([]);
@@ -247,7 +247,7 @@ function Dietitian() {
             </Route>
 
             <Route exact path={`/dietitian/:dID/findCustomers`}>
-              <GetPublicationData />
+              <GetPublication />
             </Route>
 
             <Route exact path={`/dietitian/:dID/customers`}>

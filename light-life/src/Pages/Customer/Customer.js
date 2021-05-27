@@ -105,7 +105,7 @@ function Customer() {
 
             <Link
               className={style["nav-title"]}
-              to={`/customer/${customerID}/findDietitian`}
+              to={`/customer/${customerID}/findDietitians`}
             >
               <div>找營養師</div>
             </Link>
@@ -173,7 +173,7 @@ function Customer() {
 
             <Link
               className={style["nav-title"]}
-              to={`/customer/${customerID}/findDietitian`}
+              to={`/customer/${customerID}/findDietitians`}
             >
               <div>找營養師</div>
             </Link>
@@ -203,7 +203,7 @@ function Customer() {
           <Route exact path="/customer/:cID/publish">
             <Publish />
           </Route>
-          <Route exact path="/customer/:cID/findDietitian">
+          <Route exact path="/customer/:cID/findDietitians">
             <GetDietitiansData
               props={dietitians}
               setReserve={setReserve}
