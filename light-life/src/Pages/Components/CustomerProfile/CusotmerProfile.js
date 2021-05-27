@@ -13,7 +13,6 @@ function CustomerProfile({ props, input }) {
           src={input.image ? input.image : props.image ? props.image : noImage}
           alt="customer"
         />
-
         <div>
           <div className={style["data-item"]}>
             <div className={style.title}>姓名</div>
@@ -99,5 +98,4 @@ function CustomerProfile({ props, input }) {
     </>
   );
 }
-
 export default CustomerProfile;

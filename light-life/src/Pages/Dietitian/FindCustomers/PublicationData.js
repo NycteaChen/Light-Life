@@ -14,7 +14,7 @@ import style from "../../../style/findCustomers.module.scss";
 
 function PublicationData() {
   return (
-    <div className={style.publicationForm}>
+    <div className={style.publicationForm} style={{ display: "none" }}>
       <div>
         <i className={`${style.close} fa fa-times`} aria-hidden="true"></i>
       </div>

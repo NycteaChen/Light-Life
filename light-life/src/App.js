@@ -12,39 +12,37 @@ function App() {
   const cID = "9iYZMkuFdZRK9vxgt1zc";
 
   return (
-    <>
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <Link to={`/dietitian/${dID}`}>Dietitian</Link>
-            <Link to={`/customer/${cID}`}>Customer</Link>
-            <Home />
-          </Route>
-          <Route path="/dietitian/:dID">
-            <header className={style["m-header"]}>
-              <div className={style["logo-nav"]}>
-                <a href="/">
-                  <img src={logo} id={style.logo} alt="logo" />
-                </a>
-                <div id="menu" style={{ width: "24px", height: "24px" }}></div>
-              </div>
-            </header>
-            <Dietitian />
-          </Route>
-          <Route path="/customer/:cID">
-            <header className={style["m-header"]}>
-              <div className={style["logo-nav"]}>
-                <a href="/">
-                  <img src={logo} id={style.logo} alt="logo" />
-                </a>
-                <div id="menu" style={{ width: "24px", height: "24px" }}></div>
-              </div>
-            </header>
-            <Customer />
-          </Route>
-        </Switch>
-      </Router>
-    </>
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <Link to={`/dietitian/${dID}`}>Dietitian</Link>
+          <Link to={`/customer/${cID}`}>Customer</Link>
+          <Home />
+        </Route>
+        <Route path="/dietitian/:dID">
+          <header className={style["m-header"]}>
+            <div className={style["logo-nav"]}>
+              <a href="/">
+                <img src={logo} id={style.logo} alt="logo" />
+              </a>
+              <div id="menu" style={{ width: "24px", height: "24px" }}></div>
+            </div>
+          </header>
+          <Dietitian />
+        </Route>
+        <Route path="/customer/:cID">
+          <header className={style["m-header"]}>
+            <div className={style["logo-nav"]}>
+              <a href="/">
+                <img src={logo} id={style.logo} alt="logo" />
+              </a>
+              <div id="menu" style={{ width: "24px", height: "24px" }}></div>
+            </div>
+          </header>
+          <Customer />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 export default App;
