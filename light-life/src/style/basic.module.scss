@@ -208,13 +208,14 @@
       margin: auto;
       display: grid;
       max-width: 300px;
-      grid-template-columns: repeat(2, 1fr);
       div {
         margin: 0 5px 10px;
         line-height: 50px;
         background-color: rgb(165, 170, 170);
       }
-
+      @media (min-width: 320px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
       @media (min-width: 520px) {
         & {
           max-width: 500px;
