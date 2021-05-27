@@ -20,6 +20,7 @@ import customer from "../../style/customerProfile.module.scss";
 import CusotmerProfile from "../Components/CustomerProfile/CusotmerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
+import GetPublicationData from "../Dietitian/FindCustomers/GetPublicationData.js";
 
 function Dietitian() {
   const [users, setUsers] = useState([]);
@@ -246,7 +247,7 @@ function Dietitian() {
             </Route>
 
             <Route exact path={`/dietitian/:dID/findCustomers`}>
-              <div>找客戶</div>
+              <GetPublicationData />
             </Route>
 
             <Route exact path={`/dietitian/:dID/customers`}>
