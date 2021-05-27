@@ -1,0 +1,18 @@
+.publicationList {
+  text-align: center;
+
+  .publication {
+    background-color: white;
+    margin-top: 10px;
+    .col {
+      .subject {
+        text-align: left;
+        margin: auto;
+        width: 80%;
+      }
+    }
+  }
+  @media (min-width: 1024px) {
+    margin-left: 300px;
+  }
+}

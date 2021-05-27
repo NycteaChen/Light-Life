@@ -9,6 +9,7 @@ import {
 import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/publish.module.scss";
+import Invited from "./Invited.js";
 
 function Publish() {
   return (
@@ -54,6 +55,7 @@ function Publish() {
             <button>查看詳情</button>
           </div>
         </div>
+        <Invited />
       </div>
       <div className={style.published}>
         <h3>過去刊登</h3>

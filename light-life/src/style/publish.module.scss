@@ -133,6 +133,7 @@
       }
     }
   }
+
   @media (min-width: 320px) {
     .form {
       max-width: 400px;
@@ -228,6 +229,141 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
+        }
+      }
+    }
+  }
+
+  .dietitian-details {
+    text-align: left;
+    width: 90%;
+    max-width: 450px;
+    max-height: 90%;
+    overflow: auto;
+    position: fixed;
+    padding: 20px 10px;
+    top: 30px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    background-color: white;
+
+    & > div:first-of-type {
+      text-align: right;
+      margin-right: 20px;
+
+      cursor: pointer;
+
+      .close {
+        transition: all 0.5s;
+        font-size: 20px;
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
+
+    .img,
+    .name,
+    .invite-button {
+      text-align: center;
+    }
+    img {
+      transition: all 0.5s;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+    }
+
+    .content {
+      transition: all 0.5s;
+      .education {
+        margin: auto;
+        & > div:first-of-type {
+          white-space: nowrap;
+        }
+        & > div:last-of-type {
+          margin-left: 81px;
+          & > span:last-of-type {
+            display: block;
+          }
+        }
+      }
+      .other {
+        margin-bottom: 10px;
+        & > div:last-of-type {
+          margin-top: 5px;
+          padding: 3px 7px;
+          max-width: 250px;
+          max-height: 100px;
+          overflow: auto;
+          border-radius: 5px;
+          border: 1px solid blue;
+        }
+      }
+      & > div {
+        margin: 10px 0;
+      }
+      .message {
+        textarea {
+          margin-top: 5px;
+          font-size: 14px;
+          width: 100%;
+          max-width: 300px;
+          padding: 3px 7px;
+          height: 3rem;
+          overflow: auto;
+        }
+      }
+    }
+    .buttons {
+      text-align: center;
+      button {
+        padding: 3px 7px;
+        &.accept {
+          margin-right: 5px;
+          margin-right: 7px;
+          background-color: #b8ffea;
+          outline: none;
+          border-radius: 5px;
+          border: 2px solid #094231;
+          text-shadow: 0 1px 1px #6ae499;
+        }
+        &.decline {
+          margin-left: 5px;
+          margin-left: 7px;
+          background-color: #fad2c2;
+          outline: none;
+          border-radius: 5px;
+          border: 2px solid #f34500;
+          text-shadow: 0 1px 1px #fa8556;
+        }
+      }
+    }
+
+    @media (min-width: 320px) {
+      .content {
+        margin-left: 20%;
+        .gender,
+        .skills,
+        .other {
+          margin-left: 32px;
+        }
+      }
+    }
+    @media (min-width: 520px) {
+      max-width: 520px;
+      .content {
+        .education {
+          & span:last-of-type {
+            display: inline-block !important;
+          }
+        }
+        .message {
+          textarea {
+            transition: all 0.5s;
+            height: 5rem;
+          }
         }
       }
     }
