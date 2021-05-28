@@ -4,6 +4,62 @@
   justify-content: center;
   white-space: nowrap;
   width: 800px;
+
+  .show {
+    z-index: 25 !important;
+    opacity: 1 !important;
+    bottom: 0px !important;
+  }
+
+  .emailForm {
+    transition: all 0.5s;
+    text-align: center;
+    position: fixed;
+    width: 80%;
+    max-width: 400px;
+    height: 130px;
+    top: 0;
+    right: 0;
+    bottom: 100px;
+    left: 0;
+    margin: auto;
+    background-color: white;
+    z-index: -1;
+    opacity: 0;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 5px 10px 3px #818181;
+    padding-top: 10px;
+    input {
+      width: 150px;
+      border-radius: 5px;
+      padding: 2px 7px;
+      margin: 5px 0;
+      border: 1px solid grey;
+      transition: all 0.5s;
+    }
+    button {
+      padding: 2px 12px;
+      border-radius: 5px;
+      border: 1px solid #037570;
+      background-color: #037570;
+      color: white;
+      &:first-of-type {
+        margin-right: 5px;
+        transition: all 0.5s;
+        &:hover {
+          background-color: #094346;
+          border-color: #094346;
+        }
+      }
+      &:last-of-type {
+        margin-left: 5px;
+        background-color: white;
+        color: #037570;
+      }
+    }
+  }
+
   .close {
     transition: all 0.5s;
     cursor: pointer;
@@ -109,6 +165,8 @@
       margin-top: 20px;
       position: relative;
       input {
+        font-size: 14px;
+        padding: 5px 10px;
         width: 90%;
         transition: all 0.5s;
         border: 1px solid black;
@@ -138,8 +196,6 @@
       }
     }
     .hint {
-      text-align: right;
-      margin-right: 32px;
       margin-top: 5px;
       font-size: 12px;
       letter-spacing: 2px;
@@ -148,6 +204,18 @@
         &:hover {
           color: #022e30;
           font-weight: 800;
+        }
+      }
+    }
+    .hints {
+      display: flex;
+      justify-content: center;
+      .hint {
+        &:first-of-type {
+          margin-right: 7px;
+        }
+        &:last-of-type {
+          margin-left: 7px;
         }
       }
     }
@@ -176,6 +244,11 @@
           margin: auto;
           text-align: left;
         }
+      }
+    }
+    .emailForm {
+      input {
+        width: 200px;
       }
     }
   }
@@ -207,6 +280,11 @@
         width: 65%;
       }
     }
+    .emailForm {
+      input {
+        width: 250px;
+      }
+    }
   }
 
   @media (min-width: 1024px) {
@@ -231,7 +309,7 @@
       border-radius: 15px;
       position: absolute;
       top: -15px;
-      z-index: 15;
+      z-index: 11;
       transition: all 0.5s;
     }
 
@@ -247,6 +325,19 @@
       transition: opacity 0.5s;
       position: static;
       border-radius: 0;
+      .hint {
+        font-size: 14px;
+        text-align: right;
+        margin-right: 35px;
+      }
+      .hints {
+        justify-content: flex-end;
+        .hint {
+          &:first-of-type {
+            margin-right: 0;
+          }
+        }
+      }
     }
 
     .signup {
