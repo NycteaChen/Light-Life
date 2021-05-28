@@ -12,14 +12,67 @@ import "firebase/firestore";
 import Login from "./Login.js";
 import logo from "../../images/lightlife-horizontal.png";
 import style from "../../style/home.module.scss";
+import noImage from "../../images/noimage.png";
 import $ from "jquery";
 import { set } from "date-fns";
 function Home() {
   const [display, setDisplay] = useState("none");
+  const [user, setUser] = useState({});
+
   const bindLoginButton = () => {
     console.log("1");
     setDisplay("flex");
   };
+
+  const bindEnterButton = () => {};
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        console.log(user.email);
+
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .where("email", "==", user.email)
+          .get()
+          .then((docs) => {
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                setUser({
+                  image: doc.data().image,
+                  id: doc.data().id,
+                  client: "dietitian",
+                });
+              });
+            }
+          });
+        firebase
+          .firestore()
+          .collection("customers")
+          .where("email", "==", user.email)
+          .get()
+          .then((docs) => {
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                setUser({
+                  image: doc.data().image,
+                  id: doc.data().id,
+                  client: "customer",
+                });
+              });
+            }
+          });
+      } else {
+        // User is signed out
+        // ...
+        console.log("no one");
+      }
+    });
+  }, []);
+
   return (
     <>
       <div
@@ -37,7 +90,16 @@ function Home() {
           <nav className={style["header-nav"]}>
             <a href="#about">關於本站</a>
             <a href="#contact">聯絡我們</a>
-            <a onClick={bindLoginButton}>登入</a>
+            {user.client ? (
+              <Link to={`/${user.client}/${user.id}`} onClick={bindEnterButton}>
+                <img
+                  className={style["login-image"]}
+                  src={user.image ? user.image : noImage}
+                />
+              </Link>
+            ) : (
+              <a onClick={bindLoginButton}>登入</a>
+            )}
           </nav>
         </div>
       </header>
@@ -45,7 +107,15 @@ function Home() {
         <div className={style.cover}>
           <div className={style["main-title"]}>
             <h2>Bring you to light life</h2>
-            <button onClick={bindLoginButton}>使用服務</button>
+            {user.client ? (
+              <Link to={`/${user.client}/${user.id}`} onClick={bindEnterButton}>
+                <button>使用服務</button>
+              </Link>
+            ) : (
+              <a>
+                <button onClick={bindLoginButton}>使用服務</button>
+              </a>
+            )}
           </div>
         </div>
         <div className={style.col}>
@@ -117,7 +187,15 @@ function Home() {
         </div>
         <section className={style.service}>
           <p>We will bring you to light life!</p>
-          <button onClick={bindLoginButton}>使用服務</button>
+          {user.client ? (
+            <Link to={`/${user.client}/${user.id}`} onClick={bindEnterButton}>
+              <button>使用服務</button>
+            </Link>
+          ) : (
+            <a>
+              <button onClick={bindLoginButton}>使用服務</button>
+            </a>
+          )}
         </section>
       </main>
       <aside>

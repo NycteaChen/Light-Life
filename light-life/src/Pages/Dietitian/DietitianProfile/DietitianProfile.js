@@ -145,7 +145,7 @@ function DietitianProfile({ profile }) {
               <label>其他</label>
               <p>補充更多資訊讓客戶更了解你！（例：經歷、證照、其他專長）</p>
               <textarea cols="40" rows="6">
-                安安尼好
+                {profile.other ? profile.other : ""}
               </textarea>
             </div>
           </div>

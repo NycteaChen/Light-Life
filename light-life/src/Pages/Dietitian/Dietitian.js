@@ -120,6 +120,19 @@ function Dietitian() {
       setDisplay("none");
     }
   };
+  const logoutHandler = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        alert("已登出");
+        // 登出後強制重整一次頁面
+        window.location.href = "/";
+      })
+      .catch(function (error) {
+        console.log(error.message);
+      });
+  };
 
   // if (users.length > 0) {
   if (profile.name) {
@@ -186,7 +199,7 @@ function Dietitian() {
               >
                 返回會員主頁
               </Link>
-              <a href="/">
+              <a onClick={logoutHandler}>
                 <img src={exit} alt="logout" id={basic.logout} />
               </a>
               <div className={basic.copyright}>&copy;2021 Light Life</div>

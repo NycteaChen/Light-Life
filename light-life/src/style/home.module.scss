@@ -49,6 +49,13 @@
           font-weight: 700;
         }
       }
+      .login-image {
+        position: relative;
+        bottom: 2px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
     }
     @media (min-width: 768px) {
       & {

@@ -24,7 +24,7 @@ function Login({ display, setDisplay }) {
   const [customer, setCustomer] = useState("");
   const [input, setInput] = useState({});
   const [valid, setValid] = useState({});
-  const [docId, setDocId] = useState("");
+  // const [docId, setDocId] = useState("");
   const [eye, setEye] = useState({
     on: "none",
     slash: "block",
@@ -56,22 +56,6 @@ function Login({ display, setDisplay }) {
     });
   };
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        var uid = user.uid;
-        console.log(uid);
-        console.log(user);
-      } else {
-        // User is signed out
-        // ...
-        console.log("no one");
-      }
-    });
-  }, []);
-
   const bindSelectHandler = (e) => {
     if (e.target.className.includes("dietitian")) {
       setClient("dietitian");
@@ -83,7 +67,6 @@ function Login({ display, setDisplay }) {
       setDietitian("");
     }
   };
-  console.log(client);
   const closeHandler = () => {
     setDisplay("none");
     setInput({});
@@ -181,7 +164,6 @@ function Login({ display, setDisplay }) {
                 .collection(`${client}s`)
                 .doc(docRef.id)
                 .update("id", docRef.id);
-              setDocId(docRef.id);
             })
             .then(() => {
               setValid({});
@@ -196,6 +178,104 @@ function Login({ display, setDisplay }) {
     } else {
       console.log("none");
     }
+  };
+
+  const googleLoginHandler = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((result) => {
+        const user = result.user;
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .where("email", "==", user.email)
+          .get()
+          .then((res) => {
+            if (!res.empty) {
+              let id;
+              res.forEach((i) => (id = i.data().id));
+              window.location.href = `/dietitian/${id}`;
+            } else {
+              firebase
+                .firestore()
+                .collection("customers")
+                .where("email", "==", user.email)
+                .get()
+                .then((res) => {
+                  if (!res.empty) {
+                    let id;
+                    res.forEach((i) => (id = i.data().id));
+                    window.location.href = `/customer/${id}`;
+                  } else {
+                    firebase
+                      .firestore()
+                      .collection(`${client}s`)
+                      .add({
+                        name: user.displayName,
+                        image: user.photoURL,
+                        email: user.email,
+                      })
+                      .then((docRef) => {
+                        firebase
+                          .firestore()
+                          .collection(`${client}s`)
+                          .doc(docRef.id)
+                          .update("id", docRef.id);
+
+                        return docRef.id;
+                      })
+                      .then((res) => {
+                        window.location.href = `/${client}/${res}`;
+                      });
+                  }
+                });
+            }
+          });
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        const credential = error.credential;
+        // ...
+      });
+  };
+  const facebookLoginHandler = () => {
+    const provider = new firebase.auth.FacebookAuthProvider();
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((result) => {
+        // /** @type {firebase.auth.OAuthCredential} */
+        const credential = result.credential;
+
+        // The signed-in user info.
+        const user = result.user;
+
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        const accessToken = credential.accessToken;
+        console.log(result);
+        console.log(user);
+        console.timeLog(credential);
+        console.log(accessToken);
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        const credential = error.credential;
+
+        // ...
+      });
   };
 
   return (
@@ -287,7 +367,7 @@ function Login({ display, setDisplay }) {
 
             <div className={style.hint}>
               還沒
-              <a href="#" id="signup" onClick={bindSignupHandler}>
+              <a id="signup" onClick={bindSignupHandler}>
                 註冊
               </a>
               ?
@@ -295,8 +375,12 @@ function Login({ display, setDisplay }) {
 
             <button onClick={loginHandler}>登入</button>
 
-            <button>Google 登入</button>
-            <button>Facebook 登入</button>
+            <button type="button" onClick={googleLoginHandler}>
+              Google 登入
+            </button>
+            <button type="button" onClick={facebookLoginHandler}>
+              Facebook 登入
+            </button>
           </form>
         </div>
         <div className={`${style.signup} ${signup}`}>
@@ -400,7 +484,7 @@ function Login({ display, setDisplay }) {
             </div>
             <div className={style.hint}>
               返回
-              <a href="#" id="login" onClick={bindLoginHandler}>
+              <a id="login" onClick={bindLoginHandler}>
                 登入頁
               </a>
             </div>

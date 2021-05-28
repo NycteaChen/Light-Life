@@ -69,6 +69,20 @@ function Customer() {
       });
   }, []);
 
+  const logoutHandler = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        alert("已登出");
+        // 登出後強制重整一次頁面
+        window.location.href = "/";
+      })
+      .catch(function (error) {
+        console.log(error.message);
+      });
+  };
+
   if (profile.id) {
     return (
       <main className={style["d-main"]}>
@@ -122,7 +136,7 @@ function Customer() {
             >
               <div>返回會員首頁</div>
             </Link>
-            <a href="/">
+            <a onClick={logoutHandler}>
               <img src={exit} alt="logout" id={style.logout} />
             </a>
             <div className={style["copyright"]}>&copy;2021 Light Life</div>
