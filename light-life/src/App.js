@@ -15,8 +15,6 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/">
-          <Link to={`/dietitian/${dID}`}>Dietitian</Link>
-          <Link to={`/customer/${cID}`}>Customer</Link>
           <Home />
         </Route>
         <Route path="/dietitian/:dID">
