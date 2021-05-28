@@ -134,7 +134,7 @@ function Customer() {
           <div className={style.welcome}>
             <div>{profile.name}，您好！</div>
             <div className={style["service-status"]}>
-              {profile.dietitian !== "" ? (
+              {profile.dietitian ? (
                 <div>我的營養師：{dName} 營養師</div>
               ) : (
                 <div>目前沒有使用服務喔</div>

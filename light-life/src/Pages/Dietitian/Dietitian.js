@@ -121,7 +121,8 @@ function Dietitian() {
     }
   };
 
-  if (users.length > 0) {
+  // if (users.length > 0) {
+  if (profile.name) {
     return (
       <>
         <main className={basic["d-main"]}>
