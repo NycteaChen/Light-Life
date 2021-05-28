@@ -60,7 +60,7 @@
     ul {
       width: 100%;
       &.nav-tabs {
-        border-bottom: 1px solid #037570;
+        border-bottom: 5px solid #037570;
       }
       & > li {
         width: 40%;
@@ -75,19 +75,14 @@
         & > a {
           color: #929292;
           transition: all 0.3s;
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+          border: 1px solid #037570 !important;
         }
         & > .active {
           background-color: #037570;
-          color: white;
+          color: white !important;
           border: 1px solid #037570;
-        }
-        & > .nav-link {
-          border-top-left-radius: 10px;
-          border-top-right-radius: 10px;
-          border: 1px solid #037570;
-          &:hover {
-            border: 1px solid black;
-          }
         }
       }
     }
@@ -112,7 +107,7 @@
     label {
       display: block;
       margin-top: 20px;
-
+      position: relative;
       input {
         width: 90%;
         transition: all 0.5s;
@@ -129,6 +124,18 @@
         margin: auto;
         text-align: left;
       }
+      .eye-slash,
+      .eye-on {
+        transition: all 0.5s;
+        position: absolute;
+        top: 3px;
+        right: 14px;
+        color: #c7c3c3;
+        cursor: pointer;
+        &:hover {
+          color: grey;
+        }
+      }
     }
     .hint {
       text-align: right;
@@ -137,8 +144,7 @@
       font-size: 12px;
       letter-spacing: 2px;
       a {
-        color: #3b8176;
-        text-decoration: none;
+        color: #3b8176 !important;
         &:hover {
           color: #022e30;
           font-weight: 800;
@@ -156,10 +162,14 @@
     .signup {
       max-width: 350px;
       label {
-        transition: all 0.5s;
         margin-top: 20px;
         input {
           width: 80%;
+        }
+        .eye-slash,
+        .eye-on {
+          top: 3px;
+          right: 35px;
         }
         div {
           width: 80%;
@@ -181,6 +191,11 @@
         input {
           height: 35px;
           max-width: 280px;
+        }
+        .eye-slash,
+        .eye-on {
+          top: 10px;
+          right: 14px;
         }
         div {
           margin: 0;

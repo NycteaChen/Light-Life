@@ -6,8 +6,6 @@
   font-family: Lexend, "Microsoft JhengHei";
 
   a {
-    text-decoration: none;
-    color: #4d4d4d;
     padding-top: 7px;
     display: inline-block;
   }
@@ -15,7 +13,6 @@
   body {
     height: 100vh;
     display: flex;
-    color: #4d4d4d;
     flex-direction: column;
   }
   .mask {
@@ -346,20 +343,18 @@
     font-size: 1rem;
     color: #4d4d4d;
   }
+  button {
+    margin-top: 0 !important;
+  }
   @media (min-width: 768px) {
     & {
       display: flex;
       justify-content: center;
       align-items: center;
-      a {
-        padding-top: 0;
-        button {
-          margin: 0 auto 0 15px;
-        }
-      }
+
       p {
         font-size: 28px;
-        padding: 20px;
+        padding: 15px 15px 0;
       }
     }
   }
