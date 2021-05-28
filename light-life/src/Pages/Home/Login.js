@@ -9,13 +9,13 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from "../../style/login.module.scss";
-// import "../../style/login.scss";
 import logo from "../../images/lightlife-straight.png";
-// import { Nav } from "react-bootstrap";
+
 function Login({ display, setDisplay }) {
+  const noImage =
+    "https://firebasestorage.googleapis.com/v0/b/light-life-5fdaa.appspot.com/o/images%2Fnoimage.png?alt=media&token=99c5898a-d5c4-45c9-a166-94563585aa0d";
   const [login, setLogin] = useState(style.appear);
   const [signup, setSignup] = useState(style.disappear);
   const [image, setImage] = useState(style.left);
@@ -24,7 +24,7 @@ function Login({ display, setDisplay }) {
   const [customer, setCustomer] = useState("");
   const [input, setInput] = useState({});
   const [valid, setValid] = useState({});
-  const [user, setUser] = useState("");
+  const [docId, setDocId] = useState("");
   const [eye, setEye] = useState({
     on: "none",
     slash: "block",
@@ -36,12 +36,24 @@ function Login({ display, setDisplay }) {
     setSignup(style.appear);
     setImage(style.right);
     setInput({});
+    setValid({});
+    setEye({
+      on: "none",
+      slash: "block",
+      mode: "password",
+    });
   };
   const bindLoginHandler = () => {
     setLogin(style.appear);
     setSignup(style.disappear);
     setImage(style.left);
     setInput({});
+    setValid({});
+    setEye({
+      on: "none",
+      slash: "block",
+      mode: "password",
+    });
   };
 
   useEffect(() => {
@@ -71,6 +83,7 @@ function Login({ display, setDisplay }) {
       setDietitian("");
     }
   };
+  console.log(client);
   const closeHandler = () => {
     setDisplay("none");
     setInput({});
@@ -82,12 +95,11 @@ function Login({ display, setDisplay }) {
     console.log(e.target.validity.valid);
     setInput({ ...input, [name]: e.target.value });
     if (e.target.validity.valid) {
-      setValid({ ...input, [name]: e.target.value });
+      setValid({ ...valid, [name]: e.target.value });
     } else {
       delete valid[name];
     }
   };
-
   const switchPasswordModeHandler = (e) => {
     console.log(e.target.className.includes("eye-slash"));
     if (e.target.className.includes("eye-slash")) {
@@ -104,36 +116,45 @@ function Login({ display, setDisplay }) {
       });
     }
   };
-  console.log(eye);
-  console.log(input);
-  console.log(valid);
 
   const loginHandler = () => {
     if (valid.email && valid.password) {
       firebase
-        .auth()
-        .signInWithEmailAndPassword(valid.email, valid.password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          console.log(user);
+        .firestore()
+        .collection(`${client}s`)
+        .where("email", "==", `${valid.email}`)
+        .get()
+        .then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+            let userID;
+            querySnapshot.forEach((i) => {
+              userID = i.data().id;
+            });
 
-          alert("歡迎回來");
-          setInput({});
-          setValid({});
-          setUser(user);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode + errorMessage);
-          alert("帳號密碼錯誤");
+            firebase
+              .auth()
+              .signInWithEmailAndPassword(valid.email, valid.password)
+              .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                console.log(user);
+                alert("歡迎回來");
+                window.location.href = `/${client}/${userID}`;
+                setInput({});
+                setValid({});
+              })
+              .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode + errorMessage);
+                alert("密碼錯誤");
+              });
+          } else {
+            alert("沒有此帳號喔，請檢查您輸入是否正確或選錯登入端");
+          }
         });
-    } else {
-      console.log("none");
     }
   };
-
   const signupHandler = () => {
     if (valid.email && valid.password && valid.name) {
       firebase
@@ -144,8 +165,27 @@ function Login({ display, setDisplay }) {
           const user = userCredential.user;
           console.log(user);
           setInput({});
-          setValid({});
           alert("註冊成功");
+
+          firebase
+            .firestore()
+            .collection(`${client}s`)
+            .add({
+              name: valid.name,
+              image: noImage,
+              email: valid.email,
+            })
+            .then((docRef) => {
+              firebase
+                .firestore()
+                .collection(`${client}s`)
+                .doc(docRef.id)
+                .update("id", docRef.id);
+              setDocId(docRef.id);
+            })
+            .then(() => {
+              setValid({});
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
