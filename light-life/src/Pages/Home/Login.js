@@ -29,6 +29,8 @@ function Login({ display, setDisplay }) {
     slash: "block",
     mode: "password",
   });
+  const [email, setEmail] = useState("");
+  const [show, setShow] = useState("");
 
   const bindSignupHandler = () => {
     setLogin(style.disappear);
@@ -66,6 +68,31 @@ function Login({ display, setDisplay }) {
       setDietitian("");
     }
   };
+
+  const bindForgetPasswordHandler = () => {
+    setShow(style.show);
+  };
+
+  const getEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const cancelHandler = () => {
+    setShow("");
+  };
+  const bindSendPasswordEmailButton = () => {
+    firebase
+      .auth()
+      .sendPasswordResetEmail(email)
+      .then(function () {
+        window.alert("已發送信件至信箱，請按照信件說明重設密碼");
+        window.location.reload(); // 送信後，強制頁面重整一次
+      })
+      .catch(function (error) {
+        console.log(error.message);
+      });
+  };
+
   const closeHandler = () => {
     setDisplay("none");
     setInput({});
@@ -326,6 +353,21 @@ function Login({ display, setDisplay }) {
   return (
     <>
       <div className={style["login-col"]} style={{ display: display }}>
+        <div className={`${style.emailForm} ${show}`}>
+          <label>
+            <div>請輸入信箱</div>{" "}
+            <input
+              type="email"
+              value={email !== "" ? email : ""}
+              onChange={getEmail}
+            />
+          </label>
+          <div>
+            <button onClick={bindSendPasswordEmailButton}>確認</button>
+            <button onClick={cancelHandler}>取消</button>
+          </div>
+        </div>
+
         <div className={`${style["login-image"]} ${image}`}></div>
         <div className={`${style.login} ${login}`}>
           <img src={logo} />
@@ -419,7 +461,9 @@ function Login({ display, setDisplay }) {
               </div>
               <div className={style.hint}>
                 忘記
-                <a id="forget-password">密碼</a>
+                <a id="forget-password" onClick={bindForgetPasswordHandler}>
+                  密碼
+                </a>
               </div>
             </div>
             <button onClick={loginHandler}>登入</button>
