@@ -24,7 +24,6 @@ function Login({ display, setDisplay }) {
   const [customer, setCustomer] = useState("");
   const [input, setInput] = useState({});
   const [valid, setValid] = useState({});
-  // const [docId, setDocId] = useState("");
   const [eye, setEye] = useState({
     on: "none",
     slash: "block",
@@ -251,19 +250,55 @@ function Login({ display, setDisplay }) {
       .auth()
       .signInWithPopup(provider)
       .then((result) => {
-        // /** @type {firebase.auth.OAuthCredential} */
-        const credential = result.credential;
-
-        // The signed-in user info.
         const user = result.user;
-
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-        const accessToken = credential.accessToken;
-        console.log(result);
         console.log(user);
-        console.timeLog(credential);
-        console.log(accessToken);
-        // ...
+        console.log(result);
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .where("email", "==", user.email)
+          .get()
+          .then((res) => {
+            if (!res.empty) {
+              let id;
+              res.forEach((i) => (id = i.data().id));
+              window.location.href = `/dietitian/${id}`;
+            } else {
+              firebase
+                .firestore()
+                .collection("customers")
+                .where("email", "==", user.email)
+                .get()
+                .then((res) => {
+                  if (!res.empty) {
+                    let id;
+                    res.forEach((i) => (id = i.data().id));
+                    window.location.href = `/customer/${id}`;
+                  } else {
+                    firebase
+                      .firestore()
+                      .collection(`${client}s`)
+                      .add({
+                        name: user.displayName,
+                        image: `${user.photoURL}?height=500`,
+                        email: user.email,
+                      })
+                      .then((docRef) => {
+                        firebase
+                          .firestore()
+                          .collection(`${client}s`)
+                          .doc(docRef.id)
+                          .update("id", docRef.id);
+
+                        return docRef.id;
+                      })
+                      .then((res) => {
+                        window.location.href = `/${client}/${res}`;
+                      });
+                  }
+                });
+            }
+          });
       })
       .catch((error) => {
         // Handle Errors here.
@@ -273,7 +308,6 @@ function Login({ display, setDisplay }) {
         const email = error.email;
         // The firebase.auth.AuthCredential type that was used.
         const credential = error.credential;
-
         // ...
       });
   };
