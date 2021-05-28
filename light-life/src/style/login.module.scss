@@ -8,8 +8,8 @@
     transition: all 0.5s;
     cursor: pointer;
     &:hover {
-      color: red;
-      transform: scale(1.2);
+      color: red !important;
+      transform: scale(1.2) !important;
     }
   }
   img {
@@ -251,10 +251,10 @@
 
     .signup {
       .close {
-        position: absolute;
-        left: -30px;
+        left: 350px;
         top: 15px;
         font-size: 20px;
+        width: 30px;
       }
     }
     .disappear {

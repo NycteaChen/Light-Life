@@ -148,6 +148,17 @@ function Login({ display, setDisplay }) {
           console.log(user);
           setInput({});
           alert("註冊成功");
+          const { currentUser } = firebase.auth();
+          currentUser
+            .sendEmailVerification()
+            .then(function () {
+              // 驗證信發送完成
+              window.alert("驗證信已發送到您的信箱，請查收。");
+            })
+            .catch((error) => {
+              // 驗證信發送失敗
+              console.log(error.message);
+            });
 
           firebase
             .firestore()
@@ -398,15 +409,19 @@ function Login({ display, setDisplay }) {
                 onClick={switchPasswordModeHandler}
               ></i>
             </label>
-
-            <div className={style.hint}>
-              還沒
-              <a id="signup" onClick={bindSignupHandler}>
-                註冊
-              </a>
-              ?
+            <div className={style.hints}>
+              <div className={style.hint}>
+                還沒
+                <a id="signup" onClick={bindSignupHandler}>
+                  註冊
+                </a>
+                ?
+              </div>
+              <div className={style.hint}>
+                忘記
+                <a id="forget-password">密碼</a>
+              </div>
             </div>
-
             <button onClick={loginHandler}>登入</button>
 
             <button type="button" onClick={googleLoginHandler}>
@@ -424,6 +439,7 @@ function Login({ display, setDisplay }) {
             className={`${style.close} fa fa-times`}
             onClick={closeHandler}
           ></i>
+
           <div className={style.title}>註冊</div>
           <ul className="nav nav-tabs" role="tablist">
             <li
