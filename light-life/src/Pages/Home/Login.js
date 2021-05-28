@@ -81,16 +81,20 @@ function Login({ display, setDisplay }) {
     setShow("");
   };
   const bindSendPasswordEmailButton = () => {
-    firebase
-      .auth()
-      .sendPasswordResetEmail(email)
-      .then(function () {
-        window.alert("已發送信件至信箱，請按照信件說明重設密碼");
-        window.location.reload(); // 送信後，強制頁面重整一次
-      })
-      .catch(function (error) {
-        console.log(error.message);
-      });
+    if (email !== "") {
+      firebase
+        .auth()
+        .sendPasswordResetEmail(email)
+        .then(function () {
+          window.alert("已發送信件至信箱，請按照信件說明重設密碼");
+          window.location.reload(); // 送信後，強制頁面重整一次
+        })
+        .catch(function (error) {
+          console.log(error.message);
+        });
+    } else {
+      alert("沒有輸入喔");
+    }
   };
 
   const closeHandler = () => {
