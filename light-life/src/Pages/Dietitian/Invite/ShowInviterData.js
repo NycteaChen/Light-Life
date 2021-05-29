@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import noImage from "../../../images/noimage.png";
+import { useParams } from "react-router-dom";
 import firebase from "firebase/app";
+import "firebase/firestore";
+import noImage from "../../../images/noimage.png";
 import style from "../../../style/whoInvite.module.scss";
 
-function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
+function ShowInviterData({ idx, invitedList, setInvitedList }) {
+  const props = invitedList[+idx];
   const [inviterData, setInviterData] = useState({});
-
   const [show, setShow] = useState("");
+  const [message, setMessage] = useState("");
+  const { dID } = useParams();
+  const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
 
   useEffect(() => {
     firebase
@@ -15,7 +20,6 @@ function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
       .doc(props.inviterID)
       .get()
       .then((res) => {
-        console.log(res.data());
         setInviterData(res.data());
       });
   }, []);
@@ -23,7 +27,39 @@ function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
     const { id } = e.target;
     switch (id) {
       case "accept":
-        console.log(id);
+        // firebase
+        //   .firestore()
+        //   .collection("customers")
+        //   .doc(props.inviterID)
+        //   .update({ ...inviterData, dietitian: dID });
+
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .doc(dID)
+          .collection("customers")
+          .doc(props.inviterID)
+          .set({
+            startDate: props.reserveStartDate,
+            endDate: props.reserveEndDate,
+            isServing: false,
+          })
+          .then(() => {
+            firebase
+              .firestore()
+              .collection("reserve")
+              .doc(props.reserveID)
+              .update({
+                ...props,
+                status: "1",
+              });
+          })
+          .then(() => {
+            alert("接受預約!");
+            setInvitedList([
+              ...invitedList.filter((i, index) => index !== +idx),
+            ]);
+          });
         break;
       case "decline":
         setShow(style.show);
@@ -34,18 +70,37 @@ function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
     }
   };
 
-  const bindSendPasswordEmailButton = () => {};
-  const cancelHandler = () => {};
-  const declineMessageHandler = () => {};
+  const declineMessageHandler = (e) => {
+    setMessage(e.target.value);
+  };
+  const sendDeclineMessageButton = () => {
+    if (message && message !== "") {
+      firebase
+        .firestore()
+        .collection("reserve")
+        .doc(props.reserveID)
+        .update({
+          ...props,
+          declineMessage: message,
+          status: "2",
+        })
+        .then(() => {
+          setInvitedList([...invitedList.filter((i, index) => index !== +idx)]);
+        });
+    } else {
+      alert("沒有輸入喔");
+    }
+  };
+
   return (
     <div>
       <div className={`${style.declineMessage} ${show}`}>
         <label>
           <div>婉拒訊息</div>
-          <textarea onChange={declineMessageHandler} />
+          <textarea onChange={declineMessageHandler} value={message} />
         </label>
         <div>
-          <button onClick={bindSendPasswordEmailButton}>確認</button>
+          <button onClick={sendDeclineMessageButton}>確認</button>
           <button onClick={inviteButtonHandler} id="cancel">
             取消
           </button>
@@ -56,7 +111,7 @@ function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
         <div className={style["reserve-time"]}>
           預約服務時間：
           <span>
-            {props.reverseStartDate}~{props.reverseEndDate}
+            {props.reserveStartDate}~{props.reserveEndDate}
           </span>
         </div>
         <h4 className={style["data-title"]}>客戶資料</h4>
@@ -119,7 +174,7 @@ function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
         </div>
         <div className={style.col}>
           <div className={style.title}>預約訊息</div>
-          <div>{props.reverseMessage}</div>
+          <div>{props.reserveMessage}</div>
         </div>
       </div>
       <div className={style.choose}>

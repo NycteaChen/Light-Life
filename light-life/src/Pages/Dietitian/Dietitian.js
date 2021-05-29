@@ -46,6 +46,7 @@ function Dietitian() {
         });
         setUsers(usersArray);
       });
+
     firebase
       .firestore()
       .collection("reserve")
@@ -54,8 +55,8 @@ function Dietitian() {
       .then((docs) => {
         const invitedArray = [];
         docs.forEach((doc) => {
-          const startDate = new Date(doc.data().reverseStartDate).getTime();
-          if (startDate > today) {
+          const startDate = new Date(doc.data().reserveStartDate).getTime();
+          if (startDate > today && doc.data().status === "0") {
             invitedArray.push(doc.data());
           }
         });
@@ -114,7 +115,6 @@ function Dietitian() {
   };
 
   const bindListHandler = (e) => {
-    console.log(e.target.className);
     if (e.target.className.includes("list")) {
       setDisplay("block");
     } else {
@@ -309,7 +309,9 @@ function Dietitian() {
                         customerID ? customerID : selectedID
                       }`}
                     >
-                      陳安妮
+                      {users && customerID
+                        ? users.filter((e) => e.id === customerID)[0].name
+                        : ""}
                     </Link>
                   </div>
                   <div className={style["customer-dataSelect"]}>
