@@ -40,36 +40,41 @@ function PublicationData({ publish, display, setDisplay }) {
   };
 
   const sendMessageHandler = () => {
-    if (publish.whoInvite) {
-      firebase
-        .firestore()
-        .collection("publish")
-        .doc(publish.publishID)
-        .set(
-          {
-            whoInvite: [...publish.whoInvite, invite],
-          },
-          { merge: true }
-        )
-        .then(() => {
-          alert("邀請成功!");
-          window.location.reload();
-        });
+    console.log(invite);
+    if (invite && invite.message) {
+      if (publish.whoInvite) {
+        firebase
+          .firestore()
+          .collection("publish")
+          .doc(publish.publishID)
+          .set(
+            {
+              whoInvite: [...publish.whoInvite, invite],
+            },
+            { merge: true }
+          )
+          .then(() => {
+            alert("邀請成功!");
+            window.location.reload();
+          });
+      } else {
+        firebase
+          .firestore()
+          .collection("publish")
+          .doc(publish.publishID)
+          .set(
+            {
+              whoInvite: [invite],
+            },
+            { merge: true }
+          )
+          .then(() => {
+            alert("邀請成功!");
+            window.location.reload();
+          });
+      }
     } else {
-      firebase
-        .firestore()
-        .collection("publish")
-        .doc(publish.publishID)
-        .set(
-          {
-            whoInvite: [invite],
-          },
-          { merge: true }
-        )
-        .then(() => {
-          alert("邀請成功!");
-          window.location.reload();
-        });
+      alert("請填寫邀請訊息!");
     }
   };
 

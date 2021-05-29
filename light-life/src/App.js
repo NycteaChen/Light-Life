@@ -8,9 +8,6 @@ import logo from "./images/lightlife-horizontal.png";
 import style from "./style/basic.module.scss";
 
 function App() {
-  const dID = "cJUCoL1hZz36cVgf7WRz";
-  const cID = "9iYZMkuFdZRK9vxgt1zc";
-
   return (
     <Router>
       <Switch>
