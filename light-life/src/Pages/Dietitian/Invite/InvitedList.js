@@ -54,7 +54,6 @@ function InvitedList({ invitedList, setInvitedList }) {
             onClick={checkInviter}
           ></i>
           <ShowInviterData
-            props={invitedList[buttonIndex]}
             idx={buttonIndex}
             invitedList={invitedList}
             setInvitedList={setInvitedList}
