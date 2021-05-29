@@ -12,8 +12,6 @@ import "firebase/firestore";
 import DietitianRecord from "./DietitianRecord.js";
 import CustomerRecord from "./CustomerRecord.js";
 import style from "../../../style/dietary.module.scss";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 // function ShowImages({ mealDetails, input, removeImageHandler }) {
 //   if (!input.images) {

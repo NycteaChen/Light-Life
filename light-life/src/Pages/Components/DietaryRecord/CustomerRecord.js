@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "firebase/firestore";
 import Analysis from "./Analysis.js";
 import style from "../../../style/dietary.module.scss";
@@ -129,7 +122,7 @@ function CustomerRecord({ date, count, setCount }) {
   const removeImageHandler = (e) => {
     setMealDetails({
       ...mealDetails,
-      images: [...mealDetails.images.filter((i, idx) => idx != e.target.id)],
+      images: [...mealDetails.images.filter((i, idx) => idx !== +e.target.id)],
     });
     firebase
       .firestore()
@@ -143,20 +136,12 @@ function CustomerRecord({ date, count, setCount }) {
         {
           [meal]: {
             images: [
-              ...mealDetails.images.filter((i, idx) => idx != e.target.id),
+              ...mealDetails.images.filter((i, idx) => idx !== +e.target.id),
             ],
           },
         },
         { merge: true }
       );
-    // .update({
-    //   [meal]: {
-    //     ...mealDetails,
-    //     images: [
-    //       ...mealDetails.images.filter((i, idx) => idx != e.target.id),
-    //     ],
-    //   },
-    // });
   };
   const bindSaveHandler = async (e) => {
     if (meal === e.target.className) {

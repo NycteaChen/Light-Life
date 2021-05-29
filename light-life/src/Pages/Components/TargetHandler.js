@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import style from "../../style/target.module.scss";
 
 function TargetHandler({ target, setTarget }) {
@@ -20,11 +13,13 @@ function TargetHandler({ target, setTarget }) {
   const pathName = useLocation().pathname;
   const params = useParams();
 
+  console.log(targetIndex);
+
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name === "startDate") {
       const date = new Date();
-      date.setDate(parseInt(e.target.value.split("-")[2]) + 1);
+      date.setDate(+e.target.value.split("-")[2] + 1);
       setInput({
         ...input,
         [name]: e.target.value,
@@ -69,9 +64,9 @@ function TargetHandler({ target, setTarget }) {
   };
 
   const bindRemoveTarget = (e) => {
-    setTarget([
-      ...target.filter((t, index) => index !== parseInt(e.target.id)),
-    ]);
+    setTargetIndex(e.target.id);
+
+    setTarget([...target.filter((t, index) => index !== +e.target.id)]);
     db.collection("dietitians")
       .doc(params.dID)
       .collection("customers")
@@ -83,9 +78,7 @@ function TargetHandler({ target, setTarget }) {
         docs.forEach((doc) => {
           docsArray.push(doc.id);
         });
-        const getID = docsArray.find(
-          (d, index) => index === parseInt(e.target.id)
-        );
+        const getID = docsArray.find((d, index) => index === +e.target.id);
         return getID;
       })
       .then((res) => {
@@ -118,7 +111,7 @@ function TargetHandler({ target, setTarget }) {
         docs.forEach((doc) => {
           docsArray.push(doc.id);
         });
-        const getID = docsArray.find((d, index) => index == e.target.id);
+        const getID = docsArray.find((d, index) => index === +e.target.id);
         return getID;
       })
       .then((res) => {
@@ -154,7 +147,7 @@ function TargetHandler({ target, setTarget }) {
     <>
       {isEditing
         ? target.map((t, index) =>
-            index == targetIndex ? (
+            index === +targetIndex ? (
               <div key={index} className={style["customer-target"]}>
                 <div className={style["target-header"]}>
                   <div className={style["alter-button"]}>
@@ -290,7 +283,7 @@ function TargetHandler({ target, setTarget }) {
             )
           )
         : target.map((t, index) =>
-            index == targetIndex ? (
+            index === +targetIndex ? (
               <>
                 <div key={index} className={style["customer-target"]}>
                   <div className={style["target-header"]}>

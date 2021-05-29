@@ -37,26 +37,24 @@ function Dietitian() {
     firebase
       .firestore()
       .collection("customers")
+      .where("dietitian", "==", dietitianID)
       .get()
       .then((snapshot) => {
         const usersArray = [];
         snapshot.forEach((doc) => {
-          if (doc.data().dietitian === dietitianID) {
-            usersArray.push(doc.data());
-          }
+          usersArray.push(doc.data());
         });
         setUsers(usersArray);
       });
     firebase
       .firestore()
       .collection("reserve")
+      .where("dietitian", "==", dietitianID)
       .get()
       .then((docs) => {
         const invitedArray = [];
         docs.forEach((doc) => {
-          if (doc.data().dietitian === dietitianID) {
-            invitedArray.push(doc.data());
-          }
+          invitedArray.push(doc.data());
         });
         setInvitedList(invitedArray);
       });

@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  useLocation,
-} from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import Login from "./Login.js";
@@ -14,7 +7,6 @@ import logo from "../../images/lightlife-horizontal.png";
 import style from "../../style/home.module.scss";
 import noImage from "../../images/noimage.png";
 import $ from "jquery";
-import { set } from "date-fns";
 function Home() {
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});

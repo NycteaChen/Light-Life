@@ -1,12 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  useLocation,
-} from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "bootstrap/dist/css/bootstrap.min.css";

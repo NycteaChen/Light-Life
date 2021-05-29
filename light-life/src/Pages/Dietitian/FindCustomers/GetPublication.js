@@ -10,14 +10,14 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import PublicationData from "./PublicationData.js";
 import style from "../../../style/findCustomers.module.scss";
-import { isCompositeComponent } from "react-dom/test-utils";
-import { set } from "date-fns";
 
 function GetPublication() {
   const [publish, setPublish] = useState([]);
   const [display, setDisplay] = useState("none");
   const [idx, setIdx] = useState("");
   const dID = useParams().dID;
+  const date = new Date(+new Date() + 8 * 3600 * 1000).getTime();
+
   useEffect(() => {
     firebase
       .firestore()
@@ -28,7 +28,25 @@ function GetPublication() {
         docs.forEach((doc) => {
           publishArray.push(doc.data());
         });
-        setPublish(publishArray);
+        return publishArray;
+      })
+      .then((res) => {
+        res.forEach((m, index) => {
+          const startDate = new Date(m.startDate).getTime();
+          if (startDate < date) {
+            m.whoInvite.forEach((i) => {
+              if (i.status === "0") {
+                i.status = "3";
+              }
+            });
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(res[index].publishID)
+              .update(res[index]);
+          }
+        });
+        setPublish(res);
       });
   }, []);
 
@@ -37,7 +55,7 @@ function GetPublication() {
     setDisplay("block");
   };
   const cancelInviteHandler = (e) => {
-    const { publishID, whoInvite } = publish[parseInt(e.target.id)];
+    const { publishID, whoInvite } = publish[+e.target.id];
     firebase
       .firestore()
       .collection("publish")
@@ -86,7 +104,7 @@ function GetPublication() {
                       </button>
                     </div>
                   </div>
-                  {parseInt(idx) == pubIndex ? (
+                  {+idx == pubIndex ? (
                     <PublicationData
                       key={p.name}
                       publish={p}
@@ -156,7 +174,7 @@ function GetPublication() {
                         </div>
                       </div>
 
-                      {parseInt(idx) == pubIndex ? (
+                      {+idx == pubIndex ? (
                         <PublicationData
                           key={p.name}
                           publish={p}

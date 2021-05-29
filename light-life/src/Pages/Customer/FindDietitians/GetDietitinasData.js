@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DietitianData from "./DietitianData.js";
 import style from "../../../style/findDietitian.module.scss";
-import image from "../../../images/about.png";
 
 function GetDietitiansData({ props, setReserve, profile }) {
   const [isCheck, setIsCheck] = useState(false); //false
@@ -24,7 +23,7 @@ function GetDietitiansData({ props, setReserve, profile }) {
               <button onClick={bindCheckHandler} id={index}>
                 查看詳情
               </button>
-              {isCheck && index === parseInt(checkIndex) ? (
+              {isCheck && index === +checkIndex ? (
                 <DietitianData
                   setReserve={setReserve}
                   props={d}

@@ -17,10 +17,8 @@ function ReserveList({ reserve, setReserve }) {
   };
 
   const removeReserveHandler = (e) => {
-    const docID = reserve[parseInt(e.target.id)].id;
-    setReserve([
-      ...reserve.filter((r, index) => index !== parseInt(e.target.id)),
-    ]);
+    const docID = reserve[+e.target.id].id;
+    setReserve([...reserve.filter((r, index) => index !== +e.target.id)]);
     firebase
       .firestore()
       .collection("reserve")
@@ -69,7 +67,7 @@ function ReserveList({ reserve, setReserve }) {
                     </button>
                   </div>
 
-                  {parseInt(index) === idx ? (
+                  {+index === idx ? (
                     <div className={style.message}>
                       <div className={style.addDate}>建立時間：{r.addDate}</div>
                       <div className={style.content}>
