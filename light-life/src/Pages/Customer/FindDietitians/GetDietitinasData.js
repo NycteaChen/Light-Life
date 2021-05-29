@@ -41,39 +41,15 @@ function GetDietitiansData({ props, setReserve, profile }) {
               </div>
               <div>
                 專長：
-                {d.skills.map((s, index) => (
-                  <span key={index}>
-                    {s}
-                    {d.skills[index + 1] ? "、" : ""}
-                  </span>
-                ))}
+                {d.skills.weightControl ? "體重管理　" : ""}
+                {d.skills.sportNT ? "運動營養　" : ""}
+                {d.skills.threeHigh ? "三高控制　" : ""}
+                {d.skills.bloodSugar ? "血糖控制" : ""}
               </div>
             </div>
           </div>
         </div>
       ))}
-
-      {/* <div className={style.dietitian}>
-        <img src={image} alt="dietitian" />
-        <div className={style.col}>
-          <div className={style.name}>林筱華營養師</div>
-          <button>查看詳情</button>
-        </div>
-      </div>
-      <div className={style.dietitian}>
-        <img src={image} alt="dietitian" />
-        <div className={style.col}>
-          <div className={style.name}>林筱華營養師</div>
-          <button>查看詳情</button>
-        </div>
-      </div>
-      <div className={style.dietitian}>
-        <img src={image} alt="dietitian" />
-        <div className={style.col}>
-          <div className={style.name}>林筱華營養師</div>
-          <button>查看詳情</button>
-        </div>
-      </div>*/}
     </div>
   );
 }

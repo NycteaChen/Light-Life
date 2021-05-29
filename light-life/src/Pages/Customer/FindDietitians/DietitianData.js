@@ -35,12 +35,10 @@ function DietitianData({ props, setIsCheck, setReserve, profile }) {
         <div className={style.skills}>
           專長：
           <span>
-            {props.skills.map((s, index) => (
-              <span key={index}>
-                {s}
-                {props.skills[index + 1] ? "、" : ""}
-              </span>
-            ))}
+            {props.skills.weightControl ? "體重管理　" : ""}
+            {props.skills.sportNT ? "運動營養　" : ""}
+            {props.skills.threeHigh ? "三高控制　" : ""}
+            {props.skills.bloodSugar ? "血糖控制" : ""}
           </span>
         </div>
         <div className={style.other}>

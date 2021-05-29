@@ -16,6 +16,7 @@ function DietitianProfile({ profile }) {
   const { name, image, id, gender, email, education, skills, other } = profile;
   const { school, department, degree } = education;
   const { threeHigh, sportNT, weightControl, bloodSugar } = skills;
+  const [trigger, setTrigger] = useState(true);
   const [input, setInput] = useState({});
   const [edu, setEdu] = useState({
     school: school,
@@ -28,17 +29,35 @@ function DietitianProfile({ profile }) {
     weightControl: weightControl,
     bloodSugar: bloodSugar,
   });
-  // const getSkill = (skill) => {
-  //   return skills.find((e) => e === skill);
-  // };
+
+  async function postImg(image) {
+    if (image) {
+      const storageRef = storage.ref(`${id}/` + image.name);
+      await storageRef.put(image);
+      return image.name;
+    } else {
+      return false;
+    }
+  }
+  async function getImg(image) {
+    const imageName = await postImg(image);
+    if (imageName) {
+      const storageRef = storage.ref();
+      const pathRef = await storageRef
+        .child(`${id}/` + imageName)
+        .getDownloadURL();
+      return pathRef;
+    } else {
+      return "";
+    }
+  }
+
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (e.target.className === "education") {
       setEdu({ ...edu, [name]: e.target.value });
       setInput({ ...input, education: { ...edu, [name]: e.target.value } });
     } else if (name === "skills") {
-      // setInput({ ...input, [name]: [...skills, e.target.value] });
-      console.log(e.target);
       setSkill({ ...skill, [e.target.value]: !skill[e.target.value] });
       setInput({
         ...input,
@@ -46,22 +65,85 @@ function DietitianProfile({ profile }) {
       });
     } else if (name !== "image") {
       setInput({ ...input, [name]: e.target.value });
+    } else if (e.target.files[0]) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(e.target.files[0]);
+      fileReader.addEventListener("load", (a) => {
+        setInput({
+          ...input,
+          imageFile: e.target.files[0],
+          previewImg: a.target.result,
+        });
+      });
+    } else {
+      delete input.previewImg;
+      delete input.imageFile;
+      setInput({ ...input, image: input.image || image });
+    }
+    {
     }
   };
 
-  const saveDietitianProfile = () => {
-    console.log(input);
-    db.collection("dietitians").doc(id).update(input);
-  };
+  useEffect(() => {
+    console.log("test");
+  }, [trigger]);
 
+  const saveDietitianProfile = async () => {
+    if (input.imageFile) {
+      const imageUrl = await getImg(input.imageFile);
+      delete input.imageFile;
+      delete input.previewImg;
+      setInput({
+        ...input,
+        image: imageUrl,
+      });
+      db.collection("dietitians")
+        .doc(id)
+        .update({
+          ...input,
+          image: imageUrl,
+        })
+        .then(() => {
+          setTrigger(!trigger);
+          alert("儲存囉");
+        });
+    } else {
+      db.collection("dietitians")
+        .doc(id)
+        .update(input)
+        .then(() => {
+          setTrigger(!trigger);
+          alert("儲存囉");
+        });
+    }
+  };
+  console.log(input);
   return (
     <>
       <div className={style["edit-Dprofile"]}>
         <div className={style["basic-profile"]}>
           <div className={style.flexbox}>
             <div className={style.img}>
-              <a href={image} target="_blank">
-                <img src={image} alt="profile" />
+              <a
+                href={
+                  input.previewImg
+                    ? input.previewImg
+                    : input.image
+                    ? input.image
+                    : image
+                }
+                target="_blank"
+              >
+                <img
+                  src={
+                    input.previewImg
+                      ? input.previewImg
+                      : input.image
+                      ? input.image
+                      : image
+                  }
+                  alt="profile"
+                />
               </a>
 
               <div>
@@ -70,7 +152,7 @@ function DietitianProfile({ profile }) {
                     hidden
                     type="file"
                     accept="image/*"
-                    name="customerImage"
+                    name="image"
                     id="image"
                     onChange={getInputHandler}
                   />

@@ -74,7 +74,7 @@ function EditCustomerProfile({ props }) {
     } else {
       delete input.previewImg;
       delete input.imageFile;
-      setInput({ ...input, image: image });
+      setInput({ ...input, image: input.image || image });
     }
   };
 
