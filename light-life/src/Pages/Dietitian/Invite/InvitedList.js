@@ -9,16 +9,6 @@ function InvitedList({ invitedList, setInvitedList }) {
   const [isChecked, setIsChecked] = useState(false);
   const [buttonIndex, setButtonIndex] = useState();
   const { dID } = useParams();
-  const date = new Date(+new Date() + 8 * 3600 * 1000).getTime();
-
-  useEffect(() => {
-    invitedList.forEach((i, index) => {
-      const startDate = new Date(i.reverseStartDate).getTime();
-      if (startDate < date) {
-        setInvitedList([...invitedList.filter((i, idx) => idx !== index)]);
-      }
-    });
-  }, []);
 
   const checkInviter = (e) => {
     if (e.target.id) {

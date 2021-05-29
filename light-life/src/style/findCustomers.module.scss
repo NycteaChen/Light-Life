@@ -149,7 +149,7 @@
   margin: auto;
   text-align: center;
   padding: 15px 0;
-  max-height: 600px;
+  max-height: calc(100vh - 80px);
   overflow: auto;
   overflow-x: hidden;
   .close {

@@ -31,7 +31,7 @@ function Dietitian() {
   const [date, setDate] = useState({});
   const dietitianID = useParams().dID;
   const customerID = useLocation().pathname.split("/")[4];
-
+  const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
   const input = {};
   useEffect(() => {
     firebase
@@ -54,7 +54,10 @@ function Dietitian() {
       .then((docs) => {
         const invitedArray = [];
         docs.forEach((doc) => {
-          invitedArray.push(doc.data());
+          const startDate = new Date(doc.data().reverseStartDate).getTime();
+          if (startDate > today) {
+            invitedArray.push(doc.data());
+          }
         });
         setInvitedList(invitedArray);
       });
