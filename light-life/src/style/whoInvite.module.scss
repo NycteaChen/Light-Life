@@ -118,6 +118,65 @@
       }
     }
   }
+
+  .show {
+    z-index: 25 !important;
+    opacity: 1 !important;
+    bottom: 0px !important;
+  }
+
+  .declineMessage {
+    transition: all 0.5s;
+    text-align: center;
+    position: fixed;
+    width: 80%;
+    max-width: 400px;
+    height: 160px;
+    top: 0;
+    right: 0;
+    bottom: 100px;
+    left: 0;
+    margin: auto;
+    background-color: white;
+    z-index: -1;
+    opacity: 0;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 5px 10px 3px #818181;
+    padding-top: 10px;
+    label {
+      width: 80%;
+      textarea {
+        width: 100%;
+        border-radius: 5px;
+        padding: 2px 7px;
+        margin: 5px 0;
+        border: 1px solid grey;
+        transition: all 0.5s;
+      }
+    }
+    button {
+      padding: 2px 12px;
+      border-radius: 5px;
+      border: 1px solid #037570;
+      background-color: #037570;
+      color: white;
+      &:first-of-type {
+        margin-right: 5px;
+        transition: all 0.5s;
+        &:hover {
+          background-color: #094346;
+          border-color: #094346;
+        }
+      }
+      &:last-of-type {
+        margin-left: 5px;
+        background-color: white;
+        color: #037570;
+      }
+    }
+  }
+
   @media (min-width: 520px) {
     & {
       .inviters {
@@ -157,6 +216,18 @@
           display: flex;
           align-items: center;
           justify-content: center;
+        }
+      }
+      .declineMessage {
+        height: 220px;
+
+        margin: auto;
+
+        label {
+          margin-top: 25px;
+          textarea {
+            height: 5rem;
+          }
         }
       }
     }

@@ -5,6 +5,9 @@ import style from "../../../style/whoInvite.module.scss";
 
 function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
   const [inviterData, setInviterData] = useState({});
+
+  const [show, setShow] = useState("");
+
   useEffect(() => {
     firebase
       .firestore()
@@ -17,17 +20,38 @@ function ShowInviterData({ props, idx, invitedList, setInvitedList }) {
       });
   }, []);
   const inviteButtonHandler = (e) => {
-    if (e.target.id === "accept") {
-      console.log(e.target.id);
-    }
-    if (e.target.id === "decline") {
-      console.log(e.target.id);
-      // firebase.firestore().collection("reserve")
+    const { id } = e.target;
+    switch (id) {
+      case "accept":
+        console.log(id);
+        break;
+      case "decline":
+        setShow(style.show);
+        break;
+      case "cancel":
+        setShow("");
+        break;
     }
   };
 
+  const bindSendPasswordEmailButton = () => {};
+  const cancelHandler = () => {};
+  const declineMessageHandler = () => {};
   return (
     <div>
+      <div className={`${style.declineMessage} ${show}`}>
+        <label>
+          <div>婉拒訊息</div>
+          <textarea onChange={declineMessageHandler} />
+        </label>
+        <div>
+          <button onClick={bindSendPasswordEmailButton}>確認</button>
+          <button onClick={inviteButtonHandler} id="cancel">
+            取消
+          </button>
+        </div>
+      </div>
+
       <div>
         <div className={style["reserve-time"]}>
           預約服務時間：
