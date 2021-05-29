@@ -11,22 +11,79 @@ import "firebase/firestore";
 import style from "../../../style/dietitianProfile.module.scss";
 
 function DietitianProfile({ profile }) {
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+  const { name, image, id, gender, email, education, skills, other } = profile;
+  const { school, department, degree } = education;
+  const { threeHigh, sportNT, weightControl, bloodSugar } = skills;
+  const [input, setInput] = useState({});
+  const [edu, setEdu] = useState({
+    school: school,
+    department: department,
+    degree: degree,
+  });
+  const [skill, setSkill] = useState({
+    threeHigh: threeHigh,
+    sportNT: sportNT,
+    weightControl: weightControl,
+    bloodSugar: bloodSugar,
+  });
+  // const getSkill = (skill) => {
+  //   return skills.find((e) => e === skill);
+  // };
+  const getInputHandler = (e) => {
+    const { name } = e.target;
+    if (e.target.className === "education") {
+      setEdu({ ...edu, [name]: e.target.value });
+      setInput({ ...input, education: { ...edu, [name]: e.target.value } });
+    } else if (name === "skills") {
+      // setInput({ ...input, [name]: [...skills, e.target.value] });
+      console.log(e.target);
+      setSkill({ ...skill, [e.target.value]: !skill[e.target.value] });
+      setInput({
+        ...input,
+        skills: { ...skill, [e.target.value]: !skill[e.target.value] },
+      });
+    } else if (name !== "image") {
+      setInput({ ...input, [name]: e.target.value });
+    }
+  };
+
+  const saveDietitianProfile = () => {
+    console.log(input);
+    db.collection("dietitians").doc(id).update(input);
+  };
+
   return (
     <>
       <div className={style["edit-Dprofile"]}>
         <div className={style["basic-profile"]}>
           <div className={style.flexbox}>
             <div className={style.img}>
-              <a href={profile.image} target="_blank">
-                <img src={profile.image} alt="profile" />
+              <a href={image} target="_blank">
+                <img src={image} alt="profile" />
               </a>
-              <input type="file" accept="image/*" name="image" />
-              <div>專業形象將為您加分</div>
+
+              <div>
+                <label htmlFor="image" className={style.uploadImg}>
+                  <input
+                    hidden
+                    type="file"
+                    accept="image/*"
+                    name="customerImage"
+                    id="image"
+                    onChange={getInputHandler}
+                  />
+                  <i className="fa fa-picture-o" aria-hidden="true"></i>
+                  上傳大頭照
+                </label>
+                <div>專業形象將為您加分</div>
+              </div>
             </div>
             <div>
               <div className={style.determined}>
                 <div className={style.title}>帳號</div>
-                <div className="email">jaoasfg@emgia.com</div>
+                <div className="email">{email}</div>
               </div>
               <div className={style.basic}>
                 <label className="name">姓名</label>
@@ -34,20 +91,47 @@ function DietitianProfile({ profile }) {
                   type="text"
                   name="name"
                   id={style.name}
-                  value={profile.name}
+                  value={
+                    input.name || input.name === ""
+                      ? input.name
+                      : name
+                      ? name
+                      : ""
+                  }
+                  onChange={getInputHandler}
                 />
                 <label className="gender">生理性別</label>
                 <div>
                   <input
                     type="radio"
                     name="gender"
-                    checked={profile.gender === "男" ? "checked" : null}
+                    value="男"
+                    checked={
+                      input.gender
+                        ? input.gender === "男"
+                          ? true
+                          : false
+                        : gender === "男"
+                        ? true
+                        : false
+                    }
+                    onChange={getInputHandler}
                   />
                   男
                   <input
                     type="radio"
                     name="gender"
-                    checked={profile.gender === "女" ? "checked" : null}
+                    value="女"
+                    checked={
+                      input.gender
+                        ? input.gender === "女"
+                          ? true
+                          : false
+                        : gender === "女"
+                        ? true
+                        : false
+                    }
+                    onChange={getInputHandler}
                   />
                   女
                 </div>
@@ -60,59 +144,49 @@ function DietitianProfile({ profile }) {
               <div className={style["edu-select"]}>
                 <input
                   type="text"
+                  className="education"
                   name="school"
-                  value={profile.education ? profile.education["school"] : ""}
+                  value={edu.school ? edu.school : ""}
+                  onChange={getInputHandler}
                 />
                 <input
                   type="text"
+                  className="education"
                   name="department"
-                  value={
-                    profile.education ? profile.education["department"] : ""
-                  }
+                  value={edu.department ? edu.department : ""}
+                  onChange={getInputHandler}
                 />
                 <div>
                   <label>
                     <input
                       type="radio"
-                      name="education"
+                      className="education"
+                      name="degree"
                       value="學士"
-                      checked={
-                        profile.education
-                          ? profile.education["degree"] === "學士"
-                            ? "checked"
-                            : null
-                          : null
-                      }
+                      onChange={getInputHandler}
+                      checked={edu.degree === "學士" ? true : false}
                     />
                     學士
                   </label>
                   <label>
                     <input
                       type="radio"
-                      name="education"
+                      className="education"
+                      name="degree"
                       value="碩士"
-                      checked={
-                        profile.education
-                          ? profile.education["degree"] === "碩士"
-                            ? "checked"
-                            : null
-                          : null
-                      }
+                      onChange={getInputHandler}
+                      checked={edu.degree === "碩士" ? true : false}
                     />
                     碩士
                   </label>
                   <label>
                     <input
                       type="radio"
-                      name="education"
+                      className="education"
+                      name="degree"
                       value="博士"
-                      checked={
-                        profile.education
-                          ? profile.education["degree"] === "博士"
-                            ? "checked"
-                            : null
-                          : null
-                      }
+                      onChange={getInputHandler}
+                      checked={edu.degree === "博士" ? true : false}
                     />
                     博士
                   </label>
@@ -123,19 +197,43 @@ function DietitianProfile({ profile }) {
               <label className={style.skill}>專長</label>
               <div className={style["select-skill"]}>
                 <label>
-                  <input type="checkbox" value="體重管理" />
+                  <input
+                    type="checkbox"
+                    name="skills"
+                    value="weightControl"
+                    onChange={getInputHandler}
+                    checked={skill.weightControl}
+                  />
                   體重管理
                 </label>
                 <label>
-                  <input type="checkbox" value="運動營養" />
+                  <input
+                    type="checkbox"
+                    name="skills"
+                    value="sportNT"
+                    onChange={getInputHandler}
+                    checked={skill.sportNT}
+                  />
                   運動營養
                 </label>
                 <label>
-                  <input type="checkbox" value="血糖控制" />
+                  <input
+                    type="checkbox"
+                    name="skills"
+                    value="bloodSugar"
+                    onChange={getInputHandler}
+                    checked={skill.bloodSugar}
+                  />
                   血糖控制
                 </label>
                 <label>
-                  <input type="checkbox" value="三高控制" />
+                  <input
+                    type="checkbox"
+                    name="skills"
+                    value="threeHigh"
+                    onChange={getInputHandler}
+                    checked={skill.threeHigh}
+                  />
                   三高控制
                 </label>
               </div>
@@ -144,12 +242,22 @@ function DietitianProfile({ profile }) {
             <div className={style.other}>
               <label>其他</label>
               <p>補充更多資訊讓客戶更了解你！（例：經歷、證照、其他專長）</p>
-              <textarea cols="40" rows="6">
-                {profile.other ? profile.other : ""}
-              </textarea>
+              <textarea
+                cols="40"
+                rows="6"
+                name="other"
+                value={
+                  input.other || input.other === ""
+                    ? input.otehr
+                    : other
+                    ? other
+                    : ""
+                }
+                onChange={getInputHandler}
+              ></textarea>
             </div>
           </div>
-          <button>儲存</button>
+          <button onClick={saveDietitianProfile}>儲存</button>
         </div>
       </div>
     </>
