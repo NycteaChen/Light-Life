@@ -12,11 +12,31 @@ import noImage from "../../../images/noimage.png";
 import firebase from "firebase/app";
 import style from "../../../style/findCustomers.module.scss";
 
-function PublicationData() {
+function PublicationData({ publish, display, setDisplay }) {
+  const [profile, setProfile] = useState({});
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("customers")
+      .doc(publish.id)
+      .get()
+      .then((res) => {
+        setProfile(res.data());
+      });
+  }, []);
+
+  const closeDetailsHandler = () => {
+    setDisplay("none");
+  };
+
   return (
-    <div className={style.publicationForm} style={{ display: "none" }}>
+    <div className={style.publicationForm} style={{ display: display }}>
       <div>
-        <i className={`${style.close} fa fa-times`} aria-hidden="true"></i>
+        <i
+          className={`${style.close} fa fa-times`}
+          aria-hidden="true"
+          onClick={closeDetailsHandler}
+        ></i>
       </div>
 
       <div className={style.flexbox}>
@@ -24,15 +44,15 @@ function PublicationData() {
         <div>
           <div className={style["data-item"]}>
             <div className={style.title}>姓名</div>
-            <div id="name">陳曉林</div>
+            <div id="name">{profile.name}</div>
           </div>
           <div className={style["data-item"]}>
             <div className={style.title}>性別</div>
-            <div id="gender">女</div>
+            <div id="gender">{profile.gender}</div>
           </div>
           <div className={style["data-item"]}>
             <div className={style.title}>年齡</div>
-            <div id="age">25 歲</div>
+            <div id="age">{profile.age} 歲</div>
           </div>
         </div>
       </div>
@@ -41,47 +61,36 @@ function PublicationData() {
         <div className={style["data-item"]}>
           <div className={style.title}>身高</div>
           <div id="height">
-            <span>155</span>
+            {profile.height}
             cm
           </div>
         </div>
         <div className={style["data-item"]}>
           <div className={style.title}>體重</div>
-          <div id="weight">
-            <span>55</span>
-            kg
-          </div>
+          <div id="weight">{profile.weight} kg</div>
         </div>
       </div>
       <div className={style.flexbox}>
         <div className={style["data-item"]}>
           <div className={style.title}>教育程度</div>
-          <div id="education">
-            <span>研究所</span>
-          </div>
+          <div id="education">{profile.education}</div>
         </div>
         <div className={style["data-item"]}>
           <div className={style.title}>職業</div>
-          <div id="career">
-            <span>服務業</span>
-          </div>
+          <div id="career">{profile.career}</div>
         </div>
       </div>
       <div className={style.flexcol}>
         <div className={style.col}>
           <div className={style["data-item"]}>
             <div className={style.title}>運動習慣</div>
-            <div id="sport">
-              <span>不喜歡運動</span>
-            </div>
+            <div id="sport">{profile.sport}</div>
           </div>
         </div>
         <div className={style.col}>
           <div className={style["data-item"]}>
             <div className={style.title}>其他</div>
-            <div id="other">
-              <span>不喜歡吃魚</span>
-            </div>
+            <div id="other">{profile.other}</div>
           </div>
         </div>
       </div>
@@ -91,7 +100,9 @@ function PublicationData() {
         <textarea>想為您服務</textarea>
         <div className={style.buttons}>
           <button className={style.send}>發送</button>
-          <button className={style.cancel}>取消</button>
+          <button className={style.cancel} onClick={closeDetailsHandler}>
+            取消
+          </button>
         </div>
       </div>
     </div>
