@@ -23,30 +23,45 @@ function Invited({ publishData, idx, setPublishData, setIsChecked }) {
         setProfile(docs.data());
       });
   }, []);
-
+  console.log(publishData[0].whoInvite);
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":
         console.log(e.target.id);
         break;
       case "decline":
-        // firebase
-        //   .firestore()
-        //   .collection("publish")
-        //   .doc(publishData.publishID)
-        //   .set({
-        //     ...publishData,
-        //     whoInvite: [
-        //       ...publishData.whoInvite.filter((i, index) => index !== idx),
-        //     ],
-        //   });
+        if (window.confirm("確定拒絕嗎?")) {
+          setIsChecked(false);
+          publishData[0].whoInvite[+idx].status = "2";
+          firebase
+            .firestore()
+            .collection("publish")
+            .doc(publishData[0].publishID)
+            .set(
+              {
+                whoInvite: [...publishData[0].whoInvite],
+              },
+              { merge: true }
+            );
+
+          setPublishData([
+            {
+              ...publishData[0],
+              whoInvite: [
+                ...publishData[0].whoInvite.filter(
+                  (i, index) => index !== +idx
+                ),
+              ],
+            },
+          ]);
+        }
         break;
     }
   };
 
   return (
     <>
-      {profile ? (
+      {profile && profile.name ? (
         <div className={style["dietitian-details"]}>
           <div>
             <i

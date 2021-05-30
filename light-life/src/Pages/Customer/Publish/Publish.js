@@ -66,15 +66,18 @@ function Publish() {
         break;
       case "remove":
         if (publishData.length > 0) {
-          firebase
-            .firestore()
-            .collection("publish")
-            .doc(publishData[0].publishID)
-            .delete()
-            .then(() => {
-              alert("移除成功!");
-              setPublishData([]);
-            });
+          if (window.confirm("確定移除嗎?")) {
+            alert("移除");
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(publishData[0].publishID)
+              .delete()
+              .then(() => {
+                alert("移除成功!");
+                setPublishData([]);
+              });
+          }
         } else {
           alert("沒有刊登可以移除");
         }
