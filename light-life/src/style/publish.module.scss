@@ -305,13 +305,13 @@
         margin: 10px 0;
       }
       .message {
-        textarea {
+        & > div:last-of-type {
           margin-top: 5px;
           font-size: 14px;
           width: 100%;
           max-width: 300px;
           padding: 3px 7px;
-          height: 3rem;
+          max-height: 5rem;
           overflow: auto;
         }
       }
