@@ -21,7 +21,6 @@ function ReserveList({ reserve, setReserve }) {
       setIndex();
     }
   };
-
   const removeReserveHandler = (e) => {
     const docID = reserve[+e.target.id].reserveID;
     firebase

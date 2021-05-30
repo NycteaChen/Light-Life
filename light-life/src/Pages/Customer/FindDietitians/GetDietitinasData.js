@@ -3,14 +3,12 @@ import DietitianData from "./DietitianData.js";
 import style from "../../../style/findDietitian.module.scss";
 
 function GetDietitiansData({ props, setReserve, profile }) {
-  const [isCheck, setIsCheck] = useState(false); //false
+  const [isChecked, setIsChecked] = useState(false); //false
   const [checkIndex, setCheckIndex] = useState("");
   const bindCheckHandler = (e) => {
     setCheckIndex(e.target.id);
-    setIsCheck(true);
+    setIsChecked(true);
   };
-  console.log(props);
-  console.log(profile);
 
   return (
     <div className={style.dietitianList}>
@@ -23,11 +21,11 @@ function GetDietitiansData({ props, setReserve, profile }) {
               <button onClick={bindCheckHandler} id={index}>
                 查看詳情
               </button>
-              {isCheck && index === +checkIndex ? (
+              {isChecked && index === +checkIndex ? (
                 <DietitianData
                   setReserve={setReserve}
                   props={d}
-                  setIsCheck={setIsCheck}
+                  setIsChecked={setIsChecked}
                   profile={profile}
                 />
               ) : (
