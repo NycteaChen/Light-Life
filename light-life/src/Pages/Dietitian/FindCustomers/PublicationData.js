@@ -18,7 +18,7 @@ function PublicationData({ publish, display, setDisplay }) {
   const { dID } = useParams();
   const date = new Date(+new Date() + 8 * 3600 * 1000);
   const today = date.toISOString().substr(0, 10);
-
+  const [name, setName] = useState("");
   useEffect(() => {
     firebase
       .firestore()
@@ -28,6 +28,14 @@ function PublicationData({ publish, display, setDisplay }) {
       .then((res) => {
         setProfile(res.data());
       });
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dID)
+      .get()
+      .then((doc) => {
+        setName(doc.data().name);
+      });
   }, []);
 
   const messageHandler = (e) => {
@@ -36,6 +44,7 @@ function PublicationData({ publish, display, setDisplay }) {
       message: e.target.value,
       status: "0",
       inviteDate: today,
+      name: name,
     });
   };
 
