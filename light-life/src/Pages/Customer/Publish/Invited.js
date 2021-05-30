@@ -10,7 +10,14 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/publish.module.scss";
 
-function Invited({ publishData, idx, setPublishData, setIsChecked }) {
+function Invited({
+  publishData,
+  idx,
+  setPublishData,
+  setIsChecked,
+  setOldPublish,
+  oldPublish,
+}) {
   const props = publishData[0].whoInvite[+idx];
   const [profile, setProfile] = useState(null);
   useEffect(() => {
@@ -23,11 +30,28 @@ function Invited({ publishData, idx, setPublishData, setIsChecked }) {
         setProfile(docs.data());
       });
   }, []);
-  console.log(publishData[0].whoInvite);
+  console.log(oldPublish);
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":
-        console.log(e.target.id);
+        publishData[0].status = "1";
+        publishData[0].whoInvite.forEach((e) => {
+          e.status = "2";
+        });
+
+        publishData[0].whoInvite[+idx].status = "1";
+        firebase
+          .firestore()
+          .collection("publish")
+          .doc(publishData[0].publishID)
+          .set({ ...publishData[0] });
+        setPublishData([...publishData]);
+        if (oldPublish) {
+          setOldPublish([publishData[0], ...oldPublish]);
+        } else {
+          setOldPublish([publishData[0]]);
+        }
+        setIsChecked(false);
         break;
       case "decline":
         if (window.confirm("確定拒絕嗎?")) {

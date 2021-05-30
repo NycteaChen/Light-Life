@@ -36,7 +36,7 @@ function ReserveForm({ props, setReserve, profile }) {
       .then(() => {
         db.collection("reserve")
           .doc(`${timestamp}`)
-          .update("id", `${timestamp}`);
+          .update("reserveID", `${timestamp}`);
       })
       .then(() => {
         db.collection("reserve")
@@ -66,7 +66,7 @@ function ReserveForm({ props, setReserve, profile }) {
             <div>開始</div>
             <input
               type="date"
-              name="reverseStartDate"
+              name="reserveStartDate"
               onChange={getInputHandler}
             />
           </label>
@@ -74,7 +74,7 @@ function ReserveForm({ props, setReserve, profile }) {
             <div>結束</div>
             <input
               type="date"
-              name="reverseEndDate"
+              name="reserveEndDate"
               onChange={getInputHandler}
             />
           </label>
@@ -82,7 +82,7 @@ function ReserveForm({ props, setReserve, profile }) {
 
         <label>
           <div>邀請訊息</div>
-          <textarea name="reverseMessage" onChange={getInputHandler}></textarea>
+          <textarea name="reserveMessage" onChange={getInputHandler}></textarea>
         </label>
         <div>
           <button onClick={sendReverseHandler}>發送預約邀請</button>

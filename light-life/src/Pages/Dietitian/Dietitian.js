@@ -106,7 +106,6 @@ function Dietitian() {
       .doc(e.target.className)
       .get()
       .then((doc) => {
-        console.log(doc.data());
         setDate({
           start: doc.data().startDate,
           end: doc.data().endDate,

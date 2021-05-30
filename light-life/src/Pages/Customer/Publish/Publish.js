@@ -57,7 +57,6 @@ function Publish() {
   const publishModalHandler = (e) => {
     switch (e.target.id) {
       case "add":
-        console.log(publishData);
         if (publishData.length < 1) {
           setDisplay("block");
         } else {
@@ -131,8 +130,7 @@ function Publish() {
       alert("資料不完整喔");
     }
   };
-
-  console.log(input);
+  console.log(publishData);
   return (
     <div className={style.publish}>
       <div className={style.waiting}>
@@ -158,7 +156,7 @@ function Publish() {
         <h4>您目前的刊登</h4>
         {/* <div className={style["publication-list"]}> */}
         {publishData ? (
-          publishData.length > 0 ? (
+          publishData.length > 0 && publishData[0].status === "0" ? (
             <div className={style.publication}>
               <div className={style.col}>
                 <div className={style["pulish-time"]}>
@@ -193,7 +191,9 @@ function Publish() {
         <h3>誰來應徵</h3>
         <div className={style.inviters}>
           {publishData ? (
-            publishData[0] && publishData[0].whoInvite ? (
+            publishData[0] &&
+            publishData[0].whoInvite &&
+            publishData[0].status === "0" ? (
               publishData[0].whoInvite.map((i, index) => (
                 <>
                   {i.status === "0" ? (
@@ -220,6 +220,8 @@ function Publish() {
               idx={idx}
               setPublishData={setPublishData}
               setIsChecked={setIsChecked}
+              setOldPublish={setOldPublish}
+              oldPublish={oldPublish}
             />
           ) : (
             ""
