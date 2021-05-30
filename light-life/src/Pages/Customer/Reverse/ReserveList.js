@@ -23,20 +23,19 @@ function ReserveList({ reserve, setReserve }) {
   };
 
   const removeReserveHandler = (e) => {
-    const docID = reserve[+e.target.id].dietitian;
-    console.log(docID);
-    setReserve([...reserve.filter((r, index) => index !== +e.target.id)]);
-    // firebase
-    //   .firestore()
-    //   .collection("reserve")
-    //   .doc(docID)
-    //   .delete()
-    //   .then(() => {
-    //     console.log("delete");
-    //   })
-    //   .catch((error) => {
-    //     console.log("Error:", error);
-    //   });
+    const docID = reserve[+e.target.id].reserveID;
+    firebase
+      .firestore()
+      .collection("reserve")
+      .doc(docID)
+      .delete()
+      .then(() => {
+        alert("delete");
+        setReserve([...reserve.filter((r, index) => index !== +e.target.id)]);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
   };
 
   console.log(reserve);
@@ -44,7 +43,7 @@ function ReserveList({ reserve, setReserve }) {
     <div className={style["reserve-list"]}>
       <div className={style.waiting}>
         <h3>預約中</h3>
-        {reserve ? (
+        {reserve.find((r) => r.status === "0") ? (
           <>
             <h4>請靜待營養師回覆</h4>
             <div className={style.reservations}>
