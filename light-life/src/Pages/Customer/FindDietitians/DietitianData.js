@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import ReserveForm from "../Reverse/ReserveForm.js";
 import style from "../../../style/findDietitian.module.scss";
 
-function DietitianData({ props, setIsCheck, setReserve, profile }) {
+function DietitianData({ props, setIsChecked, setReserve, profile }) {
   const bindCloseHandler = () => {
-    setIsCheck(false);
+    setIsChecked(false);
   };
   return (
     <div className={style["dietitian-details"]}>
@@ -46,7 +46,12 @@ function DietitianData({ props, setIsCheck, setReserve, profile }) {
           <div>{props.other}</div>
         </div>
       </div>
-      <ReserveForm props={props} setReserve={setReserve} profile={profile} />
+      <ReserveForm
+        props={props}
+        setReserve={setReserve}
+        profile={profile}
+        setIsChecked={setIsChecked}
+      />
     </div>
   );
 }

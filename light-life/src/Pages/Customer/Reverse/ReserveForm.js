@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/findDietitian.module.scss";
 
-function ReserveForm({ props, setReserve, profile }) {
+function ReserveForm({ props, setReserve, profile, setIsChecked }) {
   const params = useParams();
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = today.toISOString().substr(0, 10);
@@ -32,12 +32,7 @@ function ReserveForm({ props, setReserve, profile }) {
     const timestamp = Math.floor(dateTime);
     db.collection("reserve")
       .doc(`${timestamp}`)
-      .set(input)
-      .then(() => {
-        db.collection("reserve")
-          .doc(`${timestamp}`)
-          .update("reserveID", `${timestamp}`);
-      })
+      .set({ ...input, reserveID: `${timestamp}` })
       .then(() => {
         db.collection("reserve")
           .get()
@@ -53,6 +48,7 @@ function ReserveForm({ props, setReserve, profile }) {
       })
       .then(() => {
         alert("已發送!");
+        setIsChecked(false);
       })
       .catch((error) => "Error:" + error);
   };
