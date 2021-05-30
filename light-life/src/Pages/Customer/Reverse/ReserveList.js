@@ -5,6 +5,15 @@ import style from "../../../style/reserveList.module.scss";
 
 function ReserveList({ reserve, setReserve }) {
   const [index, setIndex] = useState();
+
+  const checkDeclineMessage = (e) => {
+    if (e.target.id) {
+      setIndex(e.target.id);
+    } else {
+      setIndex();
+    }
+  };
+
   const checkReserveMessage = (e) => {
     if (e.target.id) {
       setIndex(e.target.id);
@@ -96,9 +105,9 @@ function ReserveList({ reserve, setReserve }) {
         <h3>已回覆預約</h3>
         <div className={style.reservations}>
           {reserve.find((i) => i.status !== "0") ? (
-            reserve.map((i) =>
+            reserve.map((i, idx) =>
               i.status !== "0" ? (
-                <div className={style.reservation}>
+                <div className={style.reservation} key={idx}>
                   <div className={style.content}>
                     <div className={style.dietitian}>
                       營養師：{i.dietitianName}
@@ -111,7 +120,27 @@ function ReserveList({ reserve, setReserve }) {
                     {i.status === "1" ? (
                       <span className={style.success}>預約成功</span>
                     ) : i.status === "2" ? (
-                      <span className={style.decline}>婉拒</span>
+                      <>
+                        <button
+                          onClick={checkDeclineMessage}
+                          className={style.check}
+                          id={idx}
+                        >
+                          查看訊息
+                        </button>
+                        <span className={style.decline}>婉拒</span>
+                        {+index === idx ? (
+                          <div className={style.message}>
+                            <div className={style.content}>
+                              <h3>婉拒訊息</h3>
+                              <div>{i.declineMessage}</div>
+                            </div>
+                            <button onClick={checkReserveMessage}>確定</button>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </>
                     ) : (
                       ""
                     )}
