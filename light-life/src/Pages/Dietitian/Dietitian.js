@@ -56,6 +56,7 @@ function Dietitian() {
         const invitedArray = [];
         docs.forEach((doc) => {
           const startDate = new Date(doc.data().reserveStartDate).getTime();
+          console.log(doc.data());
           if (startDate > today && doc.data().status === "0") {
             invitedArray.push(doc.data());
           }

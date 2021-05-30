@@ -139,6 +139,8 @@ function ReserveList({ reserve, setReserve }) {
                           ""
                         )}
                       </>
+                    ) : i.status === "3" ? (
+                      <span className={style.decline}>逾期</span>
                     ) : (
                       ""
                     )}

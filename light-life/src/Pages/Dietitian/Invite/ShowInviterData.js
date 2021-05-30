@@ -5,7 +5,7 @@ import "firebase/firestore";
 import noImage from "../../../images/noimage.png";
 import style from "../../../style/whoInvite.module.scss";
 
-function ShowInviterData({ idx, invitedList, setInvitedList }) {
+function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
   const props = invitedList[+idx];
   const [inviterData, setInviterData] = useState({});
   const [show, setShow] = useState("");
@@ -27,12 +27,6 @@ function ShowInviterData({ idx, invitedList, setInvitedList }) {
     const { id } = e.target;
     switch (id) {
       case "accept":
-        // firebase
-        //   .firestore()
-        //   .collection("customers")
-        //   .doc(props.inviterID)
-        //   .update({ ...inviterData, dietitian: dID });
-
         firebase
           .firestore()
           .collection("dietitians")
@@ -59,6 +53,7 @@ function ShowInviterData({ idx, invitedList, setInvitedList }) {
             setInvitedList([
               ...invitedList.filter((i, index) => index !== +idx),
             ]);
+            setIsChecked(false);
           });
         break;
       case "decline":
@@ -86,6 +81,7 @@ function ShowInviterData({ idx, invitedList, setInvitedList }) {
         })
         .then(() => {
           setInvitedList([...invitedList.filter((i, index) => index !== +idx)]);
+          setIsChecked(false);
         });
     } else {
       alert("沒有輸入喔");

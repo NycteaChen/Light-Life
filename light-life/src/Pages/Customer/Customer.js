@@ -25,6 +25,8 @@ function Customer() {
   const [reserve, setReserve] = useState([]);
   const customerID = useParams().cID;
   const [dName, setDName] = useState();
+  const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
+
   let dID;
   useEffect(() => {
     firebase
@@ -57,18 +59,29 @@ function Customer() {
     firebase
       .firestore()
       .collection("reserve")
+      .where("inviterID", "==", customerID)
       .get()
       .then((docs) => {
         const reserveArray = [];
+
         docs.forEach((doc) => {
-          if (doc.data().inviterID === customerID) {
-            reserveArray.push(doc.data());
+          reserveArray.push(doc.data());
+        });
+        reserveArray.forEach((e) => {
+          const startDate = new Date(e.reserveStartDate).getTime();
+          if (startDate <= today) {
+            e.status = "3";
+            firebase
+              .firestore()
+              .collection("reserve")
+              .doc(e.reserveID)
+              .update(e);
           }
         });
+        console.log(reserveArray);
         setReserve(reserveArray);
       });
   }, []);
-
   const logoutHandler = () => {
     firebase
       .auth()
