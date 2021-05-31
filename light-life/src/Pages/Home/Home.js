@@ -6,17 +6,42 @@ import Login from "./Login.js";
 import logo from "../../images/lightlife-horizontal.png";
 import style from "../../style/home.module.scss";
 import noImage from "../../images/noimage.png";
+import swal from "sweetalert";
 import $ from "jquery";
 function Home() {
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});
+  const [button, setButton] = useState("submit");
+  const [input, setInput] = useState({});
 
   const bindLoginButton = () => {
     console.log("1");
     setDisplay("flex");
   };
 
-  const bindEnterButton = () => {};
+  const sendContactHandler = () => {
+    if (input.name && input.email && input.text) {
+      setButton("button");
+      swal({
+        title: "確定送出嗎?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((ok) => {
+        if (ok) {
+          swal("發送成功", "請稍後", "success");
+          setInput({});
+        }
+      });
+    } else {
+      setButton("submit");
+    }
+  };
+
+  const getInputHandler = (e) => {
+    const { name } = e.target;
+    setInput({ ...input, [name]: e.target.value });
+  };
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -83,7 +108,7 @@ function Home() {
             <a href="#about">關於本站</a>
             <a href="#contact">聯絡我們</a>
             {user.client ? (
-              <Link to={`/${user.client}/${user.id}`} onClick={bindEnterButton}>
+              <Link to={`/${user.client}/${user.id}`}>
                 <img
                   className={style["login-image"]}
                   src={user.image ? user.image : noImage}
@@ -100,7 +125,7 @@ function Home() {
           <div className={style["main-title"]}>
             <h2>Bring you to light life</h2>
             {user.client ? (
-              <Link to={`/${user.client}/${user.id}`} onClick={bindEnterButton}>
+              <Link to={`/${user.client}/${user.id}`}>
                 <button>使用服務</button>
               </Link>
             ) : (
@@ -150,13 +175,25 @@ function Home() {
               <label>
                 您的大名
                 <div>
-                  <input type="text" name="name" id="name" required />
+                  <input
+                    type="text"
+                    name="name"
+                    value={input.name ? input.name : ""}
+                    onChange={getInputHandler}
+                    required
+                  />
                 </div>
               </label>
               <label>
                 信箱
                 <div>
-                  <input type="email" name="email" id="email" required />
+                  <input
+                    type="email"
+                    name="email"
+                    value={input.email ? input.email : ""}
+                    onChange={getInputHandler}
+                    required
+                  />
                 </div>
               </label>
               <label>
@@ -166,13 +203,16 @@ function Home() {
                     name="text"
                     rows="6"
                     cols="40"
-                    id="text"
+                    value={input.text ? input.text : ""}
+                    onChange={getInputHandler}
                     required
                   ></textarea>
                 </div>
               </label>
               <div id="submit">
-                <button>提交</button>
+                <button type={button} onClick={sendContactHandler}>
+                  提交
+                </button>
               </div>
             </form>
           </section>
@@ -180,7 +220,7 @@ function Home() {
         <section className={style.service}>
           <p>We will bring you to light life!</p>
           {user.client ? (
-            <Link to={`/${user.client}/${user.id}`} onClick={bindEnterButton}>
+            <Link to={`/${user.client}/${user.id}`}>
               <button>使用服務</button>
             </Link>
           ) : (
