@@ -17,7 +17,7 @@ function GetPublication() {
   const [idx, setIdx] = useState("");
   const dID = useParams().dID;
   const date = new Date(+new Date() + 8 * 3600 * 1000).getTime();
-
+  console.log(publish);
   useEffect(() => {
     firebase
       .firestore()
@@ -79,9 +79,10 @@ function GetPublication() {
 
         {publish
           ? publish.map((p, pubIndex) =>
-              !p.whoInvite ||
-              (p.whoInvite &&
-                !p.whoInvite.find((e) => e.dietitianID === dID)) ? (
+              (!p.whoInvite ||
+                (p.whoInvite &&
+                  !p.whoInvite.find((e) => e.dietitianID === dID))) &&
+              p.status === "0" ? (
                 <>
                   <div className={style.publicationList} key={pubIndex}>
                     <div className={style.publication}>

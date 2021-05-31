@@ -104,7 +104,7 @@
       color: white;
       box-shadow: 0px 2px 1px #454747;
     }
-    @media (min-width: 768px) {
+    @media (min-width: 520px) {
       & {
         width: 200px;
       }
@@ -125,19 +125,30 @@
       text-align: center;
       text-shadow: 0 2px 2px black;
       white-space: nowrap;
+      h2 {
+        transition: font-size 0.5s;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 3px;
+      }
     }
     button {
       box-shadow: 0px 2px 1px #454747;
+    }
+    @media (min-width: 520px) {
+      & {
+        .main-title {
+          h2 {
+            font-size: 40px;
+          }
+        }
+      }
     }
     @media (min-width: 768px) {
       & {
         .main-title {
           text-align: left;
           margin: 300px auto auto 15vw;
-          h2 {
-            font-size: 40px;
-            letter-spacing: 3px;
-          }
         }
       }
     }
