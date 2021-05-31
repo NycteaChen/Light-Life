@@ -1,0 +1,351 @@
+.edit-Dprofile {
+  font-size: 12px;
+  padding: 20px 0;
+  text-align: center;
+  //   border: 2px solid #016126;
+  //   background-color: white;
+  //   box-shadow: 0 1px 1px black;
+  //   border-radius: 10px;
+
+  @media (min-width: 520px) {
+    width: 450px;
+    margin: auto;
+  }
+  @media (min-width: 1024px) {
+    text-align: left;
+    margin-left: 300px;
+    padding: 0;
+    font-size: 16px;
+    .basic-profile {
+      .uploadImg {
+        display: block;
+        cursor: pointer;
+        width: 100px;
+        margin: auto;
+        margin-top: 10px;
+        border-radius: 5px;
+        padding: 2px 5px;
+        border: 1px solid black;
+        background-color: #fdf8ee;
+        input[type="file"] {
+          display: none;
+        }
+      }
+      .flexbox {
+        display: flex;
+        align-items: center;
+        width: 500px;
+        & > div:last-of-type {
+          margin-top: -70px;
+        }
+      }
+      input[type="text"] {
+        padding: 2px;
+      }
+    }
+  }
+  .basic-profile {
+    .img {
+      div {
+        margin: 0 auto 10px;
+      }
+      img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+      }
+      .uploadImg {
+        display: block;
+        cursor: pointer;
+        width: 100px;
+        margin: 10px auto;
+        border-radius: 5px;
+        padding: 2px 5px;
+        border: 1px solid black;
+        background-color: #fdf8ee;
+        text-align: center;
+        input[type="file"] {
+          display: none;
+        }
+      }
+      @media (min-width: 1024px) {
+        & {
+          div {
+            margin: 10px 20px;
+            margin-left: 35px;
+            font-size: 12px;
+            white-space: nowrap;
+          }
+          img {
+            margin-left: 48px;
+          }
+          .uploadImg {
+            margin-left: 38px;
+            width: 100px;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+
+    // input[type="text"]:focus {
+    //   outline: none;
+    //   &:invalid {
+    //     border: 1px solid red !important;
+    //   }
+    // }
+
+    div {
+      .determined {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        div {
+          margin-right: auto;
+          margin-bottom: 10px;
+        }
+        .title {
+          margin-left: auto;
+          margin-right: 20px;
+        }
+        @media (min-width: 520px) {
+          display: flex;
+        }
+        @media (min-width: 1024px) {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .basic {
+        margin-bottom: 10px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        div {
+          margin-right: auto;
+          margin-top: 10px;
+        }
+        label {
+          margin: 10px 20px 0 auto;
+          &:first-of-type {
+            margin-top: 2px;
+          }
+        }
+        input[type="text"] {
+          width: 90%;
+          max-width: 150px;
+        }
+
+        input[type="radio"] {
+          vertical-align: middle;
+          margin: auto 5px 1px 3px;
+        }
+        @media (min-width: 520px) {
+          & {
+            display: flex;
+            margin: auto;
+            justify-content: center;
+            label {
+              margin: 0px 15px 0 39px;
+            }
+
+            #name {
+              width: 139px;
+            }
+            div {
+              margin-top: 0;
+            }
+          }
+        }
+        @media (min-width: 1024px) {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          #name {
+            margin-top: 3px;
+          }
+          div {
+            margin-right: auto;
+            margin-top: 10px;
+          }
+          label {
+            margin: 10px 20px 0 auto;
+            &:first-of-type {
+              margin-top: 2px;
+            }
+          }
+          input[type="radio"] {
+            vertical-align: middle;
+            margin: auto 5px 1px 3px;
+          }
+        }
+      }
+      .education {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        margin-bottom: 10px;
+        #highestDegree {
+          margin-left: auto;
+          margin-right: 20px;
+        }
+        .edu-select {
+          & > input {
+            display: block;
+            margin: -2px 0 10px 0;
+            width: 90%;
+            max-width: 150px;
+          }
+          & > div {
+            text-align: left;
+            label:last-of-type {
+              display: block;
+              @media (min-width: 280px) {
+                display: inline-block;
+              }
+            }
+            input {
+              width: 20px;
+              vertical-align: middle;
+              margin: auto 1px 1px -2px;
+            }
+          }
+        }
+
+        @media (min-width: 520px) {
+          & {
+            display: flex;
+            margin-top: 10px;
+            #highestDegree {
+              margin-left: 15px;
+              margin-right: 15px;
+            }
+            .edu-select {
+              & > input {
+                display: inline-block;
+                width: 140px;
+                & + input {
+                  margin-left: 35px;
+                }
+              }
+            }
+          }
+        }
+        @media (min-width: 1024px) {
+          & {
+            width: 750px;
+            #highestDegree {
+              margin-top: 2px;
+            }
+            .edu-select {
+              display: flex;
+              & > input {
+                width: 150px;
+                margin-top: 1px;
+                margin-right: 10px;
+                & + input {
+                  margin-left: 0px;
+                }
+              }
+              div {
+                display: flex;
+                label {
+                  width: 80px;
+                }
+              }
+            }
+          }
+        }
+      }
+      .skills {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        margin-bottom: 10px;
+        .skill {
+          display: inline-block;
+          margin-left: auto;
+          margin-right: 20px;
+        }
+        .select-skill {
+          margin-right: auto;
+          label {
+            display: block;
+            margin-bottom: 5px;
+            input {
+              margin-right: 10px;
+            }
+          }
+        }
+        @media (min-width: 520px) {
+          & {
+            display: flex;
+            .skill {
+              display: block;
+              margin-left: 35px;
+              margin-right: 18px;
+            }
+            .select-skill {
+              label {
+                display: inline-block;
+                input {
+                  vertical-align: middle;
+                  margin: auto 5px 1px 3px;
+                }
+              }
+            }
+          }
+        }
+        @media (min-width: 1024px) {
+          & {
+            width: 750px;
+            .skill {
+              margin-left: 48px;
+            }
+            .select-skill {
+              margin-left: -5px;
+              label {
+                display: inline-block;
+                margin-right: 10px;
+              }
+            }
+          }
+        }
+      }
+      .other {
+        margin: auto 10px;
+        textarea {
+          padding: 5px;
+          margin-top: 5px;
+          width: 95%;
+          max-width: 340px;
+        }
+        @media (min-width: 520px) {
+          & {
+            text-align: left;
+            margin-left: 35px;
+            textarea {
+              max-width: unset;
+            }
+          }
+        }
+        @media (min-width: 1024px) {
+          & {
+            width: 600px;
+            margin-left: 48px;
+            p {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+      button {
+        margin-top: 10px;
+        width: 80px;
+        height: 30px;
+        border: none;
+        border-radius: 5px;
+        @media (min-width: 1024px) {
+          & {
+            margin-left: 300px;
+          }
+        }
+      }
+    }
+  }
+}

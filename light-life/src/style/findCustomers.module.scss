@@ -1,0 +1,294 @@
+.publicationData {
+  text-align: center;
+  h3 {
+    margin-bottom: 10px;
+  }
+  .publicationList {
+    margin: auto;
+    max-width: 550px;
+    max-height: 300px;
+    overflow: auto;
+    .publication {
+      background-color: white;
+      padding: 10px 15px;
+      margin: 20px auto 0;
+      .col {
+        .subject {
+          text-align: left;
+          margin: auto;
+          width: 80%;
+          max-width: 200px;
+          max-height: 80px;
+          overflow: auto;
+        }
+      }
+      button {
+        border: 2px solid #094231;
+        padding: 3px 7px;
+        background-color: #b8ffea;
+        border-radius: 5px;
+        text-shadow: 0 1px 1px #6ae499;
+      }
+    }
+  }
+  @media (min-width: 520px) {
+    .publicationList {
+      .publication {
+        text-align: right;
+        .flexbox {
+          display: flex;
+        }
+        .col > .flexbox {
+          flex-direction: row-reverse;
+          justify-content: space-between;
+          border-bottom: 1px solid black;
+          padding: 8px 0;
+          .flexbox {
+            & div:first-of-type {
+              margin-right: 15px;
+            }
+          }
+        }
+
+        .col {
+          .subject {
+            padding: 8px 0;
+            text-align: left;
+            max-width: unset;
+            width: unset;
+          }
+        }
+      }
+    }
+  }
+
+  @media (min-width: 1024px) {
+    margin-left: 300px;
+    h3 {
+      text-align: left;
+      margin-top: 10px;
+    }
+    .publicationList {
+      max-width: 700px;
+      margin: 0;
+      .publication {
+        max-width: unset;
+        margin: 10px 0 30px;
+      }
+    }
+  }
+}
+
+.inviting-status {
+  text-align: center;
+  margin-top: 15px;
+  .inviting-list {
+    max-height: 300px;
+    overflow: auto;
+    margin-top: 20px;
+    .invite {
+      margin: 15px 0;
+      padding: 10px 15px;
+      background-color: wheat;
+      .buttons {
+        margin-top: 8px;
+        button {
+          padding: 3px 7px;
+        }
+        .check {
+          margin-right: 5px;
+          background-color: #b8ffea;
+          outline: none;
+          border-radius: 5px;
+          border: 2px solid #094231;
+          text-shadow: 0 1px 1px #6ae499;
+        }
+        .cancel {
+          margin-left: 5px;
+          background-color: #fad2c2;
+          outline: none;
+          border-radius: 5px;
+          border: 2px solid #f34500;
+          text-shadow: 0 1px 1px #fa8556;
+        }
+      }
+    }
+  }
+  @media (min-width: 520px) {
+    .inviting-list {
+      max-width: 550px;
+      margin: auto;
+      .invite {
+        margin: 15px auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  }
+
+  @media (min-width: 1024px) {
+    margin-left: 300px;
+    h3 {
+      text-align: left;
+    }
+    .inviting-list {
+      max-width: 700px;
+      margin: 10px 0;
+    }
+  }
+}
+
+.publicationForm {
+  position: fixed;
+  width: 80%;
+  background-color: wheat;
+  top: 5px;
+  right: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+  padding: 15px 0;
+  max-height: calc(100vh - 80px);
+  overflow: auto;
+  overflow-x: hidden;
+  .close {
+    position: absolute;
+    right: 25px;
+    transition: all 0.5s;
+    font-size: 20px;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.2);
+      color: red;
+    }
+  }
+  img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 27px;
+  }
+  .title {
+    font-weight: 700;
+  }
+  .data-item {
+    margin: 5px 0;
+    display: flex;
+    div {
+      width: 50%;
+      text-align: left;
+      margin-right: 50px;
+    }
+    .title {
+      text-align: right;
+      margin-right: 20px;
+    }
+  }
+
+  .col {
+    .title + div {
+      max-height: 100px;
+      overflow: auto;
+    }
+  }
+  .col + .col {
+    margin-bottom: 25px;
+  }
+
+  .message {
+    text-align: left;
+    border-top: 1px solid black;
+    padding: 10px 20px;
+    h3 {
+      margin-bottom: 5px;
+    }
+    textarea {
+      transition: all 0.5s;
+      width: 100%;
+      padding: 2px 5px;
+      height: 4rem;
+    }
+    .buttons {
+      text-align: center;
+      margin-top: 10px;
+      button {
+        padding: 2px 8px;
+        &.send {
+          margin-right: 7px;
+          background-color: #b8ffea;
+          outline: none;
+          border-radius: 5px;
+          border: 2px solid #094231;
+          text-shadow: 0 1px 1px #6ae499;
+        }
+        &.cancel {
+          margin-left: 7px;
+          background-color: #fad2c2;
+          outline: none;
+          border-radius: 5px;
+          border: 2px solid #f34500;
+          text-shadow: 0 1px 1px #fa8556;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 520px) {
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px 0 30px 30px;
+    text-align: center;
+    max-width: 500px;
+    img {
+      width: 180px;
+      height: 180px;
+      margin-bottom: 35px;
+    }
+    .data-item {
+      div {
+        width: 150px;
+        margin-right: 0px;
+      }
+      .title {
+        width: 70px;
+      }
+    }
+
+    .flexbox {
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .flexbox:first-of-type {
+      margin-bottom: 35px;
+
+      & > div .data-item:nth-child(2) {
+        margin: 10px 0;
+      }
+    }
+    .col {
+      margin: 8px 0;
+
+      .data-item {
+        display: flex;
+        .title + div {
+          max-height: 100px;
+          width: 350px;
+          overflow: auto;
+        }
+      }
+    }
+    .message {
+      margin-right: 30px;
+      textarea {
+        height: 6rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      padding-bottom: 10px;
+    }
+  }
+}

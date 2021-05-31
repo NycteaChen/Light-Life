@@ -5,7 +5,6 @@
     padding: 10px 15px;
     background-color: wheat;
     width: 100px;
-    cursor: default;
   }
   .customer-dataSelect {
     .link-select {
@@ -18,6 +17,7 @@
       line-height: 90px;
     }
   }
+
   @media (min-width: 520px) {
     & {
       // .customer-name {
@@ -72,5 +72,28 @@
         }
       }
     }
+  }
+}
+
+.service-time {
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  position: absolute;
+  width: 80%;
+  margin: auto;
+  top: 510px;
+  left: 0;
+  right: 0;
+  @media (min-width: 520px) {
+    font-size: 16px;
+    top: 440px;
+  }
+  @media (min-width: 1024px) {
+    font-size: 20px;
+    width: unset;
+    margin: 10px auto 0 250px;
+    position: static;
+    text-align: left;
   }
 }

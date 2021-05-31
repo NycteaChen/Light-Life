@@ -11,11 +11,13 @@
     width: 100px;
     margin-left: 10px;
   }
-  .customer-targets {
+  .customer-targets,
+  .c-targets {
+    width: 95%;
     max-height: 250px;
     overflow: auto;
     margin: 10px auto;
-    width: 95%;
+
     .customer-target + .customer-target {
       border-top: 1px solid black;
     }
@@ -61,11 +63,14 @@
         .set-content {
           max-height: 80px;
           overflow: auto;
-          overflow-x: hidden;
         }
       }
     }
   }
+  .c-targets {
+    max-height: 450px;
+  }
+
   .add-new-target {
     padding: 20px 0;
     width: 95%;
@@ -102,7 +107,8 @@
     .set-content {
       width: 130px;
     }
-    .customer-targets {
+    .customer-targets,
+    .c-targets {
       max-height: 230px;
       max-width: 560px;
       .customer-target {
@@ -127,6 +133,11 @@
         }
       }
     }
+
+    .c-targets {
+      max-height: 500px;
+    }
+
     .add-new-target {
       max-width: 560px;
       .col {
@@ -160,6 +171,7 @@
       }
     }
     .customer-targets,
+    .c-targets,
     .add-new-target {
       margin-left: 330px;
       max-width: unset;

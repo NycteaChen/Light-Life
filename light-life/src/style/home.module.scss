@@ -6,8 +6,6 @@
   font-family: Lexend, "Microsoft JhengHei";
 
   a {
-    text-decoration: none;
-    color: #4d4d4d;
     padding-top: 7px;
     display: inline-block;
   }
@@ -15,13 +13,20 @@
   body {
     height: 100vh;
     display: flex;
-    color: #4d4d4d;
     flex-direction: column;
+    background-color: #a3ffdc79;
+  }
+  .mask {
+    position: fixed;
+    z-index: 9;
+    width: 100vw;
+    height: 100vh;
+    background-color: #313131d0;
   }
 }
 
 .home-header {
-  background: #ffffff00;
+  background: #ffffff;
   padding: 10px 15px;
   div {
     margin: auto;
@@ -45,6 +50,13 @@
           font-weight: 700;
         }
       }
+      .login-image {
+        position: relative;
+        bottom: 2px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
     }
     @media (min-width: 768px) {
       & {
@@ -65,11 +77,9 @@
 .home-main {
   flex-grow: 1;
   @media (min-width: 768px) {
-    background-color: #8bcfd171;
+    background-color: #d4fafc !important;
   }
-  //   padding-bottom:50px;
   p {
-    //   text-indent: 2rem;
     line-height: 25px;
     font-size: 0.6rem;
   }
@@ -94,13 +104,13 @@
       color: white;
       box-shadow: 0px 2px 1px #454747;
     }
-    @media (min-width: 768px) {
+    @media (min-width: 520px) {
       & {
         width: 200px;
       }
     }
   }
-  #cover {
+  .cover {
     height: 600px;
     background: linear-gradient(#2e2e2e4f 0 100%, transparent),
       url("../images/cover.png") no-repeat center;
@@ -115,19 +125,30 @@
       text-align: center;
       text-shadow: 0 2px 2px black;
       white-space: nowrap;
+      h2 {
+        transition: font-size 0.5s;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 3px;
+      }
     }
     button {
       box-shadow: 0px 2px 1px #454747;
+    }
+    @media (min-width: 520px) {
+      & {
+        .main-title {
+          h2 {
+            font-size: 40px;
+          }
+        }
+      }
     }
     @media (min-width: 768px) {
       & {
         .main-title {
           text-align: left;
           margin: 300px auto auto 15vw;
-          h2 {
-            font-size: 40px;
-            letter-spacing: 3px;
-          }
         }
       }
     }
@@ -339,20 +360,18 @@
     font-size: 1rem;
     color: #4d4d4d;
   }
+  button {
+    margin-top: 0 !important;
+  }
   @media (min-width: 768px) {
     & {
       display: flex;
       justify-content: center;
       align-items: center;
-      a {
-        padding-top: 0;
-        button {
-          margin: 0 auto 0 15px;
-        }
-      }
+
       p {
         font-size: 28px;
-        padding: 20px;
+        padding: 15px 15px 0;
       }
     }
   }
@@ -384,13 +403,14 @@ footer {
   background: #013532;
   color: white;
   font-size: 0.6rem;
-  .fa {
+  .gitIcon {
     color: white;
     font-size: 3rem;
     transition: all 0.5s;
+    opacity: 0.7;
     &:hover {
       transform: scale(1.1);
-      opacity: 0.7;
+      opacity: 1;
     }
   }
 

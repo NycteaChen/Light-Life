@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "firebase/firestore";
 import getIngrediensData from "../../../utils/IngredientsAPI.js";
 import Analysis from "./Analysis.js";
@@ -207,7 +200,7 @@ function DietitianRecord({ date, count, setCount }) {
 
   const removeItemHandler = (e) => {
     setDataAnalysis([
-      ...dataAnalysis.filter((d, index) => index != e.target.id),
+      ...dataAnalysis.filter((d, index) => index !== +e.target.id),
     ]);
     firebase
       .firestore()
@@ -220,7 +213,7 @@ function DietitianRecord({ date, count, setCount }) {
       .set(
         {
           [meal[1]]: [
-            ...dataAnalysis.filter((d, index) => index != e.target.id),
+            ...dataAnalysis.filter((d, index) => index !== +e.target.id),
           ],
         },
         { merge: true }

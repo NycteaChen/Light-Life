@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import style from "../../../style/findDietitian.module.scss";
 
-function ReserveForm({ setIsReserve, props, setReserve, profile }) {
+function ReserveForm({ props, setReserve, profile, setIsChecked }) {
   const params = useParams();
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = today.toISOString().substr(0, 10);
@@ -31,12 +32,7 @@ function ReserveForm({ setIsReserve, props, setReserve, profile }) {
     const timestamp = Math.floor(dateTime);
     db.collection("reserve")
       .doc(`${timestamp}`)
-      .set(input)
-      .then(() => {
-        db.collection("reserve")
-          .doc(`${timestamp}`)
-          .update("id", `${timestamp}`);
-      })
+      .set({ ...input, reserveID: `${timestamp}` })
       .then(() => {
         db.collection("reserve")
           .get()
@@ -50,37 +46,43 @@ function ReserveForm({ setIsReserve, props, setReserve, profile }) {
             setReserve(reserveArray);
           });
       })
+      .then(() => {
+        alert("已發送!");
+        setIsChecked(false);
+      })
       .catch((error) => "Error:" + error);
   };
 
-  const bindCancelHandler = () => {
-    setIsReserve(false);
-  };
-
   return (
-    <div>
-      <label>
-        開始
-        <input type="date" name="reverseStartDate" onChange={getInputHandler} />
-      </label>
-      <label>
-        結束
-        <input type="date" name="reverseEndDate" onChange={getInputHandler} />
-      </label>
-
-      <div>
-        <label>邀請訊息</label>
+    <div className={style["reserve-form"]}>
+      <div className={style["form-title"]}>現在預約</div>
+      <div className={style.form}>
         <div>
-          <input
-            type="textarea"
-            name="reverseMessage"
-            onChange={getInputHandler}
-          />
+          <label>
+            <div>開始</div>
+            <input
+              type="date"
+              name="reserveStartDate"
+              onChange={getInputHandler}
+            />
+          </label>
+          <label>
+            <div>結束</div>
+            <input
+              type="date"
+              name="reserveEndDate"
+              onChange={getInputHandler}
+            />
+          </label>
         </div>
-      </div>
-      <div>
-        <button onClick={sendReverseHandler}>發送</button>
-        <button onClick={bindCancelHandler}>取消</button>
+
+        <label>
+          <div>邀請訊息</div>
+          <textarea name="reserveMessage" onChange={getInputHandler}></textarea>
+        </label>
+        <div>
+          <button onClick={sendReverseHandler}>發送預約邀請</button>
+        </div>
       </div>
     </div>
   );

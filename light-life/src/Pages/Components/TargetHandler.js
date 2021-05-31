@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useLocation,
-  useParams,
-} from "react-router-dom";
-import "../../style/target.scss";
+import { useLocation, useParams } from "react-router-dom";
+import style from "../../style/target.module.scss";
 
 function TargetHandler({ target, setTarget }) {
   const db = firebase.firestore();
@@ -20,11 +13,13 @@ function TargetHandler({ target, setTarget }) {
   const pathName = useLocation().pathname;
   const params = useParams();
 
+  console.log(targetIndex);
+
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name === "startDate") {
       const date = new Date();
-      date.setDate(parseInt(e.target.value.split("-")[2]) + 1);
+      date.setDate(+e.target.value.split("-")[2] + 1);
       setInput({
         ...input,
         [name]: e.target.value,
@@ -69,9 +64,9 @@ function TargetHandler({ target, setTarget }) {
   };
 
   const bindRemoveTarget = (e) => {
-    setTarget([
-      ...target.filter((t, index) => index !== parseInt(e.target.id)),
-    ]);
+    setTargetIndex(e.target.id);
+
+    setTarget([...target.filter((t, index) => index !== +e.target.id)]);
     db.collection("dietitians")
       .doc(params.dID)
       .collection("customers")
@@ -83,9 +78,7 @@ function TargetHandler({ target, setTarget }) {
         docs.forEach((doc) => {
           docsArray.push(doc.id);
         });
-        const getID = docsArray.find(
-          (d, index) => index === parseInt(e.target.id)
-        );
+        const getID = docsArray.find((d, index) => index === +e.target.id);
         return getID;
       })
       .then((res) => {
@@ -118,7 +111,7 @@ function TargetHandler({ target, setTarget }) {
         docs.forEach((doc) => {
           docsArray.push(doc.id);
         });
-        const getID = docsArray.find((d, index) => index == e.target.id);
+        const getID = docsArray.find((d, index) => index === +e.target.id);
         return getID;
       })
       .then((res) => {
@@ -154,25 +147,25 @@ function TargetHandler({ target, setTarget }) {
     <>
       {isEditing
         ? target.map((t, index) =>
-            index == targetIndex ? (
-              <div key={index} class="customer-target">
-                <div class="target-header">
-                  <div class="alter-button">
+            index === +targetIndex ? (
+              <div key={index} className={style["customer-target"]}>
+                <div className={style["target-header"]}>
+                  <div className={style["alter-button"]}>
                     <button onClick={bindSaveHandler} id={index}>
                       儲存
                     </button>
-                    {/* <i class="fa fa-trash-o" aria-hidden="true"></i> */}
-                    {/* <i class="fa fa-trash" aria-hidden="true"></i> */}
+                    {/* <i className="fa fa-trash-o" aria-hidden="true"></i> */}
+                    {/* <i className="fa fa-trash" aria-hidden="true"></i> */}
                   </div>
-                  <div class="flexbox">
-                    <div class="title">建立時間</div>
-                    <div class="set-content">{t.addDate}</div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>建立時間</div>
+                    <div className={style["set-content"]}>{t.addDate}</div>
                   </div>
                 </div>
 
-                <div class="col">
-                  <div class="flexbox">
-                    <div class="title">開始日期</div>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>開始日期</div>
                     <input
                       type="date"
                       name="startDate"
@@ -180,11 +173,11 @@ function TargetHandler({ target, setTarget }) {
                       max={date.endDate}
                       value={input.startDate ? input.startDate : t.startDate}
                       onChange={getInputHandler}
-                      class="set-content"
+                      className={style["set-content"]}
                     />
                   </div>
-                  <div class="flexbox">
-                    <div class="title">結束日期</div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>結束日期</div>
                     <input
                       type="date"
                       name="endDate"
@@ -192,14 +185,14 @@ function TargetHandler({ target, setTarget }) {
                       max={date.endDate}
                       value={input.endDate ? input.endDate : t.endDate}
                       onChange={getInputHandler}
-                      class="set-content"
+                      className={style["set-content"]}
                     />
                   </div>
                 </div>
 
-                <div class="col">
-                  <div class="flexbox">
-                    <div class="title">目標體重</div>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標體重</div>
                     <div>
                       <input
                         type="text"
@@ -210,12 +203,12 @@ function TargetHandler({ target, setTarget }) {
                             : t.weight
                         }
                         onChange={getInputHandler}
-                        class="set-content"
+                        className={style["set-content"]}
                       />
                     </div>
                   </div>
-                  <div class="flexbox">
-                    <div class="title">目標水分</div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標水分</div>
                     <div>
                       <input
                         type="text"
@@ -226,27 +219,27 @@ function TargetHandler({ target, setTarget }) {
                             : t.water
                         }
                         onChange={getInputHandler}
-                        class="set-content"
+                        className={style["set-content"]}
                       />
                     </div>
                   </div>
                 </div>
-                <div class="flexbox">
-                  <div class="title">其他</div>
+                <div className={style.flexbox}>
+                  <div className={style.title}>其他</div>
                   <textarea
                     name="other"
                     value={
                       input.other || input.other === "" ? input.other : t.other
                     }
                     onChange={getInputHandler}
-                    class="set-content"
+                    className={style["set-content"]}
                   ></textarea>
                 </div>
               </div>
             ) : (
-              <div key={index} className="customer-target">
-                <div className="target-header">
-                  <div className="alter-button">
+              <div key={index} className={style["customer-target"]}>
+                <div className={style["target-header"]}>
+                  <div className={style["alter-button"]}>
                     <button onClick={bindEditHandler} id={index}>
                       編輯
                     </button>
@@ -257,55 +250,45 @@ function TargetHandler({ target, setTarget }) {
                       onClick={bindRemoveTarget}
                     ></i>
                   </div>
-                  <div className="flexbox">
-                    <div className="title">建立時間</div>
-                    <div className="set-content">{t.addDate}</div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>建立時間</div>
+                    <div className={style["set-content"]}>{t.addDate}</div>
                   </div>
                 </div>
-                <div className="col">
-                  <div className="flexbox">
-                    <div className="title">開始日期</div>
-                    <div className="set-content">
-                      {input.startDate ? input.startDate : t.startDate}
-                    </div>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>開始日期</div>
+                    <div className={style["set-content"]}>{t.startDate}</div>
                   </div>
-                  <div className="flexbox">
-                    <div className="title">結束日期</div>
-                    <div className="set-content">
-                      {input.endDate ? input.endDate : t.endDate}
-                    </div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>結束日期</div>
+                    <div className={style["set-content"]}>{t.endDate}</div>
                   </div>
                 </div>
-                <div className="col">
-                  <div className="flexbox">
-                    <div className="title">目標體重</div>
-                    <div className="set-content">
-                      {input.weight ? input.weight : t.weight} kg
-                    </div>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標體重</div>
+                    <div className={style["set-content"]}>{t.weight} kg</div>
                   </div>
-                  <div className="flexbox">
-                    <div className="title">目標水分</div>
-                    <div className="set-content">
-                      {input.water ? input.water : t.water} cc
-                    </div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標水分</div>
+                    <div className={style["set-content"]}>{t.water} cc</div>
                   </div>
                 </div>
-                <div className="flexbox">
-                  <div className="title">其他</div>
-                  <div className="set-content">
-                    {input.other ? input.other : t.other}
-                  </div>
+                <div className={style.flexbox}>
+                  <div className={style.title}>其他</div>
+                  <div className={style["set-content"]}>{t.other}</div>
                 </div>
               </div>
             )
           )
         : target.map((t, index) =>
-            index == targetIndex ? (
+            index === +targetIndex ? (
               <>
-                <div key={index} className="customer-target">
-                  <div className="target-header">
+                <div key={index} className={style["customer-target"]}>
+                  <div className={style["target-header"]}>
                     {pathName.includes("dietitian") ? (
-                      <div className="alter-button">
+                      <div className={style["alter-button"]}>
                         <button onClick={bindEditHandler} id={index}>
                           編輯
                         </button>
@@ -319,101 +302,52 @@ function TargetHandler({ target, setTarget }) {
                     ) : (
                       ""
                     )}
-                    <div className="flexbox">
-                      <div className="title">建立時間</div>
-                      <div className="set-content">{t.addDate}</div>
+                    <div className={style.flexbox}>
+                      <div className={style.title}>建立時間</div>
+                      <div className={style["set-content"]}>{t.addDate}</div>
                     </div>
                   </div>
-                  <div className="col">
-                    <div className="flexbox">
-                      <div className="title">開始日期</div>
-                      <div className="set-content">
+                  <div className={style.col}>
+                    <div className={style.flexbox}>
+                      <div className={style.title}>開始日期</div>
+                      <div className={style["set-content"]}>
                         {input.startDate ? input.startDate : t.startDate}
                       </div>
                     </div>
-                    <div className="flexbox">
-                      <div className="title">結束日期</div>
-                      <div className="set-content">
+                    <div className={style.flexbox}>
+                      <div className={style.title}>結束日期</div>
+                      <div className={style["set-content"]}>
                         {input.endDate ? input.endDate : t.endDate}
                       </div>
                     </div>
                   </div>
-                  <div className="col">
-                    <div className="flexbox">
-                      <div className="title">目標體重</div>
-                      <div className="set-content">
+                  <div className={style.col}>
+                    <div className={style.flexbox}>
+                      <div className={style.title}>目標體重</div>
+                      <div className={style["set-content"]}>
                         {input.weight ? input.weight : t.weight} kg
                       </div>
                     </div>
-                    <div className="flexbox">
-                      <div className="title">目標水分</div>
-                      <div className="set-content">
+                    <div className={style.flexbox}>
+                      <div className={style.title}>目標水分</div>
+                      <div className={style["set-content"]}>
                         {input.water ? input.water : t.water} cc
                       </div>
                     </div>
                   </div>
-                  <div className="flexbox">
-                    <div className="title">其他</div>
-                    <div className="set-content">
+                  <div className={style.flexbox}>
+                    <div className={style.title}>其他</div>
+                    <div className={style["set-content"]}>
                       {input.other ? input.other : t.other}
                     </div>
                   </div>
                 </div>
-                {/* <div key={index}>
-                {pathName.includes("dietitian") ? (
-                  <>
-                    <button onClick={bindEditHandler} id={index}>
-                      編輯
-                    </button>
-                    <div onClick={bindRemoveTarget} id={index}>
-                      X
-                    </div>
-                  </>
-                ) : (
-                  ""
-                )}
-                <div>
-                  <div>
-                    <div>
-                      建立時間<span>{t.addDate}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div>日期</div>
-                    <span>
-                      {input.startDate ? input.startDate : t.startDate}
-                    </span>
-                    <span>至 </span>
-                    <span>{input.endDate ? input.endDate : t.endDate}</span>
-                  </div>
-                </div>
-                <div>
-                  <div>目標體重</div>
-                  <div>
-                    <span>{input.weight ? input.weight : t.weight}</span>
-                    kg
-                  </div>
-                </div>
-                <div>
-                  <div>目標水分</div>
-                  <div>
-                    <span>{input.water ? input.water : t.water}</span> cc
-                  </div>
-                </div>
-                <div>
-                  <div>其他 </div>
-                  <div>
-                    <span>{input.other ? input.other : t.other}</span>
-                  </div>
-                </div>
-                <hr />
-              </div> */}
               </>
             ) : (
-              <div key={index} className="customer-target">
-                <div className="target-header">
+              <div key={index} className={style["customer-target"]}>
+                <div className={style["target-header"]}>
                   {pathName.includes("dietitian") ? (
-                    <div className="alter-button">
+                    <div className={style["alter-button"]}>
                       <button onClick={bindEditHandler} id={index}>
                         編輯
                       </button>
@@ -427,34 +361,34 @@ function TargetHandler({ target, setTarget }) {
                   ) : (
                     ""
                   )}
-                  <div className="flexbox">
-                    <div className="title">建立時間</div>
-                    <div className="set-content">{t.addDate}</div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>建立時間</div>
+                    <div className={style["set-content"]}>{t.addDate}</div>
                   </div>
                 </div>
-                <div className="col">
-                  <div className="flexbox">
-                    <div className="title">開始日期</div>
-                    <div className="set-content">{t.startDate}</div>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>開始日期</div>
+                    <div className={style["set-content"]}>{t.startDate}</div>
                   </div>
-                  <div className="flexbox">
-                    <div className="title">結束日期</div>
-                    <div className="set-content">{t.endDate}</div>
-                  </div>
-                </div>
-                <div className="col">
-                  <div className="flexbox">
-                    <div className="title">目標體重</div>
-                    <div className="set-content">{t.weight} kg</div>
-                  </div>
-                  <div className="flexbox">
-                    <div className="title">目標水分</div>
-                    <div className="set-content">{t.water} cc</div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>結束日期</div>
+                    <div className={style["set-content"]}>{t.endDate}</div>
                   </div>
                 </div>
-                <div className="flexbox">
-                  <div className="title">其他</div>
-                  <div className="set-content">{t.other}</div>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標體重</div>
+                    <div className={style["set-content"]}>{t.weight} kg</div>
+                  </div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標水分</div>
+                    <div className={style["set-content"]}>{t.water} cc</div>
+                  </div>
+                </div>
+                <div className={style.flexbox}>
+                  <div className={style.title}>其他</div>
+                  <div className={style["set-content"]}>{t.other}</div>
                 </div>
               </div>
             )

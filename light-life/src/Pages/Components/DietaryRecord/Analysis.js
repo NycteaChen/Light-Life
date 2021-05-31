@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import "firebase/firestore";
+import style from "../../../style/dietary.module.scss";
 
 function Analysis({ date, cID, data }) {
   const pathName = useLocation().pathname;
@@ -129,105 +123,113 @@ function Analysis({ date, cID, data }) {
 
   return (
     <>
-      <div id="diet-analysis">
-        <h2>{date}飲食分析</h2>
-        <table>
-          <thead>
-            <tr id="table-title">
-              <th>　　</th>
-              <th>熱量 (kcal)</th>
-              <th>蛋白質 (g)</th>
-              <th>脂質 (g)</th>
-              <th>碳水化合物 (g)</th>
-              <th>膳食纖維 (g)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id="breakfast">
-              <th>早餐</th>
-              <th>{breakfast.kcal ? breakfast.kcal : "-"}</th>
-              <th>{breakfast.protein ? breakfast.protein : "-"}</th>
-              <th>{breakfast.lipid ? breakfast.lipid : "-"}</th>
-              <th>{breakfast.carbohydrate ? breakfast.carbohydrate : "-"}</th>
-              <th>{breakfast.fiber ? breakfast.fiber : "-"}</th>
-            </tr>
-            <tr id="morning-snack">
-              <th>早點</th>
-              <th>{morning.kcal ? morning.kcal : "-"}</th>
-              <th>{morning.protein ? morning.protein : "-"}</th>
-              <th>{morning.lipid ? morning.lipid : "-"}</th>
-              <th>{morning.carbohydrate ? morning.carbohydrate : "-"}</th>
-              <th>{morning.fiber ? morning.fiber : "-"}</th>
-            </tr>
-            <tr id="lunch">
-              <th>午餐</th>
-              <th>{lunch.kcal ? lunch.kcal : "-"}</th>
-              <th>{lunch.protein ? lunch.protein : "-"}</th>
-              <th>{lunch.lipid ? lunch.lipid : "-"}</th>
-              <th>{lunch.carbohydrate ? lunch.carbohydrate : "-"}</th>
-              <th>{lunch.fiber ? lunch.fiber : "-"}</th>
-            </tr>
-            <tr id="afternoon-snack">
-              <th>午點</th>
-              <th>{afternoon.kcal ? afternoon.kcal : "-"}</th>
-              <th>{afternoon.protein ? afternoon.protein : "-"}</th>
-              <th>{afternoon.lipid ? afternoon.lipid : "-"}</th>
-              <th>{afternoon.carbohydrate ? afternoon.carbohydrate : "-"}</th>
-              <th>{afternoon.fiber ? afternoon.fiber : "-"}</th>
-            </tr>
-            <tr id="dinner">
-              <th>晚餐</th>
-              <th>{dinner.kcal ? dinner.kcal : "-"}</th>
-              <th>{dinner.protein ? dinner.protein : "-"}</th>
-              <th>{dinner.lipid ? dinner.lipid : "-"}</th>
-              <th>{dinner.carbohydrate ? dinner.carbohydrate : "-"}</th>
-              <th>{dinner.fiber ? dinner.fiber : "-"}</th>
-            </tr>
-            <tr id="night-snack">
-              <th>晚點</th>
-              <th>{night.kcal ? night.kcal : "-"}</th>
-              <th>{night.protein ? night.protein : "-"}</th>
-              <th>{night.lipid ? night.lipid : "-"}</th>
-              <th>{night.carbohydrate ? night.carbohydrate : "-"}</th>
-              <th>{night.fiber ? night.fiber : "-"}</th>
-            </tr>
-            <tr id="table-total">
-              <th>總和</th>
-              <th>{parseFloat(getNutrientTotal("kcal").toFixed(1)) || "-"}</th>
-              <th>
-                {parseFloat(getNutrientTotal("protein").toFixed(1)) || "-"}
-              </th>
-              <th>{parseFloat(getNutrientTotal("lipid").toFixed(1)) || "-"}</th>
-              <th>
-                {parseFloat(getNutrientTotal("carbohydrate").toFixed(1)) || "-"}
-              </th>
-              <th>{parseFloat(getNutrientTotal("fiber").toFixed(1)) || "-"}</th>
-            </tr>
-            {/* <tr id="target">
+      <div id="diet-analysis" className={style["diet-analysis"]}>
+        <h3>{date} 飲食分析</h3>
+        <div className={style["analysis-table"]}>
+          <table>
+            <thead>
+              <tr className={style["item-title"]}>
+                <th>　　</th>
+                <th>熱量 (kcal)</th>
+                <th>蛋白質 (g)</th>
+                <th>脂質 (g)</th>
+                <th>碳水化合物 (g)</th>
+                <th>膳食纖維 (g)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="breakfast">
+                <th>早餐</th>
+                <th>{breakfast.kcal ? breakfast.kcal : "-"}</th>
+                <th>{breakfast.protein ? breakfast.protein : "-"}</th>
+                <th>{breakfast.lipid ? breakfast.lipid : "-"}</th>
+                <th>{breakfast.carbohydrate ? breakfast.carbohydrate : "-"}</th>
+                <th>{breakfast.fiber ? breakfast.fiber : "-"}</th>
+              </tr>
+              <tr id="morning-snack">
+                <th>早點</th>
+                <th>{morning.kcal ? morning.kcal : "-"}</th>
+                <th>{morning.protein ? morning.protein : "-"}</th>
+                <th>{morning.lipid ? morning.lipid : "-"}</th>
+                <th>{morning.carbohydrate ? morning.carbohydrate : "-"}</th>
+                <th>{morning.fiber ? morning.fiber : "-"}</th>
+              </tr>
+              <tr id="lunch">
+                <th>午餐</th>
+                <th>{lunch.kcal ? lunch.kcal : "-"}</th>
+                <th>{lunch.protein ? lunch.protein : "-"}</th>
+                <th>{lunch.lipid ? lunch.lipid : "-"}</th>
+                <th>{lunch.carbohydrate ? lunch.carbohydrate : "-"}</th>
+                <th>{lunch.fiber ? lunch.fiber : "-"}</th>
+              </tr>
+              <tr id="afternoon-snack">
+                <th>午點</th>
+                <th>{afternoon.kcal ? afternoon.kcal : "-"}</th>
+                <th>{afternoon.protein ? afternoon.protein : "-"}</th>
+                <th>{afternoon.lipid ? afternoon.lipid : "-"}</th>
+                <th>{afternoon.carbohydrate ? afternoon.carbohydrate : "-"}</th>
+                <th>{afternoon.fiber ? afternoon.fiber : "-"}</th>
+              </tr>
+              <tr id="dinner">
+                <th>晚餐</th>
+                <th>{dinner.kcal ? dinner.kcal : "-"}</th>
+                <th>{dinner.protein ? dinner.protein : "-"}</th>
+                <th>{dinner.lipid ? dinner.lipid : "-"}</th>
+                <th>{dinner.carbohydrate ? dinner.carbohydrate : "-"}</th>
+                <th>{dinner.fiber ? dinner.fiber : "-"}</th>
+              </tr>
+              <tr id="night-snack">
+                <th>晚點</th>
+                <th>{night.kcal ? night.kcal : "-"}</th>
+                <th>{night.protein ? night.protein : "-"}</th>
+                <th>{night.lipid ? night.lipid : "-"}</th>
+                <th>{night.carbohydrate ? night.carbohydrate : "-"}</th>
+                <th>{night.fiber ? night.fiber : "-"}</th>
+              </tr>
+              <tr id="table-total">
+                <th>總和</th>
+                <th>
+                  {parseFloat(getNutrientTotal("kcal").toFixed(1)) || "-"}
+                </th>
+                <th>
+                  {parseFloat(getNutrientTotal("protein").toFixed(1)) || "-"}
+                </th>
+                <th>
+                  {parseFloat(getNutrientTotal("lipid").toFixed(1)) || "-"}
+                </th>
+                <th>
+                  {parseFloat(getNutrientTotal("carbohydrate").toFixed(1)) ||
+                    "-"}
+                </th>
+                <th>
+                  {parseFloat(getNutrientTotal("fiber").toFixed(1)) || "-"}
+                </th>
+              </tr>
+              {/* <tr id="target">
                 <th>目標</th>
               </tr>
               <tr id="resr">
                 <th>剩餘</th>
               </tr> */}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
         {pathName.includes("dietitian") ? (
-          <div>
+          <div className={style.advice}>
             <div>
               <label>
-                給予建議
-                <input
-                  type="textarea"
+                <div>給予建議</div>
+                <textarea
                   value={advice}
                   onChange={bindAdviceHandler}
-                />
+                ></textarea>
               </label>
             </div>
             <button onClick={bindSaveAdviceHandler}>儲存</button>
           </div>
         ) : (
-          <div>
-            <div>營養師建議</div>
+          <div className={style.advice}>
+            <div className={style["advice-title"]}>營養師建議</div>
             <div id="advice">{advice}</div>
           </div>
         )}

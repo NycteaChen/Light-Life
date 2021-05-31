@@ -1,64 +1,71 @@
 import React, { useEffect, useState } from "react";
 import ReserveForm from "../Reverse/ReserveForm.js";
+import style from "../../../style/findDietitian.module.scss";
 
-function DietitianData({ props, setIsCheck, setReserve, profile }) {
-  const [isReserve, setIsReserve] = useState(false); //false
-  const bindReserveHandler = () => {
-    setIsReserve(true);
-  };
+function DietitianData({ props, setIsChecked, setReserve, profile }) {
   const bindCloseHandler = () => {
-    setIsCheck(false);
+    setIsChecked(false);
   };
   return (
-    <>
+    <div className={style["dietitian-details"]}>
       <div>
-        <div onClick={bindCloseHandler}>X</div>
-        <div>
-          <span>{props.name}</span> 營養師
+        <i
+          className={`${style.close} fa fa-times`}
+          aria-hidden="true"
+          onClick={bindCloseHandler}
+        ></i>
+      </div>
+      <div>
+        <div className={style.name}>{props.name}營養師</div>
+        <div className={style.img}>
+          <img src={props.image} alt="dietitian" />
         </div>
-        <img
-          src={props.image}
-          alt="dietitian"
-          style={{ width: "200px", height: "200px", borderRadius: "50%" }}
-        />
-        <div>
+      </div>
+      <div className={style.content}>
+        <div className={style.gender}>
           性別：<span>{props.gender}</span>
         </div>
-        <div>
-          最高學歷：
-          <span>
-            {props.education.school}
-            {props.education.department} {props.education.degree}
-          </span>
+        <div className={style.education}>
+          <div>最高學歷：{props.education.school}</div>
+          <div>
+            <span>{props.education.department} </span>
+            <span>{props.education.degree}</span>
+          </div>
         </div>
-        <div>
-          專長：
-          <span>
-            {props.skills.map((s, index) => (
-              <span key={index}>
-                {s}
-                {props.skills[index + 1] ? "、" : ""}
+        <>
+          {props.skills.weightControl ||
+          props.skills.sportNT ||
+          props.skills.threeHigh ||
+          props.skills.bloodSugar ? (
+            <div className={style.skills}>
+              專長：
+              <span>
+                {props.skills.weightControl ? "體重管理　" : ""}
+                {props.skills.sportNT ? "運動營養　" : ""}
+                {props.skills.threeHigh ? "三高控制　" : ""}
+                {props.skills.bloodSugar ? "血糖控制" : ""}
               </span>
-            ))}
-          </span>
-        </div>
-        <div>
-          <div>其他</div>
-          <div>{props.other}</div>
-        </div>
-        <button onClick={bindReserveHandler}>發送預約邀請</button>
-        {isReserve ? (
-          <ReserveForm
-            setIsReserve={setIsReserve}
-            props={props}
-            setReserve={setReserve}
-            profile={profile}
-          />
+            </div>
+          ) : (
+            ""
+          )}
+        </>
+        {props.other ? (
+          <div className={style.other}>
+            <div>其他</div>
+            <div>{props.other}</div>
+          </div>
         ) : (
           ""
         )}
       </div>
-    </>
+      <ReserveForm
+        props={props}
+        setReserve={setReserve}
+        profile={profile}
+        setIsChecked={setIsChecked}
+      />
+    </div>
   );
 }
 
