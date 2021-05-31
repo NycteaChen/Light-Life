@@ -1,0 +1,228 @@
+.dietitianList {
+  img {
+    transition: all 0.5s;
+  }
+  text-align: center;
+  display: grid;
+  margin: auto;
+  transition: all 0.5s;
+  .dietitian {
+    width: 100%;
+    max-width: 220px;
+    padding: 20px 20px 10px;
+    margin: 15px auto;
+    background-color: white;
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+    }
+    .info {
+      display: none;
+    }
+    .col {
+      margin: 10px 0;
+      .name {
+        margin-bottom: 5px;
+      }
+      button {
+        padding: 4px 7px;
+        border: 1px solid blue;
+        background-color: aqua;
+      }
+    }
+  }
+  @media (min-width: 520px) {
+    max-width: 500px;
+    margin: auto;
+    grid-template-columns: repeat(2, 1fr);
+
+    .dietitian {
+      img {
+        width: 180px;
+        height: 180px;
+      }
+    }
+  }
+  @media (min-width: 768px) {
+    max-width: 850px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 1024px) {
+    display: block;
+    margin-left: 300px;
+    .dietitian {
+      max-width: unset;
+      display: grid;
+      grid-template-columns: 25% 75%;
+      .col {
+        display: flex;
+        margin-left: 30px;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px dotted blue;
+        height: 50px;
+        padding-bottom: 5px;
+      }
+      .info {
+        display: block;
+        margin-left: 30px;
+        & > div:first-of-type {
+          margin: 20px 0 10px;
+        }
+      }
+    }
+  }
+}
+
+.dietitian-details {
+  text-align: left;
+  width: 90%;
+  max-width: 450px;
+  max-height: 90%;
+  overflow: auto;
+  position: fixed;
+  padding: 20px 10px;
+  top: 30px;
+  right: 0;
+  left: 0;
+  margin: auto;
+  background-color: white;
+
+  & > div:first-of-type {
+    text-align: right;
+    margin-right: 20px;
+
+    cursor: pointer;
+
+    .close {
+      transition: all 0.5s;
+      font-size: 20px;
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .img,
+  .name,
+  .invite-button {
+    text-align: center;
+  }
+
+  .content {
+    transition: all 0.5s;
+    .education {
+      margin: auto;
+      & > div:first-of-type {
+        white-space: nowrap;
+      }
+      & > div:last-of-type {
+        margin-left: 81px;
+        & > span:last-of-type {
+          display: block;
+        }
+      }
+    }
+    .other {
+      margin-bottom: 10px;
+      & > div:last-of-type {
+        margin-top: 5px;
+        padding: 3px 7px;
+        max-width: 250px;
+        max-height: 100px;
+        overflow: auto;
+        border-radius: 5px;
+        border: 1px solid blue;
+      }
+    }
+    & > div {
+      margin: 10px 0;
+    }
+  }
+  @media (min-width: 320px) {
+    .content {
+      margin-left: 20%;
+      .gender,
+      .skills,
+      .other {
+        margin-left: 32px;
+      }
+    }
+  }
+  @media (min-width: 520px) {
+    max-width: 520px;
+    .content {
+      .education {
+        & span:last-of-type {
+          display: inline-block !important;
+        }
+      }
+    }
+  }
+
+  .reserve-form {
+    margin-top: 20px;
+    border-top: 1px solid black;
+    text-align: center;
+    padding: 10px;
+    .form {
+      margin: 10px 0;
+      label {
+        input,
+        textarea {
+          margin: 5px 0 10px;
+        }
+        textarea {
+          height: 3rem;
+          width: 100%;
+          max-width: 180px;
+
+          transition: all 0.5s;
+        }
+      }
+    }
+    @media (min-width: 520px) {
+      .form {
+        label {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          div {
+            margin-right: 15px;
+          }
+        }
+        & > label {
+          align-items: unset;
+          margin-left: 5px;
+          div {
+            margin-top: 5px;
+          }
+        }
+      }
+    }
+    @media (min-width: 1024px) {
+      .form {
+        & > div:first-of-type {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+          label {
+            div {
+              margin-bottom: 5px;
+            }
+          }
+        }
+
+        & > label {
+          justify-content: unset;
+          margin-left: 0;
+          textarea {
+            max-width: 384px;
+            height: 5rem;
+          }
+        }
+      }
+    }
+  }
+}

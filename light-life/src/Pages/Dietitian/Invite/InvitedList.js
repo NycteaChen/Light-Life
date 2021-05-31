@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import firebase from "firebase/app";
+import "firebase/firestore";
 import ShowInviterData from "./ShowInviterData.js";
-import "../../../style/whoInvite.scss";
+import style from "../../../style/whoInvite.module.scss";
+import { setMilliseconds } from "date-fns";
 
 function InvitedList({ invitedList, setInvitedList }) {
   const [isChecked, setIsChecked] = useState(false);
   const [buttonIndex, setButtonIndex] = useState();
+  const { dID } = useParams();
+
   const checkInviter = (e) => {
     if (e.target.id) {
       setButtonIndex(e.target.id);
@@ -16,19 +22,19 @@ function InvitedList({ invitedList, setInvitedList }) {
 
   console.log(invitedList);
   return (
-    <div className="whoInvite">
+    <div className={style.whoInvite}>
       {invitedList.length > 0 ? (
-        <div className="invite-number">
-          有<span>{invitedList.length}</span> 位客人預約您的服務
+        <div className={style["invite-number"]}>
+          有 <span>{invitedList.length}</span> 位客人預約您的服務
         </div>
       ) : (
-        <div className="invite-number">目前沒有預約喔</div>
+        <div className={style["invite-number"]}>目前沒有預約喔</div>
       )}
-      <div className="inviters">
+      <div className={style.inviters}>
         {invitedList.map((i, index) => (
-          <div key={index} className="inviter">
-            <div className="invite-message">
-              <div className="inviter-name">
+          <div key={index} className={style.inviter}>
+            <div className={style["invite-message"]}>
+              <div className={style["inviter-name"]}>
                 <span>
                   {i.inviterName} {i.inviterGender === "男" ? "先生" : "小姐"}
                 </span>
@@ -42,17 +48,17 @@ function InvitedList({ invitedList, setInvitedList }) {
         ))}
       </div>
       {isChecked && invitedList.length > 0 ? (
-        <div className="invite-data" style={{ display: "block" }}>
+        <div className={style["invite-data"]} style={{ display: "block" }}>
           <i
             className="fa fa-times"
             aria-hidden="true"
             onClick={checkInviter}
           ></i>
           <ShowInviterData
-            props={invitedList[buttonIndex]}
             idx={buttonIndex}
             invitedList={invitedList}
             setInvitedList={setInvitedList}
+            setIsChecked={setIsChecked}
           />
         </div>
       ) : (

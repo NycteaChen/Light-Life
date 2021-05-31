@@ -11,11 +11,12 @@ import {
 } from "react-router-dom";
 
 import TargetHandler from "../../Components/TargetHandler.js";
+import style from "../../../style/target.module.scss";
 
 function CustomerTarget() {
   const [target, setTarget] = useState([]);
   const params = useParams();
-
+  console.log(params);
   useEffect(() => {
     firebase
       .firestore()
@@ -43,13 +44,13 @@ function CustomerTarget() {
           });
       });
   }, []);
+  console.log(target);
 
   return (
     <>
-      <div id="dietitian-target">
-        <h2>目標設定</h2>
+      <div className={style["target-setting"]} id="dietitian-target">
         <h3>已設立目標</h3>
-        <div id="customer-target">
+        <div className={style["c-targets"]}>
           <TargetHandler target={target} />
         </div>
       </div>
