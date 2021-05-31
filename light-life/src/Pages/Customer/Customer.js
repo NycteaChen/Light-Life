@@ -51,11 +51,34 @@ function Customer() {
             setDName(doc.data().name);
           }
         });
-        return users;
-      })
-      .then((res) => {
-        setDietitians(res);
+        firebase
+          .firestore()
+          .collection("reserve")
+          .where("inviterID", "==", customerID)
+          .get()
+          .then((docs) => {
+            const reserveArray = [];
+            docs.forEach((doc) => {
+              reserveArray.push(doc.data());
+              console.log(doc);
+            });
+            let user;
+            reserveArray.forEach((r) => {
+              user = users.filter(
+                (u) =>
+                  (u.id === r.dietitian &&
+                    (r.status !== "1") & (r.status !== "0")) ||
+                  u.id !== r.dietitian
+              );
+            });
+            setDietitians(user);
+          });
+
+        // return users;
       });
+    // .then((res) => {
+    //   setDietitians(res);
+    // });
     firebase
       .firestore()
       .collection("reserve")
