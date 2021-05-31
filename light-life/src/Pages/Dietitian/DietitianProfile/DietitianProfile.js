@@ -3,24 +3,28 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/dietitianProfile.module.scss";
 
-function DietitianProfile({ profile }) {
+function DietitianProfile({ profile, setProfile }) {
   const db = firebase.firestore();
   const storage = firebase.storage();
   const { name, image, id, gender, email, education, skills, other } = profile;
-  const { school, department, degree } = education;
-  const { threeHigh, sportNT, weightControl, bloodSugar } = skills;
   const [trigger, setTrigger] = useState(true);
-  const [input, setInput] = useState({});
   const [edu, setEdu] = useState({
-    school: school,
-    department: department,
-    degree: degree,
+    school: education ? education.school : "",
+    department: education ? education.department : "",
+    degree: education ? education.degree : "",
   });
   const [skill, setSkill] = useState({
-    threeHigh: threeHigh,
-    sportNT: sportNT,
-    weightControl: weightControl,
-    bloodSugar: bloodSugar,
+    threeHigh: skills ? skills.threeHigh : false,
+    sportNT: skills ? skills.sportNT : false,
+    weightControl: skills ? skills.weightControl : false,
+    bloodSugar: skills ? skills.bloodSugar : false,
+  });
+  const [input, setInput] = useState({
+    name: name,
+    image: image,
+    gender: gender ? gender : false,
+    education: edu,
+    skills: skill,
   });
 
   async function postImg(image) {
@@ -76,45 +80,55 @@ function DietitianProfile({ profile }) {
     {
     }
   };
-
   useEffect(() => {
     console.log("test");
   }, [trigger]);
 
   const saveDietitianProfile = async () => {
-    if (input.imageFile) {
-      const imageUrl = await getImg(input.imageFile);
-      delete input.imageFile;
-      delete input.previewImg;
-      setInput({
-        ...input,
-        image: imageUrl,
-      });
-      db.collection("dietitians")
-        .doc(id)
-        .update({
+    if (
+      input.name &&
+      input.gender &&
+      edu.school &&
+      edu.department &&
+      edu.degree
+    ) {
+      if (input.imageFile) {
+        const imageUrl = await getImg(input.imageFile);
+        delete input.imageFile;
+        delete input.previewImg;
+        setInput({
           ...input,
           image: imageUrl,
-        })
-        .then(() => {
-          setTrigger(!trigger);
-          alert("儲存囉");
         });
+        db.collection("dietitians")
+          .doc(id)
+          .update({
+            ...input,
+            image: imageUrl,
+          })
+          .then(() => {
+            setTrigger(!trigger);
+            alert("儲存囉");
+            setProfile({ ...profile, ...input, image: imageUrl });
+          });
+      } else {
+        db.collection("dietitians")
+          .doc(id)
+          .update(input)
+          .then(() => {
+            setTrigger(!trigger);
+            alert("儲存囉");
+            setProfile({ ...profile, ...input });
+          });
+      }
     } else {
-      db.collection("dietitians")
-        .doc(id)
-        .update(input)
-        .then(() => {
-          setTrigger(!trigger);
-          alert("儲存囉");
-        });
+      alert("必填資料未填完整");
     }
   };
-  console.log(input);
   return (
     <>
       <div className={style["edit-Dprofile"]}>
-        <div className={style["basic-profile"]}>
+        <form className={style["basic-profile"]} action="javascript:void(0);">
           <div className={style.flexbox}>
             <div className={style.img}>
               <a
@@ -166,6 +180,7 @@ function DietitianProfile({ profile }) {
                   type="text"
                   name="name"
                   id={style.name}
+                  required
                   value={
                     input.name || input.name === ""
                       ? input.name
@@ -181,6 +196,7 @@ function DietitianProfile({ profile }) {
                     type="radio"
                     name="gender"
                     value="男"
+                    required
                     checked={
                       input.gender
                         ? input.gender === "男"
@@ -197,6 +213,7 @@ function DietitianProfile({ profile }) {
                     type="radio"
                     name="gender"
                     value="女"
+                    required
                     checked={
                       input.gender
                         ? input.gender === "女"
@@ -223,6 +240,7 @@ function DietitianProfile({ profile }) {
                   name="school"
                   value={edu.school ? edu.school : ""}
                   onChange={getInputHandler}
+                  required
                 />
                 <input
                   type="text"
@@ -230,6 +248,7 @@ function DietitianProfile({ profile }) {
                   name="department"
                   value={edu.department ? edu.department : ""}
                   onChange={getInputHandler}
+                  required
                 />
                 <div>
                   <label>
@@ -239,6 +258,7 @@ function DietitianProfile({ profile }) {
                       name="degree"
                       value="學士"
                       onChange={getInputHandler}
+                      required
                       checked={edu.degree === "學士" ? true : false}
                     />
                     學士
@@ -250,6 +270,7 @@ function DietitianProfile({ profile }) {
                       name="degree"
                       value="碩士"
                       onChange={getInputHandler}
+                      required
                       checked={edu.degree === "碩士" ? true : false}
                     />
                     碩士
@@ -260,6 +281,7 @@ function DietitianProfile({ profile }) {
                       className="education"
                       name="degree"
                       value="博士"
+                      required
                       onChange={getInputHandler}
                       checked={edu.degree === "博士" ? true : false}
                     />
@@ -333,7 +355,7 @@ function DietitianProfile({ profile }) {
             </div>
           </div>
           <button onClick={saveDietitianProfile}>儲存</button>
-        </div>
+        </form>
       </div>
     </>
   );

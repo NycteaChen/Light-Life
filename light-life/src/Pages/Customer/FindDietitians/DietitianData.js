@@ -32,19 +32,32 @@ function DietitianData({ props, setIsChecked, setReserve, profile }) {
             <span>{props.education.degree}</span>
           </div>
         </div>
-        <div className={style.skills}>
-          專長：
-          <span>
-            {props.skills.weightControl ? "體重管理　" : ""}
-            {props.skills.sportNT ? "運動營養　" : ""}
-            {props.skills.threeHigh ? "三高控制　" : ""}
-            {props.skills.bloodSugar ? "血糖控制" : ""}
-          </span>
-        </div>
-        <div className={style.other}>
-          <div>其他</div>
-          <div>{props.other}</div>
-        </div>
+        <>
+          {props.skills.weightControl ||
+          props.skills.sportNT ||
+          props.skills.threeHigh ||
+          props.skills.bloodSugar ? (
+            <div className={style.skills}>
+              專長：
+              <span>
+                {props.skills.weightControl ? "體重管理　" : ""}
+                {props.skills.sportNT ? "運動營養　" : ""}
+                {props.skills.threeHigh ? "三高控制　" : ""}
+                {props.skills.bloodSugar ? "血糖控制" : ""}
+              </span>
+            </div>
+          ) : (
+            ""
+          )}
+        </>
+        {props.other ? (
+          <div className={style.other}>
+            <div>其他</div>
+            <div>{props.other}</div>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <ReserveForm
         props={props}

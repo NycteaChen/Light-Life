@@ -136,15 +136,20 @@ function Dietitian() {
       });
   };
 
-  const changeServiceStatusHandler = () => {
-    setProfile({ ...profile, isServing: !profile.isServing });
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dietitianID)
-      .update({ isServing: !profile.isServing });
-  };
+  console.log(profile);
 
+  const changeServiceStatusHandler = () => {
+    if (profile.education && profile.gender) {
+      setProfile({ ...profile, isServing: !profile.isServing });
+      firebase
+        .firestore()
+        .collection("dietitians")
+        .doc(dietitianID)
+        .update({ isServing: !profile.isServing });
+    } else {
+      alert("您的個人資料尚未填寫完整喔");
+    }
+  };
   // if (users.length > 0) {
   if (profile.name) {
     return (
@@ -218,9 +223,9 @@ function Dietitian() {
           </nav>
 
           <div className={basic.profile}>
-            <img src={profile ? profile.image : noImage} />
+            <img src={profile.image ? profile.image : noImage} />
             <div className={basic.welcome}>
-              <div>{profile ? profile.name : ""}，您好</div>
+              <div>{profile.name ? profile.name : ""}，您好</div>
               <div className={basic["service-status"]}>
                 <div>服務狀態：{profile.isServing ? "公開" : "私人"}</div>
                 <div>
@@ -273,7 +278,7 @@ function Dietitian() {
               </div>
             </Route>
             <Route exact path={`/dietitian/:dID/profile`}>
-              <DietitianProfile profile={profile} />
+              <DietitianProfile profile={profile} setProfile={setProfile} />
             </Route>
 
             <Route exact path={`/dietitian/:dID/findCustomers`}>
