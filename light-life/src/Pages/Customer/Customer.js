@@ -238,7 +238,13 @@ function Customer() {
 
         <Switch>
           <Route exact path="/customer/:cID">
-            <div className={style.indexWelcome}>{profile.name}，歡迎回來！</div>
+            <div className={style.indexMessage}>
+              <div>{profile.name}，歡迎回來！</div>
+              <div>當前進行之服務時間：</div>
+              <div>
+                <div>已預訂服務</div>
+              </div>
+            </div>
           </Route>
           <Route exact path="/customer/:cID/profile">
             <CustomerProfile props={profile} />

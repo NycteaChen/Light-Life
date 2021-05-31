@@ -67,7 +67,7 @@ function Publish() {
   const publishModalHandler = (e) => {
     switch (e.target.id) {
       case "add":
-        if (publishData.length < 1) {
+        if (publishData.length < 1 || publishData[0].status !== "0") {
           setDisplay("block");
         } else {
           alert("目前已有刊登了喔");
@@ -203,7 +203,8 @@ function Publish() {
           {publishData ? (
             publishData[0] &&
             publishData[0].whoInvite &&
-            publishData[0].status === "0" ? (
+            publishData[0].status === "0" &&
+            publishData[0].whoInvite.find((i) => i.status === "0") ? (
               publishData[0].whoInvite.map((i, index) => (
                 <>
                   {i.status === "0" ? (

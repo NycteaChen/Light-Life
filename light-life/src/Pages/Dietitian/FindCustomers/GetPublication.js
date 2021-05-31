@@ -12,12 +12,12 @@ import PublicationData from "./PublicationData.js";
 import style from "../../../style/findCustomers.module.scss";
 
 function GetPublication() {
-  const [publish, setPublish] = useState([]);
+  const [publish, setPublish] = useState(null);
   const [display, setDisplay] = useState("none");
   const [idx, setIdx] = useState("");
-  const dID = useParams().dID;
+  const { dID } = useParams();
   const date = new Date(+new Date() + 8 * 3600 * 1000).getTime();
-  console.log(publish);
+
   useEffect(() => {
     firebase
       .firestore()
@@ -25,9 +25,12 @@ function GetPublication() {
       .get()
       .then((docs) => {
         const publishArray = [];
-        docs.forEach((doc) => {
-          publishArray.push(doc.data());
-        });
+        if (!docs.empty) {
+          console.log(docs);
+          docs.forEach((doc) => {
+            publishArray.push(doc.data());
+          });
+        }
         return publishArray;
       })
       .then((res) => {
@@ -49,7 +52,7 @@ function GetPublication() {
         setPublish(res);
       });
   }, []);
-
+  console.log(publish);
   const checkDetailsHandler = (e) => {
     setIdx(e.target.id);
     setDisplay("block");
@@ -77,8 +80,13 @@ function GetPublication() {
       <div className={style.publicationData}>
         <h3>刊登中</h3>
 
-        {publish
-          ? publish.map((p, pubIndex) =>
+        {publish ? (
+          publish.find(
+            (i) =>
+              !i.whoInvite ||
+              (i.whoInvite && !i.whoInvite.find((d) => d.dietitianID === dID))
+          ) ? (
+            publish.map((p, pubIndex) =>
               (!p.whoInvite ||
                 (p.whoInvite &&
                   !p.whoInvite.find((e) => e.dietitianID === dID))) &&
@@ -120,77 +128,94 @@ function GetPublication() {
                 ""
               )
             )
-          : ""}
+          ) : (
+            <div>尚未有刊登</div>
+          )
+        ) : (
+          <div>loading</div>
+        )}
       </div>
 
       <div className={style["inviting-status"]}>
         <h3>邀請狀態</h3>
         <div className={style["inviting-list"]}>
-          {publish.map((p, pubIndex) =>
-            p.whoInvite && p.whoInvite.find((e) => e.dietitianID === dID)
-              ? p.whoInvite.map((e, index) =>
-                  e.dietitianID === dID ? (
-                    <>
-                      <div className={style.invite} key={index}>
-                        <div>
-                          您向 {p.name} {p.gender === "男" ? "先生" : "小姐"}
-                          提出邀請
-                        </div>
-                        <div className={style.buttons}>
-                          {p.whoInvite[index].status === "0" ? (
-                            <>
-                              <button
-                                className={style.check}
-                                id={pubIndex}
-                                onClick={checkDetailsHandler}
-                              >
-                                查看詳情
-                              </button>
-                              <button
-                                id={pubIndex}
-                                className={style.cancel}
-                                onClick={cancelInviteHandler}
-                              >
-                                取消邀請
-                              </button>
-                            </>
-                          ) : p.whoInvite[index].status === "1" ? (
-                            <>
-                              <button
-                                className={style.check}
-                                id={pubIndex}
-                                onClick={checkDetailsHandler}
-                              >
-                                查看詳情
-                              </button>
-                              <button className={style.cancel}>成功</button>
-                            </>
-                          ) : p.whoInvite[index].status === "2" ? (
-                            <button className={style.cancel}>婉拒</button>
-                          ) : p.whoInvite[index].status === "3" ? (
-                            <button className={style.cancel}>逾期</button>
+          {publish ? (
+            publish.find(
+              (i) =>
+                i.whoInvite && i.whoInvite.find((e) => e.dietitianID === dID)
+            ) ? (
+              publish.map((p, pubIndex) =>
+                p.whoInvite
+                  ? p.whoInvite.map((e, index) =>
+                      e.dietitianID === dID ? (
+                        <>
+                          <div className={style.invite} key={index}>
+                            <div>
+                              您向 {p.name}{" "}
+                              {p.gender === "男" ? "先生" : "小姐"}
+                              提出邀請
+                            </div>
+                            <div className={style.buttons}>
+                              {p.whoInvite[index].status === "0" ? (
+                                <>
+                                  <button
+                                    className={style.check}
+                                    id={pubIndex}
+                                    onClick={checkDetailsHandler}
+                                  >
+                                    查看詳情
+                                  </button>
+                                  <button
+                                    id={pubIndex}
+                                    className={style.cancel}
+                                    onClick={cancelInviteHandler}
+                                  >
+                                    取消邀請
+                                  </button>
+                                </>
+                              ) : p.whoInvite[index].status === "1" ? (
+                                <>
+                                  <button
+                                    className={style.check}
+                                    id={pubIndex}
+                                    onClick={checkDetailsHandler}
+                                  >
+                                    查看詳情
+                                  </button>
+                                  <button className={style.cancel}>成功</button>
+                                </>
+                              ) : p.whoInvite[index].status === "2" ? (
+                                <button className={style.cancel}>婉拒</button>
+                              ) : p.whoInvite[index].status === "3" ? (
+                                <button className={style.cancel}>逾期</button>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </div>
+
+                          {+idx == pubIndex ? (
+                            <PublicationData
+                              key={p.name}
+                              publish={p}
+                              display={display}
+                              setDisplay={setDisplay}
+                            />
                           ) : (
                             ""
                           )}
-                        </div>
-                      </div>
-
-                      {+idx == pubIndex ? (
-                        <PublicationData
-                          key={p.name}
-                          publish={p}
-                          display={display}
-                          setDisplay={setDisplay}
-                        />
+                        </>
                       ) : (
                         ""
-                      )}
-                    </>
-                  ) : (
-                    ""
-                  )
-                )
-              : ""
+                      )
+                    )
+                  : ""
+              )
+            ) : (
+              <div>尚未有邀請</div>
+            )
+          ) : (
+            <div>loading</div>
           )}
         </div>
       </div>
