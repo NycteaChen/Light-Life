@@ -273,7 +273,7 @@ function Dietitian() {
 
           <Switch>
             <Route exact path="/dietitian/:dID">
-              <div className={basic.indexWelcome}>
+              <div className={basic.indexMessage}>
                 {profile.name}營養師，歡迎回來！
               </div>
             </Route>

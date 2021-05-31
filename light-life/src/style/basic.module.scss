@@ -68,7 +68,7 @@
 
 .d-main {
   padding: 20px;
-  .indexWelcome {
+  .indexMessage {
     // display: none;
     text-align: center;
     font-size: 20px;
@@ -79,7 +79,7 @@
     & {
       height: calc(100vh - 77px);
       overflow: auto;
-      .indexWelcome {
+      .indexMessage {
         text-align: left;
         display: block;
         margin-top: 10px;

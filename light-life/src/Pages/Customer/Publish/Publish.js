@@ -253,7 +253,9 @@ function Publish() {
                     <div className={style.subject}>{o.subject}</div>
                   </div>
                   {o.status === "1" ? (
-                    <div className={style.success}>成功</div>
+                    <>
+                      <div className={style.success}>成功</div>
+                    </>
                   ) : o.status === "3" ? (
                     <div className={style.expired}>已過期</div>
                   ) : (

@@ -4,6 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import noImage from "../../../images/noimage.png";
 import style from "../../../style/whoInvite.module.scss";
+import { add } from "date-fns";
 
 function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
   const props = invitedList[+idx];
@@ -29,14 +30,21 @@ function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
       case "accept":
         firebase
           .firestore()
-          .collection("dietitians")
-          .doc(dID)
-          .collection("customers")
-          .doc(props.inviterID)
-          .set({
+          // .collection("dietitians")
+          // .doc(dID)
+          // .collection("customers")
+          // .doc(props.inviterID)
+          // .set({
+          //   startDate: props.reserveStartDate,
+          //   endDate: props.reserveEndDate,
+          //   isServing: false,
+          // })
+          .collection("pending")
+          .add({
             startDate: props.reserveStartDate,
             endDate: props.reserveEndDate,
-            isServing: false,
+            dietitian: dID,
+            customer: props.inviterID,
           })
           .then(() => {
             firebase
