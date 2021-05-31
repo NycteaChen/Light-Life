@@ -223,14 +223,16 @@ function Dietitian() {
               <div>{profile ? profile.name : ""}，您好</div>
               <div className={basic["service-status"]}>
                 <div>服務狀態：{profile.isServing ? "公開" : "私人"}</div>
-                <label className={basic.label}>
+                <div>
                   <input
                     type="checkbox"
+                    id="service"
                     className={`${basic.toggle} ${basic["toggle-round"]}`}
                     checked={profile.isServing ? true : false}
                     onClick={changeServiceStatusHandler}
                   />
-                </label>
+                  <label className={basic.label} for="service"></label>
+                </div>
               </div>
             </div>
             <div className={basic["d-List"]}>
