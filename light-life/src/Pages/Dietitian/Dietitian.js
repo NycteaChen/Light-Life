@@ -21,6 +21,7 @@ import GetPublication from "../Dietitian/FindCustomers/GetPublication.js";
 import basic from "../../style/basic.module.scss";
 import style from "../../style/customerData.module.scss";
 import customer from "../../style/customerProfile.module.scss";
+import styled from "styled-components";
 
 function Dietitian() {
   const [users, setUsers] = useState([]);
@@ -135,6 +136,15 @@ function Dietitian() {
       });
   };
 
+  const changeServiceStatusHandler = () => {
+    setProfile({ ...profile, isServing: !profile.isServing });
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .doc(dietitianID)
+      .update({ isServing: !profile.isServing });
+  };
+
   // if (users.length > 0) {
   if (profile.name) {
     return (
@@ -212,9 +222,14 @@ function Dietitian() {
             <div className={basic.welcome}>
               <div>{profile ? profile.name : ""}，您好</div>
               <div className={basic["service-status"]}>
-                <div>服務開放中</div>
-                <label>
-                  <input type="checkbox" />
+                <div>服務狀態：{profile.isServing ? "公開" : "私人"}</div>
+                <label className={basic.label}>
+                  <input
+                    type="checkbox"
+                    className={`${basic.toggle} ${basic["toggle-round"]}`}
+                    checked={profile.isServing ? true : false}
+                    onClick={changeServiceStatusHandler}
+                  />
                 </label>
               </div>
             </div>

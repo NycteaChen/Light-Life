@@ -33,7 +33,7 @@ function GetPublication() {
       .then((res) => {
         res.forEach((m, index) => {
           const startDate = new Date(m.startDate).getTime();
-          if (startDate < date) {
+          if (startDate < date && m.whoInvite) {
             m.whoInvite.forEach((i) => {
               if (i.status === "0") {
                 i.status = "3";
