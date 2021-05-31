@@ -26,8 +26,7 @@ function Customer() {
   const customerID = useParams().cID;
   const [dName, setDName] = useState();
   const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
-
-  let dID;
+  const [dID, setDID] = useState("");
   useEffect(() => {
     firebase
       .firestore()
@@ -35,9 +34,35 @@ function Customer() {
       .doc(`${customerID}`)
       .get()
       .then((doc) => {
-        dID = doc.data().dietitian;
+        setDID(doc.data().dietitian);
         setProfile(doc.data());
       });
+    firebase
+      .firestore()
+      .collection("reserve")
+      .where("inviterID", "==", customerID)
+      .get()
+      .then((docs) => {
+        const reserveArray = [];
+        docs.forEach((doc) => {
+          reserveArray.push(doc.data());
+        });
+        reserveArray.forEach((e) => {
+          const startDate = new Date(e.reserveStartDate).getTime();
+          if (startDate <= today) {
+            e.status = "3";
+            firebase
+              .firestore()
+              .collection("reserve")
+              .doc(e.reserveID)
+              .update(e);
+          }
+        });
+        setReserve(reserveArray);
+      });
+  }, []);
+
+  useEffect(() => {
     firebase
       .firestore()
       .collection("dietitians")
@@ -47,7 +72,7 @@ function Customer() {
         snapshot.forEach((doc) => {
           if (doc.data().id !== dID && doc.data().isServing) {
             users.push(doc.data());
-          } else {
+          } else if (doc.data().isServing) {
             setDName(doc.data().name);
           }
         });
@@ -79,32 +104,8 @@ function Customer() {
     // .then((res) => {
     //   setDietitians(res);
     // });
-    firebase
-      .firestore()
-      .collection("reserve")
-      .where("inviterID", "==", customerID)
-      .get()
-      .then((docs) => {
-        const reserveArray = [];
-
-        docs.forEach((doc) => {
-          reserveArray.push(doc.data());
-        });
-        reserveArray.forEach((e) => {
-          const startDate = new Date(e.reserveStartDate).getTime();
-          if (startDate <= today) {
-            e.status = "3";
-            firebase
-              .firestore()
-              .collection("reserve")
-              .doc(e.reserveID)
-              .update(e);
-          }
-        });
-        console.log(reserveArray);
-        setReserve(reserveArray);
-      });
-  }, []);
+  }, [reserve]);
+  console.log(dietitians);
   const logoutHandler = () => {
     firebase
       .auth()
