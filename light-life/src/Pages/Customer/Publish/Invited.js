@@ -31,6 +31,7 @@ function Invited({
       });
   }, []);
   console.log(oldPublish);
+  console.log(publishData[0]);
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":
@@ -40,6 +41,7 @@ function Invited({
         });
 
         publishData[0].whoInvite[+idx].status = "1";
+        // firebase.firestore().collection("dietitians").doc()
         firebase
           .firestore()
           .collection("publish")
@@ -82,7 +84,7 @@ function Invited({
         break;
     }
   };
-
+  console.log(publishData);
   return (
     <>
       {profile && profile.name ? (

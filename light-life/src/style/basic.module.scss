@@ -69,7 +69,10 @@
 .d-main {
   padding: 20px;
   .indexWelcome {
-    display: none;
+    // display: none;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
   }
 
   @media (min-width: 1024px) {
@@ -77,11 +80,10 @@
       height: calc(100vh - 77px);
       overflow: auto;
       .indexWelcome {
+        text-align: left;
         display: block;
         margin-top: 10px;
         margin-left: 260px;
-        font-size: 20px;
-        font-weight: 700;
       }
     }
   }
@@ -164,65 +166,71 @@
     div {
       margin: 10px 0;
     }
-    .service-status {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      & > div:last-of-type {
-        .label {
-          padding: 2px;
-          width: 40px;
-          height: 20px;
-          cursor: pointer;
-          margin-bottom: 0;
-          background-color: #ff6666;
-          border-radius: 60px;
-          transition: background-color 0.4s;
-          outline: none;
-          user-select: none;
-          position: relative;
-          top: 2px;
-          &::before,
-          &::after {
-            display: block;
-            position: absolute;
-            content: "";
-          }
-          &::before {
-            top: 2px;
-            left: 2px;
-            bottom: 2px;
-            right: 2px;
-            background-color: #ffffff;
+    .welcome {
+      margin-top: 15px;
+      div {
+        margin: 0 0 5px;
+      }
+      .service-status {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        & > div:last-of-type {
+          .label {
+            padding: 2px;
+            width: 40px;
+            height: 20px;
+            cursor: pointer;
+            margin-bottom: 0;
+            background-color: #ff6666;
             border-radius: 60px;
             transition: background-color 0.4s;
-          }
-          &::after {
-            top: 4px;
-            left: 4px;
-            bottom: 4px;
-            width: 18px;
-            border-radius: 18px;
-            background-color: #ff6666;
-            transition: margin 0.4s, background-color 0.4s;
-          }
+            outline: none;
+            user-select: none;
+            position: relative;
+            top: 2px;
+            &::before,
+            &::after {
+              display: block;
+              position: absolute;
+              content: "";
+            }
+            &::before {
+              top: 2px;
+              left: 2px;
+              bottom: 2px;
+              right: 2px;
+              background-color: #ffffff;
+              border-radius: 60px;
+              transition: background-color 0.4s;
+            }
+            &::after {
+              top: 4px;
+              left: 4px;
+              bottom: 4px;
+              width: 18px;
+              border-radius: 18px;
+              background-color: #ff6666;
+              transition: margin 0.4s, background-color 0.4s;
+            }
 
-          @media (min-width: 1024px) {
-            position: absolute;
-            top: 33px;
-            right: -10px;
+            @media (min-width: 1024px) {
+              position: absolute;
+              top: 33px;
+              right: -10px;
+            }
           }
-        }
-        .toggle {
-          visibility: hidden;
-        }
-        .toggle-round:checked + label {
-          background-color: #8ce196;
-        }
-        .toggle-round:checked + label:after {
-          margin-left: 13px;
-          background-color: #8ce196;
+          .toggle {
+            visibility: hidden;
+          }
+          .toggle-round:checked + label {
+            background-color: #8ce196;
+          }
+          .toggle-round:checked + label:after {
+            margin-left: 13px;
+            background-color: #8ce196;
+          }
         }
       }
     }
@@ -307,16 +315,18 @@
           text-align: left;
           margin: 0px;
         }
-        .service-status {
-          div {
-            margin: 5px 5px 0 0;
-          }
-          .label {
-            margin-top: 8px;
-          }
-        }
+
         .welcome {
+          margin-top: 5px;
           margin-left: 10px;
+          .service-status {
+            div {
+              margin: 0 5px 0 0;
+            }
+            .label {
+              margin-top: 8px;
+            }
+          }
         }
         .d-List,
         .selectList {
