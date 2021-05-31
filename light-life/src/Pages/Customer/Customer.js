@@ -45,7 +45,7 @@ function Customer() {
       .then((snapshot) => {
         const users = [];
         snapshot.forEach((doc) => {
-          if (doc.data().id !== dID) {
+          if (doc.data().id !== dID && doc.data().isServing) {
             users.push(doc.data());
           } else {
             setDName(doc.data().name);

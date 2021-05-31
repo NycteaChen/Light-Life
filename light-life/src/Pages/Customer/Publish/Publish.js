@@ -10,7 +10,6 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/publish.module.scss";
 import Invited from "./Invited.js";
-import { set } from "date-fns";
 
 function Publish() {
   const { cID } = useParams();
@@ -34,12 +33,23 @@ function Publish() {
           const publishArray = [];
           const oldPublishArray = [];
           docs.forEach((doc) => {
-            if (doc.data().status === "0") {
+            const startDate = new Date(doc.data().startDate).getTime();
+            if (startDate > today && doc.data().status === "0") {
               publishArray.push(doc.data());
+            } else if (startDate <= today && doc.data().status === "0") {
+              const newData = doc.data();
+              newData.status = "3";
+              oldPublishArray.push(newData);
+              firebase
+                .firestore()
+                .collection("publish")
+                .doc(doc.data().publishID)
+                .update(newData);
             } else {
               oldPublishArray.push(doc.data());
             }
           });
+
           setOldPublish(oldPublishArray);
           setPublishData(publishArray);
         } else {
