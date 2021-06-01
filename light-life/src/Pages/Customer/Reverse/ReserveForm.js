@@ -7,11 +7,23 @@ import InputGroupWithExtras from "react-bootstrap/esm/InputGroup";
 // , profile
 function ReserveForm({ props, setReserve, setIsChecked }) {
   const params = useParams();
-  const today = new Date(+new Date() + 8 * 3600 * 1000);
-  const initStartDate = today.toISOString().substr(0, 10);
   const [input, setInput] = useState({});
   const db = firebase.firestore();
   const [profile, setProfile] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const today = new Date(+new Date() + 8 * 3600 * 1000);
+  const addDate = today.toISOString().substr(0, 10);
+  const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
+  const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
+  const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
+  const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
+  console.log(initStartDate);
+  initStartDate.setDate(initStartDate.getDate() + 1);
+  startMostDate.setDate(startMostDate.getDate() + 14);
+  endLessDate.setDate(endLessDate.getDate() + 7);
+  endMostDate.setDate(endMostDate.getDate() + 14);
+
   useEffect(() => {
     db.collection("customers")
       .doc(params.cID)
@@ -19,14 +31,35 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
       .then((doc) => {
         setProfile(doc.data());
       });
+    setStartDate({
+      min: initStartDate.toISOString().substr(0, 10),
+      max: startMostDate.toISOString().substr(0, 10),
+    });
+    setEndDate({
+      min: endLessDate.toISOString().substr(0, 10),
+      max: endMostDate.toISOString().substr(0, 10),
+    });
   }, []);
 
   const getInputHandler = (e) => {
+    console.log(e.target.value);
     const { name } = e.target;
+    if (name === "reserveStartDate") {
+      const newEndLessDate = new Date();
+      const newEndMostDate = new Date();
+
+      newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
+      newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
+
+      setEndDate({
+        min: newEndLessDate.toISOString().substr(0, 10),
+        max: newEndMostDate.toISOString().substr(0, 10),
+      });
+    }
     setInput({
       ...input,
       [name]: e.target.value,
-      addDate: initStartDate,
+      addDate: addDate,
       dietitian: props.id,
       dietitianName: props.name,
       image: props.image,
@@ -90,6 +123,15 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
             <div>開始</div>
             <input
               type="date"
+              value={
+                input.reserveStartDate
+                  ? input.reserveStartDate
+                  : startDate
+                  ? startDate.min
+                  : ""
+              }
+              min={startDate ? startDate.min : ""}
+              max={startDate ? startDate.max : ""}
               name="reserveStartDate"
               onChange={getInputHandler}
             />
@@ -98,6 +140,15 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
             <div>結束</div>
             <input
               type="date"
+              value={
+                input.reserveEndDate
+                  ? input.reserveEndDate
+                  : endDate
+                  ? endDate.min
+                  : ""
+              }
+              min={endDate ? endDate.min : ""}
+              max={endDate ? endDate.max : ""}
               name="reserveEndDate"
               onChange={getInputHandler}
             />
