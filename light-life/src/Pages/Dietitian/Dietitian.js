@@ -33,6 +33,11 @@ function Dietitian() {
   const dietitianID = useParams().dID;
   const customerID = useLocation().pathname.split("/")[4];
   const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
+  const getToday = new Date(+new Date() + 8 * 3600 * 1000)
+    .toISOString()
+    .substr(0, 10);
+  const todayTime = new Date(getToday).getTime();
+
   const input = {};
   useEffect(() => {
     firebase
@@ -42,9 +47,35 @@ function Dietitian() {
       .get()
       .then((snapshot) => {
         const usersArray = [];
-        snapshot.forEach((doc) => {
-          usersArray.push(doc.data());
-        });
+        if (!snapshot.empty) {
+          snapshot.forEach((doc) => {
+            usersArray.push(doc.data());
+          });
+          usersArray.forEach((i, index) => {
+            firebase
+              .firestore()
+              .collection("dietitians")
+              .doc(dietitianID)
+              .collection("customers")
+              .doc(i.id)
+              .get()
+              .then((res) => {
+                if (res.exists) {
+                  const endDate = new Date(res.data().endDate).getTime();
+                  if (endDate < todayTime) {
+                    firebase
+                      .firestore()
+                      .collection("customers")
+                      .doc(i.id)
+                      .update({
+                        dietitian: firebase.firestore.FieldValue.delete(),
+                      });
+                    usersArray.splice(index, 1);
+                  }
+                }
+              });
+          });
+        }
         setUsers(usersArray);
       });
 
@@ -274,7 +305,29 @@ function Dietitian() {
           <Switch>
             <Route exact path="/dietitian/:dID">
               <div className={basic.indexMessage}>
-                {profile.name}營養師，歡迎回來！
+                <div>{profile.name}營養師，歡迎回來！</div>
+                <div>
+                  <div>當前進行之服務時間</div>
+                  <div>
+                    <div>尚未進行的服務</div>
+                    {/* {pending ? (
+                      pending.length > 0 ? (
+                        pending.map((p) => ( */}
+                    <div>
+                      <div>
+                        <div>XXX 小姐</div>
+                        <div>時間：2021-06-15~2021-06-30</div>
+                      </div>
+                    </div>
+                    {/* ))
+                      ) : (
+                        <div>無</div>
+                      )
+                    ) : (
+                      <div>loading</div>
+                    )} */}
+                  </div>
+                </div>
               </div>
             </Route>
             <Route exact path={`/dietitian/:dID/profile`}>
@@ -331,7 +384,7 @@ function Dietitian() {
                         customerID ? customerID : selectedID
                       }`}
                     >
-                      {users && customerID
+                      {users.length > 0 && customerID
                         ? users.filter((e) => e.id === customerID)[0].name
                         : ""}
                     </Link>
