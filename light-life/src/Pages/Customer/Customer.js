@@ -24,7 +24,7 @@ function Customer() {
   const [dietitians, setDietitians] = useState([]);
   const [reserve, setReserve] = useState([]);
   const customerID = useParams().cID;
-  const [dName, setDName] = useState();
+  const [dName, setDName] = useState("");
   const [serviceDate, setServiceDate] = useState(null);
   const [pending, setPending] = useState(null);
   const getToday = new Date(+new Date() + 8 * 3600 * 1000)
@@ -58,6 +58,7 @@ function Customer() {
                 const end = new Date(res.data().endDate).getTime();
                 if (end < today) {
                   setServiceDate({});
+                  setDName("");
                   setProfile({ ...doc, dietitian: "" });
                   firebase
                     .firestore()
@@ -141,12 +142,13 @@ function Customer() {
                       startDate: res[0].startDate,
                       endDate: res[0].endDate,
                     });
+
                   setServiceDate({
                     startDate: res[0].startDate,
                     endDate: res[0].endDate,
                   });
-                  setDName(res[0].dietitianName);
 
+                  setDName(res[0].dietitianName);
                   res.shift();
                   setPending(res);
                 } else {
@@ -157,7 +159,55 @@ function Customer() {
               setPending([]);
             }
           });
+
+        //刪除成功的刊登或預約???
+        // .then(() => {
+        //   firebase
+        //     .firestore()
+        //     .collection("publish")
+        //     .where("id", "==", customerID)
+        //     .where("status", "==", "1")
+        //     .where("startDate", "==", getToday)
+        //     .get()
+        //     .then((res) => {
+        //       let docID;
+        //       res.forEach((i) => {
+        //         console.log(i.data());
+        //         docID = i.data().publishID;
+        //       });
+        //       return docID;
+        //     })
+        //     .then((res) => {
+        //       if (res) {
+        //         console.log(res);
+        //         firebase.firestore().collection("publish").doc(res).delete();
+        //       }
+        //     });
+
+        //   firebase
+        //     .firestore()
+        //     .collection("reserve")
+        //     .where("inviterID", "==", customerID)
+        //     .where("status", "==", "1")
+        //     .where("reserveStartDate", "==", getToday)
+        //     .get()
+        //     .then((res) => {
+        //       let docID;
+        //       res.forEach((i) => {
+        //         console.log(i.data());
+        //         docID = i.data().reserveID;
+        //       });
+        //       return docID;
+        //     })
+        //     .then((res) => {
+        //       if (res) {
+        //         console.log(res);
+        //         firebase.firestore().collection("publish").doc(res).delete();
+        //       }
+        //     });
+        // });
       });
+
     firebase
       .firestore()
       .collection("reserve")
@@ -191,32 +241,43 @@ function Customer() {
       .then((snapshot) => {
         const users = [];
         snapshot.forEach((doc) => {
-          if (doc.data().id !== dID && doc.data().isServing) {
+          if (dID && doc.data().id !== dID && doc.data().isServing) {
             users.push(doc.data());
-          } else if (doc.data().isServing) {
-            setDName(doc.data().name);
+          } else if (!dID && doc.data().isServing) {
+            users.push(doc.data());
           }
+          console.log(users);
+          // else if (doc.data().isServing) {
+          //   setDName(doc.data().name);
+          // }
         });
+
         firebase
           .firestore()
           .collection("reserve")
           .where("inviterID", "==", customerID)
           .get()
           .then((docs) => {
-            const reserveArray = [];
-            docs.forEach((doc) => {
-              reserveArray.push(doc.data());
-            });
-            let user;
-            reserveArray.forEach((r) => {
-              user = users.filter(
-                (u) =>
-                  (u.id === r.dietitian &&
-                    (r.status !== "1") & (r.status !== "0")) ||
-                  u.id !== r.dietitian
-              );
-            });
-            setDietitians(user);
+            console.log(docs);
+            if (!docs.empty) {
+              const reserveArray = [];
+              docs.forEach((doc) => {
+                reserveArray.push(doc.data());
+              });
+              let user;
+              reserveArray.forEach((r) => {
+                user = users.filter(
+                  (u) =>
+                    (u.id === r.dietitian &&
+                      (r.status !== "1") & (r.status !== "0")) ||
+                    u.id !== r.dietitian
+                );
+              });
+
+              setDietitians(user);
+            } else {
+              setDietitians(users);
+            }
           });
 
         // return users;
@@ -401,7 +462,7 @@ function Customer() {
             </div>
           </Route>
           <Route exact path="/customer/:cID/profile">
-            <CustomerProfile props={profile} />
+            <CustomerProfile />
           </Route>
           <Route exact path="/customer/:cID/dietary">
             <DietrayRecord />
