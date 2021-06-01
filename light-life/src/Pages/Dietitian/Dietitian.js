@@ -522,14 +522,14 @@ function Dietitian() {
                     <div className={customer["profile-data"]}>
                       <CustomerProfile
                         props={props}
-                        id={selectedID}
+                        // id={selectedID}
                         input={input}
                       />
                     </div>
                   </div>
                 </Route>
                 <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
-                  <DietrayRecord id={selectedID} />
+                  <DietrayRecord />
                 </Route>
                 <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
                   <DietitianTarget />
