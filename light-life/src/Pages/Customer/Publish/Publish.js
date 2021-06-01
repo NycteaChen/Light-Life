@@ -64,6 +64,7 @@ function Publish() {
       .get()
       .then((res) => setProfile(res.data()));
   }, []);
+
   const publishModalHandler = (e) => {
     switch (e.target.id) {
       case "add":
@@ -116,28 +117,41 @@ function Publish() {
     });
   };
 
+  console.log(profile);
   const newPublishHandler = (e) => {
-    if (input.endDate && input.startDate && input.subject && input.content) {
-      firebase
-        .firestore()
-        .collection("publish")
-        .add(input)
-        .then((res) => {
-          firebase
-            .firestore()
-            .collection("publish")
-            .doc(res.id)
-            .update({ publishID: res.id });
-          return res.id;
-        })
-        .then((res) => {
-          alert("發布成功");
-          setPublishData([{ ...input, publishID: res }]);
-          setDisplay("none");
-          setInput({});
-        });
+    if (
+      !profile.gender ||
+      !profile.name ||
+      !profile.weight ||
+      !profile.height ||
+      !profile.career ||
+      !profile.education ||
+      !profile.age
+    ) {
+      alert("您的個人資料尚未填寫完整喔");
     } else {
-      alert("資料不完整喔");
+      if (input.endDate && input.startDate && input.subject && input.content) {
+        firebase
+          .firestore()
+          .collection("publish")
+          .add(input)
+          .then((res) => {
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(res.id)
+              .update({ publishID: res.id });
+            return res.id;
+          })
+          .then((res) => {
+            alert("發布成功");
+            setPublishData([{ ...input, publishID: res }]);
+            setDisplay("none");
+            setInput({});
+          });
+      } else {
+        alert("資料不完整喔");
+      }
     }
   };
   console.log(publishData);

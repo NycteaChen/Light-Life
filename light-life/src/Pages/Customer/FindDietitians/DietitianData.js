@@ -62,7 +62,7 @@ function DietitianData({ props, setIsChecked, setReserve, profile }) {
       <ReserveForm
         props={props}
         setReserve={setReserve}
-        profile={profile}
+        // profile={profile}
         setIsChecked={setIsChecked}
       />
     </div>

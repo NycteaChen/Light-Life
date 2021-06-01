@@ -8,11 +8,19 @@ import CustomerProfile from "./CusotmerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
 import { param } from "jquery";
 
-function EditCustomerProfile({ props }) {
+function EditCustomerProfile() {
   const db = firebase.firestore();
   const storage = firebase.storage();
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [profile, setProfile] = useState({});
+  const { cID } = useParams();
+  useEffect(() => {
+    db.collection("customers")
+      .doc(cID)
+      .get()
+      .then((doc) => setProfile(doc.data()));
+  }, []);
   const {
     name,
     image,
@@ -25,7 +33,7 @@ function EditCustomerProfile({ props }) {
     career,
     sport,
     other,
-  } = props;
+  } = profile;
 
   async function postImg(image) {
     if (image) {
@@ -76,6 +84,11 @@ function EditCustomerProfile({ props }) {
       const imageUrl = await getImg(input.imageFile);
       delete input.imageFile;
       delete input.previewImg;
+      setProfile({
+        ...profile,
+        ...input,
+        image: imageUrl,
+      });
       setInput({
         ...input,
         image: imageUrl,
@@ -86,16 +99,27 @@ function EditCustomerProfile({ props }) {
           ...input,
           image: imageUrl,
         });
+      setInput({});
     } else {
+      setProfile({
+        ...profile,
+        ...input,
+      });
       db.collection("customers").doc(id).update(input);
+      setInput({});
     }
     setIsEditing(false);
   };
+
+  console.log(profile);
+  console.log(input);
+
   const bindEditHandler = () => {
     setIsEditing(true);
   };
   const bindCancelHandler = () => {
     setIsEditing(false);
+    setInput({});
   };
 
   return (
@@ -477,7 +501,7 @@ function EditCustomerProfile({ props }) {
           <div className={style.edit}>
             <button onClick={bindEditHandler}>編輯</button>
           </div>
-          <CustomerProfile props={props} input={input} />
+          <CustomerProfile props={profile} input={input} />
         </div>
       )}
     </div>

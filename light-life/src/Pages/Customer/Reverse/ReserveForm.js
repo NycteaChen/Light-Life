@@ -3,13 +3,23 @@ import { useParams } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/findDietitian.module.scss";
-
-function ReserveForm({ props, setReserve, profile, setIsChecked }) {
+import InputGroupWithExtras from "react-bootstrap/esm/InputGroup";
+// , profile
+function ReserveForm({ props, setReserve, setIsChecked }) {
   const params = useParams();
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = today.toISOString().substr(0, 10);
   const [input, setInput] = useState({});
   const db = firebase.firestore();
+  const [profile, setProfile] = useState(null);
+  useEffect(() => {
+    db.collection("customers")
+      .doc(params.cID)
+      .get()
+      .then((doc) => {
+        setProfile(doc.data());
+      });
+  }, []);
 
   const getInputHandler = (e) => {
     const { name } = e.target;
@@ -27,30 +37,51 @@ function ReserveForm({ props, setReserve, profile, setIsChecked }) {
     });
   };
 
+  console.log(profile);
+
   const sendReverseHandler = () => {
-    const dateTime = Date.now();
-    const timestamp = Math.floor(dateTime);
-    db.collection("reserve")
-      .doc(`${timestamp}`)
-      .set({ ...input, reserveID: `${timestamp}` })
-      .then(() => {
-        db.collection("reserve")
-          .get()
-          .then((docs) => {
-            const reserveArray = [];
-            docs.forEach((doc) => {
-              if (doc.data().inviterID === params.cID) {
-                reserveArray.push(doc.data());
-              }
+    if (
+      !profile.gender ||
+      !profile.name ||
+      !profile.weight ||
+      !profile.height ||
+      !profile.career ||
+      !profile.education ||
+      !profile.age
+    ) {
+      console.log(profile);
+      alert("您的個人資料尚未填寫完整喔");
+    } else if (
+      input.reserveStartDate &&
+      input.reserveEndDate &&
+      input.reserveMessage
+    ) {
+      const dateTime = Date.now();
+      const timestamp = Math.floor(dateTime);
+      db.collection("reserve")
+        .doc(`${timestamp}`)
+        .set({ ...input, reserveID: `${timestamp}` })
+        .then(() => {
+          db.collection("reserve")
+            .get()
+            .then((docs) => {
+              const reserveArray = [];
+              docs.forEach((doc) => {
+                if (doc.data().inviterID === params.cID) {
+                  reserveArray.push(doc.data());
+                }
+              });
+              setReserve(reserveArray);
             });
-            setReserve(reserveArray);
-          });
-      })
-      .then(() => {
-        alert("已發送!");
-        setIsChecked(false);
-      })
-      .catch((error) => "Error:" + error);
+        })
+        .then(() => {
+          alert("已發送!");
+          setIsChecked(false);
+        })
+        .catch((error) => "Error:" + error);
+    } else {
+      alert("請填寫日期與訊息");
+    }
   };
 
   return (
