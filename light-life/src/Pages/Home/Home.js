@@ -15,7 +15,6 @@ function Home() {
   const [input, setInput] = useState({});
 
   const bindLoginButton = () => {
-    console.log("1");
     setDisplay("flex");
   };
 

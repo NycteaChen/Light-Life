@@ -30,9 +30,6 @@ function Invited({
         setProfile(docs.data());
       });
   }, []);
-  console.log(oldPublish);
-  console.log(publishData[0]);
-  console.log(publishData[0].whoInvite[+idx]);
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":

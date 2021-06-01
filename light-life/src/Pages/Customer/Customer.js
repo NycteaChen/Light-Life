@@ -94,7 +94,6 @@ function Customer() {
               docs.forEach((doc) => {
                 pendingArray.push(doc.data());
               });
-              console.log(pendingArray);
               const promises = [];
               pendingArray.forEach((p) => {
                 const promise = firebase
@@ -110,9 +109,7 @@ function Customer() {
                   });
                 promises.push(promise);
               });
-              // console.log(Promise.all(promises));
               Promise.all(promises).then((res) => {
-                console.log(res);
                 res.sort((a, b) => {
                   const dateA = new Date(a.startDate).getTime();
                   const dateB = new Date(b.startDate).getTime();
@@ -125,7 +122,6 @@ function Customer() {
                   }
                 });
                 if (res[0].startDate === getToday) {
-                  console.log("今天");
                   setProfile({ ...doc, dietitian: res[0].dietitian });
                   firebase
                     .firestore()
@@ -141,16 +137,18 @@ function Customer() {
                     .set({
                       startDate: res[0].startDate,
                       endDate: res[0].endDate,
+                    })
+                    .then(() => {
+                      setServiceDate({
+                        startDate: res[0].startDate,
+                        endDate: res[0].endDate,
+                      });
+                      setDName(res[0].dietitianName);
+                    })
+                    .then(() => {
+                      res.shift();
+                      setPending(res);
                     });
-
-                  setServiceDate({
-                    startDate: res[0].startDate,
-                    endDate: res[0].endDate,
-                  });
-
-                  setDName(res[0].dietitianName);
-                  res.shift();
-                  setPending(res);
                 } else {
                   setPending(res);
                 }
@@ -246,7 +244,6 @@ function Customer() {
           } else if (!dID && doc.data().isServing) {
             users.push(doc.data());
           }
-          console.log(users);
           // else if (doc.data().isServing) {
           //   setDName(doc.data().name);
           // }
@@ -258,7 +255,6 @@ function Customer() {
           .where("inviterID", "==", customerID)
           .get()
           .then((docs) => {
-            console.log(docs);
             if (!docs.empty) {
               const reserveArray = [];
               docs.forEach((doc) => {

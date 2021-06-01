@@ -26,7 +26,6 @@ function GetPublication() {
       .then((docs) => {
         const publishArray = [];
         if (!docs.empty) {
-          console.log(docs);
           docs.forEach((doc) => {
             publishArray.push(doc.data());
           });
@@ -52,7 +51,6 @@ function GetPublication() {
         setPublish(res);
       });
   }, []);
-  console.log(publish);
   const checkDetailsHandler = (e) => {
     setIdx(e.target.id);
     setDisplay("block");

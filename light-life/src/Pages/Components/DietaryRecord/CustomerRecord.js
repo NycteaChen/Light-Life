@@ -37,8 +37,7 @@ function CustomerRecord({ date, count, setCount }) {
     }
     setMeal(mealClass);
     setInput("");
-    console.log(mealClass);
-    console.log(meal);
+
     // if (mealDetails.images) {
     //   setMealDetails({ images: mealDetails.images });
     // }

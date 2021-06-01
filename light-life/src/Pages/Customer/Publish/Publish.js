@@ -117,7 +117,6 @@ function Publish() {
     });
   };
 
-  console.log(profile);
   const newPublishHandler = (e) => {
     if (
       !profile.gender ||
@@ -154,7 +153,6 @@ function Publish() {
       }
     }
   };
-  console.log(publishData);
   return (
     <div className={style.publish}>
       <div className={style.waiting}>

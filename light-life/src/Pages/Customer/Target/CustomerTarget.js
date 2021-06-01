@@ -44,7 +44,6 @@ function CustomerTarget() {
           });
       });
   }, []);
-  console.log(target);
 
   return (
     <>

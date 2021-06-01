@@ -37,7 +37,6 @@ function ReserveList({ reserve, setReserve }) {
       });
   };
 
-  console.log(reserve);
   return (
     <div className={style["reserve-list"]}>
       <div className={style.waiting}>

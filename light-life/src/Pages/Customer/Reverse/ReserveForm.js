@@ -37,8 +37,6 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
     });
   };
 
-  console.log(profile);
-
   const sendReverseHandler = () => {
     if (
       !profile.gender ||
@@ -49,7 +47,6 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
       !profile.education ||
       !profile.age
     ) {
-      console.log(profile);
       alert("您的個人資料尚未填寫完整喔");
     } else if (
       input.reserveStartDate &&
