@@ -59,7 +59,6 @@ function EditCustomerProfile() {
 
   const getInputHandler = (e) => {
     const { name } = e.target;
-    console.log(e.target);
     if (name !== "customerImage") {
       setInput({ ...input, [name]: e.target.value });
     } else if (e.target.files[0]) {
@@ -110,9 +109,6 @@ function EditCustomerProfile() {
     }
     setIsEditing(false);
   };
-
-  console.log(profile);
-  console.log(input);
 
   const bindEditHandler = () => {
     setIsEditing(true);

@@ -97,7 +97,6 @@ function Login({ display, setDisplay }) {
 
   const getInputHandler = (e) => {
     const { name } = e.target;
-    console.log(e.target.validity.valid);
     setInput({ ...input, [name]: e.target.value });
     if (e.target.validity.valid) {
       setValid({ ...valid, [name]: e.target.value });
@@ -106,7 +105,6 @@ function Login({ display, setDisplay }) {
     }
   };
   const switchPasswordModeHandler = (e) => {
-    console.log(e.target.className.includes("eye-slash"));
     if (e.target.className.includes("eye-slash")) {
       setEye({
         on: "block",
@@ -168,7 +166,6 @@ function Login({ display, setDisplay }) {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(user);
           setInput({});
           alert("註冊成功");
           const { currentUser } = firebase.auth();
@@ -285,8 +282,7 @@ function Login({ display, setDisplay }) {
       .signInWithPopup(provider)
       .then((result) => {
         const user = result.user;
-        console.log(user);
-        console.log(result);
+
         firebase
           .firestore()
           .collection("dietitians")

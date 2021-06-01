@@ -49,7 +49,6 @@ function PublicationData({ publish, display, setDisplay }) {
   };
 
   const sendMessageHandler = () => {
-    console.log(invite);
     if (invite && invite.message) {
       if (publish.whoInvite) {
         firebase

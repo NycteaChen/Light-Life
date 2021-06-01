@@ -20,7 +20,6 @@ function InvitedList({ invitedList, setInvitedList }) {
     }
   };
 
-  console.log(invitedList);
   return (
     <div className={style.whoInvite}>
       {invitedList.length > 0 ? (

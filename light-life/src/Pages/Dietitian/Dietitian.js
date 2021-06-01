@@ -37,8 +37,9 @@ function Dietitian() {
     .toISOString()
     .substr(0, 10);
   const todayTime = new Date(getToday).getTime();
-
+  const [pending, setPending] = useState(null);
   const input = {};
+  const props = {};
   useEffect(() => {
     firebase
       .firestore()
@@ -71,12 +72,102 @@ function Dietitian() {
                         dietitian: firebase.firestore.FieldValue.delete(),
                       });
                     usersArray.splice(index, 1);
+                  } else {
+                    setUsers(usersArray);
                   }
                 }
               });
           });
         }
-        setUsers(usersArray);
+
+        firebase
+          .firestore()
+          .collection("pending")
+          .where("dietitian", "==", dietitianID)
+          .get()
+          .then((docs) => {
+            const pendingArray = [];
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                pendingArray.push(doc.data());
+              });
+              const promises = [];
+              pendingArray.forEach((p) => {
+                const promise = firebase
+                  .firestore()
+                  .collection("customers")
+                  .doc(p.customer)
+                  .get()
+                  .then((res) => {
+                    return {
+                      ...p,
+                      customerName: res.data().name,
+                      customerGender: res.data().gender,
+                    };
+                  });
+                promises.push(promise);
+              });
+              Promise.all(promises).then((res) => {
+                res.sort((a, b) => {
+                  const dateA = new Date(a.startDate).getTime();
+                  const dateB = new Date(b.startDate).getTime();
+                  if (dateA < dateB) {
+                    return -1;
+                  } else if (dateA > dateB) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                });
+                res.forEach((r) => {
+                  if (r.startDate === getToday) {
+                    firebase
+                      .firestore()
+                      .collection("customers")
+                      .doc(r.customer)
+                      .update({ dietitian: r.dietitian })
+                      .then(() => {
+                        firebase
+                          .firestore()
+                          .collection("customers")
+                          .doc(r.customer)
+                          .get()
+                          .then((doc) => {
+                            if (
+                              usersArray.length > 0 &&
+                              !usersArray.find((i) => i.id === doc.data().id)
+                            ) {
+                              setUsers([...usersArray, doc.data()]);
+                            } else if (usersArray.length > 0) {
+                              setUsers([...usersArray]);
+                            } else {
+                              setUsers([doc.data()]);
+                            }
+                          })
+                          .then(() => {
+                            setPending(r);
+                          });
+                      });
+                    firebase
+                      .firestore()
+                      .collection("dietitians")
+                      .doc(r.dietitian)
+                      .collection("customers")
+                      .doc(r.customer)
+                      .set({
+                        startDate: r.startDate,
+                        endDate: r.endDate,
+                      });
+                  } else {
+                    setPending(r);
+                  }
+                });
+              });
+            } else {
+              setPending([]);
+            }
+            // });
+          });
       });
 
     firebase
@@ -88,7 +179,7 @@ function Dietitian() {
         const invitedArray = [];
         docs.forEach((doc) => {
           const startDate = new Date(doc.data().reserveStartDate).getTime();
-          console.log(doc.data());
+
           if (startDate > today && doc.data().status === "0") {
             invitedArray.push(doc.data());
           }
@@ -101,16 +192,6 @@ function Dietitian() {
       .doc(dietitianID)
       .get()
       .then((res) => setProfile(res.data()));
-
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dietitianID)
-      .collection("customers")
-      .get()
-      .then((doc) => {
-        console.log(doc);
-      });
 
     if (customerID) {
       firebase
@@ -167,8 +248,6 @@ function Dietitian() {
       });
   };
 
-  console.log(profile);
-
   const changeServiceStatusHandler = () => {
     if (profile.education && profile.gender) {
       setProfile({ ...profile, isServing: !profile.isServing });
@@ -208,21 +287,23 @@ function Dietitian() {
                   className={`${basic.customerList} list`}
                   style={{ display: display }}
                 >
-                  {users.map((c, index) => (
-                    <li
-                      key={index}
-                      className={c.id}
-                      onClick={getSelectedCustomer}
-                    >
-                      <Link
-                        to={`/dietitian/${c.dietitian}/customer/${c.id}`}
-                        className={c.id}
-                        style={{ fontSize: "16px" }}
-                      >
-                        {c.name}
-                      </Link>
-                    </li>
-                  ))}
+                  {users.length > 0
+                    ? users.map((c, index) => (
+                        <li
+                          key={index}
+                          className={c.id}
+                          onClick={getSelectedCustomer}
+                        >
+                          <Link
+                            to={`/dietitian/${c.dietitian}/customer/${c.id}`}
+                            className={c.id}
+                            style={{ fontSize: "16px" }}
+                          >
+                            {c.name}
+                          </Link>
+                        </li>
+                      ))
+                    : ""}
                 </div>
               </ul>
 
@@ -307,25 +388,29 @@ function Dietitian() {
               <div className={basic.indexMessage}>
                 <div>{profile.name}營養師，歡迎回來！</div>
                 <div>
-                  <div>當前進行之服務時間</div>
                   <div>
                     <div>尚未進行的服務</div>
-                    {/* {pending ? (
+                    {pending ? (
                       pending.length > 0 ? (
-                        pending.map((p) => ( */}
-                    <div>
-                      <div>
-                        <div>XXX 小姐</div>
-                        <div>時間：2021-06-15~2021-06-30</div>
-                      </div>
-                    </div>
-                    {/* ))
+                        pending.map((p) => (
+                          <div>
+                            <div>
+                              <div>
+                                {p.customerName}{" "}
+                                {p.customerGender === "男" ? "先生" : "小姐"}
+                              </div>
+                              <div>
+                                時間：{p.startDate}~{p.endDate}
+                              </div>
+                            </div>
+                          </div>
+                        ))
                       ) : (
                         <div>無</div>
                       )
                     ) : (
                       <div>loading</div>
-                    )} */}
+                    )}
                   </div>
                 </div>
               </div>
@@ -343,20 +428,24 @@ function Dietitian() {
                 className={basic.mobileCustomerList}
                 style={{ display: display }}
               >
-                {users.map((c, index) => (
-                  <li
-                    key={index}
-                    className={c.id}
-                    onClick={getSelectedCustomer}
-                  >
-                    <Link
-                      to={`/dietitian/${c.dietitian}/customer/${c.id}`}
+                {users.length > 0 ? (
+                  users.map((c, index) => (
+                    <li
+                      key={index}
                       className={c.id}
+                      onClick={getSelectedCustomer}
                     >
-                      {c.name}
-                    </Link>
-                  </li>
-                ))}
+                      <Link
+                        to={`/dietitian/${c.dietitian}/customer/${c.id}`}
+                        className={c.id}
+                      >
+                        {c.name}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <div>目前沒有客戶喔</div>
+                )}
               </div>
             </Route>
             <Route exact path={`/dietitian/:dID/inviteMe`}>
@@ -423,16 +512,18 @@ function Dietitian() {
                       {date.end ? date.end : ""}
                     </div>
                   </Route>
-                  <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
-                    <div
-                      id="customer-profile"
-                      className={customer["customer-profile"]}
-                    >
-                      <div className={customer["profile-data"]}>
-                        <CusotmerProfile props={users[0]} input={input} />
+                  {users.map((u) => (
+                    <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
+                      <div
+                        id="customer-profile"
+                        className={customer["customer-profile"]}
+                      >
+                        <div className={customer["profile-data"]}>
+                          <CusotmerProfile props={props} input={input} />
+                        </div>
                       </div>
-                    </div>
-                  </Route>
+                    </Route>
+                  ))}
                   <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
                     <DietrayRecord />
                   </Route>
