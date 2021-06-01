@@ -27,7 +27,10 @@ function Customer() {
   const [dName, setDName] = useState();
   const [serviceDate, setServiceDate] = useState(null);
   const [pending, setPending] = useState(null);
-  const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
+  const getToday = new Date(+new Date() + 8 * 3600 * 1000)
+    .toISOString()
+    .substr(0, 10);
+  const today = new Date(getToday).getTime();
   const [dID, setDID] = useState("");
   useEffect(() => {
     firebase
@@ -36,27 +39,122 @@ function Customer() {
       .doc(`${customerID}`)
       .get()
       .then((doc) => {
-        setDID(doc.data().dietitian);
-        setProfile(doc.data());
-        return doc.data().dietitian;
+        if (doc.data().dietitian) {
+          setDID(doc.data().dietitian);
+        }
+        return doc.data();
       })
-      .then((res) => {
+      .then((doc) => {
+        if (doc.dietitian) {
+          firebase
+            .firestore()
+            .collection("dietitians")
+            .doc(doc.dietitian)
+            .collection("customers")
+            .doc(customerID)
+            .get()
+            .then((res) => {
+              if (res) {
+                const end = new Date(res.data().endDate).getTime();
+                if (end < today) {
+                  setServiceDate({});
+                  setProfile({ ...doc, dietitian: "" });
+                  firebase
+                    .firestore()
+                    .collection("customers")
+                    .doc(`${customerID}`)
+                    .update({
+                      dietitian: firebase.firestore.FieldValue.delete(),
+                    });
+                } else {
+                  setServiceDate({
+                    startDate: res.data().startDate,
+                    endDate: res.data().endDate,
+                  });
+                  setProfile(doc);
+                }
+              } else {
+                setServiceDate({});
+                setProfile(doc);
+              }
+            });
+        } else {
+          setServiceDate({});
+          setProfile(doc);
+        }
         firebase
           .firestore()
-          .collection("dietitians")
-          .doc(res)
-          .collection("customers")
-          .doc(customerID)
+          .collection("pending")
+          .where("customer", "==", customerID)
           .get()
-          .then((res) => {
-            if (res) {
-              console.log(res.data());
-              setServiceDate({
-                startDate: res.data().startDate,
-                endDate: res.data().endDate,
+          .then((docs) => {
+            const pendingArray = [];
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                pendingArray.push(doc.data());
+              });
+              console.log(pendingArray);
+              const promises = [];
+              pendingArray.forEach((p) => {
+                const promise = firebase
+                  .firestore()
+                  .collection("dietitians")
+                  .doc(p.dietitian)
+                  .get()
+                  .then((res) => {
+                    return {
+                      ...p,
+                      dietitianName: res.data().name,
+                    };
+                  });
+                promises.push(promise);
+              });
+              // console.log(Promise.all(promises));
+              Promise.all(promises).then((res) => {
+                console.log(res);
+                res.sort((a, b) => {
+                  const dateA = new Date(a.startDate).getTime();
+                  const dateB = new Date(b.startDate).getTime();
+                  if (dateA < dateB) {
+                    return -1;
+                  } else if (dateA > dateB) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                });
+                if (res[0].startDate === getToday) {
+                  console.log("今天");
+                  setProfile({ ...doc, dietitian: res[0].dietitian });
+                  firebase
+                    .firestore()
+                    .collection("customers")
+                    .doc(`${customerID}`)
+                    .update({ ...doc, dietitian: res[0].dietitian });
+                  firebase
+                    .firestore()
+                    .collection("dietitians")
+                    .doc(res[0].dietitian)
+                    .collection("customers")
+                    .doc(`${customerID}`)
+                    .set({
+                      startDate: res[0].startDate,
+                      endDate: res[0].endDate,
+                    });
+                  setServiceDate({
+                    startDate: res[0].startDate,
+                    endDate: res[0].endDate,
+                  });
+                  setDName(res[0].dietitianName);
+
+                  res.shift();
+                  setPending(res);
+                } else {
+                  setPending(res);
+                }
               });
             } else {
-              setServiceDate({});
+              setPending([]);
             }
           });
       });
@@ -82,53 +180,6 @@ function Customer() {
           }
         });
         setReserve(reserveArray);
-      });
-
-    firebase
-      .firestore()
-      .collection("pending")
-      .where("customer", "==", customerID)
-      .get()
-      .then((docs) => {
-        const pendingArray = [];
-        if (!docs.empty) {
-          docs.forEach((doc) => {
-            pendingArray.push(doc.data());
-          });
-          console.log(pendingArray);
-          const promises = [];
-          pendingArray.forEach((p) => {
-            const promise = firebase
-              .firestore()
-              .collection("dietitians")
-              .doc(p.dietitian)
-              .get()
-              .then((res) => {
-                return {
-                  ...p,
-                  dietitianName: res.data().name,
-                };
-              });
-            promises.push(promise);
-          });
-          // console.log(Promise.all(promises));
-          Promise.all(promises).then((res) => {
-            res.sort((a, b) => {
-              const dateA = new Date(a.startDate).getTime();
-              const dateB = new Date(b.startDate).getTime();
-              if (dateA < dateB) {
-                return -1;
-              } else if (dateA > dateB) {
-                return 1;
-              } else {
-                return 0;
-              }
-            });
-            setPending(res);
-          });
-        } else {
-          setPending([]);
-        }
       });
   }, []);
 
