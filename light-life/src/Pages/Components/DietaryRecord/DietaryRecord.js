@@ -90,18 +90,19 @@ function RenderDietaryRecord() {
       setGetRecord(true);
     }
   };
-  if (params.dID) {
-    return (
-      <div className={style["daily-diet"]}>
-        <div className={style["date-selector"]}>
-          <input
-            type="date"
-            min="2021-05-14"
-            max="2021-05-26"
-            onChange={getDietaryRecordDate}
-            required="required"
-          ></input>
-        </div>
+  // if (params.dID) {
+  return (
+    <div className={style["daily-diet"]}>
+      <div className={style["date-selector"]}>
+        <input
+          type="date"
+          min="2021-05-14"
+          max="2021-05-26"
+          onChange={getDietaryRecordDate}
+          required="required"
+        ></input>
+      </div>
+      {params.dID ? (
         <Router>
           <Link
             to={`/dietitian/${params.dID}/customer/${params.cID}/dietary/`}
@@ -121,20 +122,7 @@ function RenderDietaryRecord() {
             ""
           )}
         </Router>
-      </div>
-    );
-  } else {
-    return (
-      <div className={style["daily-diet"]}>
-        <div className={style["date-selector"]}>
-          <input
-            type="date"
-            min="2021-05-14"
-            max="2021-05-26"
-            onChange={getDietaryRecordDate}
-            required="required"
-          ></input>
-        </div>
+      ) : (
         <Router>
           <Link to={`/customer/${params.cID}/dietary/`}></Link>
           {getRecord ? (
@@ -151,9 +139,25 @@ function RenderDietaryRecord() {
             ""
           )}
         </Router>
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
+  // } else {
+  //   return (
+  //     <div className={style["daily-diet"]}>
+  //       <div className={style["date-selector"]}>
+  //         <input
+  //           type="date"
+  //           min="2021-05-14"
+  //           max="2021-05-26"
+  //           onChange={getDietaryRecordDate}
+  //           required="required"
+  //         ></input>
+  //       </div>
+
+  //     </div>
+  //   );
+  // }
 }
 
 export default RenderDietaryRecord;
