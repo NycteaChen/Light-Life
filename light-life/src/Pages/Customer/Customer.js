@@ -283,6 +283,20 @@ function Customer() {
     // });
   }, [reserve]);
 
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("customers")
+      .doc(customerID)
+      .onSnapshot((doc) => {
+        setProfile({
+          ...profile,
+          name: doc.data().name,
+          image: doc.data().image,
+        });
+      });
+  }, []);
+
   const logoutHandler = () => {
     firebase
       .auth()
