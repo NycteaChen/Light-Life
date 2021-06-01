@@ -77,24 +77,22 @@ import style from "../../../style/dietary.module.scss";
 //   }
 // }
 
-function RenderDietaryRecord({ id }) {
+function RenderDietaryRecord() {
   const [recordDate, setRecordDate] = useState();
   const [getRecord, setGetRecord] = useState(false); //false
   const [count, setCount] = useState(1);
   const [serviceDate, setServiceDate] = useState(null);
-  const [input, setInput] = useState({});
   const { dID } = useParams();
   const { cID } = useParams();
 
   useEffect(() => {
     if (dID) {
-      setInput({});
       firebase
         .firestore()
         .collection("dietitians")
         .doc(dID)
         .collection("customers")
-        .doc(id || cID)
+        .doc(cID)
         .get()
         .then((res) => {
           setServiceDate({
@@ -103,7 +101,7 @@ function RenderDietaryRecord({ id }) {
           });
         });
     }
-  }, [id]);
+  }, []);
 
   const getDietaryRecordDate = (e) => {
     if (e.target.value !== "") {
@@ -111,7 +109,6 @@ function RenderDietaryRecord({ id }) {
       setCount(1);
       setGetRecord(true);
     }
-    setInput({ date: e.target.value });
   };
   // if (dID) {
   return (
@@ -121,7 +118,6 @@ function RenderDietaryRecord({ id }) {
           type="date"
           min={serviceDate ? serviceDate.startDate : ""}
           max={serviceDate ? serviceDate.endDate : ""}
-          value={input.date ? input.date : ""}
           onChange={getDietaryRecordDate}
           required="required"
         ></input>

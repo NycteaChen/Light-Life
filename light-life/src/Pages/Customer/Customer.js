@@ -121,7 +121,9 @@ function Customer() {
                     return 0;
                   }
                 });
-                if (res[0].startDate === getToday) {
+                const start = new Date(res[0].startDate).getTime();
+
+                if (start <= today) {
                   setProfile({ ...doc, dietitian: res[0].dietitian });
                   firebase
                     .firestore()
@@ -157,7 +159,6 @@ function Customer() {
               setPending([]);
             }
           });
-
         //刪除成功的刊登或預約???
         // .then(() => {
         //   firebase

@@ -11,7 +11,7 @@ import "firebase/firestore";
 import noImage from "../../../images/noimage.png";
 import style from "../../../style/customerProfile.module.scss";
 
-function CustomerProfile({ props, id, input }) {
+function CustomerProfile({ props, input }) {
   const [profile, setProfile] = useState({});
   const { cID } = useParams();
   console.log(props);
@@ -20,10 +20,10 @@ function CustomerProfile({ props, id, input }) {
     firebase
       .firestore()
       .collection("customers")
-      .doc(id || cID)
+      .doc(cID)
       .get()
       .then((res) => setProfile(res.data()));
-  }, [id]);
+  }, []);
   return (
     <>
       <div className={style.flexbox}>
