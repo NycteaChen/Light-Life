@@ -83,8 +83,10 @@ function GetPublication() {
         {publish ? (
           publish.find(
             (i) =>
-              !i.whoInvite ||
-              (i.whoInvite && !i.whoInvite.find((d) => d.dietitianID === dID))
+              i.status === "0" &&
+              (!i.whoInvite ||
+                (i.whoInvite &&
+                  !i.whoInvite.find((d) => d.dietitianID === dID)))
           ) ? (
             publish.map((p, pubIndex) =>
               (!p.whoInvite ||
