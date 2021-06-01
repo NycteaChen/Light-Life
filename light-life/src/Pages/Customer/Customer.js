@@ -249,26 +249,33 @@ function Customer() {
           //   setDName(doc.data().name);
           // }
         });
-
+        return users;
+      })
+      .then((users) => {
+        console.log(users);
         firebase
           .firestore()
           .collection("reserve")
           .where("inviterID", "==", customerID)
           .get()
           .then((docs) => {
+            const user = [];
             if (!docs.empty) {
               const reserveArray = [];
               docs.forEach((doc) => {
-                reserveArray.push(doc.data());
+                if (doc.data().status === "0" || doc.data().status === "1") {
+                  reserveArray.push(doc.data());
+                }
               });
-              let user;
-              reserveArray.forEach((r) => {
-                user = users.filter(
-                  (u) =>
-                    (u.id === r.dietitian &&
-                      (r.status !== "1") & (r.status !== "0")) ||
-                    u.id !== r.dietitian
-                );
+
+              //users : 所有isServing的營養師
+              //reserveArray要篩選掉的東西："我"預約中 or 預約成功的營養師
+              // users營養師 - reserveArray
+              users.forEach((u) => {
+                if (!reserveArray.find((r) => r.dietitian === u.id)) {
+                  console.log(u.id);
+                  user.push(u);
+                }
               });
 
               setDietitians(user);
@@ -276,9 +283,10 @@ function Customer() {
               setDietitians(users);
             }
           });
-
-        // return users;
       });
+
+    // return users;
+
     // .then((res) => {
     //   setDietitians(res);
     // });
