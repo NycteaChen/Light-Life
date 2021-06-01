@@ -14,7 +14,7 @@ import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import InvitedList from "./Invite/InvitedList.js";
 import DietitianProfile from "../Dietitian/DietitianProfile/DietitianProfile.js";
-import CusotmerProfile from "../Components/CustomerProfile/CusotmerProfile.js";
+import CustomerProfile from "../Components/CustomerProfile/CustomerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
 import GetPublication from "../Dietitian/FindCustomers/GetPublication.js";
@@ -209,6 +209,8 @@ function Dietitian() {
         });
     }
   }, []);
+
+  console.log(selectedID);
 
   const getSelectedCustomer = (e) => {
     setSelectedID(e.target.className);
@@ -464,74 +466,76 @@ function Dietitian() {
                 customerID ? customerID : selectedID
               }`}
             >
-              <Router>
-                <div className={style["customer-data"]}>
-                  <div>
-                    <Link
-                      className={style["customer-name"]}
-                      to={`/dietitian/${dietitianID}/customer/${
-                        customerID ? customerID : selectedID
-                      }`}
-                    >
-                      {users.length > 0 && customerID
-                        ? users.filter((e) => e.id === customerID)[0].name
-                        : ""}
-                    </Link>
-                  </div>
-                  <div className={style["customer-dataSelect"]}>
-                    <Link
-                      className={style["link-select"]}
-                      to={`/dietitian/${dietitianID}/customer/${
-                        customerID ? customerID : selectedID
-                      }/profile`}
-                    >
-                      基本資料
-                    </Link>
-                    <Link
-                      className={style["link-select"]}
-                      to={`/dietitian/${dietitianID}/customer/${
-                        customerID ? customerID : selectedID
-                      }/dietary`}
-                    >
-                      飲食記錄
-                    </Link>
-                    <Link
-                      className={style["link-select"]}
-                      to={`/dietitian/${dietitianID}/customer/${
-                        customerID ? customerID : selectedID
-                      }/target`}
-                    >
-                      目標設定
-                    </Link>
-                  </div>
+              {/* <Router> */}
+              <div className={style["customer-data"]}>
+                <div>
+                  <Link
+                    className={style["customer-name"]}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }`}
+                  >
+                    {users.length > 0 && customerID
+                      ? users.filter((e) => e.id === customerID)[0].name
+                      : ""}
+                  </Link>
                 </div>
-                <Switch>
-                  <Route exact path={`/dietitian/:dID/customer/:cID/`}>
-                    <div className={style["service-time"]}>
-                      服務時間：{date.start ? date.start : ""}~
-                      {date.end ? date.end : ""}
+                <div className={style["customer-dataSelect"]}>
+                  <Link
+                    className={style["link-select"]}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }/profile`}
+                  >
+                    基本資料
+                  </Link>
+                  <Link
+                    className={style["link-select"]}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }/dietary`}
+                  >
+                    飲食記錄
+                  </Link>
+                  <Link
+                    className={style["link-select"]}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }/target`}
+                  >
+                    目標設定
+                  </Link>
+                </div>
+              </div>
+              <Switch>
+                <Route exact path={`/dietitian/:dID/customer/:cID/`}>
+                  <div className={style["service-time"]}>
+                    服務時間：{date.start ? date.start : ""}~
+                    {date.end ? date.end : ""}
+                  </div>
+                </Route>
+                <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
+                  <div
+                    id="customer-profile"
+                    className={customer["customer-profile"]}
+                  >
+                    <div className={customer["profile-data"]}>
+                      <CustomerProfile
+                        props={props}
+                        id={selectedID}
+                        input={input}
+                      />
                     </div>
-                  </Route>
-                  {users.map((u) => (
-                    <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
-                      <div
-                        id="customer-profile"
-                        className={customer["customer-profile"]}
-                      >
-                        <div className={customer["profile-data"]}>
-                          <CusotmerProfile props={props} input={input} />
-                        </div>
-                      </div>
-                    </Route>
-                  ))}
-                  <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
-                    <DietrayRecord />
-                  </Route>
-                  <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
-                    <DietitianTarget />
-                  </Route>
-                </Switch>
-              </Router>
+                  </div>
+                </Route>
+                <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
+                  <DietrayRecord id={selectedID} />
+                </Route>
+                <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
+                  <DietitianTarget />
+                </Route>
+              </Switch>
+              {/* </Router> */}
             </Route>
           </Switch>
         </main>

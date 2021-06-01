@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import noImage from "../../../images/noimage.png";
-import CustomerProfile from "./CusotmerProfile.js";
+import CustomerProfile from "./CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
 import { param } from "jquery";
 
