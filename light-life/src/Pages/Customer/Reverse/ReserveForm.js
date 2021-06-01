@@ -18,7 +18,6 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
   const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
   const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
   const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-  console.log(initStartDate);
   initStartDate.setDate(initStartDate.getDate() + 1);
   startMostDate.setDate(startMostDate.getDate() + 14);
   endLessDate.setDate(endLessDate.getDate() + 7);
@@ -39,10 +38,14 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
       min: endLessDate.toISOString().substr(0, 10),
       max: endMostDate.toISOString().substr(0, 10),
     });
+    setInput({
+      reserveStartDate: initStartDate.toISOString().substr(0, 10),
+      reserveEndDate: endLessDate.toISOString().substr(0, 10),
+    });
   }, []);
 
   const getInputHandler = (e) => {
-    console.log(e.target.value);
+    console.log(e.target);
     const { name } = e.target;
     if (name === "reserveStartDate") {
       const newEndLessDate = new Date();
