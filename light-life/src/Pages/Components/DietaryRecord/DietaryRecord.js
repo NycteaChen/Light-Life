@@ -77,11 +77,33 @@ import style from "../../../style/dietary.module.scss";
 //   }
 // }
 
-function RenderDietaryRecord() {
+function RenderDietaryRecord({ id }) {
   const [recordDate, setRecordDate] = useState();
   const [getRecord, setGetRecord] = useState(false); //false
   const [count, setCount] = useState(1);
-  const params = useParams();
+  const [serviceDate, setServiceDate] = useState(null);
+  const [input, setInput] = useState({});
+  const { dID } = useParams();
+  const { cID } = useParams();
+
+  useEffect(() => {
+    if (dID) {
+      setInput({});
+      firebase
+        .firestore()
+        .collection("dietitians")
+        .doc(dID)
+        .collection("customers")
+        .doc(id || cID)
+        .get()
+        .then((res) => {
+          setServiceDate({
+            startDate: res.data().startDate,
+            endDate: res.data().endDate,
+          });
+        });
+    }
+  }, [id]);
 
   const getDietaryRecordDate = (e) => {
     if (e.target.value !== "") {
@@ -89,24 +111,24 @@ function RenderDietaryRecord() {
       setCount(1);
       setGetRecord(true);
     }
+    setInput({ date: e.target.value });
   };
-  // if (params.dID) {
+  // if (dID) {
   return (
     <div className={style["daily-diet"]}>
       <div className={style["date-selector"]}>
         <input
           type="date"
-          min="2021-05-14"
-          max="2021-05-26"
+          min={serviceDate ? serviceDate.startDate : ""}
+          max={serviceDate ? serviceDate.endDate : ""}
+          value={input.date ? input.date : ""}
           onChange={getDietaryRecordDate}
           required="required"
         ></input>
       </div>
-      {params.dID ? (
+      {dID ? (
         <Router>
-          <Link
-            to={`/dietitian/${params.dID}/customer/${params.cID}/dietary/`}
-          ></Link>
+          <Link to={`/dietitian/${dID}/customer/${cID}/dietary/`}></Link>
           {getRecord ? (
             <Switch>
               <Route exact path={`/dietitian/:dID/customer/:cID/dietary/`}>
@@ -124,7 +146,7 @@ function RenderDietaryRecord() {
         </Router>
       ) : (
         <Router>
-          <Link to={`/customer/${params.cID}/dietary/`}></Link>
+          <Link to={`/customer/${cID}/dietary/`}></Link>
           {getRecord ? (
             <Switch>
               <Route exact path="/customer/:cID/dietary/">
