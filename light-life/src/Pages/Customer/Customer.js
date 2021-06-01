@@ -25,6 +25,8 @@ function Customer() {
   const [reserve, setReserve] = useState([]);
   const customerID = useParams().cID;
   const [dName, setDName] = useState();
+  const [serviceDate, setServiceDate] = useState(null);
+  const [pending, setPending] = useState(null);
   const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
   const [dID, setDID] = useState("");
   useEffect(() => {
@@ -36,6 +38,27 @@ function Customer() {
       .then((doc) => {
         setDID(doc.data().dietitian);
         setProfile(doc.data());
+        return doc.data().dietitian;
+      })
+      .then((res) => {
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .doc(res)
+          .collection("customers")
+          .doc(customerID)
+          .get()
+          .then((res) => {
+            if (res) {
+              console.log(res.data());
+              setServiceDate({
+                startDate: res.data().startDate,
+                endDate: res.data().endDate,
+              });
+            } else {
+              setServiceDate({});
+            }
+          });
       });
     firebase
       .firestore()
@@ -59,6 +82,53 @@ function Customer() {
           }
         });
         setReserve(reserveArray);
+      });
+
+    firebase
+      .firestore()
+      .collection("pending")
+      .where("customer", "==", customerID)
+      .get()
+      .then((docs) => {
+        const pendingArray = [];
+        if (!docs.empty) {
+          docs.forEach((doc) => {
+            pendingArray.push(doc.data());
+          });
+          console.log(pendingArray);
+          const promises = [];
+          pendingArray.forEach((p) => {
+            const promise = firebase
+              .firestore()
+              .collection("dietitians")
+              .doc(p.dietitian)
+              .get()
+              .then((res) => {
+                return {
+                  ...p,
+                  dietitianName: res.data().name,
+                };
+              });
+            promises.push(promise);
+          });
+          // console.log(Promise.all(promises));
+          Promise.all(promises).then((res) => {
+            res.sort((a, b) => {
+              const dateA = new Date(a.startDate).getTime();
+              const dateB = new Date(b.startDate).getTime();
+              if (dateA < dateB) {
+                return -1;
+              } else if (dateA > dateB) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
+            setPending(res);
+          });
+        } else {
+          setPending([]);
+        }
       });
   }, []);
 
@@ -85,7 +155,6 @@ function Customer() {
             const reserveArray = [];
             docs.forEach((doc) => {
               reserveArray.push(doc.data());
-              console.log(doc);
             });
             let user;
             reserveArray.forEach((r) => {
@@ -105,7 +174,7 @@ function Customer() {
     //   setDietitians(res);
     // });
   }, [reserve]);
-  console.log(dietitians);
+
   const logoutHandler = () => {
     firebase
       .auth()
@@ -240,9 +309,43 @@ function Customer() {
           <Route exact path="/customer/:cID">
             <div className={style.indexMessage}>
               <div>{profile.name}，歡迎回來！</div>
-              <div>當前進行之服務時間：</div>
               <div>
-                <div>已預訂服務</div>
+                <div>當前進行之服務時間</div>
+                {serviceDate ? (
+                  serviceDate.startDate ? (
+                    <>
+                      <div>
+                        {serviceDate ? serviceDate.startDate : ""}~
+                        {serviceDate ? serviceDate.endDate : ""}
+                      </div>
+                    </>
+                  ) : (
+                    <div>暫無</div>
+                  )
+                ) : (
+                  <div>loading</div>
+                )}
+              </div>
+              <div>
+                <div>尚未進行的服務</div>
+                {pending ? (
+                  pending.length > 0 ? (
+                    pending.map((p) => (
+                      <div>
+                        <div>
+                          <div>{p.dietitianName} 營養師</div>
+                          <div>
+                            時間：{p.startDate}~{p.endDate}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div>無</div>
+                  )
+                ) : (
+                  <div>loading</div>
+                )}
               </div>
             </div>
           </Route>
