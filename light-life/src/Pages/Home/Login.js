@@ -185,7 +185,7 @@ function Login({ display, setDisplay }) {
           setValidStyle({ ...validStyle, reset: style.invalid });
           setShowMessage({
             formHeight: style.formHeight,
-            errorEmail: style.showMessage,
+            wrongEmail: style.showMessage,
           });
         });
     } else {
@@ -247,16 +247,9 @@ function Login({ display, setDisplay }) {
                   });
                 }
               });
+          } else {
+            setValidStyle({ ...validStyle, email: style.invalid });
           }
-          // if (emails.find((f) => f === e.target.value)) {
-          //   setValidStyle({
-          //     email: style.valid,
-          //   });
-          // } else {
-          //   setValidStyle({
-          //     email: style.invalid,
-          //   });
-          // }
         } else {
           if (emails.find((f) => f === e.target.value)) {
             setShowMessage({
@@ -300,11 +293,6 @@ function Login({ display, setDisplay }) {
     }
   };
 
-  const checkEmailHandler = (e) => {
-    if (valid.email) {
-    }
-  };
-
   const loginHandler = () => {
     if (valid.email && valid.password) {
       firebase
@@ -336,14 +324,14 @@ function Login({ display, setDisplay }) {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode + errorMessage);
-                alert("密碼錯誤");
+                setShowMessage({ wrongPassword: style.showMessage });
                 setValidStyle({
                   email: style.valid,
                   password: style.invalid,
                 });
               });
           } else {
-            alert("沒有此帳號喔，請檢查您輸入是否正確或選錯登入端");
+            setShowMessage({ wrongAccount: style.showMessage });
             setValidStyle({
               email: style.invalid,
               password: style.invalid,
@@ -352,6 +340,7 @@ function Login({ display, setDisplay }) {
         });
     } else {
       alert("none");
+      setShowMessage({ incomplete: style.showMessage });
       setValidStyle({
         email: style.invalid,
         password: style.invalid,
@@ -594,7 +583,7 @@ function Login({ display, setDisplay }) {
           <div className={`${style.message} ${showMessage.noEnter || ""}`}>
             沒有輸入喔
           </div>
-          <div className={`${style.message} ${showMessage.errorEmail || ""}`}>
+          <div className={`${style.message} ${showMessage.wrongEmail || ""}`}>
             信箱輸入有誤
           </div>
           <div>
@@ -654,12 +643,10 @@ function Login({ display, setDisplay }) {
                 type="email"
                 name="email"
                 className={validStyle.email || ""}
-                placeholder="請輸入e-mail"
+                placeholder="diet@test.com or cus@test.com"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
                 value={input.email ? input.email : ""}
                 onChange={getInputHandler}
-                onBlur={checkEmailHandler}
-                required
               />
             </label>
             <label>
@@ -668,13 +655,12 @@ function Login({ display, setDisplay }) {
                 type={eye.mode}
                 name="password"
                 className={validStyle.password || ""}
-                placeholder="請輸入至少6位英數字"
+                placeholder="abc123"
                 pattern="^([a-zA-Z]+\d+|\d+[a-zA-Z]+)[a-zA-Z0-9]*$"
                 minlength="6"
                 maxlength="12"
                 value={input.password ? input.password : ""}
                 onChange={getInputHandler}
-                required
               />
               <i
                 class={`fa fa-eye-slash ${style["eye-slash"]}`}
@@ -689,6 +675,19 @@ function Login({ display, setDisplay }) {
                 onClick={switchPasswordModeHandler}
               ></i>
             </label>
+            <div
+              className={`${style.message} ${showMessage.wrongAccount || ""}`}
+            >
+              帳號或登入端有誤
+            </div>
+            <div
+              className={`${style.message} ${showMessage.wrongPassword || ""}`}
+            >
+              密碼錯誤
+            </div>
+            <div className={`${style.message} ${showMessage.incomplete || ""}`}>
+              資料請填寫完整喔
+            </div>
             <div className={style.hints}>
               <div className={style.hint}>
                 還沒
@@ -770,7 +769,6 @@ function Login({ display, setDisplay }) {
                 pattern="^[\u4e00-\u9fa5]+$|^[a-zA-Z\s]+$"
                 value={input.name ? input.name : ""}
                 onChange={getInputHandler}
-                required
               />
             </label>
             <label>
@@ -783,8 +781,6 @@ function Login({ display, setDisplay }) {
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
                 value={input.email ? input.email : ""}
                 onChange={getInputHandler}
-                onBlur={checkEmailHandler}
-                required
               />
             </label>
 
@@ -800,7 +796,6 @@ function Login({ display, setDisplay }) {
                 maxlength="12"
                 value={input.password ? input.password : ""}
                 onChange={getInputHandler}
-                required
               />
               <i
                 class={`fa fa-eye-slash ${style["eye-slash"]}`}
