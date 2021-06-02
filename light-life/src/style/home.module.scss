@@ -75,6 +75,14 @@
 // $header-height: 77px;
 // height: calc(100vh - #{$header-height});
 .home-main {
+  background-color: white;
+  h2 {
+    font-size: 24px;
+  }
+  h3 {
+    font-size: 20px;
+    margin: 20px auto 10px;
+  }
   flex-grow: 1;
   @media (min-width: 768px) {
     background-color: #d4fafc !important;
@@ -88,21 +96,20 @@
   }
   button {
     margin-top: 20px;
-    width: 120px;
+    width: 150px;
     height: 40px;
     border-style: none;
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.5s;
-    letter-spacing: 4px;
+    letter-spacing: 3px;
     outline: none;
-    background: #449676;
+    background: cadetblue;
     color: white;
     &:hover,
     &:focus {
-      background: #0a724a;
-      color: white;
-      box-shadow: 0px 2px 1px #454747;
+      background: #1e4d4e;
+      transform: scale(1.1);
     }
     @media (min-width: 520px) {
       & {
@@ -112,7 +119,7 @@
   }
   .cover {
     height: 600px;
-    background: linear-gradient(#2e2e2e4f 0 100%, transparent),
+    background: linear-gradient(#00000073 0 100%, transparent),
       url("../images/cover.png") no-repeat center;
     background-attachment: fixed;
     background-size: cover;
@@ -123,7 +130,6 @@
       color: white;
       margin: auto;
       text-align: center;
-      text-shadow: 0 2px 2px black;
       white-space: nowrap;
       h2 {
         transition: font-size 0.5s;
@@ -132,8 +138,14 @@
         letter-spacing: 3px;
       }
     }
-    button {
-      box-shadow: 0px 2px 1px #454747;
+    @media (min-width: 320px) {
+      & {
+        .main-title {
+          h2 {
+            font-size: 24px;
+          }
+        }
+      }
     }
     @media (min-width: 520px) {
       & {
@@ -191,9 +203,6 @@
         h3 {
           text-align: center;
         }
-        h3 {
-          margin: 20px auto 10px;
-        }
         p + p {
           margin-top: 12px;
         }
@@ -223,7 +232,6 @@
             section {
               clip-path: polygon(0 0, 100% 15%, 100% 85%, 0 100%);
               opacity: 0.9;
-              text-shadow: 0 1px 2px #8d8d8dc4;
               background-color: #ffffffc7;
               display: flex;
               align-items: center;
@@ -256,7 +264,7 @@
                     font-size: 20px;
                   }
                   p {
-                    font-size: 18px;
+                    font-size: 16px;
                     line-height: 30px;
                   }
                 }
@@ -305,8 +313,7 @@
         padding: 0 10px;
         &:focus {
           outline: none !important;
-          border: 2px solid #002641;
-          box-shadow: 0 1px 2px #002641;
+          border: 2px solid cadetblue;
         }
       }
       textarea {
@@ -314,8 +321,7 @@
         width: 90%;
         &:focus {
           outline: none !important;
-          border: 2px solid #002641;
-          box-shadow: 0 1px 2px #002641;
+          border: 2px solid cadetblue;
         }
       }
       @media (min-width: 520px) {
