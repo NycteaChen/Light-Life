@@ -164,6 +164,25 @@
       display: block;
       margin-top: 20px;
       position: relative;
+
+      .invalid {
+        border: 1.5px solid #ff4d4d;
+        background: url("../images/alert-circle.svg") no-repeat;
+        background-size: 17px;
+        background-position: 95%;
+        @media (min-width: 320px) {
+          background-position: 97%;
+        }
+      }
+      .valid {
+        background: url("../images/check.svg") no-repeat;
+        background-size: 17px;
+        background-position: 95%;
+        border: 1.5px solid #78d494;
+        @media (min-width: 320px) {
+          background-position: 97%;
+        }
+      }
       input {
         font-size: 14px;
         padding: 5px 10px;
@@ -172,9 +191,15 @@
         border: 1px solid black;
         padding-left: 7px;
         border-radius: 5px;
-        &:valid {
-          background-color: white !important;
-        }
+        outline: none;
+        transition: border-color 0.2s;
+        padding-right: 30px;
+        position: relative;
+        // &:required {
+        //   &:focus {
+
+        //   }
+        // }
       }
       div {
         width: 90%;

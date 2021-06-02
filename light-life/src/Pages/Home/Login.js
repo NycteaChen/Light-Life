@@ -4,6 +4,7 @@ import "firebase/firestore";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from "../../style/login.module.scss";
 import logo from "../../images/lightlife-straight.png";
+import { Formik } from "formik";
 
 function Login({ display, setDisplay }) {
   const noImage =
@@ -21,6 +22,7 @@ function Login({ display, setDisplay }) {
     slash: "block",
     mode: "password",
   });
+  const [validStyle, setValidStyle] = useState({});
   const [email, setEmail] = useState("");
   const [show, setShow] = useState("");
 
@@ -30,6 +32,7 @@ function Login({ display, setDisplay }) {
     setImage(style.right);
     setInput({});
     setValid({});
+    setValidStyle({});
     setEye({
       on: "none",
       slash: "block",
@@ -42,6 +45,7 @@ function Login({ display, setDisplay }) {
     setImage(style.left);
     setInput({});
     setValid({});
+    setValidStyle({});
     setEye({
       on: "none",
       slash: "block",
@@ -54,10 +58,48 @@ function Login({ display, setDisplay }) {
       setClient("dietitian");
       setDietitian(style.active);
       setCustomer("");
+      console.log(valid.email);
+      if (valid.email && login === style.appear) {
+        firebase
+          .firestore()
+          .collection(`dietitians`)
+          .where("email", "==", `${valid.email}`)
+          .get()
+          .then((querySnapshot) => {
+            if (querySnapshot.empty) {
+              setValidStyle({
+                email: style.invalid,
+              });
+            } else {
+              setValidStyle({
+                email: style.valid,
+              });
+            }
+          });
+      }
     } else {
       setCustomer(style.active);
       setClient("customer");
       setDietitian("");
+      if (valid.email && login === style.appear) {
+        firebase
+          .firestore()
+          .collection(`customers`)
+          .where("email", "==", `${valid.email}`)
+          .get()
+          .then((querySnapshot) => {
+            console.log("hrer");
+            if (querySnapshot.empty) {
+              setValidStyle({
+                email: style.invalid,
+              });
+            } else {
+              setValidStyle({
+                email: style.valid,
+              });
+            }
+          });
+      }
     }
   };
 
@@ -93,6 +135,7 @@ function Login({ display, setDisplay }) {
     setDisplay("none");
     setInput({});
     setValid({});
+    setValidStyle({});
   };
 
   const getInputHandler = (e) => {
@@ -100,8 +143,14 @@ function Login({ display, setDisplay }) {
     setInput({ ...input, [name]: e.target.value });
     if (e.target.validity.valid) {
       setValid({ ...valid, [name]: e.target.value });
+      if (signup === style.appear) {
+        setValidStyle({ ...validStyle, [name]: style.valid });
+      }
     } else {
       delete valid[name];
+      if (signup === style.appear) {
+        setValidStyle({ ...validStyle, [name]: style.invalid });
+      }
     }
   };
   const switchPasswordModeHandler = (e) => {
@@ -117,6 +166,27 @@ function Login({ display, setDisplay }) {
         slash: "block",
         mode: "password",
       });
+    }
+  };
+
+  const checkEmailHandler = (e) => {
+    if (valid.email) {
+      firebase
+        .firestore()
+        .collection(`${client}s`)
+        .where("email", "==", `${valid.email}`)
+        .get()
+        .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            setValidStyle({
+              email: style.invalid,
+            });
+          } else {
+            setValidStyle({
+              email: style.valid,
+            });
+          }
+        });
     }
   };
 
@@ -141,24 +211,33 @@ function Login({ display, setDisplay }) {
                 // Signed in
                 const user = userCredential.user;
                 console.log(user);
-                alert("歡迎回來");
-                window.location.href = `/${client}/${userID}`;
                 setInput({});
                 setValid({});
+                setValidStyle({});
+                alert("歡迎回來");
+                window.location.href = `/${client}/${userID}`;
               })
               .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode + errorMessage);
                 alert("密碼錯誤");
+                setValidStyle({
+                  email: style.valid,
+                  password: style.invalid,
+                });
               });
           } else {
             alert("沒有此帳號喔，請檢查您輸入是否正確或選錯登入端");
+            setValidStyle({
+              email: style.invalid,
+              password: style.invalid,
+            });
           }
         });
     }
   };
-  const signupHandler = () => {
+  const signupHandler = (e) => {
     if (valid.email && valid.password && valid.name) {
       firebase
         .auth()
@@ -204,6 +283,10 @@ function Login({ display, setDisplay }) {
           const errorMessage = error.message;
           console.log(errorCode + errorMessage);
           alert("此信箱已有人使用");
+          setValidStyle({
+            ...validStyle,
+            email: style.invalid,
+          });
         });
     } else {
       console.log("none");
@@ -404,16 +487,18 @@ function Login({ display, setDisplay }) {
               </a>
             </li>
           </ul>
-          <form action="javascript:void(0);">
+          <form action="javascript:void(0);" autocomplete="off">
             <label>
               <div>帳號</div>
               <input
                 type="email"
                 name="email"
+                className={validStyle.email || ""}
                 placeholder="請輸入e-mail"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
                 value={input.email ? input.email : ""}
                 onChange={getInputHandler}
+                onBlur={checkEmailHandler}
                 required
               />
             </label>
@@ -422,6 +507,7 @@ function Login({ display, setDisplay }) {
               <input
                 type={eye.mode}
                 name="password"
+                className={validStyle.password || ""}
                 placeholder="請輸入至少6位英數字"
                 pattern="^([a-zA-Z]+\d+|\d+[a-zA-Z]+)[a-zA-Z0-9]*$"
                 minlength="6"
@@ -513,12 +599,13 @@ function Login({ display, setDisplay }) {
             </li>
           </ul>
 
-          <form action="javascript:void(0);">
+          <form action="javascript:void(0);" autocomplete="off">
             <label>
               <div>姓名</div>
               <input
                 type="text"
                 name="name"
+                className={validStyle.name || ""}
                 placeholder="請輸入姓名"
                 pattern="^[\u4e00-\u9fa5]+$|^[a-zA-Z\s]+$"
                 value={input.name ? input.name : ""}
@@ -531,10 +618,12 @@ function Login({ display, setDisplay }) {
               <input
                 type="email"
                 name="email"
+                className={validStyle.email || ""}
                 placeholder="請輸入e-mail"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
                 value={input.email ? input.email : ""}
                 onChange={getInputHandler}
+                onBlur={checkEmailHandler}
                 required
               />
             </label>
@@ -544,6 +633,7 @@ function Login({ display, setDisplay }) {
               <input
                 type={eye.mode}
                 name="password"
+                className={validStyle.password || ""}
                 placeholder="請輸入至少6位英數字"
                 pattern="^([a-zA-Z]+\d+|\d+[a-zA-Z]+)[a-zA-Z0-9]*$"
                 minlength="6"
