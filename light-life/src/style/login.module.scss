@@ -208,11 +208,11 @@
         font-size: 14px;
         padding: 5px 10px;
         width: 90%;
-        transition: all 0.5s;
         border: 1px solid black;
         padding-left: 7px;
         border-radius: 5px;
         outline: none;
+        transition: all 0.5s;
         transition: border-color 0.2s;
         padding-right: 30px;
         position: relative;
@@ -237,7 +237,7 @@
       }
     }
     .hint {
-      margin-top: 5px;
+      margin-top: 15px;
       font-size: 12px;
       letter-spacing: 2px;
       a {
@@ -273,7 +273,7 @@
         opacity: 0;
       }
       .showMessage {
-        opacity: 1;
+        opacity: 1 !important;
       }
     }
   }
@@ -281,6 +281,20 @@
   .signup {
     button {
       margin-top: 35px !important;
+    }
+  }
+  .login {
+    form {
+      .message {
+        position: absolute;
+        bottom: 175px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        color: #ff4d4d;
+        font-size: 12px;
+        opacity: 0;
+      }
     }
   }
   .login-image {
@@ -353,71 +367,91 @@
         margin-top: 40px !important;
       }
     }
-    .emailForm {
-      input {
-        width: 300px;
-      }
-      .message {
-        width: 300px;
-        text-align: left;
-      }
-    }
-  }
-
-  @media (min-width: 1024px) {
-    position: fixed;
-    z-index: 10;
-    height: 600px;
-    text-align: center;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-
-    .login-image {
-      display: block;
-      width: 420px;
-      height: 630px;
-      background-image: url("../images/food.png");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: top 25% right 10%;
-      border-radius: 15px;
-      position: absolute;
-      top: -15px;
-      z-index: 11;
-      transition: all 0.5s;
-    }
-
-    .right {
-      transform: translateX(210px);
-    }
-    .left {
-      transform: translate(-210px);
-    }
-
-    .login,
-    .signup {
-      transition: opacity 0.5s;
-      position: static;
-      border-radius: 0;
+    .login {
       .hint {
-        font-size: 14px;
-        text-align: right;
-        margin-right: 35px;
-      }
-      .hints {
-        justify-content: flex-end;
-        .hint {
-          &:first-of-type {
-            margin-right: 0;
-          }
-        }
+        margin-top: 10px;
       }
       form {
         .message {
-          bottom: 88px;
+          bottom: 170px;
+          left: 0;
+          right: 0;
+        }
+      }
+    }
+
+    .login {
+      button {
+        &:first-of-type {
+          margin-top: 15px;
+        }
+      }
+      .emailForm {
+        input {
+          width: 300px;
+        }
+        .message {
+          width: 300px;
+          text-align: left;
+        }
+      }
+    }
+
+    @media (min-width: 1024px) {
+      position: fixed;
+      z-index: 10;
+      height: 600px;
+      text-align: center;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+
+      .login-image {
+        display: block;
+        width: 420px;
+        height: 630px;
+        background-image: url("../images/food.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top 25% right 10%;
+        border-radius: 15px;
+        position: absolute;
+        top: -15px;
+        z-index: 11;
+        transition: all 0.5s;
+      }
+
+      .right {
+        transform: translateX(210px);
+      }
+      .left {
+        transform: translate(-210px);
+      }
+
+      .login,
+      .signup {
+        transition: all 0.5s;
+        position: static;
+        border-radius: 0;
+        .hint {
+          font-size: 14px;
+          text-align: right;
+          margin-right: 35px;
+        }
+        .hints {
+          justify-content: flex-end;
+          .hint {
+            &:first-of-type {
+              margin-right: 0;
+            }
+          }
+        }
+        form {
+          .message {
+            bottom: 88px;
+          }
         }
       }
     }
@@ -428,6 +462,15 @@
         top: 15px;
         font-size: 20px;
         width: 30px;
+      }
+    }
+    .login {
+      form {
+        .message {
+          bottom: 175px;
+          right: unset;
+          left: 80px;
+        }
       }
     }
     .disappear {
