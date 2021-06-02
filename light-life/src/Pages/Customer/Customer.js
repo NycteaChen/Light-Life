@@ -252,7 +252,6 @@ function Customer() {
         return users;
       })
       .then((users) => {
-        console.log(users);
         firebase
           .firestore()
           .collection("reserve")
@@ -267,44 +266,18 @@ function Customer() {
                   reserveArray.push(doc.data());
                 }
               });
-
-              //users : 所有isServing的營養師
-              //reserveArray要篩選掉的東西："我"預約中 or 預約成功的營養師
-              // users營養師 - reserveArray
               users.forEach((u) => {
                 if (!reserveArray.find((r) => r.dietitian === u.id)) {
-                  console.log(u.id);
                   user.push(u);
                 }
               });
-
               setDietitians(user);
             } else {
               setDietitians(users);
             }
           });
       });
-
-    // return users;
-
-    // .then((res) => {
-    //   setDietitians(res);
-    // });
   }, [reserve]);
-
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(customerID)
-      .onSnapshot((doc) => {
-        setProfile({
-          ...profile,
-          name: doc.data().name,
-          image: doc.data().image,
-        });
-      });
-  }, []);
 
   const logoutHandler = () => {
     firebase
@@ -481,7 +454,7 @@ function Customer() {
             </div>
           </Route>
           <Route exact path="/customer/:cID/profile">
-            <CustomerProfile />
+            <CustomerProfile profile={profile} setProfile={setProfile} />
           </Route>
           <Route exact path="/customer/:cID/dietary">
             <DietrayRecord />

@@ -8,19 +8,13 @@ import CustomerProfile from "./CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
 import { param } from "jquery";
 
-function EditCustomerProfile() {
+function EditCustomerProfile({ profile, setProfile }) {
   const db = firebase.firestore();
   const storage = firebase.storage();
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({});
   const { cID } = useParams();
-  useEffect(() => {
-    db.collection("customers")
-      .doc(cID)
-      .get()
-      .then((doc) => setProfile(doc.data()));
-  }, []);
+
   const {
     name,
     image,
@@ -34,7 +28,6 @@ function EditCustomerProfile() {
     sport,
     other,
   } = profile;
-
   async function postImg(image) {
     if (image) {
       const storageRef = storage.ref(`${id}/` + image.name);
@@ -109,7 +102,7 @@ function EditCustomerProfile() {
     }
     setIsEditing(false);
   };
-
+  console.log(profile);
   const bindEditHandler = () => {
     setIsEditing(true);
   };
