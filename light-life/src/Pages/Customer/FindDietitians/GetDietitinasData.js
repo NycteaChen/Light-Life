@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DietitianData from "./DietitianData.js";
 import style from "../../../style/findDietitian.module.scss";
 
-function GetDietitiansData({ props, setReserve, profile }) {
+function GetDietitiansData({ props, setReserve, profile, reserve }) {
   const [isChecked, setIsChecked] = useState(false); //false
   const [checkIndex, setCheckIndex] = useState("");
   const bindCheckHandler = (e) => {
@@ -27,6 +27,7 @@ function GetDietitiansData({ props, setReserve, profile }) {
                   props={d}
                   setIsChecked={setIsChecked}
                   profile={profile}
+                  reserve={reserve}
                 />
               ) : (
                 ""

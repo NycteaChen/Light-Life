@@ -470,6 +470,7 @@ function Customer() {
               props={dietitians}
               setReserve={setReserve}
               profile={profile}
+              reserve={reserve}
             />
           </Route>
           <Route exact path="/customer/:cID/reserve-list">
