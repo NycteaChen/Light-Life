@@ -5,13 +5,14 @@ import "firebase/firestore";
 import style from "../../../style/findDietitian.module.scss";
 import InputGroupWithExtras from "react-bootstrap/esm/InputGroup";
 // , profile
-function ReserveForm({ props, setReserve, setIsChecked }) {
+function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   const params = useParams();
   const [input, setInput] = useState({});
   const db = firebase.firestore();
   const [profile, setProfile] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [occupationTime, setOccupationTime] = useState([]);
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const addDate = today.toISOString().substr(0, 10);
   const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
@@ -22,6 +23,11 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
   startMostDate.setDate(startMostDate.getDate() + 14);
   endLessDate.setDate(endLessDate.getDate() + 7);
   endMostDate.setDate(endMostDate.getDate() + 14);
+
+  const transDateToTime = (date) => {
+    const time = new Date(date).getTime();
+    return time;
+  };
 
   useEffect(() => {
     db.collection("customers")
@@ -38,39 +44,89 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
       min: endLessDate.toISOString().substr(0, 10),
       max: endMostDate.toISOString().substr(0, 10),
     });
-    setInput({
-      reserveStartDate: initStartDate.toISOString().substr(0, 10),
-      reserveEndDate: endLessDate.toISOString().substr(0, 10),
-    });
+    // setInput({
+    //   reserveStartDate: initStartDate.toISOString().substr(0, 10),
+    //   reserveEndDate: endLessDate.toISOString().substr(0, 10),
+    // });
+    db.collection("publish")
+      .where("id", "==", params.cID)
+      .get()
+      .then((docs) => {
+        const occupation = reserve
+          .filter((r) => r.status === "0" || r.status === "1")
+          .map((u) => [
+            transDateToTime(u.reserveStartDate),
+            transDateToTime(u.reserveEndDate),
+          ]);
+        docs.forEach((doc) => {
+          if (doc.data().status === "1" || doc.data().status === "0") {
+            occupation.push([
+              transDateToTime(doc.data().startDate),
+              transDateToTime(doc.data().endDate),
+            ]);
+          }
+        });
+        setOccupationTime(occupation);
+      });
   }, []);
 
+  console.log(occupationTime);
   const getInputHandler = (e) => {
-    console.log(e.target);
     const { name } = e.target;
-    if (name === "reserveStartDate") {
-      const newEndLessDate = new Date();
-      const newEndMostDate = new Date();
+    const test = transDateToTime(e.target.value);
+    if (name === "reserveStartDate" || name === "reserveEndDate") {
+      if (
+        occupationTime.find((r) => test >= r[0] && test <= r[1]) ||
+        (name === "reserveStartDate" &&
+          occupationTime.find(
+            (r) => test < r[0] && transDateToTime(input.reserveEndDate) > r[1]
+          )) ||
+        (name === "reserveEndDate" &&
+          occupationTime.find(
+            (r) => transDateToTime(input.reserveStartDate) < r[0] && test > r[1]
+          ))
+      ) {
+        alert("您所選的區間已有安排!");
+      } else {
+        if (name === "reserveStartDate") {
+          const newEndLessDate = new Date();
+          const newEndMostDate = new Date();
 
-      newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
-      newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
+          newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
+          newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
 
-      setEndDate({
-        min: newEndLessDate.toISOString().substr(0, 10),
-        max: newEndMostDate.toISOString().substr(0, 10),
+          setEndDate({
+            min: newEndLessDate.toISOString().substr(0, 10),
+            max: newEndMostDate.toISOString().substr(0, 10),
+          });
+        }
+        setInput({
+          ...input,
+          [name]: e.target.value,
+          addDate: addDate,
+          dietitian: props.id,
+          dietitianName: props.name,
+          image: props.image,
+          inviterID: params.cID,
+          inviterName: profile.name,
+          inviterGender: profile.gender,
+          status: "0",
+        });
+      }
+    } else {
+      setInput({
+        ...input,
+        [name]: e.target.value,
+        addDate: addDate,
+        dietitian: props.id,
+        dietitianName: props.name,
+        image: props.image,
+        inviterID: params.cID,
+        inviterName: profile.name,
+        inviterGender: profile.gender,
+        status: "0",
       });
     }
-    setInput({
-      ...input,
-      [name]: e.target.value,
-      addDate: addDate,
-      dietitian: props.id,
-      dietitianName: props.name,
-      image: props.image,
-      inviterID: params.cID,
-      inviterName: profile.name,
-      inviterGender: profile.gender,
-      status: "0",
-    });
   };
 
   const sendReverseHandler = () => {
@@ -126,13 +182,7 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
             <div>開始</div>
             <input
               type="date"
-              value={
-                input.reserveStartDate
-                  ? input.reserveStartDate
-                  : startDate
-                  ? startDate.min
-                  : ""
-              }
+              value={input.reserveStartDate ? input.reserveStartDate : ""}
               min={startDate ? startDate.min : ""}
               max={startDate ? startDate.max : ""}
               name="reserveStartDate"
@@ -143,13 +193,7 @@ function ReserveForm({ props, setReserve, setIsChecked }) {
             <div>結束</div>
             <input
               type="date"
-              value={
-                input.reserveEndDate
-                  ? input.reserveEndDate
-                  : endDate
-                  ? endDate.min
-                  : ""
-              }
+              value={input.reserveEndDate ? input.reserveEndDate : ""}
               min={endDate ? endDate.min : ""}
               max={endDate ? endDate.max : ""}
               name="reserveEndDate"
