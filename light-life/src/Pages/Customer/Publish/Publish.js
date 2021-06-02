@@ -31,8 +31,8 @@ function Publish({ reserve }) {
   const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
   initStartDate.setDate(initStartDate.getDate() + 1);
   startMostDate.setDate(startMostDate.getDate() + 21);
-  endLessDate.setDate(endLessDate.getDate() + 14);
-  endMostDate.setDate(endMostDate.getDate() + 21);
+  endLessDate.setDate(endLessDate.getDate() + 7);
+  endMostDate.setDate(endMostDate.getDate() + 14);
   const transDateToTime = (date) => {
     const time = new Date(date).getTime();
     return time;
