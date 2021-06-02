@@ -21,7 +21,7 @@ import exit from "../../images/exit.png";
 
 function Customer() {
   const [profile, setProfile] = useState({});
-  const [dietitians, setDietitians] = useState([]);
+  const [dietitians, setDietitians] = useState(null);
   const [reserve, setReserve] = useState([]);
   const customerID = useParams().cID;
   const [dName, setDName] = useState("");
@@ -463,7 +463,7 @@ function Customer() {
             <CustomerTarget />
           </Route>
           <Route exact path="/customer/:cID/publish">
-            <Publish />
+            <Publish reserve={reserve} />
           </Route>
           <Route exact path="/customer/:cID/findDietitians">
             <GetDietitiansData

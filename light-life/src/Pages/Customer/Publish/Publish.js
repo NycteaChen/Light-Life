@@ -11,7 +11,7 @@ import "firebase/firestore";
 import style from "../../../style/publish.module.scss";
 import Invited from "./Invited.js";
 
-function Publish() {
+function Publish({ reserve }) {
   const { cID } = useParams();
   const [display, setDisplay] = useState("none");
   const [profile, setProfile] = useState({});
@@ -19,8 +19,24 @@ function Publish() {
   const [oldPublish, setOldPublish] = useState(null);
   const [idx, setIdx] = useState("");
   const [isChecked, setIsChecked] = useState(false);
-  const today = new Date(+new Date() + 8 * 3600 * 1000);
   const [input, setInput] = useState({});
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [occupationTime, setOccupationTime] = useState([]);
+  const today = new Date(+new Date() + 8 * 3600 * 1000);
+  const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
+  const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
+  const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
+  const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
+  initStartDate.setDate(initStartDate.getDate() + 1);
+  startMostDate.setDate(startMostDate.getDate() + 21);
+  endLessDate.setDate(endLessDate.getDate() + 14);
+  endMostDate.setDate(endMostDate.getDate() + 21);
+  const transDateToTime = (date) => {
+    const time = new Date(date).getTime();
+    return time;
+  };
 
   useEffect(() => {
     firebase
@@ -29,10 +45,23 @@ function Publish() {
       .where("id", "==", cID)
       .get()
       .then((docs) => {
+        const occupation = reserve
+          .filter((r) => r.status === "0" || r.status === "1")
+          .map((u) => [
+            transDateToTime(u.reserveStartDate),
+            transDateToTime(u.reserveEndDate),
+          ]);
+
         if (!docs.empty) {
           const publishArray = [];
           const oldPublishArray = [];
           docs.forEach((doc) => {
+            if (doc.data().status === "1" || doc.data().status === "0") {
+              occupation.push([
+                transDateToTime(doc.data().startDate),
+                transDateToTime(doc.data().endDate),
+              ]);
+            }
             const startDate = new Date(doc.data().startDate).getTime();
             if (startDate > today && doc.data().status === "0") {
               publishArray.push(doc.data());
@@ -49,7 +78,7 @@ function Publish() {
               oldPublishArray.push(doc.data());
             }
           });
-
+          setOccupationTime(occupation);
           setOldPublish(oldPublishArray);
           setPublishData(publishArray);
         } else {
@@ -63,6 +92,14 @@ function Publish() {
       .doc(cID)
       .get()
       .then((res) => setProfile(res.data()));
+    setStartDate({
+      min: initStartDate.toISOString().substr(0, 10),
+      max: startMostDate.toISOString().substr(0, 10),
+    });
+    setEndDate({
+      min: endLessDate.toISOString().substr(0, 10),
+      max: endMostDate.toISOString().substr(0, 10),
+    });
   }, []);
 
   const publishModalHandler = (e) => {
@@ -106,15 +143,54 @@ function Publish() {
 
   const getInputHandler = (e) => {
     const { name } = e.target;
-    setInput({
-      ...input,
-      [name]: e.target.value,
-      publishDate: today.toISOString().substr(0, 10),
-      name: profile.name,
-      gender: profile.gender,
-      id: cID,
-      status: "0",
-    });
+    const test = transDateToTime(e.target.value);
+    if (name === "startDate" || name === "endDate") {
+      if (
+        occupationTime.find((r) => test >= r[0] && test <= r[1]) ||
+        (name === "startDate" &&
+          occupationTime.find(
+            (r) => test < r[0] && transDateToTime(input.endDate) > r[1]
+          )) ||
+        (name === "endDate" &&
+          occupationTime.find(
+            (r) => transDateToTime(input.startDate) < r[0] && test > r[1]
+          ))
+      ) {
+        alert("您所選的區間已有安排!");
+      } else {
+        if (name === "startDate") {
+          const newEndLessDate = new Date();
+          const newEndMostDate = new Date();
+
+          newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
+          newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
+
+          setEndDate({
+            min: newEndLessDate.toISOString().substr(0, 10),
+            max: newEndMostDate.toISOString().substr(0, 10),
+          });
+        }
+        setInput({
+          ...input,
+          [name]: e.target.value,
+          publishDate: today.toISOString().substr(0, 10),
+          name: profile.name,
+          gender: profile.gender,
+          id: cID,
+          status: "0",
+        });
+      }
+    } else {
+      setInput({
+        ...input,
+        [name]: e.target.value,
+        publishDate: today.toISOString().substr(0, 10),
+        name: profile.name,
+        gender: profile.gender,
+        id: cID,
+        status: "0",
+      });
+    }
   };
 
   const newPublishHandler = (e) => {
@@ -292,6 +368,8 @@ function Publish() {
             <input
               type="date"
               name="startDate"
+              min={startDate ? startDate.min : ""}
+              max={startDate ? startDate.max : ""}
               value={input.startDate || ""}
               onChange={getInputHandler}
             ></input>
@@ -301,6 +379,8 @@ function Publish() {
             <input
               type="date"
               name="endDate"
+              min={endDate ? endDate.min : ""}
+              max={endDate ? endDate.max : ""}
               value={input.endDate || ""}
               onChange={getInputHandler}
             ></input>
