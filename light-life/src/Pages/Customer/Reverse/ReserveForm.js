@@ -44,10 +44,6 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       min: endLessDate.toISOString().substr(0, 10),
       max: endMostDate.toISOString().substr(0, 10),
     });
-    // setInput({
-    //   reserveStartDate: initStartDate.toISOString().substr(0, 10),
-    //   reserveEndDate: endLessDate.toISOString().substr(0, 10),
-    // });
     db.collection("publish")
       .where("id", "==", params.cID)
       .get()
@@ -58,19 +54,20 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
             transDateToTime(u.reserveStartDate),
             transDateToTime(u.reserveEndDate),
           ]);
-        docs.forEach((doc) => {
-          if (doc.data().status === "1" || doc.data().status === "0") {
-            occupation.push([
-              transDateToTime(doc.data().startDate),
-              transDateToTime(doc.data().endDate),
-            ]);
-          }
-        });
+        if (!docs.empty) {
+          docs.forEach((doc) => {
+            if (doc.data().status === "1" || doc.data().status === "0") {
+              occupation.push([
+                transDateToTime(doc.data().startDate),
+                transDateToTime(doc.data().endDate),
+              ]);
+            }
+          });
+        }
         setOccupationTime(occupation);
       });
   }, []);
 
-  console.log(occupationTime);
   const getInputHandler = (e) => {
     const { name } = e.target;
     const test = transDateToTime(e.target.value);
