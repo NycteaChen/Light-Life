@@ -14,8 +14,7 @@ import style from "../../../style/customerProfile.module.scss";
 function CustomerProfile({ props, input }) {
   const [profile, setProfile] = useState({});
   const { cID } = useParams();
-  console.log(props);
-  console.log(profile);
+
   useEffect(() => {
     firebase
       .firestore()
