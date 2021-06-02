@@ -12,8 +12,7 @@
   }
 
   .emailForm {
-    transition: all 0.5s;
-    transition: height 0s;
+    transition: all 0.5s, height 0s !important;
     text-align: center;
     position: fixed;
     width: 80%;
@@ -129,7 +128,7 @@
     box-shadow: 2px 5px 10px 3px #818181;
     text-align: center;
     padding-bottom: 15px;
-    transition: all 0.5s;
+    transition: all 0.5s !important;
     position: fixed;
     z-index: 10;
     height: 620px;
@@ -432,7 +431,6 @@
 
       .login,
       .signup {
-        transition: all 0.5s;
         position: static;
         border-radius: 0;
         .hint {
@@ -454,32 +452,65 @@
           }
         }
       }
-    }
 
-    .signup {
-      .close {
-        left: 350px;
-        top: 15px;
-        font-size: 20px;
-        width: 30px;
+      .disappear {
+        transform: unset;
+        opacity: 0;
       }
-    }
-    .login {
-      form {
-        .message {
-          bottom: 175px;
-          right: unset;
-          left: 80px;
+      .appear {
+        transform: unset;
+        opacity: 1;
+      }
+      .signup {
+        .close {
+          left: 350px;
+          top: 15px;
+          font-size: 20px;
+          width: 30px;
+        }
+      }
+      .login {
+        form {
+          .message {
+            bottom: 175px;
+            right: unset;
+            left: 80px;
+          }
         }
       }
     }
-    .disappear {
-      transform: unset;
-      opacity: 0;
-    }
-    .appear {
-      transform: unset;
-      opacity: 1;
-    }
+  }
+}
+
+.loginMessage {
+  visibility: hidden;
+  position: fixed;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #025c57;
+  box-shadow: 0 2px 4px #333;
+  letter-spacing: 3px;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 16px;
+  z-index: 20;
+  left: 50%;
+  top: 40px;
+}
+.showloginMessage {
+  visibility: visible;
+  z-index: 20;
+  animation: fadein 0.5s;
+}
+
+@keyframes fadein {
+  from {
+    top: 0;
+    opacity: 0;
+  }
+  to {
+    top: 40px;
+    opacity: 0.85;
   }
 }

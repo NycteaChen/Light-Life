@@ -6,7 +6,6 @@ import style from "../../style/login.module.scss";
 import logo from "../../images/lightlife-straight.png";
 import { Formik } from "formik";
 import swal from "sweetalert";
-import { invalid } from "moment";
 
 function Login({ display, setDisplay }) {
   const noImage =
@@ -29,6 +28,7 @@ function Login({ display, setDisplay }) {
   const [show, setShow] = useState("");
   const [showMessage, setShowMessage] = useState({});
   const [emails, setEmails] = useState([]);
+
   useEffect(() => {
     firebase
       .firestore()
@@ -314,11 +314,14 @@ function Login({ display, setDisplay }) {
                 // Signed in
                 const user = userCredential.user;
                 console.log(user);
-                setInput({});
-                setValid({});
-                setValidStyle({});
-                alert("歡迎回來");
-                window.location.href = `/${client}/${userID}`;
+                setShowMessage({ welcomeback: style.showloginMessage });
+
+                setTimeout(() => {
+                  setInput({});
+                  setValid({});
+                  setValidStyle({});
+                  window.location.href = `/${client}/${userID}`;
+                }, 1500);
               })
               .catch((error) => {
                 const errorCode = error.code;
@@ -339,8 +342,9 @@ function Login({ display, setDisplay }) {
           }
         });
     } else {
-      alert("none");
-      setShowMessage({ incomplete: style.showMessage });
+      setShowMessage({
+        incomplete: style.showMessage,
+      });
       setValidStyle({
         email: style.invalid,
         password: style.invalid,
@@ -446,7 +450,11 @@ function Login({ display, setDisplay }) {
             if (!res.empty) {
               let id;
               res.forEach((i) => (id = i.data().id));
-              window.location.href = `/dietitian/${id}`;
+
+              setShowMessage({ welcomeback: style.showloginMessage });
+              setTimeout(() => {
+                window.location.href = `/dietitian/${id}`;
+              }, 1500);
             } else {
               firebase
                 .firestore()
@@ -457,7 +465,10 @@ function Login({ display, setDisplay }) {
                   if (!res.empty) {
                     let id;
                     res.forEach((i) => (id = i.data().id));
-                    window.location.href = `/customer/${id}`;
+                    setShowMessage({ welcomeback: style.showloginMessage });
+                    setTimeout(() => {
+                      window.location.href = `/customer/${id}`;
+                    }, 1500);
                   } else {
                     firebase
                       .firestore()
@@ -477,7 +488,10 @@ function Login({ display, setDisplay }) {
                         return docRef.id;
                       })
                       .then((res) => {
-                        window.location.href = `/${client}/${res}`;
+                        setShowMessage({ welcomeback: style.showloginMessage });
+                        setTimeout(() => {
+                          window.location.href = `/${client}/${res}`;
+                        }, 1500);
                       });
                   }
                 });
@@ -512,7 +526,10 @@ function Login({ display, setDisplay }) {
             if (!res.empty) {
               let id;
               res.forEach((i) => (id = i.data().id));
-              window.location.href = `/dietitian/${id}`;
+              setShowMessage({ welcomeback: style.showloginMessage });
+              setTimeout(() => {
+                window.location.href = `/dietitian/${id}`;
+              }, 1500);
             } else {
               firebase
                 .firestore()
@@ -523,7 +540,10 @@ function Login({ display, setDisplay }) {
                   if (!res.empty) {
                     let id;
                     res.forEach((i) => (id = i.data().id));
-                    window.location.href = `/customer/${id}`;
+                    setShowMessage({ welcomeback: style.showloginMessage });
+                    setTimeout(() => {
+                      window.location.href = `/customer/${id}`;
+                    }, 1500);
                   } else {
                     firebase
                       .firestore()
@@ -543,7 +563,10 @@ function Login({ display, setDisplay }) {
                         return docRef.id;
                       })
                       .then((res) => {
-                        window.location.href = `/${client}/${res}`;
+                        setShowMessage({ welcomeback: style.showloginMessage });
+                        setTimeout(() => {
+                          window.location.href = `/${client}/${res}`;
+                        }, 1500);
                       });
                   }
                 });
@@ -564,6 +587,9 @@ function Login({ display, setDisplay }) {
 
   return (
     <>
+      <div className={`${style.loginMessage} ${showMessage.welcomeback || ""}`}>
+        <div>歡迎回來</div>
+      </div>
       <div className={style["login-col"]} style={{ display: display }}>
         <div
           className={`${style.emailForm} ${show} ${
