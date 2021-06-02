@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import style from "../../style/login.module.scss";
 import logo from "../../images/lightlife-straight.png";
 import { Formik } from "formik";
+import swal from "sweetalert";
+import { invalid } from "moment";
 
 function Login({ display, setDisplay }) {
   const noImage =
@@ -25,11 +27,39 @@ function Login({ display, setDisplay }) {
   const [validStyle, setValidStyle] = useState({});
   const [email, setEmail] = useState("");
   const [show, setShow] = useState("");
+  const [showMessage, setShowMessage] = useState({});
+  const [emails, setEmails] = useState([]);
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .get()
+      .then((docs) => {
+        const emailsArray = [];
+        docs.forEach((doc) => {
+          emailsArray.push(doc.data().email);
+        });
+        return emailsArray;
+      })
+      .then((emailsArray) => {
+        firebase
+          .firestore()
+          .collection("customers")
+          .get()
+          .then((docs) => {
+            docs.forEach((doc) => {
+              emailsArray.push(doc.data().email);
+            });
+            setEmails(emailsArray);
+          });
+      });
+  }, []);
 
   const bindSignupHandler = () => {
     setLogin(style.disappear);
     setSignup(style.appear);
     setImage(style.right);
+    setShowMessage({});
     setInput({});
     setValid({});
     setValidStyle({});
@@ -43,6 +73,7 @@ function Login({ display, setDisplay }) {
     setLogin(style.appear);
     setSignup(style.disappear);
     setImage(style.left);
+    setShowMessage({});
     setInput({});
     setValid({});
     setValidStyle({});
@@ -54,11 +85,18 @@ function Login({ display, setDisplay }) {
   };
 
   const bindSelectHandler = (e) => {
+    if (showMessage.alreadyEmail) {
+      setShowMessage({
+        alreadyEmail: style.showMessage,
+      });
+    } else {
+      setShowMessage({});
+    }
+
     if (e.target.className.includes("dietitian")) {
       setClient("dietitian");
       setDietitian(style.active);
       setCustomer("");
-      console.log(valid.email);
       if (valid.email && login === style.appear) {
         firebase
           .firestore()
@@ -88,7 +126,6 @@ function Login({ display, setDisplay }) {
           .where("email", "==", `${valid.email}`)
           .get()
           .then((querySnapshot) => {
-            console.log("hrer");
             if (querySnapshot.empty) {
               setValidStyle({
                 email: style.invalid,
@@ -103,39 +140,61 @@ function Login({ display, setDisplay }) {
     }
   };
 
-  const bindForgetPasswordHandler = () => {
-    setShow(style.show);
+  const closeHandler = () => {
+    setDisplay("none");
+    setInput({});
+    setValid({});
+    setValidStyle({});
+    setShowMessage({});
+  };
+
+  const bindForgetPasswordHandler = (e) => {
+    if (e.target.id === "forget-password") {
+      setShow(style.show);
+      setValidStyle({ ...validStyle, reset: "" });
+    } else {
+      setShow("");
+      setShowMessage({});
+      setValidStyle({ ...validStyle, reset: "" });
+      setEmail("");
+    }
   };
 
   const getEmail = (e) => {
     setEmail(e.target.value);
   };
 
-  const cancelHandler = () => {
-    setShow("");
-  };
   const bindSendPasswordEmailButton = () => {
     if (email !== "") {
       firebase
         .auth()
         .sendPasswordResetEmail(email)
         .then(function () {
-          window.alert("已發送信件至信箱，請按照信件說明重設密碼");
-          window.location.reload(); // 送信後，強制頁面重整一次
+          swal("已發送信件至信箱", "請按照信件說明重設密碼", "success").then(
+            () => {
+              setShow("");
+              setEmail("");
+              setShowMessage({});
+              setValidStyle({ ...validStyle, reset: "" });
+            }
+          );
         })
         .catch(function (error) {
+          console.log(error);
           console.log(error.message);
+          setValidStyle({ ...validStyle, reset: style.invalid });
+          setShowMessage({
+            formHeight: style.formHeight,
+            errorEmail: style.showMessage,
+          });
         });
     } else {
-      alert("沒有輸入喔");
+      setValidStyle({ ...validStyle, reset: style.invalid });
+      setShowMessage({
+        formHeight: style.formHeight,
+        noEnter: style.showMessage,
+      });
     }
-  };
-
-  const closeHandler = () => {
-    setDisplay("none");
-    setInput({});
-    setValid({});
-    setValidStyle({});
   };
 
   const getInputHandler = (e) => {
@@ -146,10 +205,82 @@ function Login({ display, setDisplay }) {
       if (signup === style.appear) {
         setValidStyle({ ...validStyle, [name]: style.valid });
       }
+      if (name === "email") {
+        if (login === style.appear) {
+          if (
+            emails.find((f) => f === e.target.value) &&
+            client === "dietitian"
+          ) {
+            firebase
+              .firestore()
+              .collection(`dietitians`)
+              .where("email", "==", `${e.target.value}`)
+              .get()
+              .then((querySnapshot) => {
+                if (querySnapshot.empty) {
+                  setValidStyle({
+                    email: style.invalid,
+                  });
+                } else {
+                  setValidStyle({
+                    email: style.valid,
+                  });
+                }
+              });
+          } else if (
+            emails.find((f) => f === e.target.value) &&
+            client === "customer"
+          ) {
+            firebase
+              .firestore()
+              .collection(`customers`)
+              .where("email", "==", `${e.target.value}`)
+              .get()
+              .then((querySnapshot) => {
+                if (querySnapshot.empty) {
+                  setValidStyle({
+                    email: style.invalid,
+                  });
+                } else {
+                  setValidStyle({
+                    email: style.valid,
+                  });
+                }
+              });
+          }
+          // if (emails.find((f) => f === e.target.value)) {
+          //   setValidStyle({
+          //     email: style.valid,
+          //   });
+          // } else {
+          //   setValidStyle({
+          //     email: style.invalid,
+          //   });
+          // }
+        } else {
+          if (emails.find((f) => f === e.target.value)) {
+            setShowMessage({
+              alreadyEmail: style.showMessage,
+            });
+            setValidStyle({
+              ...validStyle,
+              email: style.invalid,
+            });
+          } else {
+            setValidStyle({
+              ...validStyle,
+              email: style.valid,
+            });
+            setShowMessage({});
+          }
+        }
+      }
     } else {
       delete valid[name];
       if (signup === style.appear) {
         setValidStyle({ ...validStyle, [name]: style.invalid });
+      } else if (name === "email") {
+        setValidStyle({ ...validStyle, email: style.invalid });
       }
     }
   };
@@ -171,22 +302,6 @@ function Login({ display, setDisplay }) {
 
   const checkEmailHandler = (e) => {
     if (valid.email) {
-      firebase
-        .firestore()
-        .collection(`${client}s`)
-        .where("email", "==", `${valid.email}`)
-        .get()
-        .then((querySnapshot) => {
-          if (querySnapshot.empty) {
-            setValidStyle({
-              email: style.invalid,
-            });
-          } else {
-            setValidStyle({
-              email: style.valid,
-            });
-          }
-        });
     }
   };
 
@@ -235,61 +350,94 @@ function Login({ display, setDisplay }) {
             });
           }
         });
+    } else {
+      alert("none");
+      setValidStyle({
+        email: style.invalid,
+        password: style.invalid,
+      });
     }
   };
+
   const signupHandler = (e) => {
     if (valid.email && valid.password && valid.name) {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(valid.email, valid.password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          setInput({});
-          alert("註冊成功");
-          const { currentUser } = firebase.auth();
-          currentUser
-            .sendEmailVerification()
-            .then(function () {
-              // 驗證信發送完成
-              window.alert("驗證信已發送到您的信箱，請查收。");
-            })
-            .catch((error) => {
-              // 驗證信發送失敗
-              console.log(error.message);
-            });
+      if (!showMessage.alreadyEmail && validStyle.email !== style.invalid) {
+        swal({
+          title: `確定註冊${client === "dietitian" ? "營養師" : "客戶"}端嗎?`,
+          text: `若您是${client === "dietitian" ? "客戶" : "營養師"}，請選擇${
+            client === "dietitian" ? "客戶" : "營養師"
+          }端註冊`,
+          icon: "warning",
+          buttons: true,
+          // dangerMode: true,
+        }).then((ok) => {
+          if (ok) {
+            firebase
+              .auth()
+              .createUserWithEmailAndPassword(valid.email, valid.password)
+              .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
 
-          firebase
-            .firestore()
-            .collection(`${client}s`)
-            .add({
-              name: valid.name,
-              image: noImage,
-              email: valid.email,
-            })
-            .then((docRef) => {
-              firebase
-                .firestore()
-                .collection(`${client}s`)
-                .doc(docRef.id)
-                .update("id", docRef.id);
-            })
-            .then(() => {
-              setValid({});
-            });
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode + errorMessage);
-          alert("此信箱已有人使用");
-          setValidStyle({
-            ...validStyle,
-            email: style.invalid,
-          });
+                const { currentUser } = firebase.auth();
+                currentUser
+                  .sendEmailVerification()
+                  .then(function () {
+                    swal("註冊成功", "驗證信已發送到您的信箱", "success");
+                    setInput({});
+                    setValidStyle({});
+                  })
+                  .catch((error) => {
+                    swal("Oops!驗證信發送失敗", `${error.message}`, "warning");
+                  });
+
+                firebase
+                  .firestore()
+                  .collection(`${client}s`)
+                  .add({
+                    name: valid.name,
+                    image: noImage,
+                    email: valid.email,
+                  })
+                  .then((docRef) => {
+                    firebase
+                      .firestore()
+                      .collection(`${client}s`)
+                      .doc(docRef.id)
+                      .update("id", docRef.id);
+                  })
+                  .then(() => {
+                    setValid({});
+                  });
+              })
+              .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode + errorMessage);
+
+                setValidStyle({
+                  ...validStyle,
+                  email: style.invalid,
+                });
+              });
+          }
         });
+      } else {
+        setValidStyle({
+          ...validStyle,
+          email: style.invalid,
+        });
+      }
     } else {
-      console.log("none");
+      setValidStyle({
+        name: validStyle.name === style.valid ? style.valid : style.invalid,
+        email: validStyle.email === style.valid ? style.valid : style.invalid,
+        password:
+          validStyle.password === style.valid ? style.valid : style.invalid,
+      });
+      setShowMessage({
+        incomplete: style.showMessage,
+      });
     }
   };
 
@@ -428,18 +576,30 @@ function Login({ display, setDisplay }) {
   return (
     <>
       <div className={style["login-col"]} style={{ display: display }}>
-        <div className={`${style.emailForm} ${show}`}>
+        <div
+          className={`${style.emailForm} ${show} ${
+            showMessage.formHeight || ""
+          } `}
+        >
           <label>
             <div>請輸入信箱</div>{" "}
             <input
               type="email"
+              className={validStyle.reset || ""}
+              pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
               value={email !== "" ? email : ""}
               onChange={getEmail}
             />
           </label>
+          <div className={`${style.message} ${showMessage.noEnter || ""}`}>
+            沒有輸入喔
+          </div>
+          <div className={`${style.message} ${showMessage.errorEmail || ""}`}>
+            信箱輸入有誤
+          </div>
           <div>
             <button onClick={bindSendPasswordEmailButton}>確認</button>
-            <button onClick={cancelHandler}>取消</button>
+            <button onClick={bindForgetPasswordHandler}>取消</button>
           </div>
         </div>
 
@@ -655,6 +815,15 @@ function Login({ display, setDisplay }) {
                 onClick={switchPasswordModeHandler}
               ></i>
             </label>
+
+            <div className={`${style.message} ${showMessage.incomplete || ""}`}>
+              資料請填寫完整喔
+            </div>
+            <div
+              className={`${style.message} ${showMessage.alreadyEmail || ""}`}
+            >
+              此信箱已有人使用
+            </div>
             <div>
               <button onClick={signupHandler}>註冊</button>
             </div>

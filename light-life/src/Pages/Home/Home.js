@@ -170,7 +170,7 @@ function Home() {
             <p>對本站有任何疑問或回饋請告訴我們！</p>
           </div>
           <section>
-            <form>
+            <form autocomplete="off">
               <label>
                 您的大名
                 <div>
