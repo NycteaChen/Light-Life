@@ -39,12 +39,22 @@ function Invited({
         });
 
         publishData[0].whoInvite[+idx].status = "1";
-        firebase.firestore().collection("pending").add({
-          dietitian: props.dietitianID,
-          customer: publishData[0].id,
-          startDate: publishData[0].startDate,
-          endDate: publishData[0].endDate,
-        });
+        firebase
+          .firestore()
+          .collection("pending")
+          .add({
+            dietitian: props.dietitianID,
+            customer: publishData[0].id,
+            startDate: publishData[0].startDate,
+            endDate: publishData[0].endDate,
+          })
+          .then((docRef) => {
+            firebase
+              .firestore()
+              .collection("pending")
+              .doc(docRef.id)
+              .update("id", docRef.id);
+          });
 
         firebase
           .firestore()
