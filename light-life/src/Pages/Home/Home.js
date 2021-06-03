@@ -12,13 +12,6 @@ import WOW from "wowjs";
 import "animate.css/animate.min.css";
 import $ from "jquery";
 function Home() {
-  const wow = new WOW.WOW({
-    boxClass: `${style.wow}`,
-    offset: 150,
-    live: true,
-  });
-  wow.init();
-
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});
   const [button, setButton] = useState("submit");
@@ -97,6 +90,12 @@ function Home() {
         console.log("no one");
       }
     });
+    const wow = new WOW.WOW({
+      boxClass: `${style.wow}`,
+      offset: 150,
+      live: true,
+    });
+    wow.init();
   }, []);
 
   const logoutHandler = () => {
