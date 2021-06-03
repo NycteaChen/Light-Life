@@ -19,7 +19,6 @@ function Home() {
   const [button, setButton] = useState("submit");
   const [input, setInput] = useState({});
   const [load, setLoad] = useState(style.loading);
-  const [showLoad, setShowLoad] = useState("unset");
   const bindLoginButton = () => {
     setDisplay("flex");
   };
