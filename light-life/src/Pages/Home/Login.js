@@ -5,7 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import style from "../../style/login.module.scss";
 import logo from "../../images/lightlife-straight.png";
 import { Formik } from "formik";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
+import apple from "../../images/apple.gif";
 import "animate.css/animate.min.css";
 
 function Login({ display, setDisplay }) {
@@ -171,14 +172,18 @@ function Login({ display, setDisplay }) {
         .auth()
         .sendPasswordResetEmail(email)
         .then(function () {
-          swal("已發送信件至信箱", "請按照信件說明重設密碼", "success").then(
-            () => {
-              setShow("");
-              setEmail("");
-              setShowMessage({});
-              setValidStyle({ ...validStyle, reset: "" });
-            }
-          );
+          Swal.fire({
+            title: "已發送信件至信箱",
+            text: "請按照信件說明重設密碼",
+            icon: "info",
+            confirmButtonText: "確定",
+            confirmButtonColor: "#1e4d4e",
+          }).then(() => {
+            setShow("");
+            setEmail("");
+            setShowMessage({});
+            setValidStyle({ ...validStyle, reset: "" });
+          });
         })
         .catch(function (error) {
           console.log(error);
@@ -356,16 +361,18 @@ function Login({ display, setDisplay }) {
   const signupHandler = (e) => {
     if (valid.email && valid.password && valid.name) {
       if (!showMessage.alreadyEmail && validStyle.email !== style.invalid) {
-        swal({
+        Swal.fire({
           title: `確定註冊${client === "dietitian" ? "營養師" : "客戶"}端嗎?`,
           text: `若您是${client === "dietitian" ? "客戶" : "營養師"}，請選擇${
             client === "dietitian" ? "客戶" : "營養師"
           }端註冊`,
           icon: "warning",
-          buttons: true,
-          // dangerMode: true,
-        }).then((ok) => {
-          if (ok) {
+          showCancelButton: true,
+          cancelButtonText: "取消",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        }).then((res) => {
+          if (res.isConfirmed) {
             firebase
               .auth()
               .createUserWithEmailAndPassword(valid.email, valid.password)
@@ -377,12 +384,24 @@ function Login({ display, setDisplay }) {
                 currentUser
                   .sendEmailVerification()
                   .then(function () {
-                    swal("註冊成功", "驗證信已發送到您的信箱", "success");
+                    Swal.fire({
+                      title: "註冊成功",
+                      text: "驗證信已發送到您的信箱",
+                      icon: "success",
+                      confirmButtonText: "確定",
+                      confirmButtonColor: "#1e4d4e",
+                    });
                     setInput({});
                     setValidStyle({});
                   })
                   .catch((error) => {
-                    swal("Oops!驗證信發送失敗", `${error.message}`, "warning");
+                    Swal.fire({
+                      title: "Oops!驗證信發送失敗",
+                      text: `${error.message}`,
+                      icon: "warning",
+                      confirmButtonText: "確定",
+                      confirmButtonColor: "#1e4d4e",
+                    });
                   });
 
                 firebase
@@ -589,6 +608,7 @@ function Login({ display, setDisplay }) {
   return (
     <>
       <div className={`${style.loginMessage} ${showMessage.welcomeback || ""}`}>
+        <img src={apple} />
         <div>歡迎回來</div>
       </div>
       <div className={`${style["login-col"]}`} style={{ display: display }}>

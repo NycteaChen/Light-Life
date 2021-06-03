@@ -3,7 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
-  font-family: Monda, Lexend, "Microsoft JhengHei";
+  font-family: Lexend, Monda, "Microsoft JhengHei";
 
   a {
     padding-top: 7px;
@@ -40,7 +40,7 @@
       linear,
       40% 0%,
       75% 84%,
-      from(#64b795),
+      from(#1e4d4e),
       to(#98cfba)
     );
   }
@@ -143,6 +143,16 @@
 .home-main {
   overflow-x: hidden;
   background-color: white;
+  :target:before {
+    content: "";
+    display: block;
+    height: 80px;
+    @media (min-width: 768px) {
+      & {
+        height: 30px;
+      }
+    }
+  }
   h2 {
     font-size: 24px;
   }
@@ -209,6 +219,7 @@
       text-align: center;
       white-space: nowrap;
       h2 {
+        font-family: Monda;
         transition: all 0.5s;
         margin-top: 220px;
         transition: font-size 0.5s;
@@ -330,7 +341,7 @@
               align-items: center;
               justify-content: space-between;
               transition: opacity 0.5s;
-              opacity: 0.8;
+              opacity: 0.85;
               &:hover {
                 opacity: 1;
               }
@@ -443,7 +454,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-
       section {
         width: 60%;
         max-width: 750px;
@@ -461,6 +471,7 @@
   p {
     font-size: 1.1rem;
     color: #4d4d4d;
+    font-family: Monda;
   }
   button {
     margin-top: 0 !important;
@@ -513,9 +524,6 @@ footer {
   background: #013532;
   color: white;
   font-size: 0.8rem;
-  p {
-    font-family: Lexend;
-  }
   .gitIcon {
     color: white;
     font-size: 3rem;
