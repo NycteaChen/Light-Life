@@ -201,7 +201,7 @@ function Login({ display, setDisplay }) {
   const getInputHandler = (e) => {
     const { name } = e.target;
     setInput({ ...input, [name]: e.target.value });
-    if (e.target.validity.valid) {
+    if (e.target.validity.valid && e.target.value) {
       setValid({ ...valid, [name]: e.target.value });
       if (signup === style.appear) {
         setValidStyle({ ...validStyle, [name]: style.valid });
@@ -276,11 +276,6 @@ function Login({ display, setDisplay }) {
       } else if (name === "email") {
         setValidStyle({ ...validStyle, email: style.invalid });
       }
-    }
-    if (name === "name") {
-      e.target.value !== ""
-        ? setValidStyle({ ...validStyle, name: style.valid })
-        : setValidStyle({ ...validStyle, name: style.invalid });
     }
   };
   const switchPasswordModeHandler = (e) => {
