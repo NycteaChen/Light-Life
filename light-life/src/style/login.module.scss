@@ -503,7 +503,7 @@
 .showloginMessage {
   visibility: visible;
   z-index: 20;
-  animation: fadein 1s;
+  animation: fadein 0.5s;
 }
 
 @keyframes fadein {
