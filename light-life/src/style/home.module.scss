@@ -56,6 +56,18 @@
         width: 30px;
         height: 30px;
         border-radius: 50%;
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+      .logout-image {
+        position: relative;
+        bottom: 2px;
+        width: 30px;
+        height: 30px;
+        &:hover {
+          opacity: 0.7;
+        }
       }
     }
     @media (min-width: 768px) {
@@ -75,6 +87,7 @@
 // $header-height: 77px;
 // height: calc(100vh - #{$header-height});
 .home-main {
+  overflow-x: hidden;
   background-color: white;
   h2 {
     font-size: 24px;
@@ -104,7 +117,7 @@
     transition: all 0.5s;
     letter-spacing: 3px;
     outline: none;
-    background: cadetblue;
+    background: #64b795;
     color: white;
     &:hover,
     &:focus {
@@ -118,7 +131,7 @@
     }
   }
   .cover {
-    height: 600px;
+    height: calc(100vh - 100px);
     background: linear-gradient(#00000073 0 100%, transparent),
       url("../images/cover.png") no-repeat center;
     background-attachment: fixed;
@@ -127,6 +140,9 @@
     z-index: 3;
     display: flex;
     .main-title {
+      position: absolute;
+      left: 10%;
+      bottom: 20%;
       color: white;
       margin: auto;
       text-align: center;
@@ -160,7 +176,7 @@
       & {
         .main-title {
           text-align: left;
-          margin: 300px auto auto 15vw;
+          // margin: 300px auto auto 15vw;
         }
       }
     }
@@ -313,7 +329,7 @@
         padding: 0 10px;
         &:focus {
           outline: none !important;
-          border: 2px solid cadetblue;
+          border: 2px solid #64b795;
         }
       }
       textarea {
@@ -321,7 +337,7 @@
         width: 90%;
         &:focus {
           outline: none !important;
-          border: 2px solid cadetblue;
+          border: 2px solid #64b795;
         }
       }
       @media (min-width: 520px) {
@@ -359,15 +375,22 @@
 .service {
   text-align: center;
   padding: 50px 12px;
-  background: linear-gradient(#ffffffb6 0 100%, transparent),
+  background: linear-gradient(#ffffffc4 0 100%, transparent),
     url("../images/service.png") no-repeat center;
   background-size: 100%;
   p {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #4d4d4d;
   }
   button {
     margin-top: 0 !important;
+  }
+  @media (min-width: 520px) {
+    & {
+      p {
+        font-size: 24px;
+      }
+    }
   }
   @media (min-width: 768px) {
     & {
@@ -376,6 +399,7 @@
       align-items: center;
 
       p {
+        margin-right: 80px;
         font-size: 28px;
         padding: 15px 15px 0;
       }
