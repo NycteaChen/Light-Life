@@ -3,7 +3,7 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import Login from "./Login.js";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import logo from "../../images/lightlife-horizontal.png";
 import loading from "../../images/lightlife-straight.png";
 import style from "../../style/home.module.scss";
@@ -12,7 +12,6 @@ import exit from "../../images/exit.png";
 import WOW from "wowjs";
 import "animate.css/animate.min.css";
 import $ from "jquery";
-import { set } from "date-fns";
 function Home() {
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});
@@ -26,14 +25,15 @@ function Home() {
   const sendContactHandler = () => {
     if (input.name && input.email && input.text) {
       setButton("button");
-      swal({
-        title: "確定送出嗎?",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((ok) => {
-        if (ok) {
-          swal("發送成功", "感謝您的來信", "success");
+      Swal.fire({
+        text: "確定送出嗎?",
+        showCancelButton: true,
+        cancelButtonText: "取消",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire("發送成功", "感謝您的來信", "success");
           setInput({});
         }
       });
@@ -109,19 +109,22 @@ function Home() {
   }, []);
 
   const logoutHandler = () => {
-    swal({
-      title: "確定登出嗎?",
-      buttons: true,
-    }).then((ok) => {
-      if (ok) {
+    Swal.fire({
+      text: "確定登出嗎?",
+      confirmButtonText: "確定",
+      confirmButtonColor: "#1e4d4e",
+      showCancelButton: true,
+    }).then((res) => {
+      if (res.isConfirmed) {
         firebase
           .auth()
           .signOut()
           .then(function () {
-            swal({
-              title: "已登出",
-              text: "感謝您的使用",
+            Swal.fire({
+              text: "已登出，感謝您的使用",
               icon: "success",
+              confirmButtonText: "確定",
+              confirmButtonColor: "#1e4d4e",
             }).then(() => {
               // 登出後強制重整一次頁面
               window.location.href = "/";
