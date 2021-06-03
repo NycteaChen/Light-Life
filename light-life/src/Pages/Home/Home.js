@@ -160,7 +160,7 @@ function Home() {
                 <Link to={`/${user.client}/${user.id}`} className={style.icon}>
                   <img
                     className={style["login-image"]}
-                    src={user.image ? user.image : noImage}
+                    src={user.image || noImage}
                   />
                 </Link>
                 <a onClick={logoutHandler} className={style.icon}>

@@ -51,12 +51,18 @@
 }
 
 .home-header {
-  background: #ffffff;
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+  top: 0;
+  background: #ffffffd7;
   padding: 10px 15px;
   div {
     margin: auto;
     max-width: 1920px;
-    justify-content: center;
+    // justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     display: flex;
     #logo {
       width: 150px;
@@ -68,13 +74,18 @@
       }
     }
     .header-nav {
-      display: none;
+      // display: none;
       a {
+        display: none;
         color: #64b795;
+        // margin-left: 8px;
         &:hover {
           color: #358867;
           border-bottom: 2px solid #358867;
           font-weight: 700;
+        }
+        &:last-of-type {
+          display: inline-block;
         }
       }
       .icon {
@@ -103,14 +114,25 @@
         }
       }
     }
-    @media (min-width: 768px) {
+    @media (min-width: 520px) {
       & {
         justify-content: space-between;
         .header-nav {
           display: flex;
           width: 300px;
-          justify-content: space-between;
+          justify-content: space-between !important;
           padding: 10px 15px;
+          a {
+            display: inline-block;
+            margin-left: 0;
+          }
+          .icon {
+            // display: inline-block;
+            &:hover {
+              border-bottom: unset;
+              font-weight: 700;
+            }
+          }
         }
       }
     }
@@ -130,9 +152,7 @@
     margin: 20px auto 10px;
   }
   flex-grow: 1;
-  @media (min-width: 768px) {
-    background-color: #d4fafc !important;
-  }
+
   p {
     line-height: 25px;
     font-size: 0.6rem;
@@ -164,6 +184,7 @@
     }
   }
   .cover {
+    margin-top: 76px;
     height: calc(100vh - 100px);
     background: linear-gradient(#00000073 0 100%, transparent),
       url("../images/cover.png") no-repeat center;
@@ -264,15 +285,17 @@
       & {
         position: static;
 
+        background-color: #d4fafc;
         .content {
+          padding: 50px 0;
           height: unset;
           position: static;
-          margin: 20px 0;
+          margin: 0px 0;
           .about {
             background-color: unset;
             box-shadow: unset;
             padding: 0;
-            margin: 50px auto auto;
+            margin: 0px auto auto;
             h2,
             h3 {
               text-align: left;
