@@ -669,7 +669,7 @@ function Login({ display, setDisplay }) {
                 type="email"
                 name="email"
                 className={validStyle.email || ""}
-                placeholder="diet@test.com or cus@test.com"
+                placeholder="diet@test.com / cus@test.com"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
                 value={input.email ? input.email : ""}
                 onChange={getInputHandler}

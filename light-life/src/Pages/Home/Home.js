@@ -3,12 +3,19 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import Login from "./Login.js";
+import swal from "sweetalert";
 import logo from "../../images/lightlife-horizontal.png";
 import style from "../../style/home.module.scss";
 import noImage from "../../images/noimage.png";
-import swal from "sweetalert";
+import exit from "../../images/exit.png";
+import WOW from "wowjs";
+import ReactWOW from "react-wow";
+import "animate.css/animate.min.css";
 import $ from "jquery";
 function Home() {
+  new WOW.WOW({
+    live: false,
+  }).init();
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});
   const [button, setButton] = useState("submit");
@@ -28,7 +35,7 @@ function Home() {
         dangerMode: true,
       }).then((ok) => {
         if (ok) {
-          swal("發送成功", "請稍後", "success");
+          swal("發送成功", "感謝您的來信", "success");
           setInput({});
         }
       });
@@ -89,6 +96,19 @@ function Home() {
     });
   }, []);
 
+  const logoutHandler = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        alert("已登出");
+        // 登出後強制重整一次頁面
+        window.location.href = "/";
+      })
+      .catch(function (error) {
+        console.log(error.message);
+      });
+  };
   return (
     <>
       <div
@@ -107,12 +127,21 @@ function Home() {
             <a href="#about">關於本站</a>
             <a href="#contact">聯絡我們</a>
             {user.client ? (
-              <Link to={`/${user.client}/${user.id}`}>
-                <img
-                  className={style["login-image"]}
-                  src={user.image ? user.image : noImage}
-                />
-              </Link>
+              <>
+                <Link to={`/${user.client}/${user.id}`}>
+                  <img
+                    className={style["login-image"]}
+                    src={user.image ? user.image : noImage}
+                  />
+                </Link>
+                <a onClick={logoutHandler}>
+                  <img
+                    src={exit}
+                    alt="logout"
+                    className={style["logout-image"]}
+                  />
+                </a>
+              </>
             ) : (
               <a onClick={bindLoginButton}>登入</a>
             )}
@@ -138,7 +167,10 @@ function Home() {
           <div className={style.background}></div>
           <div className={style.content} id="about">
             <article className={style.about}>
-              <section>
+              <section
+                className="wow animate__animated animate__slideInLeft"
+                data-wow-delay="0.3s"
+              >
                 <div className={style.sectionText}>
                   <h2>關於本站</h2>
                   <h3>您在尋找客戶嗎？</h3>
@@ -150,7 +182,10 @@ function Home() {
                 </div>
                 <img className={style.firstImg} alt="lightlife-about" />
               </section>
-              <section>
+              <section
+                className="wow animate__animated animate__slideInRight"
+                data-wow-delay="0.3s"
+              >
                 <div className={style.sectionText}>
                   <h3 className={style.subtitle}>您想尋找營養師嗎？</h3>
                   <p>本站有來自各地的專業營養師，讓您能選擇自己的營養管家。</p>
@@ -165,11 +200,13 @@ function Home() {
           </div>
         </div>
         <div className={style.contact} id="contact">
-          <div className={style["contact-title"]}>
+          <div
+            className={`${style["contact-title"]} wow animate__animated animate__fadeInUp`}
+          >
             <h2>聯絡我們</h2>
             <p>對本站有任何疑問或回饋請告訴我們！</p>
           </div>
-          <section>
+          <section className="wow animate__animated animate__fadeInUp">
             <form autocomplete="off">
               <label>
                 您的大名
@@ -189,6 +226,7 @@ function Home() {
                   <input
                     type="email"
                     name="email"
+                    pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
                     value={input.email ? input.email : ""}
                     onChange={getInputHandler}
                     required
