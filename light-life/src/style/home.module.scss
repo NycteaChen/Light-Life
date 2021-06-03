@@ -77,6 +77,12 @@
           font-weight: 700;
         }
       }
+      .icon {
+        &:hover {
+          border-bottom: unset;
+          font-weight: 700;
+        }
+      }
       .login-image {
         position: relative;
         bottom: 2px;
