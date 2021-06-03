@@ -6,6 +6,7 @@ import style from "../../style/login.module.scss";
 import logo from "../../images/lightlife-straight.png";
 import { Formik } from "formik";
 import swal from "sweetalert";
+import "animate.css/animate.min.css";
 
 function Login({ display, setDisplay }) {
   const noImage =
@@ -584,13 +585,13 @@ function Login({ display, setDisplay }) {
         // ...
       });
   };
-
+  // animate__animated animate__slideInLeft
   return (
     <>
       <div className={`${style.loginMessage} ${showMessage.welcomeback || ""}`}>
         <div>歡迎回來</div>
       </div>
-      <div className={style["login-col"]} style={{ display: display }}>
+      <div className={`${style["login-col"]}`} style={{ display: display }}>
         <div
           className={`${style.emailForm} ${show} ${
             showMessage.formHeight || ""

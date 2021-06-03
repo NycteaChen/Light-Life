@@ -9,13 +9,16 @@ import style from "../../style/home.module.scss";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import WOW from "wowjs";
-import ReactWOW from "react-wow";
 import "animate.css/animate.min.css";
 import $ from "jquery";
 function Home() {
-  new WOW.WOW({
-    live: false,
-  }).init();
+  const wow = new WOW.WOW({
+    boxClass: `${style.wow}`,
+    offset: 150,
+    live: true,
+  });
+  wow.init();
+
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});
   const [button, setButton] = useState("submit");
@@ -167,10 +170,7 @@ function Home() {
           <div className={style.background}></div>
           <div className={style.content} id="about">
             <article className={style.about}>
-              <section
-                className="wow animate__animated animate__slideInLeft"
-                data-wow-delay="0.3s"
-              >
+              <section className={`${style.wow} animated animate__slideInLeft`}>
                 <div className={style.sectionText}>
                   <h2>關於本站</h2>
                   <h3>您在尋找客戶嗎？</h3>
@@ -183,14 +183,13 @@ function Home() {
                 <img className={style.firstImg} alt="lightlife-about" />
               </section>
               <section
-                className="wow animate__animated animate__slideInRight"
-                data-wow-delay="0.3s"
+                className={`${style.wow} animated animate__slideInRight`}
               >
                 <div className={style.sectionText}>
                   <h3 className={style.subtitle}>您想尋找營養師嗎？</h3>
                   <p>本站有來自各地的專業營養師，讓您能選擇自己的營養管家。</p>
                   <p>
-                    每次服務時間最長為兩週，可以續約，期間內營養師將為您分析每日飲食狀況，此外您可以向您的營養師詢問各類營養資訊。
+                    營養師將為您分析每日飲食狀況，此外您可以向您的營養師詢問各類營養資訊。
                   </p>
                   <p>若您是需要營養師的民眾，即可註冊本站服務。</p>
                 </div>
@@ -201,12 +200,12 @@ function Home() {
         </div>
         <div className={style.contact} id="contact">
           <div
-            className={`${style["contact-title"]} wow animate__animated animate__fadeInUp`}
+            className={`${style["contact-title"]} ${style.wow} animated animate__fadeInUp`}
           >
             <h2>聯絡我們</h2>
             <p>對本站有任何疑問或回饋請告訴我們！</p>
           </div>
-          <section className="wow animate__animated animate__fadeInUp">
+          <section className={`${style.wow} animated animate__fadeInUp`}>
             <form autocomplete="off">
               <label>
                 您的大名
