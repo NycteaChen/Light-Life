@@ -6,7 +6,13 @@ import noImage from "../../../images/noimage.png";
 import style from "../../../style/whoInvite.module.scss";
 import { add } from "date-fns";
 
-function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
+function ShowInviterData({
+  idx,
+  invitedList,
+  setInvitedList,
+  setIsChecked,
+  setPending,
+}) {
   const props = invitedList[+idx];
   const [inviterData, setInviterData] = useState({});
   const [show, setShow] = useState("");
@@ -26,6 +32,7 @@ function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
   }, []);
   const inviteButtonHandler = (e) => {
     const { id } = e.target;
+    console.log(id);
     switch (id) {
       case "accept":
         firebase
@@ -47,6 +54,12 @@ function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
             customer: props.inviterID,
           })
           .then(() => {
+            setPending({
+              startDate: props.reserveStartDate,
+              endDate: props.reserveEndDate,
+              dietitian: dID,
+              customer: props.inviterID,
+            });
             firebase
               .firestore()
               .collection("reserve")

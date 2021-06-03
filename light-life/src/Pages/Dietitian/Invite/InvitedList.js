@@ -6,7 +6,7 @@ import ShowInviterData from "./ShowInviterData.js";
 import style from "../../../style/whoInvite.module.scss";
 import { setMilliseconds } from "date-fns";
 
-function InvitedList({ invitedList, setInvitedList }) {
+function InvitedList({ invitedList, setInvitedList, setPending }) {
   const [isChecked, setIsChecked] = useState(false);
   const [buttonIndex, setButtonIndex] = useState();
   const { dID } = useParams();
@@ -58,6 +58,7 @@ function InvitedList({ invitedList, setInvitedList }) {
             invitedList={invitedList}
             setInvitedList={setInvitedList}
             setIsChecked={setIsChecked}
+            setPending={setPending}
           />
         </div>
       ) : (

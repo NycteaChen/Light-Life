@@ -40,6 +40,8 @@ function Dietitian() {
   const [pending, setPending] = useState(null);
   const input = {};
   const props = {};
+  console.log(pending);
+  console.log(users);
   useEffect(() => {
     firebase
       .firestore()
@@ -119,7 +121,10 @@ function Dietitian() {
                     return 0;
                   }
                 });
+                const newPendingArray = [];
                 res.forEach((r) => {
+                  const start = new Date(r.startDate).getTime();
+                  console.log(r);
                   if (r.startDate === getToday) {
                     firebase
                       .firestore()
@@ -133,6 +138,7 @@ function Dietitian() {
                           .doc(r.customer)
                           .get()
                           .then((doc) => {
+                            console.log(usersArray);
                             if (
                               usersArray.length > 0 &&
                               !usersArray.find((i) => i.id === doc.data().id)
@@ -145,7 +151,20 @@ function Dietitian() {
                             }
                           })
                           .then(() => {
-                            setPending(r);
+                            firebase
+                              .firestore()
+                              .collection("pending")
+                              .doc(r.id)
+                              .delete()
+                              .then(() => {
+                                console.log("Document successfully deleted!");
+                              })
+                              .catch((error) => {
+                                console.error(
+                                  "Error removing document: ",
+                                  error
+                                );
+                              });
                           });
                       });
                     firebase
@@ -158,10 +177,13 @@ function Dietitian() {
                         startDate: r.startDate,
                         endDate: r.endDate,
                       });
+                  } else if (start < todayTime) {
+                    console.log("晚");
                   } else {
-                    setPending(r);
+                    newPendingArray.push(r);
                   }
                 });
+                setPending(newPendingArray);
               });
             } else {
               setPending([]);
@@ -169,7 +191,7 @@ function Dietitian() {
             // });
           });
       });
-
+    console.log(pending);
     firebase
       .firestore()
       .collection("reserve")
@@ -209,8 +231,6 @@ function Dietitian() {
         });
     }
   }, []);
-
-  console.log(selectedID);
 
   const getSelectedCustomer = (e) => {
     setSelectedID(e.target.className);
@@ -455,6 +475,7 @@ function Dietitian() {
                 <InvitedList
                   invitedList={invitedList}
                   setInvitedList={setInvitedList}
+                  setPending={setPending}
                 />
               </div>
             </Route>

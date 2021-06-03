@@ -12,6 +12,7 @@ import style from "../../../style/publish.module.scss";
 import Invited from "./Invited.js";
 
 function Publish({ reserve }) {
+  console.log(reserve);
   const { cID } = useParams();
   const [display, setDisplay] = useState("none");
   const [profile, setProfile] = useState({});
@@ -51,7 +52,6 @@ function Publish({ reserve }) {
             transDateToTime(u.reserveStartDate),
             transDateToTime(u.reserveEndDate),
           ]);
-
         if (!docs.empty) {
           const publishArray = [];
           const oldPublishArray = [];
@@ -82,6 +82,7 @@ function Publish({ reserve }) {
           setOldPublish(oldPublishArray);
           setPublishData(publishArray);
         } else {
+          setOccupationTime(occupation);
           setPublishData([]);
           setOldPublish([]);
         }
