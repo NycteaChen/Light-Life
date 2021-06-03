@@ -1,10 +1,4 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  scroll-behavior: smooth;
-  // font-family: Lexend, "Microsoft JhengHei";
-
   a {
     text-decoration: none;
     color: #4d4d4d;
@@ -123,6 +117,7 @@
         bottom: 15px;
       }
       ul {
+        margin-bottom: 0;
         div {
           &.customerList {
             max-height: 141px;

@@ -25,6 +25,10 @@
   }
 }
 
+.wow {
+  visibility: hidden;
+}
+
 .home-header {
   background: #ffffff;
   padding: 10px 15px;
@@ -45,8 +49,8 @@
     .header-nav {
       display: none;
       a {
+        color: #64b795 !important;
         &:hover {
-          color: #002641;
           font-weight: 700;
         }
       }
@@ -87,7 +91,7 @@
 // $header-height: 77px;
 // height: calc(100vh - #{$header-height});
 .home-main {
-  overflow-x: hidden;
+  // overflow-x: hidden;
   background-color: white;
   h2 {
     font-size: 24px;
@@ -140,9 +144,6 @@
     z-index: 3;
     display: flex;
     .main-title {
-      position: absolute;
-      left: 10%;
-      bottom: 20%;
       color: white;
       margin: auto;
       text-align: center;
@@ -175,8 +176,10 @@
     @media (min-width: 768px) {
       & {
         .main-title {
+          position: absolute;
+          left: 10%;
+          bottom: 20%;
           text-align: left;
-          // margin: 300px auto auto 15vw;
         }
       }
     }
