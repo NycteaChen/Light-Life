@@ -5,18 +5,21 @@ import "firebase/firestore";
 import Login from "./Login.js";
 import swal from "sweetalert";
 import logo from "../../images/lightlife-horizontal.png";
+import loading from "../../images/lightlife-straight.png";
 import style from "../../style/home.module.scss";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import WOW from "wowjs";
 import "animate.css/animate.min.css";
 import $ from "jquery";
+import { set } from "date-fns";
 function Home() {
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});
   const [button, setButton] = useState("submit");
   const [input, setInput] = useState({});
-
+  const [load, setLoad] = useState(style.loading);
+  const [showLoad, setShowLoad] = useState("unset");
   const bindLoginButton = () => {
     setDisplay("flex");
   };
@@ -84,12 +87,20 @@ function Home() {
               });
             }
           });
+
+        setTimeout(() => {
+          setLoad(style.loadFadeout);
+        }, 1000);
       } else {
         // User is signed out
         // ...
         console.log("no one");
+        setTimeout(() => {
+          setLoad(style.loadFadeout);
+        }, 500);
       }
     });
+
     const wow = new WOW.WOW({
       boxClass: `${style.wow}`,
       offset: 150,
@@ -99,20 +110,36 @@ function Home() {
   }, []);
 
   const logoutHandler = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(function () {
-        alert("已登出");
-        // 登出後強制重整一次頁面
-        window.location.href = "/";
-      })
-      .catch(function (error) {
-        console.log(error.message);
-      });
+    swal({
+      title: "確定登出嗎?",
+      buttons: true,
+    }).then((ok) => {
+      if (ok) {
+        firebase
+          .auth()
+          .signOut()
+          .then(function () {
+            swal({
+              title: "已登出",
+              text: "感謝您的使用",
+              icon: "success",
+            }).then(() => {
+              // 登出後強制重整一次頁面
+              window.location.href = "/";
+            });
+          })
+          .catch(function (error) {
+            console.log(error.message);
+          });
+      }
+    });
   };
+
   return (
     <>
+      <div className={load}>
+        <img src={loading} />
+      </div>
       <div
         className={style.mask}
         style={{
