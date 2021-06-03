@@ -489,8 +489,8 @@
   position: fixed;
   min-width: 250px;
   margin-left: -125px;
-  background-color: #025c57;
-  box-shadow: 0 2px 4px #333;
+  background-color: #64b795;
+  box-shadow: 0 2px 3px #505050;
   letter-spacing: 3px;
   color: #fff;
   text-align: center;
@@ -498,21 +498,21 @@
   padding: 16px;
   z-index: 20;
   left: 50%;
-  top: 40px;
+  top: 15%;
 }
 .showloginMessage {
   visibility: visible;
   z-index: 20;
-  animation: fadein 0.5s;
+  animation: fadein 1s;
 }
 
 @keyframes fadein {
   from {
-    top: 0;
+    top: 8%;
     opacity: 0;
   }
   to {
-    top: 40px;
+    top: 15%;
     opacity: 0.85;
   }
 }
