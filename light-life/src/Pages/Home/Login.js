@@ -277,6 +277,11 @@ function Login({ display, setDisplay }) {
         setValidStyle({ ...validStyle, email: style.invalid });
       }
     }
+    if (name === "name") {
+      e.target.value !== ""
+        ? setValidStyle({ ...validStyle, name: style.valid })
+        : setValidStyle({ ...validStyle, name: style.invalid });
+    }
   };
   const switchPasswordModeHandler = (e) => {
     if (e.target.className.includes("eye-slash")) {
