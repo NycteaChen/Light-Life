@@ -130,13 +130,13 @@ function Home() {
             <a href="#contact">聯絡我們</a>
             {user.client ? (
               <>
-                <Link to={`/${user.client}/${user.id}`}>
+                <Link to={`/${user.client}/${user.id}`} className={style.icon}>
                   <img
                     className={style["login-image"]}
                     src={user.image ? user.image : noImage}
                   />
                 </Link>
-                <a onClick={logoutHandler}>
+                <a onClick={logoutHandler} className={style.icon}>
                   <img
                     src={exit}
                     alt="logout"
