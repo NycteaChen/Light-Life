@@ -148,6 +148,21 @@ function Customer() {
                       setDName(res[0].dietitianName);
                     })
                     .then(() => {
+                      if (start < today) {
+                        firebase
+                          .firestore()
+                          .collection("pending")
+                          .doc(res[0].id)
+                          .delete()
+                          .then(() => {
+                            console.log("Document successfully deleted!");
+                          })
+                          .catch((error) => {
+                            console.error("Error removing document: ", error);
+                          });
+                      }
+                    })
+                    .then(() => {
                       res.shift();
                       setPending(res);
                     });
@@ -219,7 +234,7 @@ function Customer() {
         });
         reserveArray.forEach((e) => {
           const startDate = new Date(e.reserveStartDate).getTime();
-          if (startDate <= today) {
+          if (startDate <= today && e.status === "0") {
             e.status = "3";
             firebase
               .firestore()
@@ -231,7 +246,6 @@ function Customer() {
         setReserve(reserveArray);
       });
   }, []);
-
   useEffect(() => {
     firebase
       .firestore()
@@ -244,10 +258,9 @@ function Customer() {
             users.push(doc.data());
           } else if (!dID && doc.data().isServing) {
             users.push(doc.data());
+          } else if (doc.data().isServing) {
+            setDName(doc.data().name);
           }
-          // else if (doc.data().isServing) {
-          //   setDName(doc.data().name);
-          // }
         });
         return users;
       })
