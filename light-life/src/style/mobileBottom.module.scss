@@ -1,10 +1,10 @@
 .mobileBottom {
   position: fixed;
-  z-index: 5;
+  z-index: 1;
   height: 50px;
   bottom: 0;
   width: 100%;
-  background: #ccf3e7;
+  background: #e0fcee;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -34,7 +34,9 @@
     background: unset;
     bottom: unset;
     top: 0;
+    right: 0;
     justify-content: flex-end;
+    width: 150px;
     .link {
       &:first-of-type {
         border-right: unset;
@@ -73,6 +75,9 @@
     content: url("../images/monotone_arrow_next_right.svg");
     width: 50px;
     height: 50px;
+  }
+  @media (min-width: 520px) {
+    bottom: 8px;
   }
   @media (min-width: 1024px) {
     display: none;

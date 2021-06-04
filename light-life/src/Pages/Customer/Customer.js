@@ -527,7 +527,7 @@ function Customer() {
             <Route exact path="/customer/:cID">
               <div className={style.indexMessage}>
                 <div>{profile.name}，歡迎回來！</div>
-                <div>
+                <div className={style.serving}>
                   <div>當前進行之服務時間</div>
                   {serviceDate ? (
                     serviceDate.startDate ? (
@@ -544,7 +544,7 @@ function Customer() {
                     <div>loading</div>
                   )}
                 </div>
-                <div>
+                <div className={style.pendingService}>
                   <div>尚未進行的服務</div>
                   {pending ? (
                     pending.length > 0 ? (

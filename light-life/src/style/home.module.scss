@@ -55,7 +55,7 @@
   height: 77px;
   z-index: 5;
   top: 0;
-  background: #ffffffd2;
+  background: #ffffffea;
   box-shadow: 0 1px 5px rgba(126, 125, 125, 0.568);
   padding: 10px 15px;
   div {
@@ -96,14 +96,14 @@
       }
       .login-image {
         position: relative;
-        bottom: 2px;
-        width: 30px;
-        height: 30px;
+        bottom: 5px;
+        width: 35px;
+        height: 35px;
         border-radius: 50%;
       }
       .logout-image {
         position: relative;
-        bottom: 2px;
+        bottom: 3px;
         width: 30px;
         height: 30px;
       }
