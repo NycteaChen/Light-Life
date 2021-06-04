@@ -199,13 +199,7 @@
   .cover {
     margin-top: 76px;
     height: calc(100vh - 100px);
-    background: linear-gradient(
-        to right,
-        #ffffff00 0%,
-        #ffffff00 60%,
-        transparent
-      ),
-      url("../images/meal2.jpg") no-repeat center;
+    background: url("../images/meal2.jpg") no-repeat center;
     background-attachment: fixed;
     background-position: left;
     background-size: cover;
@@ -317,8 +311,7 @@
     @media (min-width: 768px) {
       & {
         position: static;
-
-        background-color: #d4fafc;
+        background-color: #cbffeb8a;
         .content {
           padding: 50px 0;
           height: unset;
@@ -417,14 +410,14 @@
         width: 90%;
         border: 1px solid #4d4d4d;
         border-radius: 2px;
-        padding: 0 10px;
+        padding: 0 5px;
         &:focus {
           outline: none !important;
           border: 2px solid #64b795;
         }
       }
       textarea {
-        padding: 5px 10px;
+        padding: 2px 5px;
         width: 90%;
         &:focus {
           outline: none !important;
