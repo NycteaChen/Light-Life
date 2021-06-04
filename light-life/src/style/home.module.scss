@@ -223,6 +223,7 @@
         letter-spacing: 3px;
       }
       div {
+        font-size: 12px;
         transition: font-size 0.5s;
       }
     }
@@ -231,6 +232,9 @@
         .main-title {
           h2 {
             font-size: 24px;
+          }
+          div {
+            font-size: 16px;
           }
         }
       }

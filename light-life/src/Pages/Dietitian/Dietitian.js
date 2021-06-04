@@ -342,7 +342,6 @@ function Dietitian() {
                   }`}
                   onClick={bindListHandler}
                 >
-                  {" "}
                   <i class="fa fa-users" aria-hidden="true"></i>
                   <div
                     title="customerList"
@@ -358,19 +357,14 @@ function Dietitian() {
                 >
                   {users.length > 0
                     ? users.map((c, index) => (
-                        <li
+                        <Link
+                          to={`/dietitian/${c.dietitian}/customer/${c.id}`}
                           key={index}
                           className={c.id}
                           onClick={getSelectedCustomer}
                         >
-                          <Link
-                            to={`/dietitian/${c.dietitian}/customer/${c.id}`}
-                            className={c.id}
-                            style={{ fontSize: "16px" }}
-                          >
-                            {c.name}
-                          </Link>
-                        </li>
+                          <li className={c.id}>{c.name} </li>
+                        </Link>
                       ))
                     : ""}
                 </div>
@@ -401,7 +395,7 @@ function Dietitian() {
                 to={`/dietitian/${dietitianID}`}
               >
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                返回會員首頁
+                會員首頁
               </Link>
               <a onClick={logoutHandler}>
                 <img src={exit} alt="logout" id={basic.logout} />
@@ -430,31 +424,38 @@ function Dietitian() {
             </div>
             <div className={basic["d-List"]}>
               <Link
+                className={basic["nav-title"]}
                 to={`/dietitian/${dietitianID}/profile`}
                 onClick={bindListHandler}
               >
+                <i class="fa fa-user" aria-hidden="true"></i>
                 <div>會員資料</div>
               </Link>
               <Link
+                className={basic["nav-title"]}
                 to={`/dietitian/${dietitianID}/findCustomers`}
                 onClick={bindListHandler}
               >
+                <i class="fa fa-search" aria-hidden="true"></i>
                 <div>找客戶</div>
               </Link>
 
               <Link
-                className="list"
+                className={`${basic["nav-title"]} list`}
                 to={`/dietitian/${dietitianID}/customers`}
                 onClick={bindListHandler}
               >
+                <i class="fa fa-users" aria-hidden="true"></i>
                 <div className="list">客戶清單</div>
               </Link>
 
               <Link
+                className={basic["nav-title"]}
                 to={`/dietitian/${dietitianID}/inviteMe`}
                 onClick={bindListHandler}
               >
-                <div> 誰找我</div>
+                <i class="fa fa-envira" aria-hidden="true"></i>
+                <div>誰找我</div>
               </Link>
             </div>
           </div>

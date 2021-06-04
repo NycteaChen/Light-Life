@@ -75,6 +75,8 @@
 
 .d-main {
   padding: 20px;
+  margin-bottom: 50px;
+
   .indexMessage {
     // display: none;
     text-align: center;
@@ -86,6 +88,7 @@
     & {
       height: calc(100vh - 77px);
       overflow: auto;
+      margin-bottom: 0;
       .indexMessage {
         text-align: left;
         display: block;
@@ -96,7 +99,6 @@
   }
   nav {
     position: fixed;
-    z-index: 2px;
     top: 0;
     left: 0;
     width: 70%;
@@ -131,6 +133,10 @@
         div {
           margin-left: 5px;
         }
+        div[title="findCustomer"],
+        div[title="whoInvite"] {
+          margin-right: 16px;
+        }
         &:hover {
           background-color: #d4fde6;
           font-weight: bold;
@@ -161,13 +167,16 @@
             overflow: auto;
           }
         }
-        li {
+        a {
+          display: block;
           background-color: #fffafa;
           font-size: 12px;
           padding: 15px;
-          list-style: none;
-          & + li {
+          & + a {
             border-top: 2px dashed #81beb1f3;
+          }
+          li {
+            list-style: none;
           }
         }
       }
@@ -233,7 +242,7 @@
               left: 2px;
               bottom: 2px;
               right: 2px;
-              background-color: #ff6666;
+              background-color: #9b9797;
               // background-color: rgba(70, 100, 73, 0.671);
               border-radius: 60px;
               transition: background-color 0.4s;
@@ -273,59 +282,45 @@
       width: 150px;
       height: 150px;
     }
-    .selectList {
-      margin: auto;
-      display: grid;
-      max-width: 300px;
 
-      div {
-        margin: 0 5px 10px;
-        line-height: 50px;
-        background-color: rgb(165, 170, 170);
-      }
-      @media (min-width: 320px) {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .mobile-list {
       @media (min-width: 520px) {
         & {
-          max-width: 500px;
           flex-wrap: wrap;
-          display: flex;
-          justify-content: center;
-          div {
-            line-height: unset;
-            padding: 10px;
-            width: 120px;
-            height: 50px;
-            line-height: 30px;
-          }
         }
       }
     }
-
-    .d-List {
+    .d-List,
+    .mobile-list {
       margin: auto;
       display: grid;
       max-width: 300px;
-      div {
-        margin: 0 5px 10px;
-        line-height: 50px;
+      .nav-title {
+        padding-top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: rgb(165, 170, 170);
+        margin-bottom: 10px;
+        i {
+          margin-right: 5px;
+        }
+        div {
+          margin-left: 5px;
+        }
       }
+
       @media (min-width: 320px) {
         grid-template-columns: repeat(2, 1fr);
+        grid-gap: 0 10px;
       }
       @media (min-width: 520px) {
         & {
           max-width: 500px;
           display: flex;
           justify-content: center;
-          div {
-            line-height: unset;
-            padding: 10px;
+          .nav-title {
             width: 120px;
-            height: 50px;
-            line-height: 30px;
           }
         }
       }
@@ -367,7 +362,7 @@
           }
         }
         .d-List,
-        .selectList {
+        .mobile-list {
           display: none;
         }
       }

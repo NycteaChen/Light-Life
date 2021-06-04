@@ -44,17 +44,25 @@ export default function MobileBottom() {
     });
   };
   return (
-    <div className={style.mobileBottom}>
-      <Link
-        to={params.dID ? `/dietitian/${params.dID}` : `/customer/${params.cID}`}
-      >
-        <img src={user} alt="member" />
-        <span>會員首頁</span>
-      </Link>
-      <a onClick={logoutHandler}>
-        <img src={exit} alt="logout" />
-        <span>登出</span>
-      </a>
-    </div>
+    <>
+      <div className={style.mobileBottom}>
+        <Link
+          className={style.link}
+          to={
+            params.dID ? `/dietitian/${params.dID}` : `/customer/${params.cID}`
+          }
+        >
+          <img src={user} alt="member" />
+          <span>會員首頁</span>
+        </Link>
+        <a onClick={logoutHandler} className={style.link}>
+          <img src={exit} alt="logout" />
+          <span>登出</span>
+        </a>
+      </div>
+      <aside>
+        <a href="#top" id={style.toTop}></a>
+      </aside>
+    </>
   );
 }
