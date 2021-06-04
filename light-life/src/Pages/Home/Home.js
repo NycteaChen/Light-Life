@@ -33,7 +33,13 @@ function Home() {
         confirmButtonColor: "#1e4d4e",
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire("發送成功", "感謝您的來信", "success");
+          Swal.fire({
+            title: "發送成功",
+            text: "感謝您的來信",
+            icon: "success",
+            confirmButtonText: "確定",
+            confirmButtonColor: "#1e4d4e",
+          });
           setInput({});
         }
       });
