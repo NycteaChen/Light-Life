@@ -331,6 +331,7 @@ function Dietitian() {
                 to={`/dietitian/${dietitianID}/profile`}
                 onClick={bindListHandler}
               >
+                <i class="fa fa-user" aria-hidden="true"></i>
                 <div title="profile">會員資料</div>
               </Link>
               <ul>
@@ -341,7 +342,15 @@ function Dietitian() {
                   }`}
                   onClick={bindListHandler}
                 >
-                  客戶清單
+                  {" "}
+                  <i class="fa fa-users" aria-hidden="true"></i>
+                  <div
+                    title="customerList"
+                    className="list"
+                    onClick={bindListHandler}
+                  >
+                    客戶清單
+                  </div>
                 </div>
                 <div
                   className={`${basic.customerList} list`}
@@ -373,6 +382,7 @@ function Dietitian() {
                 onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}/findCustomers`}
               >
+                <i class="fa fa-search" aria-hidden="true"></i>
                 <div title="findCustomer">找客戶</div>
               </Link>
 
@@ -382,6 +392,7 @@ function Dietitian() {
                 onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}/inviteMe`}
               >
+                <i class="fa fa-envira" aria-hidden="true"></i>
                 <div title="whoInvite">誰找我</div>
               </Link>
               <Link
@@ -389,7 +400,8 @@ function Dietitian() {
                 onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}`}
               >
-                返回會員主頁
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                返回會員首頁
               </Link>
               <a onClick={logoutHandler}>
                 <img src={exit} alt="logout" id={basic.logout} />

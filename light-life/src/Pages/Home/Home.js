@@ -190,7 +190,7 @@ function Home() {
         <div className={style.cover}>
           <div className={style["main-title"]}>
             <h2>Bring you to light life</h2>
-            <h6>您的營養貼身管家</h6>
+            <div>專業營養團隊，帶您活出輕盈光彩</div>
             {user.client ? (
               <Link to={`/${user.client}/${user.id}`}>
                 <button>使用服務</button>
