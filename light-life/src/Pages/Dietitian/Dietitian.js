@@ -10,7 +10,7 @@ import {
 import firebase from "firebase/app";
 import "firebase/firestore";
 import Swal from "sweetalert2";
-import logo from "../../images/lightlife-straight.svg";
+import logo from "../../images/lightlife-straight.png";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import InvitedList from "./Invite/InvitedList.js";
