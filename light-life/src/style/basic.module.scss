@@ -118,17 +118,18 @@
         border-right: 5px solid green;
       }
       .nav-title {
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         padding: 15px 0;
         background-color: #ffffff;
         transition: background-color 0.2s;
         cursor: pointer;
-
-        & > div::before {
-          content: "";
-          width: 24px;
-          height: 24px;
-          background-image: url("../images/user.svg");
+        i {
+          margin-right: 5px;
+        }
+        div {
+          margin-left: 5px;
         }
         &:hover {
           background-color: #d4fde6;
