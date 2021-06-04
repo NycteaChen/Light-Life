@@ -180,6 +180,7 @@ function Customer() {
               setPending([]);
             }
           });
+        console.log(pending);
         //刪除成功的刊登或預約???
         // .then(() => {
         //   firebase
@@ -290,23 +291,51 @@ function Customer() {
           .where("inviterID", "==", customerID)
           .get()
           .then((docs) => {
-            const user = [];
+            const reserveArray = [];
             if (!docs.empty) {
-              const reserveArray = [];
               docs.forEach((doc) => {
-                if (doc.data().status === "0" || doc.data().status === "1") {
+                if (doc.data().status === "0") {
+                  // || doc.data().status === "1"
                   reserveArray.push(doc.data());
                 }
               });
-              users.forEach((u) => {
-                if (!reserveArray.find((r) => r.dietitian === u.id)) {
-                  user.push(u);
+              // users.forEach((u) => {
+              //   if (!reserveArray.find((r) => r.dietitian === u.id)) {
+              //     user.push(u);
+              //   }
+              // });
+              // setDietitians(user);
+              // } else {
+              //   setDietitians(users);
+              // }
+            }
+            return { reserveArray, users };
+          })
+          .then((res) => {
+            const user = [];
+            firebase
+              .firestore()
+              .collection("pending")
+              .where("customer", "==", customerID)
+              .get()
+              .then((docs) => {
+                if (!docs.empty) {
+                  docs.forEach((doc) => {
+                    res["reserveArray"].push(doc.data());
+                  });
+
+                  res["users"].forEach((u) => {
+                    if (
+                      !res["reserveArray"].find((r) => r.dietitian === u.id)
+                    ) {
+                      user.push(u);
+                    }
+                  });
+                  setDietitians(user);
+                } else {
+                  setDietitians(res["users"]);
                 }
               });
-              setDietitians(user);
-            } else {
-              setDietitians(users);
-            }
           });
       });
   }, [reserve]);
@@ -423,7 +452,7 @@ function Customer() {
                 to={`/customer/${customerID}/`}
               >
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                <div>返回會員首頁</div>
+                <div>會員首頁</div>
               </Link>
               <a onClick={logoutHandler}>
                 <img src={exit} alt="logout" id={style.logout} />
@@ -445,23 +474,26 @@ function Customer() {
               </div>
             </div>
 
-            <div className={style["selectList"]}>
+            <div className={style["mobile-list"]}>
               <Link
                 className={style["nav-title"]}
                 to={`/customer/${profile.id}/profile`}
               >
-                <div>基本資料</div>
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <div>會員資料</div>
               </Link>
               <Link
                 className={style["nav-title"]}
                 to={`/customer/${profile.id}/dietary`}
               >
+                <i class="fa fa-cutlery" aria-hidden="true"></i>
                 <div>飲食記錄</div>
               </Link>
               <Link
                 className={style["nav-title"]}
                 to={`/customer/${profile.id}/target`}
               >
+                <i class="fa fa-bullseye" aria-hidden="true"></i>
                 <div>目標設定</div>
               </Link>
 
@@ -469,6 +501,7 @@ function Customer() {
                 className={style["nav-title"]}
                 to={`/customer/${customerID}/publish`}
               >
+                <i class="fa fa-file-text-o" aria-hidden="true"></i>
                 <div>刊登需求</div>
               </Link>
 
@@ -476,6 +509,7 @@ function Customer() {
                 className={style["nav-title"]}
                 to={`/customer/${customerID}/findDietitians`}
               >
+                <i class="fa fa-search" aria-hidden="true"></i>
                 <div>找營養師</div>
               </Link>
 
@@ -483,6 +517,7 @@ function Customer() {
                 className={style["nav-title"]}
                 to={`/customer/${customerID}/reserve-list`}
               >
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
                 <div>預約清單</div>
               </Link>
             </div>
