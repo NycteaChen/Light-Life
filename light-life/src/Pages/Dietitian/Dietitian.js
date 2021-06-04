@@ -424,7 +424,7 @@ function Dietitian() {
             </div>
             <div className={basic["d-List"]}>
               <Link
-                className={basic["nav-title"]}
+                className={`${basic["nav-title"]}`}
                 to={`/dietitian/${dietitianID}/profile`}
                 onClick={bindListHandler}
               >
@@ -464,31 +464,33 @@ function Dietitian() {
             <Route exact path="/dietitian/:dID">
               <div className={basic.indexMessage}>
                 <div>{profile.name}營養師，歡迎回來！</div>
-                <div>
-                  <div>
-                    <div>尚未進行的服務</div>
-                    {pending ? (
-                      pending.length > 0 ? (
-                        pending.map((p) => (
+                <div className={basic.servingNumber}>
+                  目前服務人數：
+                  <span>{users && users.length > 0 ? users.lenght : 0}</span>人
+                </div>
+                <div className={basic.pendingService}>
+                  <div>尚未進行的服務</div>
+                  {pending ? (
+                    pending.length > 0 ? (
+                      pending.map((p) => (
+                        <div>
                           <div>
                             <div>
-                              <div>
-                                {p.customerName}{" "}
-                                {p.customerGender === "男" ? "先生" : "小姐"}
-                              </div>
-                              <div>
-                                時間：{p.startDate}~{p.endDate}
-                              </div>
+                              {p.customerName}{" "}
+                              {p.customerGender === "男" ? "先生" : "小姐"}
+                            </div>
+                            <div>
+                              時間：{p.startDate}~{p.endDate}
                             </div>
                           </div>
-                        ))
-                      ) : (
-                        <div>無</div>
-                      )
+                        </div>
+                      ))
                     ) : (
-                      <div>loading</div>
-                    )}
-                  </div>
+                      <div>無</div>
+                    )
+                  ) : (
+                    <div>loading</div>
+                  )}
                 </div>
               </div>
             </Route>
