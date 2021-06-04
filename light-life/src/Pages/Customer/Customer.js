@@ -18,7 +18,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import Swal from "sweetalert2";
 import style from "../../style/basic.module.scss";
-import logo from "../../images/lightlife-straight.svg";
+import logo from "../../images/lightlife-straight.png";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 

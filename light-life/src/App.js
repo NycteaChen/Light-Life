@@ -4,7 +4,7 @@ import Home from "./Pages/Home/Home.js";
 import Dietitian from "./Pages/Dietitian/Dietitian.js";
 import Customer from "./Pages/Customer/Customer.js";
 import styled from "styled-components";
-import logo from "./images/lightlife-horizontal.svg";
+import logo from "./images/lightlife-horizontal.png";
 import style from "./style/basic.module.scss";
 
 function App() {

@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from "../../style/login.module.scss";
-import logo from "../../images/lightlife-straight.svg";
+import logo from "../../images/lightlife-straight.png";
 import { Formik } from "formik";
 import Swal from "sweetalert2";
 import apple from "../../images/apple.gif";
