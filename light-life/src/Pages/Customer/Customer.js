@@ -5,6 +5,7 @@ import {
   Route,
   Link,
   useParams,
+  useLocation,
 } from "react-router-dom";
 import GetDietitiansData from "./FindDietitians/GetDietitinasData.js";
 import ReserveList from "./Reverse/ReserveList.js";
@@ -12,10 +13,12 @@ import CustomerProfile from "../Components/CustomerProfile/EditCustomerProfile.j
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import CustomerTarget from "./Target/CustomerTarget.js";
 import Publish from "./Publish/Publish.js";
+import MobileBottom from "../Components/MobileBottom.js";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import style from "../../style/basic.module.scss";
-import logo from "../../images/lightlife-straight.png";
+import logo from "../../images/lightlife-straight.svg";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 
@@ -32,6 +35,9 @@ function Customer() {
     .substr(0, 10);
   const today = new Date(getToday).getTime();
   const [dID, setDID] = useState("");
+  const [nav, setNav] = useState("");
+  const keyword = useLocation().pathname;
+  console.log(keyword);
   useEffect(() => {
     firebase
       .firestore()
@@ -245,6 +251,19 @@ function Customer() {
         });
         setReserve(reserveArray);
       });
+    if (keyword.includes("profile")) {
+      setNav({ profile: style["nav-active"] });
+    } else if (keyword.includes("dietary")) {
+      setNav({ dietary: style["nav-active"] });
+    } else if (keyword.includes("target")) {
+      setNav({ target: style["nav-active"] });
+    } else if (keyword.includes("publish")) {
+      setNav({ publish: style["nav-active"] });
+    } else if (keyword.includes("findDietitian")) {
+      setNav({ findDietitian: style["nav-active"] });
+    } else if (keyword.includes("reserve")) {
+      setNav({ reserve: style["nav-active"] });
+    }
   }, []);
   useEffect(() => {
     firebase
@@ -292,205 +311,246 @@ function Customer() {
       });
   }, [reserve]);
 
+  const activeHandler = (e) => {
+    const { title } = e.target;
+    if (title) {
+      setNav({ [title]: style["nav-active"] });
+    } else {
+      setNav({});
+    }
+  };
+
   const logoutHandler = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(function () {
-        alert("已登出");
-        // 登出後強制重整一次頁面
-        window.location.href = "/";
-      })
-      .catch(function (error) {
-        console.log(error.message);
-      });
+    Swal.fire({
+      text: "確定登出嗎?",
+      confirmButtonText: "確定",
+      cancelButtonText: "取消",
+      confirmButtonColor: "#1e4d4e",
+      showCancelButton: true,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        firebase
+          .auth()
+          .signOut()
+          .then(function () {
+            Swal.fire({
+              text: "已登出，感謝您的使用",
+              icon: "success",
+              confirmButtonText: "確定",
+              confirmButtonColor: "#1e4d4e",
+            }).then(() => {
+              // 登出後強制重整一次頁面
+              window.location.href = "/";
+            });
+          })
+          .catch(function (error) {
+            console.log(error.message);
+          });
+      }
+    });
   };
 
   if (profile.id) {
     return (
-      <main className={style["d-main"]}>
-        <nav>
-          <a href="/">
-            <img src={logo} id={style["menu-logo"]} />
-          </a>
-          <div className={style["straight-nav"]}>
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${profile.id}/profile`}
-            >
-              <div>基本資料</div>
-            </Link>
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${profile.id}/dietary`}
-            >
-              <div>飲食記錄</div>
-            </Link>
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${profile.id}/target`}
-            >
-              <div>目標設定</div>
-            </Link>
-
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${customerID}/publish`}
-            >
-              <div>刊登需求</div>
-            </Link>
-
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${customerID}/findDietitians`}
-            >
-              <div>找營養師</div>
-            </Link>
-
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${customerID}/reserve-list`}
-            >
-              <div>預約清單</div>
-            </Link>
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${customerID}/`}
-            >
-              <div>返回會員首頁</div>
-            </Link>
-            <a onClick={logoutHandler}>
-              <img src={exit} alt="logout" id={style.logout} />
+      <>
+        <MobileBottom />
+        <main className={style["d-main"]}>
+          <nav>
+            <a href="/">
+              <img src={logo} id={style["menu-logo"]} />
             </a>
-            <div className={style["copyright"]}>&copy;2021 Light Life</div>
-          </div>
-        </nav>
+            <div className={style["straight-nav"]}>
+              <Link
+                title="profile"
+                className={`${style["nav-title"]} ${nav.profile || ""}`}
+                onClick={activeHandler}
+                to={`/customer/${profile.id}/profile`}
+              >
+                <div title="profile">基本資料</div>
+              </Link>
+              <Link
+                title="dietary"
+                className={`${style["nav-title"]} ${nav.dietary || ""}`}
+                onClick={activeHandler}
+                to={`/customer/${profile.id}/dietary`}
+              >
+                <div title="dietary">飲食記錄</div>
+              </Link>
+              <Link
+                title="target"
+                className={`${style["nav-title"]} ${nav.target || ""}`}
+                onClick={activeHandler}
+                to={`/customer/${profile.id}/target`}
+              >
+                <div title="target">目標設定</div>
+              </Link>
 
-        <div className={style.profile}>
-          <img src={profile ? profile.image : noImage} />
-          <div className={style.welcome}>
-            <div>{profile.name}，您好！</div>
-            <div className={style["service-status"]}>
-              {profile.dietitian ? (
-                <div>我的營養師：{dName} 營養師</div>
-              ) : (
-                <div>目前沒有使用服務喔</div>
-              )}
+              <Link
+                title="publish"
+                className={`${style["nav-title"]} ${nav.publish || ""}`}
+                onClick={activeHandler}
+                to={`/customer/${customerID}/publish`}
+              >
+                <div title="publish">刊登需求</div>
+              </Link>
+
+              <Link
+                title="findDietitian"
+                className={`${style["nav-title"]} ${nav.findDietitian || ""}`}
+                onClick={activeHandler}
+                to={`/customer/${customerID}/findDietitians`}
+              >
+                <div title="findDietitian">找營養師</div>
+              </Link>
+
+              <Link
+                title="reserve"
+                className={`${style["nav-title"]} ${nav.reserve || ""}`}
+                onClick={activeHandler}
+                to={`/customer/${customerID}/reserve-list`}
+              >
+                <div title="reserve">預約清單</div>
+              </Link>
+              <Link
+                className={style["nav-title"]}
+                onClick={activeHandler}
+                to={`/customer/${customerID}/`}
+              >
+                <div>返回會員首頁</div>
+              </Link>
+              <a onClick={logoutHandler}>
+                <img src={exit} alt="logout" id={style.logout} />
+              </a>
+              <div className={style["copyright"]}>&copy;2021 Light Life</div>
+            </div>
+          </nav>
+
+          <div className={style.profile}>
+            <img src={profile ? profile.image : noImage} />
+            <div className={style.welcome}>
+              <div>{profile.name}，您好！</div>
+              <div className={style["service-status"]}>
+                {profile.dietitian ? (
+                  <div>您的營養師：{dName} 營養師</div>
+                ) : (
+                  <div>目前沒有使用服務喔</div>
+                )}
+              </div>
+            </div>
+
+            <div className={style["selectList"]}>
+              <Link
+                className={style["nav-title"]}
+                to={`/customer/${profile.id}/profile`}
+              >
+                <div>基本資料</div>
+              </Link>
+              <Link
+                className={style["nav-title"]}
+                to={`/customer/${profile.id}/dietary`}
+              >
+                <div>飲食記錄</div>
+              </Link>
+              <Link
+                className={style["nav-title"]}
+                to={`/customer/${profile.id}/target`}
+              >
+                <div>目標設定</div>
+              </Link>
+
+              <Link
+                className={style["nav-title"]}
+                to={`/customer/${customerID}/publish`}
+              >
+                <div>刊登需求</div>
+              </Link>
+
+              <Link
+                className={style["nav-title"]}
+                to={`/customer/${customerID}/findDietitians`}
+              >
+                <div>找營養師</div>
+              </Link>
+
+              <Link
+                className={style["nav-title"]}
+                to={`/customer/${customerID}/reserve-list`}
+              >
+                <div>預約清單</div>
+              </Link>
             </div>
           </div>
 
-          <div className={style["selectList"]}>
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${profile.id}/profile`}
-            >
-              <div>基本資料</div>
-            </Link>
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${profile.id}/dietary`}
-            >
-              <div>飲食記錄</div>
-            </Link>
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${profile.id}/target`}
-            >
-              <div>目標設定</div>
-            </Link>
-
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${customerID}/publish`}
-            >
-              <div>刊登需求</div>
-            </Link>
-
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${customerID}/findDietitians`}
-            >
-              <div>找營養師</div>
-            </Link>
-
-            <Link
-              className={style["nav-title"]}
-              to={`/customer/${customerID}/reserve-list`}
-            >
-              <div>預約清單</div>
-            </Link>
-          </div>
-        </div>
-
-        <Switch>
-          <Route exact path="/customer/:cID">
-            <div className={style.indexMessage}>
-              <div>{profile.name}，歡迎回來！</div>
-              <div>
-                <div>當前進行之服務時間</div>
-                {serviceDate ? (
-                  serviceDate.startDate ? (
-                    <>
-                      <div>
-                        {serviceDate ? serviceDate.startDate : ""}~
-                        {serviceDate ? serviceDate.endDate : ""}
-                      </div>
-                    </>
-                  ) : (
-                    <div>暫無</div>
-                  )
-                ) : (
-                  <div>loading</div>
-                )}
-              </div>
-              <div>
-                <div>尚未進行的服務</div>
-                {pending ? (
-                  pending.length > 0 ? (
-                    pending.map((p) => (
-                      <div>
+          <Switch>
+            <Route exact path="/customer/:cID">
+              <div className={style.indexMessage}>
+                <div>{profile.name}，歡迎回來！</div>
+                <div>
+                  <div>當前進行之服務時間</div>
+                  {serviceDate ? (
+                    serviceDate.startDate ? (
+                      <>
                         <div>
-                          <div>{p.dietitianName} 營養師</div>
+                          {serviceDate ? serviceDate.startDate : ""}~
+                          {serviceDate ? serviceDate.endDate : ""}
+                        </div>
+                      </>
+                    ) : (
+                      <div>暫無</div>
+                    )
+                  ) : (
+                    <div>loading</div>
+                  )}
+                </div>
+                <div>
+                  <div>尚未進行的服務</div>
+                  {pending ? (
+                    pending.length > 0 ? (
+                      pending.map((p) => (
+                        <div>
                           <div>
-                            時間：{p.startDate}~{p.endDate}
+                            <div>{p.dietitianName} 營養師</div>
+                            <div>
+                              時間：{p.startDate}~{p.endDate}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))
+                      ))
+                    ) : (
+                      <div>無</div>
+                    )
                   ) : (
-                    <div>無</div>
-                  )
-                ) : (
-                  <div>loading</div>
-                )}
+                    <div>loading</div>
+                  )}
+                </div>
               </div>
-            </div>
-          </Route>
-          <Route exact path="/customer/:cID/profile">
-            <CustomerProfile profile={profile} setProfile={setProfile} />
-          </Route>
-          <Route exact path="/customer/:cID/dietary">
-            <DietrayRecord />
-          </Route>
-          <Route exact path="/customer/:cID/target">
-            <CustomerTarget />
-          </Route>
-          <Route exact path="/customer/:cID/publish">
-            <Publish reserve={reserve} />
-          </Route>
-          <Route exact path="/customer/:cID/findDietitians">
-            <GetDietitiansData
-              props={dietitians}
-              setReserve={setReserve}
-              profile={profile}
-              reserve={reserve}
-            />
-          </Route>
-          <Route exact path="/customer/:cID/reserve-list">
-            <ReserveList reserve={reserve} setReserve={setReserve} />
-          </Route>
-        </Switch>
-      </main>
+            </Route>
+            <Route exact path="/customer/:cID/profile">
+              <CustomerProfile profile={profile} setProfile={setProfile} />
+            </Route>
+            <Route exact path="/customer/:cID/dietary">
+              <DietrayRecord />
+            </Route>
+            <Route exact path="/customer/:cID/target">
+              <CustomerTarget />
+            </Route>
+            <Route exact path="/customer/:cID/publish">
+              <Publish reserve={reserve} />
+            </Route>
+            <Route exact path="/customer/:cID/findDietitians">
+              <GetDietitiansData
+                props={dietitians}
+                setReserve={setReserve}
+                profile={profile}
+                reserve={reserve}
+              />
+            </Route>
+            <Route exact path="/customer/:cID/reserve-list">
+              <ReserveList reserve={reserve} setReserve={setReserve} />
+            </Route>
+          </Switch>
+        </main>
+      </>
     );
   } else {
     return (

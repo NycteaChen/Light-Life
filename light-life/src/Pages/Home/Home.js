@@ -4,8 +4,8 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import Login from "./Login.js";
 import Swal from "sweetalert2";
-import logo from "../../images/lightlife-horizontal.png";
-import loading from "../../images/lightlife-straight.png";
+import logo from "../../images/lightlife-horizontal.svg";
+import loading from "../../images/lightlife-straight.svg";
 import style from "../../style/home.module.scss";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
@@ -118,6 +118,7 @@ function Home() {
     Swal.fire({
       text: "確定登出嗎?",
       confirmButtonText: "確定",
+      cancelButtonText: "取消",
       confirmButtonColor: "#1e4d4e",
       showCancelButton: true,
     }).then((res) => {
@@ -189,6 +190,7 @@ function Home() {
         <div className={style.cover}>
           <div className={style["main-title"]}>
             <h2>Bring you to light life</h2>
+            <h6>您的營養貼身管家</h6>
             {user.client ? (
               <Link to={`/${user.client}/${user.id}`}>
                 <button>使用服務</button>

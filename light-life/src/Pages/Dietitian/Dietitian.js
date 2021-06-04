@@ -9,7 +9,8 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import logo from "../../images/lightlife-straight.png";
+import Swal from "sweetalert2";
+import logo from "../../images/lightlife-straight.svg";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import InvitedList from "./Invite/InvitedList.js";
@@ -18,6 +19,7 @@ import CustomerProfile from "../Components/CustomerProfile/CustomerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
 import GetPublication from "../Dietitian/FindCustomers/GetPublication.js";
+import MobileBottom from "../Components/MobileBottom.js";
 import basic from "../../style/basic.module.scss";
 import style from "../../style/customerData.module.scss";
 import customer from "../../style/customerProfile.module.scss";
@@ -40,8 +42,8 @@ function Dietitian() {
   const [pending, setPending] = useState(null);
   const input = {};
   const props = {};
-  console.log(pending);
-  console.log(users);
+  const [nav, setNav] = useState("");
+  const keyword = useLocation().pathname;
   useEffect(() => {
     firebase
       .firestore()
@@ -191,7 +193,6 @@ function Dietitian() {
             // });
           });
       });
-    console.log(pending);
     firebase
       .firestore()
       .collection("reserve")
@@ -230,6 +231,15 @@ function Dietitian() {
           });
         });
     }
+    if (keyword.includes("profile")) {
+      setNav({ profile: basic["nav-active"] });
+    } else if (keyword.includes("customer")) {
+      setNav({ customerList: basic["nav-active"] });
+    } else if (keyword.includes("findCustomer")) {
+      setNav({ findCustomer: basic["nav-active"] });
+    } else if (keyword.includes("inviteMe")) {
+      setNav({ whoInvite: basic["nav-active"] });
+    }
   }, []);
 
   const getSelectedCustomer = (e) => {
@@ -255,19 +265,41 @@ function Dietitian() {
     } else {
       setDisplay("none");
     }
+    const { title } = e.target;
+    if (title) {
+      setNav({ [title]: basic["nav-active"] });
+    } else {
+      setNav({});
+    }
   };
   const logoutHandler = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(function () {
-        alert("已登出");
-        // 登出後強制重整一次頁面
-        window.location.href = "/";
-      })
-      .catch(function (error) {
-        console.log(error.message);
-      });
+    Swal.fire({
+      text: "確定登出嗎?",
+      confirmButtonText: "確定",
+      cancelButtonText: "取消",
+      confirmButtonColor: "#1e4d4e",
+      showCancelButton: true,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        firebase
+          .auth()
+          .signOut()
+          .then(function () {
+            Swal.fire({
+              text: "已登出，感謝您的使用",
+              icon: "success",
+              confirmButtonText: "確定",
+              confirmButtonColor: "#1e4d4e",
+            }).then(() => {
+              // 登出後強制重整一次頁面
+              window.location.href = "/";
+            });
+          })
+          .catch(function (error) {
+            console.log(error.message);
+          });
+      }
+    });
   };
 
   const changeServiceStatusHandler = () => {
@@ -286,6 +318,7 @@ function Dietitian() {
   if (profile.name) {
     return (
       <>
+        <MobileBottom />
         <main className={basic["d-main"]}>
           <nav>
             <a href="/">
@@ -293,14 +326,19 @@ function Dietitian() {
             </a>
             <div className={basic["straight-nav"]}>
               <Link
-                className={basic["nav-title"]}
+                title="profile"
+                className={`${basic["nav-title"]} ${nav.profile || ""}`}
                 to={`/dietitian/${dietitianID}/profile`}
+                onClick={bindListHandler}
               >
-                <div onClick={bindListHandler}>編輯會員資料</div>
+                <div title="profile">會員資料</div>
               </Link>
               <ul>
                 <div
-                  className={`${basic["nav-title"]} list`}
+                  title="customerList"
+                  className={`${basic["nav-title"]} list ${
+                    nav.customerList || ""
+                  }`}
                   onClick={bindListHandler}
                 >
                   客戶清單
@@ -330,17 +368,21 @@ function Dietitian() {
               </ul>
 
               <Link
-                className={basic["nav-title"]}
+                title="findCustomer"
+                className={`${basic["nav-title"]} ${nav.findCustomer || ""}`}
+                onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}/findCustomers`}
               >
-                <div onClick={bindListHandler}>找客戶</div>
+                <div title="findCustomer">找客戶</div>
               </Link>
 
               <Link
-                className={basic["nav-title"]}
+                title="whoInvite"
+                className={`${basic["nav-title"]} ${nav.whoInvite || ""}`}
+                onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}/inviteMe`}
               >
-                <div onClick={bindListHandler}>誰找我</div>
+                <div title="whoInvite">誰找我</div>
               </Link>
               <Link
                 className={basic["nav-title"]}
@@ -379,7 +421,7 @@ function Dietitian() {
                 to={`/dietitian/${dietitianID}/profile`}
                 onClick={bindListHandler}
               >
-                <div>編輯會員資料</div>
+                <div>會員資料</div>
               </Link>
               <Link
                 to={`/dietitian/${dietitianID}/findCustomers`}

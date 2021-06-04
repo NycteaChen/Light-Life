@@ -1,0 +1,50 @@
+.mobileBottom {
+  position: fixed;
+  z-index: 5;
+  height: 50px;
+  bottom: 0;
+  width: 100%;
+  background: #dbfff3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  a {
+    font-size: 12px;
+    width: 50%;
+    text-align: center;
+    img {
+      width: 20px;
+      transition: all 0.3s;
+      margin-right: 10px;
+      &:hover {
+        transform: scale(1.1);
+        opacity: 0.7;
+      }
+    }
+  }
+  @media (min-width: 520px) {
+    position: absolute;
+    height: 73px;
+    background: unset;
+    bottom: unset;
+    top: 0;
+    justify-content: flex-end;
+    a {
+      font-size: 1rem;
+      display: inline-block;
+      margin-right: 20px;
+      width: unset;
+      text-align: center;
+      img {
+        width: 30px;
+      }
+      span {
+        display: none;
+      }
+    }
+    @media (min-width: 1024px) {
+      display: none;
+    }
+  }
+}

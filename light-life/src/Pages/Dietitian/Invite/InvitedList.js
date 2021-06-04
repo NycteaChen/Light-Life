@@ -4,7 +4,6 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import ShowInviterData from "./ShowInviterData.js";
 import style from "../../../style/whoInvite.module.scss";
-import { setMilliseconds } from "date-fns";
 
 function InvitedList({ invitedList, setInvitedList, setPending }) {
   const [isChecked, setIsChecked] = useState(false);

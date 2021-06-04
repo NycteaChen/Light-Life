@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/findDietitian.module.scss";
-import InputGroupWithExtras from "react-bootstrap/esm/InputGroup";
 // , profile
 function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   const params = useParams();
