@@ -53,7 +53,7 @@ export default function MobileBottom() {
           }
         >
           <img src={user} alt="member" />
-          <span>會員首頁</span>
+          <span>會員主頁</span>
         </Link>
         <a onClick={logoutHandler} className={style.link}>
           <img src={exit} alt="logout" />

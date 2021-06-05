@@ -452,7 +452,7 @@ function Customer() {
                 to={`/customer/${customerID}/`}
               >
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                <div>會員首頁</div>
+                <div>會員主頁</div>
               </Link>
               <a onClick={logoutHandler}>
                 <img src={exit} alt="logout" id={style.logout} />
@@ -526,44 +526,48 @@ function Customer() {
           <Switch>
             <Route exact path="/customer/:cID">
               <div className={style.indexMessage}>
-                <div>{profile.name}，歡迎回來！</div>
-                <div className={style.serving}>
-                  <div>當前進行之服務時間</div>
-                  {serviceDate ? (
-                    serviceDate.startDate ? (
-                      <>
-                        <div>
-                          {serviceDate ? serviceDate.startDate : ""}~
-                          {serviceDate ? serviceDate.endDate : ""}
-                        </div>
-                      </>
-                    ) : (
-                      <div>暫無</div>
-                    )
-                  ) : (
-                    <div>loading</div>
-                  )}
-                </div>
-                <div className={style.pendingService}>
-                  <div>尚未進行的服務</div>
-                  {pending ? (
-                    pending.length > 0 ? (
-                      pending.map((p) => (
-                        <div>
+                <div className={style.title}>服務使用情形</div>
+                <div className={style.content}>
+                  <div className={style.serving}>
+                    <div className={style.servingTitle}>進行中服務</div>
+                    {serviceDate ? (
+                      serviceDate.startDate ? (
+                        <>
                           <div>
-                            <div>{p.dietitianName} 營養師</div>
+                            開始日期：
+                            {serviceDate ? serviceDate.startDate : ""}
+                          </div>
+                          <div>
+                            結束日期： {serviceDate ? serviceDate.endDate : ""}
+                          </div>
+                        </>
+                      ) : (
+                        <div>暫無</div>
+                      )
+                    ) : (
+                      <div>loading</div>
+                    )}
+                  </div>
+                  <div className={style.pendingService}>
+                    <div>尚未進行的服務</div>
+                    {pending ? (
+                      pending.length > 0 ? (
+                        pending.map((p) => (
+                          <div>
                             <div>
-                              時間：{p.startDate}~{p.endDate}
+                              <div>{p.dietitianName} 營養師</div>
+                              <div>開始日期：{p.startDate}</div>
+                              <div>結束日期：{p.endDate}</div>
                             </div>
                           </div>
-                        </div>
-                      ))
+                        ))
+                      ) : (
+                        <div>無</div>
+                      )
                     ) : (
-                      <div>無</div>
-                    )
-                  ) : (
-                    <div>loading</div>
-                  )}
+                      <div>loading</div>
+                    )}
+                  </div>
                 </div>
               </div>
             </Route>

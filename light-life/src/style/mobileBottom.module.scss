@@ -63,13 +63,14 @@
   display: inline-block;
   position: fixed;
   z-index: 5;
-  right: 8px;
-  bottom: 58px;
+  right: -5px;
+  bottom: 40px;
   opacity: 0.7;
   transition: all 0.5s;
+  transform: scale(0.6);
   &:hover {
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(0.8);
   }
   &::before {
     content: url("../images/monotone_arrow_next_right.svg");
@@ -77,7 +78,8 @@
     height: 50px;
   }
   @media (min-width: 520px) {
-    bottom: 8px;
+    bottom: -5px;
+    right: 0px;
   }
   @media (min-width: 1024px) {
     display: none;
