@@ -143,25 +143,31 @@
   position: fixed;
   z-index: 3;
   width: 80%;
-  background-color: wheat;
+  background-color: #e3fce9;
+  box-shadow: 0 1px 2px #065e39;
+  border-radius: 5px;
   top: 5px;
   right: 0;
   left: 0;
   margin: auto;
   text-align: center;
-  padding: 15px 0;
+  padding: 15px 0 0;
   max-height: calc(100vh - 80px);
   overflow: auto;
   overflow-x: hidden;
+  div {
+    font-size: 14px;
+  }
   .close {
     position: absolute;
-    right: 25px;
+    // right: 25px;
+    right: 10px;
     transition: all 0.5s;
     font-size: 20px;
     cursor: pointer;
     &:hover {
       transform: scale(1.2);
-      color: red;
+      color: #037570;
     }
   }
   img {
@@ -179,7 +185,7 @@
     div {
       width: 50%;
       text-align: left;
-      margin-right: 50px;
+      margin-right: 20px;
     }
     .title {
       text-align: right;
@@ -196,40 +202,66 @@
   .col + .col {
     margin-bottom: 25px;
   }
-
   .message {
     text-align: left;
-    border-top: 1px solid black;
-    padding: 10px 20px;
-    h3 {
-      margin-bottom: 5px;
+    border-top: 1.5px solid #105a3c;
+    padding-top: 20px;
+    h5 {
+      font-weight: bold;
+      font-size: 18px;
+      margin-left: 10px;
+      margin-bottom: 0;
+    }
+    h5 + div,
+    h5 + textarea {
+      width: 90%;
+      margin: 10px auto 20px;
+      max-height: 5rem;
+      overflow: auto;
+      display: block;
+      transition: all 0.3s;
+      border-radius: 5px;
+    }
+    h5 + div {
+      padding: 5px;
+      background-color: white;
     }
     textarea {
-      transition: all 0.5s;
-      width: 100%;
+      height: 5rem;
       padding: 2px 5px;
-      height: 4rem;
+      border-color: #73af97;
+      &:focus {
+        outline: none;
+        border: 1.5px solid #105a3c;
+      }
     }
+
     .buttons {
       text-align: center;
-      margin-top: 10px;
+      margin-top: 20px;
+      width: 100%;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      height: 60px;
+      padding: 15px 0;
       button {
+        width: 80px;
         padding: 2px 8px;
+        border-radius: 5px;
+        outline: none;
+        border: none;
+        transition: opacity 0.3s, width 0.3s;
         &.send {
-          margin-right: 7px;
-          background-color: #b8ffea;
-          outline: none;
-          border-radius: 5px;
-          border: 2px solid #094231;
-          text-shadow: 0 1px 1px #6ae499;
+          background-color: #b5f5d3;
+          color: #046b40;
         }
         &.cancel {
-          margin-left: 7px;
-          background-color: #fad2c2;
-          outline: none;
-          border-radius: 5px;
-          border: 2px solid #f34500;
-          text-shadow: 0 1px 1px #fa8556;
+          background-color: #dadada;
+          color: #464444;
+        }
+        &:hover {
+          opacity: 0.7;
         }
       }
     }
@@ -238,14 +270,9 @@
   @media (min-width: 520px) {
     width: 90%;
     margin: 20px auto;
-    padding: 20px 0 30px 30px;
+    padding: 20px 0 0 30px;
     text-align: center;
     max-width: 500px;
-    img {
-      width: 180px;
-      height: 180px;
-      margin-bottom: 35px;
-    }
     .data-item {
       div {
         width: 150px;
@@ -261,13 +288,21 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-    .flexbox:first-of-type {
-      margin-bottom: 35px;
 
-      & > div .data-item:nth-child(2) {
-        margin: 10px 0;
+      img {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 35px;
       }
+      .basicData {
+        margin-left: 60px;
+        .data-item:nth-child(2) {
+          margin: 8px 0;
+        }
+      }
+    }
+    .close {
+      right: 25px;
     }
     .col {
       margin: 8px 0;
@@ -283,13 +318,23 @@
     }
     .message {
       margin-right: 30px;
-      textarea {
-        height: 6rem;
+      h5 + div {
+        max-height: 6rem;
+      }
+      .buttons {
+        justify-content: space-around;
+        margin-top: 0;
+        position: absolute;
+        width: 100%;
+        left: 0;
+        button {
+          width: 120px;
+        }
       }
     }
+  }
 
-    @media (min-width: 1024px) {
-      padding-bottom: 10px;
-    }
+  @media (min-width: 1024px) {
+    padding-bottom: 10px;
   }
 }

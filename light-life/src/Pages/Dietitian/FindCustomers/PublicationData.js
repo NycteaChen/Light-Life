@@ -101,7 +101,7 @@ function PublicationData({ publish, display, setDisplay }) {
 
       <div className={style.flexbox}>
         <img id="profile-img" src={profile.image || noImage} alt="customer" />
-        <div>
+        <div className={style.basicData}>
           <div className={style["data-item"]}>
             <div className={style.title}>姓名</div>
             <div id="name">{profile.name}</div>
@@ -144,42 +144,34 @@ function PublicationData({ publish, display, setDisplay }) {
         <div className={style.col}>
           <div className={style["data-item"]}>
             <div className={style.title}>運動習慣</div>
-            <div id="sport">{profile.sport}</div>
+            <div id="sport">
+              {profile.sport}
+              試測試測試測試測試測試測試測試測
+            </div>
           </div>
         </div>
         <div className={style.col}>
           <div className={style["data-item"]}>
             <div className={style.title}>其他</div>
-            <div id="other">{profile.other}</div>
+            <div id="other">
+              {profile.other}
+              測試測試測試測
+            </div>
           </div>
         </div>
       </div>
 
       <div className={style.message}>
-        <h3>需求描述</h3>
-        <div style={{ maxHeight: "5rem", overflow: "auto" }}>
-          {publish.content}
-        </div>
+        <h5>需求描述</h5>
+        <div>{publish.content}</div>
       </div>
 
       <div className={style.message}>
-        <h3>邀請訊息</h3>
-
+        <h5>邀請訊息</h5>
         {publish.whoInvite &&
         publish.whoInvite.find((e) => e.dietitianID === dID) ? (
           publish.whoInvite.map((e) =>
-            e.dietitianID === dID ? (
-              <div
-                style={{
-                  maxHeight: "5rem",
-                  overflow: "auto",
-                }}
-              >
-                {e.message}
-              </div>
-            ) : (
-              ""
-            )
+            e.dietitianID === dID ? <div>{e.message}</div> : ""
           )
         ) : (
           <>

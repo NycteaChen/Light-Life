@@ -76,7 +76,7 @@ function GetPublication() {
   return (
     <>
       <div className={style.publicationData}>
-        <h3>刊登中</h3>
+        <h5>刊登中</h5>
 
         {publish ? (
           publish.find(
@@ -137,7 +137,7 @@ function GetPublication() {
       </div>
 
       <div className={style["inviting-status"]}>
-        <h3>邀請狀態</h3>
+        <h5>邀請狀態</h5>
         <div className={style["inviting-list"]}>
           {publish ? (
             publish.find(
