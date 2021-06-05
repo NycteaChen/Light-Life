@@ -468,46 +468,52 @@ function Dietitian() {
                 <div className={basic.title}>服務狀況</div>
                 <div className={basic.content}>
                   <div className={basic.serving}>
-                    <div className={basic.servingTitle}>
+                    <div className={basic.subtitle}>
                       目前服務人數：
                       <span>
                         {users && users.length > 0 ? users.length : 0}
                       </span>
                       人
                     </div>
-                    <div className={basic.servingCustomers}>
-                      {users && users.length > 0
-                        ? users.map((u) => (
-                            <div className={basic.servingCustomer}>
-                              <div>
-                                {u.name} {u.gender === "男" ? "先生" : "小姐"}
-                              </div>
-                              <div>結束日期：{u.endDate}</div>
-                            </div>
-                          ))
-                        : ""}
-                    </div>
-                  </div>
-                  <div className={basic.pendingService}>
-                    <div>尚未進行的服務</div>
-                    {pending ? (
-                      pending.length > 0 ? (
-                        pending.map((p) => (
-                          <div className={basic.eachPending}>
+                    <div>
+                      {users && users.length > 0 ? (
+                        users.map((u) => (
+                          <div className={basic.each}>
                             <div>
-                              {p.customerName}{" "}
-                              {p.customerGender === "男" ? "先生" : "小姐"}
+                              {u.name} {u.gender === "男" ? "先生" : "小姐"}
                             </div>
-                            <div>開始日期：{p.startDate}</div>
-                            <div>結束日期：{p.endDate}</div>
+                            <div>結束日期：{u.endDate}</div>
                           </div>
                         ))
                       ) : (
-                        <div>無</div>
-                      )
-                    ) : (
-                      <div>loading</div>
-                    )}
+                        <div className={basic.each}>暫無</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className={basic.pendingService}>
+                    <div className={basic.subtitle}>尚未進行的服務</div>
+                    <div>
+                      {pending ? (
+                        pending.length > 0 ? (
+                          pending.map((p) => (
+                            <div className={basic.each}>
+                              <div>
+                                {p.customerName}{" "}
+                                {p.customerGender === "男" ? "先生" : "小姐"}
+                              </div>
+                              <div>
+                                <div>開始日期：{p.startDate}</div>
+                                <div>結束日期：{p.endDate}</div>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className={basic.each}>暫無</div>
+                        )
+                      ) : (
+                        <div className={basic.each}>loading</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
