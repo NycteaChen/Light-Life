@@ -10,6 +10,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import PublicationData from "./PublicationData.js";
 import style from "../../../style/findCustomers.module.scss";
+import "animate.css/animate.min.css";
 
 function GetPublication() {
   const [publish, setPublish] = useState(null);
@@ -77,23 +78,22 @@ function GetPublication() {
     <>
       <div className={style.publicationData}>
         <h5>刊登中</h5>
-
-        {publish ? (
-          publish.find(
-            (i) =>
-              i.status === "0" &&
-              (!i.whoInvite ||
-                (i.whoInvite &&
-                  !i.whoInvite.find((d) => d.dietitianID === dID)))
-          ) ? (
-            publish.map((p, pubIndex) =>
-              (!p.whoInvite ||
-                (p.whoInvite &&
-                  !p.whoInvite.find((e) => e.dietitianID === dID))) &&
-              p.status === "0" ? (
-                <>
-                  <div className={style.publicationList} key={pubIndex}>
-                    <div className={style.publication}>
+        <div className={style.publicationList}>
+          {publish ? (
+            publish.find(
+              (i) =>
+                i.status === "0" &&
+                (!i.whoInvite ||
+                  (i.whoInvite &&
+                    !i.whoInvite.find((d) => d.dietitianID === dID)))
+            ) ? (
+              publish.map((p, pubIndex) =>
+                (!p.whoInvite ||
+                  (p.whoInvite &&
+                    !p.whoInvite.find((e) => e.dietitianID === dID))) &&
+                p.status === "0" ? (
+                  <>
+                    <div className={style.publication} key={pubIndex}>
                       <div className={style.col}>
                         <div className={style.flexbox}>
                           <div className={style.flexbox}>
@@ -108,32 +108,34 @@ function GetPublication() {
                         </div>
                         <div className={style.subject}>主旨：{p.subject}</div>
                       </div>
-                      <button id={pubIndex} onClick={checkDetailsHandler}>
-                        查看詳情
-                      </button>
+                      <div className={style.button}>
+                        <button id={pubIndex} onClick={checkDetailsHandler}>
+                          查看詳情
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  {+idx == pubIndex ? (
-                    <PublicationData
-                      key={p.name}
-                      publish={p}
-                      display={display}
-                      setDisplay={setDisplay}
-                    />
-                  ) : (
-                    ""
-                  )}
-                </>
-              ) : (
-                ""
+                    {+idx == pubIndex ? (
+                      <PublicationData
+                        key={p.name}
+                        publish={p}
+                        display={display}
+                        setDisplay={setDisplay}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </>
+                ) : (
+                  ""
+                )
               )
+            ) : (
+              <div>尚未有刊登</div>
             )
           ) : (
-            <div>尚未有刊登</div>
-          )
-        ) : (
-          <div>loading</div>
-        )}
+            <div>loading</div>
+          )}
+        </div>{" "}
       </div>
 
       <div className={style["inviting-status"]}>
