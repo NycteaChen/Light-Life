@@ -97,7 +97,9 @@ function GetPublication() {
                       <div className={style.col}>
                         <div className={style.flexbox}>
                           <div className={style.flexbox}>
-                            <div>預約時間</div>
+                            <div>
+                              預約時間<span>：</span>
+                            </div>
                             <div>
                               {p.startDate}~{p.endDate}
                             </div>
@@ -114,6 +116,7 @@ function GetPublication() {
                         </button>
                       </div>
                     </div>
+
                     {+idx == pubIndex ? (
                       <PublicationData
                         key={p.name}
@@ -184,12 +187,12 @@ function GetPublication() {
                                   >
                                     查看詳情
                                   </button>
-                                  <button className={style.cancel}>成功</button>
+                                  <span className={style.success}>成功</span>
                                 </>
                               ) : p.whoInvite[index].status === "2" ? (
-                                <button className={style.cancel}>婉拒</button>
+                                <span className={style.failed}>婉拒</span>
                               ) : p.whoInvite[index].status === "3" ? (
-                                <button className={style.cancel}>逾期</button>
+                                <span className={style.failed}>逾期</span>
                               ) : (
                                 ""
                               )}

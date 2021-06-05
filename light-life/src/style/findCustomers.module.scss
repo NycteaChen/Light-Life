@@ -1,10 +1,8 @@
 .publicationData {
-  // text-align: center;
   max-width: 580px;
   margin: auto;
   h5 {
-    padding: 12px 0;
-
+    padding: 12px 0 10px;
     font-weight: bold;
   }
   .publicationList {
@@ -22,7 +20,13 @@
       &:hover {
         background-color: #fff;
       }
+      &:first-of-type {
+        margin-top: 2px;
+      }
       .col {
+        span {
+          display: none;
+        }
         .name {
           margin: 5px 0;
         }
@@ -34,15 +38,16 @@
       .button {
         text-align: center;
         button {
-          width: 80px;
+          width: 90px;
           margin: 10px 0 5px;
           padding: 2px 8px;
           border-radius: 5px;
           outline: none;
           border: none;
           transition: opacity 0.3s, width 0.3s;
-          background-color: #b5f5d3;
-          color: #046b40;
+          background-color: #015830;
+          color: white;
+          letter-spacing: 2px;
           &:hover {
             opacity: 0.7;
           }
@@ -54,12 +59,12 @@
     .publicationList {
       .publication {
         .col > .flexbox {
+          span {
+            display: inline;
+          }
           .flexbox {
             display: flex;
             justify-content: center;
-            & > div:last-of-type {
-              margin-left: 10px;
-            }
           }
         }
       }
@@ -75,12 +80,6 @@
           justify-content: space-between;
           border-bottom: 2px solid #00753f;
           padding: 8px 0;
-          .flexbox {
-            justify-content: unset;
-            & div:first-of-type {
-              margin-right: 15px;
-            }
-          }
         }
         .col {
           .subject {
@@ -97,7 +96,7 @@
 
     .publicationList {
       font-size: 16px;
-      margin-top: 10px;
+      margin-top: 22px;
       .publication {
         position: relative;
         margin: 10px 2px 30px;
@@ -117,61 +116,111 @@
 }
 
 .inviting-status {
-  text-align: center;
   margin-top: 15px;
+  max-width: 580px;
+  margin: auto;
+  h5 {
+    padding: 12px 0;
+    font-weight: bold;
+  }
   .inviting-list {
     max-height: 300px;
     overflow: auto;
     margin-top: 20px;
+    font-size: 14px;
     .invite {
-      margin: 15px 0;
       padding: 10px 15px;
-      background-color: wheat;
+      background-color: #ffffffc5;
+      box-shadow: 0 1px 3px #515a56;
+      border-radius: 5px;
+      margin: 0 10px 20px;
+      transition: background-color 0.3s;
+      &:hover {
+        background-color: #fff;
+      }
+      &:first-of-type {
+        margin-top: 2px;
+      }
       .buttons {
-        margin-top: 8px;
+        display: flex;
+        justify-content: space-around;
+        margin: 10px auto 2px;
+        max-width: 200px;
         button {
+          width: 80px;
           padding: 3px 7px;
-        }
-        .check {
-          margin-right: 5px;
-          background-color: #b8ffea;
           outline: none;
+          border: none;
           border-radius: 5px;
-          border: 2px solid #094231;
-          text-shadow: 0 1px 1px #6ae499;
+          transition: opacity 0.3s, width 0.3s;
+          &.check {
+            margin-right: 5px;
+            background-color: #015830;
+            color: white;
+          }
+          &.cancel {
+            margin-left: 5px;
+            background-color: #dadada;
+            color: #464444;
+          }
+          &:hover {
+            opacity: 0.7;
+          }
         }
-        .cancel {
-          margin-left: 5px;
-          background-color: #fad2c2;
-          outline: none;
+        span {
+          display: inline-block;
+          width: 60px;
+          margin-left: 15px;
+          margin-right: 10px;
+          text-align: center;
+          letter-spacing: 2px;
+          padding: 2px 8px;
           border-radius: 5px;
-          border: 2px solid #f34500;
-          text-shadow: 0 1px 1px #fa8556;
+
+          line-height: 22px;
+          &.success {
+            background-color: #b5f5d3;
+            color: #046b40;
+          }
+          &.failed {
+            background-color: #fcc9b5;
+            color: #661b05;
+          }
         }
       }
     }
   }
   @media (min-width: 520px) {
     .inviting-list {
-      max-width: 550px;
+      max-width: 570px;
       margin: auto;
+      font-size: 16px;
       .invite {
-        margin: 15px auto;
+        margin: 15px 2px;
+        padding: 20px 15px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        .buttons {
+          font-size: 14px;
+          margin: 0;
+          display: block;
+          max-width: unset;
+        }
       }
     }
   }
 
   @media (min-width: 1024px) {
-    margin-left: 300px;
-    h3 {
-      text-align: left;
-    }
+    margin-left: 260px;
+    max-width: 800px;
     .inviting-list {
-      max-width: 700px;
-      margin: 10px 0;
+      max-width: 800px;
+      margin: 20px 0;
+      .invite {
+        margin: 10px 2px 30px;
+      }
     }
   }
 }
@@ -251,8 +300,8 @@
     }
     h5 + div,
     h5 + textarea {
-      width: 90%;
-      margin: 10px auto 20px;
+      width: 95%;
+      margin: 0 auto 20px;
       max-height: 5rem;
       overflow: auto;
       display: block;
@@ -283,6 +332,7 @@
       height: 60px;
       padding: 15px 0;
       button {
+        letter-spacing: 2px;
         width: 80px;
         padding: 2px 8px;
         border-radius: 5px;
