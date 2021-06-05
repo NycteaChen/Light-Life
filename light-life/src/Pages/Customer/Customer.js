@@ -378,7 +378,6 @@ function Customer() {
       }
     });
   };
-
   if (profile.id) {
     return (
       <>
@@ -529,44 +528,54 @@ function Customer() {
                 <div className={style.title}>服務使用情形</div>
                 <div className={style.content}>
                   <div className={style.serving}>
-                    <div className={style.servingTitle}>進行中服務</div>
-                    {serviceDate ? (
-                      serviceDate.startDate ? (
-                        <>
-                          <div>
-                            開始日期：
-                            {serviceDate ? serviceDate.startDate : ""}
-                          </div>
-                          <div>
-                            結束日期： {serviceDate ? serviceDate.endDate : ""}
-                          </div>
-                        </>
-                      ) : (
-                        <div>暫無</div>
-                      )
-                    ) : (
-                      <div>loading</div>
-                    )}
+                    <div className={style.subtitle}>進行中服務</div>
+                    <div>
+                      <div className={style.each}>
+                        {serviceDate ? (
+                          serviceDate.startDate ? (
+                            <>
+                              <div>{dName} 營養師</div>
+                              <div>
+                                <div>
+                                  開始日期：
+                                  {serviceDate ? serviceDate.startDate : ""}
+                                </div>
+                                <div>
+                                  結束日期：{" "}
+                                  {serviceDate ? serviceDate.endDate : ""}
+                                </div>
+                              </div>
+                            </>
+                          ) : (
+                            <>暫無</>
+                          )
+                        ) : (
+                          <>loading</>
+                        )}
+                      </div>
+                    </div>
                   </div>
                   <div className={style.pendingService}>
-                    <div>尚未進行的服務</div>
-                    {pending ? (
-                      pending.length > 0 ? (
-                        pending.map((p) => (
-                          <div>
-                            <div>
+                    <div className={style.subtitle}>尚未進行的服務</div>
+                    <div>
+                      {pending ? (
+                        pending.length > 0 ? (
+                          pending.map((p) => (
+                            <div className={style.each}>
                               <div>{p.dietitianName} 營養師</div>
-                              <div>開始日期：{p.startDate}</div>
-                              <div>結束日期：{p.endDate}</div>
+                              <div>
+                                <div>開始日期：{p.startDate}</div>
+                                <div>結束日期：{p.endDate}</div>
+                              </div>
                             </div>
-                          </div>
-                        ))
+                          ))
+                        ) : (
+                          <div className={style.each}>暫無</div>
+                        )
                       ) : (
-                        <div>無</div>
-                      )
-                    ) : (
-                      <div>loading</div>
-                    )}
+                        <div className={style.each}>loading</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
