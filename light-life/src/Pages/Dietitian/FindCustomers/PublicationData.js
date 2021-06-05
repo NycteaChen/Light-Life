@@ -90,7 +90,10 @@ function PublicationData({ publish, display, setDisplay }) {
     setDisplay("none");
   };
   return (
-    <div className={style.publicationForm} style={{ display: display }}>
+    <div
+      className={`${style.publicationForm} animated animate__fadeIn`}
+      style={{ display: display }}
+    >
       <div>
         <i
           className={`${style.close} fa fa-times`}
@@ -144,19 +147,13 @@ function PublicationData({ publish, display, setDisplay }) {
         <div className={style.col}>
           <div className={style["data-item"]}>
             <div className={style.title}>運動習慣</div>
-            <div id="sport">
-              {profile.sport}
-              試測試測試測試測試測試測試測試測
-            </div>
+            <div id="sport">{profile.sport}</div>
           </div>
         </div>
         <div className={style.col}>
           <div className={style["data-item"]}>
             <div className={style.title}>其他</div>
-            <div id="other">
-              {profile.other}
-              測試測試測試測
-            </div>
+            <div id="other">{profile.other}</div>
           </div>
         </div>
       </div>

@@ -77,12 +77,12 @@
   margin-bottom: 50px;
 
   .indexMessage {
-    font-weight: bold;
     max-width: 580px;
     margin: auto;
     .title {
       font-size: 20px;
       padding: 10px 0;
+      font-weight: bold;
     }
     .content {
       margin: 20px auto 40px;
@@ -93,6 +93,7 @@
         background-color: #fafafaad;
         transition: background-color 0.5s;
         .subtitle {
+          font-weight: bold;
           padding: 12px 0;
           border-bottom: 2px solid #00753f;
           & + div {
