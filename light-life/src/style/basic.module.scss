@@ -77,14 +77,22 @@
   margin-bottom: 50px;
 
   .indexMessage {
-    text-align: center;
-    // font-size: 20px;
+    // text-align: center;
     font-weight: 700;
-    .servingNumber {
+    .title {
+      font-size: 20px;
+      background-color: rgb(235, 232, 232);
+      padding: 10px 0;
     }
-    .serving {
-    }
-    .pengingService {
+    .content {
+      margin: 20px auto;
+      background-color: #02c2f1;
+      .serving {
+        background-color: #eafff8;
+      }
+      .pendingService {
+        background-color: #abf7de;
+      }
     }
   }
 

@@ -77,6 +77,7 @@ function Dietitian() {
                       });
                     usersArray.splice(index, 1);
                   } else {
+                    usersArray[index].endDate = res.data().endDate;
                     setUsers(usersArray);
                   }
                 }
@@ -314,6 +315,7 @@ function Dietitian() {
       alert("您的個人資料尚未填寫完整喔");
     }
   };
+  console.log(users);
   // if (users.length > 0) {
   if (profile.name) {
     return (
@@ -395,7 +397,7 @@ function Dietitian() {
                 to={`/dietitian/${dietitianID}`}
               >
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                會員首頁
+                會員主頁
               </Link>
               <a onClick={logoutHandler}>
                 <img src={exit} alt="logout" id={basic.logout} />
@@ -463,34 +465,50 @@ function Dietitian() {
           <Switch>
             <Route exact path="/dietitian/:dID">
               <div className={basic.indexMessage}>
-                <div>{profile.name}營養師，歡迎回來！</div>
-                <div className={basic.servingNumber}>
-                  目前服務人數：
-                  <span>{users && users.length > 0 ? users.lenght : 0}</span>人
-                </div>
-                <div className={basic.pendingService}>
-                  <div>尚未進行的服務</div>
-                  {pending ? (
-                    pending.length > 0 ? (
-                      pending.map((p) => (
-                        <div>
-                          <div>
+                <div className={basic.title}>服務狀況</div>
+                <div className={basic.content}>
+                  <div className={basic.serving}>
+                    <div className={basic.servingTitle}>
+                      目前服務人數：
+                      <span>
+                        {users && users.length > 0 ? users.length : 0}
+                      </span>
+                      人
+                    </div>
+                    <div className={basic.servingCustomers}>
+                      {users && users.length > 0
+                        ? users.map((u) => (
+                            <div className={basic.servingCustomer}>
+                              <div>
+                                {u.name} {u.gender === "男" ? "先生" : "小姐"}
+                              </div>
+                              <div>結束日期：{u.endDate}</div>
+                            </div>
+                          ))
+                        : ""}
+                    </div>
+                  </div>
+                  <div className={basic.pendingService}>
+                    <div>尚未進行的服務</div>
+                    {pending ? (
+                      pending.length > 0 ? (
+                        pending.map((p) => (
+                          <div className={basic.eachPending}>
                             <div>
                               {p.customerName}{" "}
                               {p.customerGender === "男" ? "先生" : "小姐"}
                             </div>
-                            <div>
-                              時間：{p.startDate}~{p.endDate}
-                            </div>
+                            <div>開始日期：{p.startDate}</div>
+                            <div>結束日期：{p.endDate}</div>
                           </div>
-                        </div>
-                      ))
+                        ))
+                      ) : (
+                        <div>無</div>
+                      )
                     ) : (
-                      <div>無</div>
-                    )
-                  ) : (
-                    <div>loading</div>
-                  )}
+                      <div>loading</div>
+                    )}
+                  </div>
                 </div>
               </div>
             </Route>
