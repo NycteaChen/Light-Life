@@ -1,12 +1,32 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import DietitianData from "../FindDietitians/DietitianData.js";
 import style from "../../../style/reserveList.module.scss";
 
 function ReserveList({ reserve, setReserve }) {
   const [index, setIndex] = useState();
-
+  const [dietitians, setDietitians] = useState([]);
+  const [isChecked, setIsChecked] = useState(false); //false
+  useEffect(() => {
+    const dietitianArray = [];
+    reserve.forEach((r) => {
+      firebase
+        .firestore()
+        .collection("dietitians")
+        .doc(r.dietitian)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            dietitianArray.push(doc.data());
+            setDietitians(dietitianArray);
+          }
+        });
+    });
+  }, []);
+  console.log(dietitians);
   const checkDeclineMessage = (e) => {
+    setIsChecked(true);
     if (e.target.id) {
       setIndex(e.target.id);
     } else {
@@ -17,6 +37,7 @@ function ReserveList({ reserve, setReserve }) {
   const checkReserveMessage = (e) => {
     if (e.target.id) {
       setIndex(e.target.id);
+      setIsChecked(true);
     } else {
       setIndex();
     }
@@ -73,17 +94,25 @@ function ReserveList({ reserve, setReserve }) {
                       </button>
                     </div>
 
-                    {+index === idx ? (
-                      <div className={style.message}>
-                        <div className={style.addDate}>
-                          建立時間：{r.addDate}
-                        </div>
-                        <div className={style.content}>
-                          <h3>邀請訊息</h3>
-                          <div>{r.reserveMessage}</div>
-                        </div>
-                        <button onClick={checkReserveMessage}>確定</button>
-                      </div>
+                    {+index === idx && isChecked ? (
+                      <>
+                        <DietitianData
+                          props={dietitians[idx]}
+                          reserve={reserve}
+                          setIsChecked={setIsChecked}
+                          setReserve={setReserve}
+                        />
+                        {/* <div className={style.message}>
+                          <div className={style.addDate}>
+                            建立時間：{r.addDate}
+                          </div>
+                          <div className={style.content}>
+                            <h3>邀請訊息</h3>
+                            <div>{r.reserveMessage}</div>
+                          </div>
+                          <button onClick={checkReserveMessage}>確定</button>
+                        </div> */}
+                      </>
                     ) : (
                       ""
                     )}

@@ -87,6 +87,7 @@
         max-width: unset;
         display: grid;
         grid-template-columns: 25% 75%;
+        padding: 20px;
         .col {
           display: flex;
           margin-left: 30px;
@@ -138,7 +139,11 @@
       }
     }
   }
-
+  img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+  }
   .name {
     font-size: 20px;
     font-weight: bold;
@@ -213,6 +218,10 @@
   }
   @media (min-width: 520px) {
     max-width: 520px;
+    img {
+      width: 180px;
+      height: 180px;
+    }
     .content {
       margin-left: 120px;
       .flexbox {

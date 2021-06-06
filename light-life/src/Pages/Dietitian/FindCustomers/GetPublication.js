@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import PublicationData from "./PublicationData.js";
 import style from "../../../style/findCustomers.module.scss";
 import "animate.css/animate.min.css";
@@ -58,20 +59,29 @@ function GetPublication() {
   };
   const cancelInviteHandler = (e) => {
     const { publishID, whoInvite } = publish[+e.target.id];
-    firebase
-      .firestore()
-      .collection("publish")
-      .doc(publishID)
-      .set(
-        {
-          whoInvite: [...whoInvite.filter((i) => i.dietitianID !== dID)],
-        },
-        { merge: true }
-      )
-      .then(() => {
-        alert("取消成功!");
-        window.location.reload();
-      });
+    Swal.fire({
+      text: "確定取消嗎?",
+      confirmButtonText: "確定",
+      cancelButtonText: "返回",
+      confirmButtonColor: "#1e4d4e",
+      showCancelButton: true,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        firebase
+          .firestore()
+          .collection("publish")
+          .doc(publishID)
+          .set(
+            {
+              whoInvite: [...whoInvite.filter((i) => i.dietitianID !== dID)],
+            },
+            { merge: true }
+          )
+          .then(() => {
+            window.location.reload();
+          });
+      }
+    });
   };
 
   return (
