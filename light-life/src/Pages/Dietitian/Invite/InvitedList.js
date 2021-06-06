@@ -40,9 +40,11 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
                 </span>
                 指定您的服務
               </div>
-              <button onClick={checkInviter} id={index}>
-                查看詳情
-              </button>
+              <div className={style.button}>
+                <button onClick={checkInviter} id={index}>
+                  查看詳情
+                </button>
+              </div>
             </div>
           </div>
         ))}
