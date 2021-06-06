@@ -9,7 +9,6 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
     setCheckIndex(e.target.id);
     setIsChecked(true);
   };
-
   return (
     <div className={style.dietitianList}>
       <div className={style.title}>營養師清單</div>

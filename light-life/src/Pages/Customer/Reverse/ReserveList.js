@@ -10,21 +10,22 @@ function ReserveList({ reserve, setReserve }) {
   const [isChecked, setIsChecked] = useState(false); //false
   useEffect(() => {
     const dietitianArray = [];
-    reserve.forEach((r) => {
-      firebase
-        .firestore()
-        .collection("dietitians")
-        .doc(r.dietitian)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            dietitianArray.push(doc.data());
-            setDietitians(dietitianArray);
-          }
-        });
-    });
+    reserve
+      .filter((r) => r.status === "0")
+      .forEach((r) => {
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .doc(r.dietitian)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              dietitianArray.push(doc.data());
+              setDietitians(dietitianArray);
+            }
+          });
+      });
   }, []);
-  console.log(dietitians);
   const checkDeclineMessage = (e) => {
     setIsChecked(true);
     if (e.target.id) {
@@ -57,7 +58,8 @@ function ReserveList({ reserve, setReserve }) {
         console.log("Error:", error);
       });
   };
-
+  console.log(reserve);
+  console.log(dietitians);
   return (
     <div className={style["reserve-list"]}>
       <div className={style.waiting}>
@@ -66,8 +68,9 @@ function ReserveList({ reserve, setReserve }) {
           <>
             <h4>請靜待營養師回覆</h4>
             <div className={style.reservations}>
-              {reserve.map((r, idx) =>
-                r.status === "0" ? (
+              {reserve
+                .filter((r) => r.status === "0")
+                .map((r, idx) => (
                   <div key={idx} className={style.reservation}>
                     <div className={style.content}>
                       <div className={style.dietitian}>
@@ -102,25 +105,12 @@ function ReserveList({ reserve, setReserve }) {
                           setIsChecked={setIsChecked}
                           setReserve={setReserve}
                         />
-                        {/* <div className={style.message}>
-                          <div className={style.addDate}>
-                            建立時間：{r.addDate}
-                          </div>
-                          <div className={style.content}>
-                            <h3>邀請訊息</h3>
-                            <div>{r.reserveMessage}</div>
-                          </div>
-                          <button onClick={checkReserveMessage}>確定</button>
-                        </div> */}
                       </>
                     ) : (
                       ""
                     )}
                   </div>
-                ) : (
-                  ""
-                )
-              )}
+                ))}
             </div>
           </>
         ) : (

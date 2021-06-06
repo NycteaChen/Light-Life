@@ -37,7 +37,6 @@ function Customer() {
   const [dID, setDID] = useState("");
   const [nav, setNav] = useState("");
   const keyword = useLocation().pathname;
-  console.log(keyword);
   useEffect(() => {
     firebase
       .firestore()

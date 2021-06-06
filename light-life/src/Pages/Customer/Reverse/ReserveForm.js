@@ -180,12 +180,21 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
         {path.includes("reserve-list") ? "您的預約" : "現在預約"}
       </div>
       <div className={style.form}>
-        <div className={style.flexbox}>
-          <label>
-            <div>開始</div>
-            {path.includes("reserve-list") ? (
+        {path.includes("reserve-list") ? (
+          <div className={style.reserveCol}>
+            <label className={style.reserveLabel}>
+              <div>開始日期</div>
               <div>{nowReserve.reserveStartDate}</div>
-            ) : (
+            </label>
+            <label className={style.reserveLabel}>
+              <div>結束日期</div>
+              <div>{nowReserve.reserveEndDate}</div>
+            </label>
+          </div>
+        ) : (
+          <div className={style.flexbox}>
+            <label>
+              <div>開始</div>
               <input
                 type="date"
                 value={input.reserveStartDate ? input.reserveStartDate : ""}
@@ -194,13 +203,9 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
                 name="reserveStartDate"
                 onChange={getInputHandler}
               />
-            )}
-          </label>
-          <label>
-            <div>結束</div>
-            {path.includes("reserve-list") ? (
-              <div>{nowReserve.reserveEndDate}</div>
-            ) : (
+            </label>
+            <label>
+              <div>結束</div>
               <input
                 type="date"
                 value={input.reserveEndDate ? input.reserveEndDate : ""}
@@ -209,27 +214,28 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
                 name="reserveEndDate"
                 onChange={getInputHandler}
               />
-            )}
-          </label>
-        </div>
-
-        <label>
-          <div>邀請訊息</div>
-          {path.includes("reserve-list") ? (
-            <div>{nowReserve.reserveMessage}</div>
-          ) : (
-            <textarea
-              name="reserveMessage"
-              onChange={getInputHandler}
-            ></textarea>
-          )}
-        </label>
-        {path.includes("reserve-list") ? (
-          ""
-        ) : (
-          <div className={style.button}>
-            <button onClick={sendReverseHandler}>發送預約邀請</button>
+            </label>
           </div>
+        )}
+
+        {path.includes("reserve-list") ? (
+          <label className={`${style.reserveLabel} ${style.reserveMessage}`}>
+            <div>邀請訊息</div>
+            <div>{nowReserve.reserveMessage}</div>
+          </label>
+        ) : (
+          <>
+            <label>
+              <div>邀請訊息</div>
+              <textarea
+                name="reserveMessage"
+                onChange={getInputHandler}
+              ></textarea>
+            </label>
+            <div className={style.button}>
+              <button onClick={sendReverseHandler}>發送預約邀請</button>
+            </div>
+          </>
         )}
       </div>
     </div>
