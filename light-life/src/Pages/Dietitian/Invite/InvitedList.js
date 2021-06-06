@@ -14,8 +14,10 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
     if (e.target.id) {
       setButtonIndex(e.target.id);
       setIsChecked(true);
+      console.log("test");
     } else {
       setIsChecked(false);
+      console.log("test");
     }
   };
 
@@ -46,7 +48,10 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
         ))}
       </div>
       {isChecked && invitedList.length > 0 ? (
-        <div className={style["invite-data"]} style={{ display: "block" }}>
+        <div
+          className={`${style["invite-data"]} animated animate__fadeIn`}
+          style={{ display: "block" }}
+        >
           <i
             className="fa fa-times"
             aria-hidden="true"
