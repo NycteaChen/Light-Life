@@ -7,7 +7,7 @@ function DietitianData({ props, setIsChecked, setReserve, profile, reserve }) {
     setIsChecked(false);
   };
   return (
-    <div className={style["dietitian-details"]}>
+    <div className={`${style["dietitian-details"]} animated animate__fadeIn`}>
       <div>
         <i
           className={`${style.close} fa fa-times`}
