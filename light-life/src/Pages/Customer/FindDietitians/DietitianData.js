@@ -22,14 +22,20 @@ function DietitianData({ props, setIsChecked, setReserve, profile, reserve }) {
         </div>
       </div>
       <div className={style.content}>
-        <div className={style.gender}>
-          性別：<span>{props.gender}</span>
-        </div>
-        <div className={style.education}>
-          <div>最高學歷：{props.education.school}</div>
-          <div>
-            <span>{props.education.department} </span>
-            <span>{props.education.degree}</span>
+        <div className={style.flexbox}>
+          <div className={style.gender}>
+            <span className={style.title}>性別</span>　
+            <span>{props.gender}</span>
+          </div>
+          <div className={style.education}>
+            <div>
+              <span className={style.title}>學歷</span>　
+              {props.education.school}
+            </div>
+            <div>
+              <span>{props.education.department}　</span>
+              <span>{props.education.degree}</span>
+            </div>
           </div>
         </div>
         <>
@@ -38,13 +44,13 @@ function DietitianData({ props, setIsChecked, setReserve, profile, reserve }) {
           props.skills.threeHigh ||
           props.skills.bloodSugar ? (
             <div className={style.skills}>
-              專長：
-              <span>
-                {props.skills.weightControl ? "體重管理　" : ""}
-                {props.skills.sportNT ? "運動營養　" : ""}
-                {props.skills.threeHigh ? "三高控制　" : ""}
-                {props.skills.bloodSugar ? "血糖控制" : ""}
-              </span>
+              <div className={style.title}>專長　</div>
+              <div>
+                {props.skills.weightControl ? <span>體重管理　</span> : ""}
+                {props.skills.sportNT ? <span>運動營養　</span> : ""}
+                {props.skills.threeHigh ? <span>三高控制　</span> : ""}
+                {props.skills.bloodSugar ? <span>血糖控制　</span> : ""}
+              </div>
             </div>
           ) : (
             ""
@@ -52,7 +58,7 @@ function DietitianData({ props, setIsChecked, setReserve, profile, reserve }) {
         </>
         {props.other ? (
           <div className={style.other}>
-            <div>其他</div>
+            <div className={style.title}>其他</div>
             <div>{props.other}</div>
           </div>
         ) : (

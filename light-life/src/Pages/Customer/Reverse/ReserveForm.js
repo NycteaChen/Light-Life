@@ -173,7 +173,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
     <div className={style["reserve-form"]}>
       <div className={style["form-title"]}>現在預約</div>
       <div className={style.form}>
-        <div>
+        <div className={style.flexbox}>
           <label>
             <div>開始</div>
             <input
@@ -202,7 +202,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
           <div>邀請訊息</div>
           <textarea name="reserveMessage" onChange={getInputHandler}></textarea>
         </label>
-        <div>
+        <div className={style.button}>
           <button onClick={sendReverseHandler}>發送預約邀請</button>
         </div>
       </div>
