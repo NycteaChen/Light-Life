@@ -8,6 +8,7 @@ function ReserveList({ reserve, setReserve }) {
   const [index, setIndex] = useState();
   const [dietitians, setDietitians] = useState([]);
   const [isChecked, setIsChecked] = useState(false); //false
+  const [checkDecline, setCheckDecline] = useState(false);
   useEffect(() => {
     const dietitianArray = [];
     reserve
@@ -27,20 +28,21 @@ function ReserveList({ reserve, setReserve }) {
       });
   }, []);
   const checkDeclineMessage = (e) => {
-    setIsChecked(true);
     if (e.target.id) {
       setIndex(e.target.id);
+      setCheckDecline(true);
     } else {
       setIndex();
+      setCheckDecline(false);
     }
   };
-
   const checkReserveMessage = (e) => {
     if (e.target.id) {
       setIndex(e.target.id);
       setIsChecked(true);
     } else {
       setIndex();
+      setIsChecked(false);
     }
   };
   const removeReserveHandler = (e) => {
@@ -58,15 +60,12 @@ function ReserveList({ reserve, setReserve }) {
         console.log("Error:", error);
       });
   };
-  console.log(reserve);
-  console.log(dietitians);
   return (
     <div className={style["reserve-list"]}>
       <div className={style.waiting}>
-        <h3>預約中</h3>
+        <h4>預約中</h4>
         {reserve.find((r) => r.status === "0") ? (
           <>
-            <h4>請靜待營養師回覆</h4>
             <div className={style.reservations}>
               {reserve
                 .filter((r) => r.status === "0")
@@ -86,7 +85,7 @@ function ReserveList({ reserve, setReserve }) {
                         id={idx}
                         className={style.check}
                       >
-                        查看訊息
+                        查看詳情
                       </button>
                       <button
                         onClick={removeReserveHandler}
@@ -118,7 +117,7 @@ function ReserveList({ reserve, setReserve }) {
         )}
       </div>
       <div className={style.checked}>
-        <h3>已回覆預約</h3>
+        <h4>已回覆預約</h4>
         <div className={style.reservations}>
           {reserve.find((i) => i.status !== "0") ? (
             reserve.map((i, idx) =>
@@ -134,7 +133,7 @@ function ReserveList({ reserve, setReserve }) {
                   </div>
                   <div className={style["reservation-state"]}>
                     {i.status === "1" ? (
-                      <span className={style.success}>預約成功</span>
+                      <span className={style.success}>成功</span>
                     ) : i.status === "2" ? (
                       <>
                         <button
@@ -145,13 +144,15 @@ function ReserveList({ reserve, setReserve }) {
                           查看訊息
                         </button>
                         <span className={style.decline}>婉拒</span>
-                        {+index === idx ? (
-                          <div className={style.message}>
+                        {+index === idx && checkDecline ? (
+                          <div
+                            className={`${style.message} animated animated animate__fadeIn`}
+                          >
                             <div className={style.content}>
-                              <h3>婉拒訊息</h3>
+                              <div>婉拒訊息</div>
                               <div>{i.declineMessage}</div>
                             </div>
-                            <button onClick={checkReserveMessage}>確定</button>
+                            <button onClick={checkDeclineMessage}>確定</button>
                           </div>
                         ) : (
                           ""
@@ -169,7 +170,7 @@ function ReserveList({ reserve, setReserve }) {
               )
             )
           ) : (
-            <h4>尚未有回覆</h4>
+            <div>尚未有回覆</div>
           )}
         </div>
       </div>
