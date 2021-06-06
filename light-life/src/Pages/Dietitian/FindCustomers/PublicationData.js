@@ -8,6 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import noImage from "../../../images/noimage.png";
 import firebase from "firebase/app";
 import style from "../../../style/findCustomers.module.scss";
@@ -51,35 +52,54 @@ function PublicationData({ publish, display, setDisplay }) {
   const sendMessageHandler = () => {
     if (invite && invite.message) {
       if (publish.whoInvite) {
-        firebase
-          .firestore()
-          .collection("publish")
-          .doc(publish.publishID)
-          .set(
-            {
-              whoInvite: [...publish.whoInvite, invite],
-            },
-            { merge: true }
-          )
-          .then(() => {
-            alert("邀請成功!");
-            window.location.reload();
-          });
+        Swal.fire({
+          text: "確定送出嗎?",
+          confirmButtonText: "確定",
+          cancelButtonText: "取消",
+          confirmButtonColor: "#1e4d4e",
+          showCancelButton: true,
+        }).then((res) => {
+          if (res.isConfirmed) {
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(publish.publishID)
+              .set(
+                {
+                  whoInvite: [...publish.whoInvite, invite],
+                },
+                { merge: true }
+              )
+              .then(() => {
+                window.location.reload();
+              });
+          }
+        });
       } else {
-        firebase
-          .firestore()
-          .collection("publish")
-          .doc(publish.publishID)
-          .set(
-            {
-              whoInvite: [invite],
-            },
-            { merge: true }
-          )
-          .then(() => {
-            alert("邀請成功!");
-            window.location.reload();
-          });
+        Swal.fire({
+          text: "確定送出嗎?",
+          confirmButtonText: "確定",
+          cancelButtonText: "取消",
+          confirmButtonColor: "#1e4d4e",
+          showCancelButton: true,
+        }).then((res) => {
+          if (res.isConfirmed) {
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(publish.publishID)
+              .set(
+                {
+                  whoInvite: [invite],
+                },
+                { merge: true }
+              )
+              .then(() => {
+                alert("邀請成功!");
+                window.location.reload();
+              });
+          }
+        });
       }
     } else {
       alert("請填寫邀請訊息!");

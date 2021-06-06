@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/findDietitian.module.scss";
@@ -22,6 +22,8 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   startMostDate.setDate(startMostDate.getDate() + 14);
   endLessDate.setDate(endLessDate.getDate() + 7);
   endMostDate.setDate(endMostDate.getDate() + 14);
+  const path = useLocation().pathname;
+  console.log(path);
 
   const transDateToTime = (date) => {
     const time = new Date(date).getTime();
@@ -168,43 +170,67 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       alert("請填寫日期與訊息");
     }
   };
-
+  console.log(reserve);
+  console.log(props);
+  const nowReserve = reserve.find((r) => r.dietitian === props.id);
+  console.log(nowReserve);
   return (
     <div className={style["reserve-form"]}>
-      <div className={style["form-title"]}>現在預約</div>
+      <div className={style["form-title"]}>
+        {path.includes("reserve-list") ? "您的預約" : "現在預約"}
+      </div>
       <div className={style.form}>
         <div className={style.flexbox}>
           <label>
             <div>開始</div>
-            <input
-              type="date"
-              value={input.reserveStartDate ? input.reserveStartDate : ""}
-              min={startDate ? startDate.min : ""}
-              max={startDate ? startDate.max : ""}
-              name="reserveStartDate"
-              onChange={getInputHandler}
-            />
+            {path.includes("reserve-list") ? (
+              <div>{nowReserve.reserveStartDate}</div>
+            ) : (
+              <input
+                type="date"
+                value={input.reserveStartDate ? input.reserveStartDate : ""}
+                min={startDate ? startDate.min : ""}
+                max={startDate ? startDate.max : ""}
+                name="reserveStartDate"
+                onChange={getInputHandler}
+              />
+            )}
           </label>
           <label>
             <div>結束</div>
-            <input
-              type="date"
-              value={input.reserveEndDate ? input.reserveEndDate : ""}
-              min={endDate ? endDate.min : ""}
-              max={endDate ? endDate.max : ""}
-              name="reserveEndDate"
-              onChange={getInputHandler}
-            />
+            {path.includes("reserve-list") ? (
+              <div>{nowReserve.reserveEndDate}</div>
+            ) : (
+              <input
+                type="date"
+                value={input.reserveEndDate ? input.reserveEndDate : ""}
+                min={endDate ? endDate.min : ""}
+                max={endDate ? endDate.max : ""}
+                name="reserveEndDate"
+                onChange={getInputHandler}
+              />
+            )}
           </label>
         </div>
 
         <label>
           <div>邀請訊息</div>
-          <textarea name="reserveMessage" onChange={getInputHandler}></textarea>
+          {path.includes("reserve-list") ? (
+            <div>{nowReserve.reserveMessage}</div>
+          ) : (
+            <textarea
+              name="reserveMessage"
+              onChange={getInputHandler}
+            ></textarea>
+          )}
         </label>
-        <div className={style.button}>
-          <button onClick={sendReverseHandler}>發送預約邀請</button>
-        </div>
+        {path.includes("reserve-list") ? (
+          ""
+        ) : (
+          <div className={style.button}>
+            <button onClick={sendReverseHandler}>發送預約邀請</button>
+          </div>
+        )}
       </div>
     </div>
   );
