@@ -6,6 +6,7 @@ function DietitianData({ props, setIsChecked, setReserve, reserve }) {
   const bindCloseHandler = () => {
     setIsChecked(false);
   };
+  console.log(props);
   return (
     <div className={`${style["dietitian-details"]} animated animate__fadeIn`}>
       <div>
@@ -16,7 +17,7 @@ function DietitianData({ props, setIsChecked, setReserve, reserve }) {
         ></i>
       </div>
       <div>
-        <div className={style.name}>{props.name}營養師</div>
+        <div className={style.name}>{props.name || ""}營養師</div>
         <div className={style.img}>
           <img src={props.image} alt="dietitian" />
         </div>
