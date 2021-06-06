@@ -400,11 +400,14 @@ function Publish({ reserve }) {
         </div>
       </div>
 
-      <div className={style.form} style={{ display: display }}>
-        <h3>刊登</h3>
+      <div
+        className={`${style.form} animated animate__fadeIn`}
+        style={{ display: display }}
+      >
+        <h4>刊登</h4>
         <div>
           <label>
-            <div>開始</div>
+            <div className={style.title}>開始</div>
             <input
               type="date"
               name="startDate"
@@ -415,7 +418,7 @@ function Publish({ reserve }) {
             ></input>
           </label>
           <label>
-            <div>結束</div>
+            <div className={style.title}>結束</div>
             <input
               type="date"
               name="endDate"
@@ -426,9 +429,9 @@ function Publish({ reserve }) {
             ></input>
           </label>
         </div>
-        <div className={style.title}>
+        <div className={style.subject}>
           <label>
-            <div>主旨</div>
+            <div className={style.title}>主旨</div>
             <input
               type="text"
               name="subject"
@@ -439,7 +442,7 @@ function Publish({ reserve }) {
         </div>
         <div className={style.content}>
           <label>
-            <div>內容</div>
+            <div className={style.title}>內容</div>
             <textarea
               name="content"
               value={input.content || ""}
