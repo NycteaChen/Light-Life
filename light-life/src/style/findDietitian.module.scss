@@ -113,12 +113,12 @@
   text-align: left;
   width: 90%;
   max-width: 450px;
-  max-height: 90%;
+  max-height: calc(100vh - 80px);
   overflow: auto;
   position: fixed;
   z-index: 3;
   padding: 10px 0;
-  top: 30px;
+  top: 10px;
   right: 0;
   left: 0;
   margin: auto;
@@ -219,6 +219,7 @@
   }
   @media (min-width: 520px) {
     max-width: 520px;
+    max-height: calc(100vh - 50px);
     img {
       width: 180px;
       height: 180px;
@@ -366,5 +367,8 @@
         }
       }
     }
+  }
+  @media (min-width: 1024px) {
+    max-height: 700px;
   }
 }

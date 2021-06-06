@@ -8,7 +8,8 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import style from "../../../style/publish.module.scss";
+import publish from "../../../style/publish.module.scss";
+import style from "../../../style/findDietitian.module.scss";
 
 function Invited({
   publishData,
@@ -101,7 +102,9 @@ function Invited({
   return (
     <>
       {profile && profile.name ? (
-        <div className={style["dietitian-details"]}>
+        <div
+          className={`${style["dietitian-details"]} animated animate__fadeIn`}
+        >
           <div>
             <i
               className={`${style.close} fa fa-times`}
@@ -116,48 +119,62 @@ function Invited({
             </div>
           </div>
           <div className={style.content}>
-            <div className={style.gender}>性別：{profile.gender}</div>
-            <div className={style.education}>
-              <div>最高學歷：{profile.education["school"]}</div>
-              <div>
-                <span>{profile.education["department"]} </span>
-                <span>{profile.education["degree"]}</span>
+            <div className={style.flexbox}>
+              <div className={style.gender}>
+                <span className={style.title}>性別</span>　
+                <span>{profile.gender}</span>
+              </div>
+              <div className={style.education}>
+                <div>
+                  <span className={style.title}>學歷</span>　
+                  {profile.education["school"]}
+                </div>
+                <div>
+                  <span>{profile.education["department"]}　</span>
+                  <span>{profile.education["degree"]}</span>
+                </div>
               </div>
             </div>
+
             <div className={style.skills}>
-              專長：
-              <span>
-                {profile.skills.weightControl ? "體重管理　" : ""}
-                {profile.skills.sportNT ? "運動營養　" : ""}
-                {profile.skills.threeHigh ? "三高控制　" : ""}
-                {profile.skills.bloodSugar ? "血糖控制" : ""}
-              </span>
+              <div className={style.title}>專長　</div>
+              <div>
+                {profile.skills.weightControl ? <span>體重管理　</span> : ""}
+                {profile.skills.sportNT ? <span>運動營養　</span> : ""}
+                {profile.skills.threeHigh ? <span>三高控制　</span> : ""}
+                {profile.skills.bloodSugar ? <span>血糖控制　</span> : ""}
+              </div>
             </div>
+
             <div className={style.other}>
-              <div>其他</div>
+              <div className={style.title}>其他</div>
               <div>{profile.other}</div>
-            </div>
-            <div className={style.message}>
-              <div>邀請訊息</div>
-              <div>{props.message}</div>
             </div>
           </div>
 
-          <div className={style.buttons}>
-            <button
-              className={style.accept}
-              onClick={buttonHandler}
-              id="accept"
-            >
-              接受
-            </button>
-            <button
-              className={style.decline}
-              onClick={buttonHandler}
-              id="decline"
-            >
-              婉拒
-            </button>
+          <div className={`${style["reserve-form"]}`}>
+            <div className={style.form}>
+              <div className={style["form-title"]}>邀請訊息</div>
+
+              <div className={publish["invite-message"]}>{props.message}</div>
+
+              <div className={publish["form-buttons"]}>
+                <button
+                  className={publish.accept}
+                  onClick={buttonHandler}
+                  id="accept"
+                >
+                  接受
+                </button>
+                <button
+                  className={publish.decline}
+                  onClick={buttonHandler}
+                  id="decline"
+                >
+                  婉拒
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       ) : (
