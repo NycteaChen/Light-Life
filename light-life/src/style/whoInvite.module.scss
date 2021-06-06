@@ -385,6 +385,10 @@
       }
       .invite-data {
         text-align: center;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        height: 620px;
         .reserve-time,
         .col:last-of-type {
           div + div {

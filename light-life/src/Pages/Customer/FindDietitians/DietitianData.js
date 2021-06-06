@@ -6,7 +6,6 @@ function DietitianData({ props, setIsChecked, setReserve, reserve }) {
   const bindCloseHandler = () => {
     setIsChecked(false);
   };
-  console.log(props);
   return (
     <div className={`${style["dietitian-details"]} animated animate__fadeIn`}>
       <div>

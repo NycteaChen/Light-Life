@@ -95,7 +95,6 @@ function PublicationData({ publish, display, setDisplay }) {
                 { merge: true }
               )
               .then(() => {
-                alert("邀請成功!");
                 window.location.reload();
               });
           }

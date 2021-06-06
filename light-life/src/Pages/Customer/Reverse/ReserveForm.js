@@ -23,7 +23,6 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   endLessDate.setDate(endLessDate.getDate() + 7);
   endMostDate.setDate(endMostDate.getDate() + 14);
   const path = useLocation().pathname;
-  console.log(path);
 
   const transDateToTime = (date) => {
     const time = new Date(date).getTime();
@@ -170,10 +169,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       alert("請填寫日期與訊息");
     }
   };
-  console.log(reserve);
-  console.log(props);
   const nowReserve = reserve.find((r) => r.dietitian === props.id);
-  console.log(nowReserve);
   return (
     <div className={style["reserve-form"]}>
       <div className={style["form-title"]}>
