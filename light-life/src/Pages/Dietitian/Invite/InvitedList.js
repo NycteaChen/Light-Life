@@ -31,23 +31,27 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
         <div className={style["invite-number"]}>目前沒有預約喔</div>
       )}
       <div className={style.inviters}>
-        {invitedList.map((i, index) => (
-          <div key={index} className={style.inviter}>
-            <div className={style["invite-message"]}>
-              <div className={style["inviter-name"]}>
-                <span>
-                  {i.inviterName} {i.inviterGender === "男" ? "先生" : "小姐"}
-                </span>
-                指定您的服務
-              </div>
-              <div className={style.button}>
-                <button onClick={checkInviter} id={index}>
-                  查看詳情
-                </button>
+        {invitedList.length > 0 ? (
+          invitedList.map((i, index) => (
+            <div key={index} className={style.inviter}>
+              <div className={style["invite-message"]}>
+                <div className={style["inviter-name"]}>
+                  <span>
+                    {i.inviterName} {i.inviterGender === "男" ? "先生" : "小姐"}
+                  </span>
+                  指定您的服務
+                </div>
+                <div className={style.button}>
+                  <button onClick={checkInviter} id={index}>
+                    查看詳情
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div>沒有預約</div>
+        )}
       </div>
       {isChecked && invitedList.length > 0 ? (
         <div
