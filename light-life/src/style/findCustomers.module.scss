@@ -147,13 +147,10 @@
       transition: opacity 0.3s;
       &:first-of-type {
         border-top: none;
+        margin-top: 2px;
       }
-
       &:hover {
         opacity: 1;
-      }
-      &:first-of-type {
-        margin-top: 2px;
       }
       .buttons {
         display: flex;
