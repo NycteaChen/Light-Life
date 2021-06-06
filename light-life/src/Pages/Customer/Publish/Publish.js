@@ -234,7 +234,7 @@ function Publish({ reserve }) {
     <div className={style.publish}>
       <div className={style.waiting}>
         <div className={style.header}>
-          <h3>刊登需求</h3>
+          <h4>刊登需求</h4>
           <div className={style.buttons}>
             <button
               className={style.add}
@@ -252,29 +252,30 @@ function Publish({ reserve }) {
             </button>
           </div>
         </div>
-        <h4>您目前的刊登</h4>
-        {/* <div className={style["publication-list"]}> */}
+        <h5>您目前的刊登</h5>
         {publishData ? (
           publishData.length > 0 && publishData[0].status === "0" ? (
             <div className={style.publication}>
               <div className={style.col}>
-                <div className={style["pulish-time"]}>
-                  刊登時間：{publishData[0].publishDate}
+                <div className={style.para}>
+                  <span className={style.title}>刊登時間</span>：
+                  {publishData[0].publishDate}
                 </div>
-                <div className={style["service-time"]}>
+                <div className={style.para}>
                   <div>
-                    預約時間：
+                    <span className={style.title}>預約時間：</span>
                     <span>
                       {publishData[0].startDate}~{publishData[0].endDate}
                     </span>
                   </div>
                 </div>
               </div>
-              <div className={style.subject}>
-                標題：{publishData[0].subject}
+              <div className={style.para}>
+                <span className={style.title}>主旨：</span>
+                {publishData[0].subject}
               </div>
-              <div className={style.message}>
-                <div>內容：</div>
+              <div className={`${style.message} ${style.para}`}>
+                <div className={style.title}>內容：</div>
                 <div>{publishData[0].content}</div>
               </div>
             </div>
@@ -284,10 +285,9 @@ function Publish({ reserve }) {
         ) : (
           <div>loading</div>
         )}
-        {/* </div> */}
       </div>
       <div className={style.invited}>
-        <h3>誰來應徵</h3>
+        <h4>誰來應徵</h4>
         <div className={style.inviters}>
           {publishData ? (
             publishData[0] &&
@@ -297,12 +297,32 @@ function Publish({ reserve }) {
               publishData[0].whoInvite.map((i, index) => (
                 <>
                   {i.status === "0" ? (
-                    <div className={style.inviter}>
-                      <div>{i.name} 營養師對您的刊登有興趣</div>
-                      <button id={index} onClick={checkDietitianDetails}>
-                        查看詳情
-                      </button>
-                    </div>
+                    <>
+                      <div className={style.inviter}>
+                        <div>{i.name} 營養師對您的刊登有興趣</div>
+                        <button id={index} onClick={checkDietitianDetails}>
+                          查看詳情
+                        </button>
+                      </div>
+                      <div className={style.inviter}>
+                        <div>{i.name} 營養師對您的刊登有興趣</div>
+                        <button id={index} onClick={checkDietitianDetails}>
+                          查看詳情
+                        </button>
+                      </div>
+                      <div className={style.inviter}>
+                        <div>{i.name} 營養師對您的刊登有興趣</div>
+                        <button id={index} onClick={checkDietitianDetails}>
+                          查看詳情
+                        </button>
+                      </div>
+                      <div className={style.inviter}>
+                        <div>{i.name} 營養師對您的刊登有興趣</div>
+                        <button id={index} onClick={checkDietitianDetails}>
+                          查看詳情
+                        </button>
+                      </div>
+                    </>
                   ) : (
                     ""
                   )}
@@ -329,28 +349,47 @@ function Publish({ reserve }) {
         </div>
       </div>
       <div className={style.published}>
-        <h3>過去刊登</h3>
+        <h4>過去刊登</h4>
         <div className={style.list}>
           {oldPublish ? (
             oldPublish.length > 0 ? (
               oldPublish.map((o) => (
-                <div className={style["published-col"]}>
-                  <div>
-                    <div className={style.startDate}>
-                      預約開始時間：{o.startDate}
+                <>
+                  <div className={style["published-col"]}>
+                    <div>
+                      <div className={style.startDate}>
+                        預約開始時間：{o.startDate}
+                      </div>
+                      <div className={style.subject}>{o.subject}</div>
                     </div>
-                    <div className={style.subject}>{o.subject}</div>
+                    {o.status === "1" ? (
+                      <>
+                        <span className={style.success}>成功</span>
+                      </>
+                    ) : o.status === "3" ? (
+                      <span className={style.expired}>已過期</span>
+                    ) : (
+                      ""
+                    )}
+                  </div>{" "}
+                  <div className={style["published-col"]}>
+                    <div>
+                      <div className={style.startDate}>
+                        預約開始時間：{o.startDate}
+                      </div>
+                      <div className={style.subject}>{o.subject}</div>
+                    </div>
+                    {o.status === "1" ? (
+                      <>
+                        <span className={style.success}>成功</span>
+                      </>
+                    ) : o.status === "3" ? (
+                      <span className={style.expired}>已過期</span>
+                    ) : (
+                      ""
+                    )}
                   </div>
-                  {o.status === "1" ? (
-                    <>
-                      <div className={style.success}>成功</div>
-                    </>
-                  ) : o.status === "3" ? (
-                    <div className={style.expired}>已過期</div>
-                  ) : (
-                    ""
-                  )}
-                </div>
+                </>
               ))
             ) : (
               <div>沒有喔</div>
@@ -389,7 +428,7 @@ function Publish({ reserve }) {
         </div>
         <div className={style.title}>
           <label>
-            <div>標題</div>
+            <div>主旨</div>
             <input
               type="text"
               name="subject"
