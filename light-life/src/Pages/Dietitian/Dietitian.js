@@ -403,32 +403,14 @@ function Dietitian() {
                 >
                   {users.length > 0
                     ? users.map((c, index) => (
-                        <>
-                          <Link
-                            to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
-                            key={index}
-                            className={c.id}
-                            onClick={getSelectedCustomer}
-                          >
-                            <li className={c.id}>{c.name} </li>
-                          </Link>
-                          <Link
-                            to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
-                            key={index}
-                            className={c.id}
-                            onClick={getSelectedCustomer}
-                          >
-                            <li className={c.id}>{c.name} </li>
-                          </Link>
-                          <Link
-                            to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
-                            key={index}
-                            className={c.id}
-                            onClick={getSelectedCustomer}
-                          >
-                            <li className={c.id}>{c.name} </li>
-                          </Link>
-                        </>
+                        <Link
+                          to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
+                          key={index}
+                          className={c.id}
+                          onClick={getSelectedCustomer}
+                        >
+                          <li className={c.id}>{c.name} </li>
+                        </Link>
                       ))
                     : ""}
                 </div>

@@ -69,12 +69,12 @@ function DietitianTarget() {
 
   return (
     <div className={style["target-setting"]} id="dietitian-target">
-      <h3>已設立目標</h3>
+      <h5>已設立目標</h5>
       <div className={style["customer-targets"]}>
         <TargetHandler target={target} setTarget={setTarget} />
       </div>
-      <h3>新增目標</h3>
       <div className={style["add-new-target"]}>
+        <h5>新增目標</h5>
         <div className={style.col}>
           <label className={style.flexbox}>
             <div>開始日期</div>
