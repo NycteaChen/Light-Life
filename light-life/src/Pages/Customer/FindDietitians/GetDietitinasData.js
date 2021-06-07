@@ -38,7 +38,7 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
                     </div>
                     <div className={style.info} style={{ textAlign: "left" }}>
                       <div>
-                        學歷： {d.education["school"]} {d.education["degree"]}
+                        學歷：{d.education["school"]} {d.education["degree"]}
                       </div>
                       <>
                         {d.skills.weightControl ||
