@@ -77,6 +77,8 @@
 
 .service-time {
   font-weight: bold;
+  padding: 12px 0 10px;
+  margin-bottom: 0;
   font-size: 16px;
   text-align: center;
   width: 80%;
@@ -96,6 +98,7 @@
   @media (min-width: 1024px) {
     font-size: 20px;
     width: unset;
-    margin: 0 0 10px;
+    margin: 0;
+    margin-left: 260px;
   }
 }

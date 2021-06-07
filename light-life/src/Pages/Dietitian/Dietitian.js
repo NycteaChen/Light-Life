@@ -657,19 +657,19 @@ function Dietitian() {
                 {/* <Route exact path={`/dietitian/:dID/customer/:cID/`}></Route> */}
                 <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
                   <>
+                    <div className={style["service-time"]}>
+                      <div>
+                        服務時間<span>：</span>
+                      </div>
+                      <div>
+                        {date.start ? date.start : ""}~
+                        {date.end ? date.end : ""}
+                      </div>
+                    </div>
                     <div
                       id="customer-profile"
                       className={customer["customer-profile"]}
                     >
-                      <div className={style["service-time"]}>
-                        <div>
-                          服務時間<span>：</span>
-                        </div>
-                        <div>
-                          {date.start ? date.start : ""}~
-                          {date.end ? date.end : ""}
-                        </div>
-                      </div>
                       <div className={customer["profile-data"]}>
                         <CustomerProfile
                           props={props}
