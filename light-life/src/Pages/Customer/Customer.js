@@ -569,7 +569,7 @@ function Customer() {
                                   {serviceDate ? serviceDate.startDate : ""}
                                 </div>
                                 <div>
-                                  結束日期：{" "}
+                                  結束日期：
                                   {serviceDate ? serviceDate.endDate : ""}
                                 </div>
                               </div>
