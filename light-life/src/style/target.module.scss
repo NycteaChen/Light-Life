@@ -1,11 +1,20 @@
 .target-setting {
-  & > h5 {
+  h5 {
     font-size: 20px;
-    padding: 15px 0 10px;
     font-weight: bold;
-    max-width: 580px;
-    margin: auto;
   }
+
+  .flex {
+    display: flex;
+    padding: 15px 0 10px;
+    max-width: 580px;
+    justify-content: space-between;
+    margin: auto;
+    button {
+      margin-right: 15px;
+    }
+  }
+
   button {
     cursor: pointer;
   }
@@ -16,6 +25,15 @@
     width: 100px;
     margin-left: 10px;
   }
+
+  input.set-content,
+  textarea {
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 2px 5px;
+    font-size: 14px;
+  }
+
   .customer-targets,
   .c-targets {
     text-align: center;
@@ -37,6 +55,7 @@
       background-color: white;
       opacity: 0.8;
       box-shadow: 0 2px 2px #515a56;
+      transition: opacity 0.3s;
       .alter-button {
         margin: 10px 20px auto auto;
         text-align: right;
@@ -78,6 +97,9 @@
           overflow: auto;
         }
       }
+      &:hover {
+        opacity: 1;
+      }
     }
   }
   .c-targets {
@@ -85,22 +107,60 @@
   }
 
   .add-new-target {
-    display: none;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    z-index: 3;
     position: fixed;
-    height: 300px;
+    height: 380px;
     top: 10px;
-    padding: 20px 0;
-    width: 95%;
-    margin: 20px auto;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    width: 80%;
+    margin: auto;
     background-color: #fdfdfd;
-
-    @media (min-width: 244px) {
-      .flexbox {
-        display: flex;
-        justify-content: center;
-        margin: 10px auto;
-        padding-left: 15px;
+    box-shadow: 0 2px 2px #515a56;
+    h5 {
+      text-align: center;
+      border-top-right-radius: 15px;
+      border-top-left-radius: 15px;
+      background-color: #015830;
+      padding: 15px 0;
+      color: white;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      margin: 22px auto 8px;
+      max-width: 200px;
+      button {
+        letter-spacing: 2px;
+        font-size: 12px;
+        width: 80px;
+        padding: 3px 7px;
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        transition: opacity 0.3s, width 0.3s;
+        padding: 5px 15px;
+        &.add {
+          background-color: #015830;
+          color: white;
+        }
+        &.cancel {
+          background-color: #dadada;
+          color: #464444;
+        }
+        &:hover {
+          opacity: 0.7;
+        }
       }
+    }
+    .flexbox {
+      display: flex;
+      justify-content: center;
+      margin: 20px auto;
+      padding-left: 15px;
     }
     .target-other {
       .flexbox > div {
@@ -110,14 +170,10 @@
         }
       }
     }
-    button {
-      padding: 5px 15px;
-      border: 1px solid black;
-      background-color: wheat;
-    }
   }
-  @media (min-width: 520px) {
-    & > h5 {
+
+  @media (min-width: 570px) {
+    .flexbox > h5 {
       text-align: left;
     }
     .set-content {
@@ -175,7 +231,8 @@
     }
 
     .add-new-target {
-      max-width: 560px;
+      max-width: 460px;
+      height: 310px;
       .col {
         display: flex;
       }
@@ -196,18 +253,18 @@
     max-height: unset;
     margin-left: 260px;
     max-width: 800px;
-    & > h5 {
+    .flex {
+      max-width: 700px;
       margin: 0;
-    }
-    .add-new-target {
-      margin-top: 10px;
       button {
-        margin-left: 88px;
+        margin-right: 0;
       }
     }
-    .customer-targets,
-    .c-targets,
     .add-new-target {
+      top: 30px;
+    }
+    .customer-targets,
+    .c-targets {
       margin: 0;
       margin-top: 20px;
       max-width: 700px;

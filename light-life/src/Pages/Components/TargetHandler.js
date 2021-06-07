@@ -189,7 +189,7 @@ function TargetHandler({ target, setTarget }) {
                     <div className={style.title}>目標體重</div>
                     <div>
                       <input
-                        type="text"
+                        type="number"
                         name="weight"
                         value={
                           input.weight || input.weight === ""
@@ -205,7 +205,7 @@ function TargetHandler({ target, setTarget }) {
                     <div className={style.title}>目標水分</div>
                     <div>
                       <input
-                        type="text"
+                        type="number"
                         name="water"
                         value={
                           input.water || input.water === ""
