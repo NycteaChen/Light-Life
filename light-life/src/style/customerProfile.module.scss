@@ -13,6 +13,7 @@
       height: 150px;
       border-radius: 50%;
       margin-bottom: 27px;
+      object-fit: cover;
     }
     .title {
       font-weight: 700;
@@ -71,8 +72,11 @@
           display: flex;
           align-items: center;
           justify-content: space-around;
+          margin-left: 20px;
         }
         .flexbox:first-of-type {
+          margin-left: 0;
+          color: red;
           margin-bottom: 35px;
 
           & > div .data-item:nth-child(2) {
@@ -117,7 +121,6 @@
       overflow: auto;
       overflow-x: hidden;
       .profile-data {
-        background-color: #f5deb38a;
         width: 800px;
         margin: 0;
         .flexbox {
