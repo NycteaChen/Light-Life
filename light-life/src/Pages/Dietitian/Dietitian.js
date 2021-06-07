@@ -398,19 +398,37 @@ function Dietitian() {
                   </div>
                 </div>
                 <div
-                  className={`${basic.customerList} list`}
+                  className={`${basic.customerList} list `}
                   style={{ display: display }}
                 >
                   {users.length > 0
                     ? users.map((c, index) => (
-                        <Link
-                          to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
-                          key={index}
-                          className={c.id}
-                          onClick={getSelectedCustomer}
-                        >
-                          <li className={c.id}>{c.name} </li>
-                        </Link>
+                        <>
+                          <Link
+                            to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
+                            key={index}
+                            className={c.id}
+                            onClick={getSelectedCustomer}
+                          >
+                            <li className={c.id}>{c.name} </li>
+                          </Link>
+                          <Link
+                            to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
+                            key={index}
+                            className={c.id}
+                            onClick={getSelectedCustomer}
+                          >
+                            <li className={c.id}>{c.name} </li>
+                          </Link>
+                          <Link
+                            to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
+                            key={index}
+                            className={c.id}
+                            onClick={getSelectedCustomer}
+                          >
+                            <li className={c.id}>{c.name} </li>
+                          </Link>
+                        </>
                       ))
                     : ""}
                 </div>
@@ -501,20 +519,17 @@ function Dietitian() {
               </Link>
 
               <Link
-                className={`${basic["nav-title"]} list`}
+                className={`${basic["nav-title"]}`}
                 to={`/dietitian/${dietitianID}/customers`}
                 title="customerList"
-                // onClick={bindListHandler}
                 onClick={showMobileCustomerList}
               >
                 <i
-                  class="fa fa-users list"
+                  class="fa fa-users"
                   aria-hidden="true"
                   title="customerList"
                 ></i>
-                <div className="list" title="customerList">
-                  客戶清單
-                </div>
+                <div title="customerList">客戶清單</div>
               </Link>
 
               <Link
@@ -595,28 +610,6 @@ function Dietitian() {
 
             <Route exact path={`/dietitian/:dID/findCustomers`}>
               <GetPublication />
-            </Route>
-
-            <Route exact path={`/dietitian/:dID/customers`}>
-              <div
-                className={basic.mobileCustomerList}
-                style={{ display: display }}
-              >
-                {users.length > 0 ? (
-                  users.map((c, index) => (
-                    <Link
-                      to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
-                      key={index}
-                      className={c.id}
-                      onClick={getSelectedCustomer}
-                    >
-                      <li className={c.id}>{c.name} </li>
-                    </Link>
-                  ))
-                ) : (
-                  <div>目前沒有客戶喔</div>
-                )}
-              </div>
             </Route>
             <Route exact path={`/dietitian/:dID/inviteMe`}>
               <div>
