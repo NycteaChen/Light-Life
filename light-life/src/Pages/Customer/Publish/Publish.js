@@ -297,32 +297,12 @@ function Publish({ reserve }) {
               publishData[0].whoInvite.map((i, index) => (
                 <>
                   {i.status === "0" ? (
-                    <>
-                      <div className={style.inviter}>
-                        <div>{i.name} 營養師對您的刊登有興趣</div>
-                        <button id={index} onClick={checkDietitianDetails}>
-                          查看詳情
-                        </button>
-                      </div>
-                      <div className={style.inviter}>
-                        <div>{i.name} 營養師對您的刊登有興趣</div>
-                        <button id={index} onClick={checkDietitianDetails}>
-                          查看詳情
-                        </button>
-                      </div>
-                      <div className={style.inviter}>
-                        <div>{i.name} 營養師對您的刊登有興趣</div>
-                        <button id={index} onClick={checkDietitianDetails}>
-                          查看詳情
-                        </button>
-                      </div>
-                      <div className={style.inviter}>
-                        <div>{i.name} 營養師對您的刊登有興趣</div>
-                        <button id={index} onClick={checkDietitianDetails}>
-                          查看詳情
-                        </button>
-                      </div>
-                    </>
+                    <div className={style.inviter}>
+                      <div>{i.name} 營養師對您的刊登有興趣</div>
+                      <button id={index} onClick={checkDietitianDetails}>
+                        查看詳情
+                      </button>
+                    </div>
                   ) : (
                     ""
                   )}
@@ -354,42 +334,23 @@ function Publish({ reserve }) {
           {oldPublish ? (
             oldPublish.length > 0 ? (
               oldPublish.map((o) => (
-                <>
-                  <div className={style["published-col"]}>
-                    <div>
-                      <div className={style.startDate}>
-                        預約開始時間：{o.startDate}
-                      </div>
-                      <div className={style.subject}>{o.subject}</div>
+                <div className={style["published-col"]}>
+                  <div>
+                    <div className={style.startDate}>
+                      預約開始時間：{o.startDate}
                     </div>
-                    {o.status === "1" ? (
-                      <>
-                        <span className={style.success}>成功</span>
-                      </>
-                    ) : o.status === "3" ? (
-                      <span className={style.expired}>已過期</span>
-                    ) : (
-                      ""
-                    )}
-                  </div>{" "}
-                  <div className={style["published-col"]}>
-                    <div>
-                      <div className={style.startDate}>
-                        預約開始時間：{o.startDate}
-                      </div>
-                      <div className={style.subject}>{o.subject}</div>
-                    </div>
-                    {o.status === "1" ? (
-                      <>
-                        <span className={style.success}>成功</span>
-                      </>
-                    ) : o.status === "3" ? (
-                      <span className={style.expired}>已過期</span>
-                    ) : (
-                      ""
-                    )}
+                    <div className={style.subject}>{o.subject}</div>
                   </div>
-                </>
+                  {o.status === "1" ? (
+                    <>
+                      <span className={style.success}>成功</span>
+                    </>
+                  ) : o.status === "3" ? (
+                    <span className={style.expired}>已過期</span>
+                  ) : (
+                    ""
+                  )}
+                </div>
               ))
             ) : (
               <div>沒有喔</div>
