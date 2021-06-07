@@ -15,11 +15,8 @@
       margin-bottom: 20px;
       object-fit: cover;
     }
-    .title {
-      font-weight: 700;
-    }
     .data-item {
-      margin: 0 0 13px;
+      margin-bottom: 13px;
       display: flex;
       div {
         width: 50%;
@@ -27,6 +24,7 @@
         margin-right: 50px;
       }
       .title {
+        font-weight: bold;
         text-align: right;
         margin-right: 20px;
       }
@@ -51,7 +49,6 @@
     & {
       .profile-data {
         max-width: 480px;
-        // max-width: 580px;
         margin: 20px auto;
         padding: 20px 0 30px;
 
@@ -115,10 +112,11 @@
         max-width: 580px;
         .col {
           margin: 10px 0 15px;
-          margin-left: 100px;
+          margin-left: 45px;
+          width: 450px;
           .data-item {
             .title + div {
-              width: 280px;
+              width: 310px;
             }
           }
         }
@@ -127,12 +125,6 @@
   }
   @media (min-width: 1024px) {
     & {
-      padding: 5px;
-      margin-top: 30px;
-      margin-left: 260px;
-      max-height: calc(100vh - 50px);
-      overflow: auto;
-      overflow-x: hidden;
       .profile-data {
         margin: 0;
 
@@ -223,46 +215,52 @@
         text-align: right;
         margin-right: 20px;
       }
-      input {
+      input[type="text"],
+      input[type="number"],
+      select,
+      textarea {
+        background-color: blanchedalmond;
+        width: 120px;
+        padding-left: 5px;
         outline: none;
         border: 1px solid grey;
         border-radius: 5px;
         font-size: 14px;
-        padding: 1px 0;
-      }
-      input[type="text"],
-      input[type="number"],
-      select {
-        background-color: blanchedalmond;
-        width: 120px;
-        padding-left: 5px;
       }
       .edit-gender {
         display: grid;
+        font-size: 14px;
         grid-template-columns: 60px 60px;
       }
       .edit-education {
         display: grid;
+        font-size: 14px;
         grid-template-columns: 120px;
       }
     }
 
     .col {
-      .title + div {
-        max-height: 100px;
-        overflow: auto;
-      }
-      .title {
-        span {
-          font-size: 12px;
+      .data-item {
+        margin: 5px 0;
+        display: flex;
+        .title {
+          text-align: right;
+          margin-right: 20px;
         }
-      }
-      textarea {
-        width: 80%;
-        max-width: 350px;
-        margin: auto;
-        height: 3rem;
-        padding: 3px 5px;
+        .title + div {
+          max-height: 100px;
+          // overflow: hidden;
+          width: 50%;
+          text-align: left;
+          margin-right: 50px;
+        }
+
+        textarea {
+          margin-right: 50px;
+          margin: auto;
+          height: 4rem;
+          padding: 3px 5px;
+        }
       }
     }
     .buttons {
@@ -277,30 +275,8 @@
       }
     }
   }
-  // @media (min-width: 320px) {
-  //   & {
-  //     .edit-mode {
-  //       .data-item {
-  //         input[type="text"],
-  //         input[type="number"],
-  //         select {
-  //           width: 150px;
-  //         }
-  //         .edit-gender {
-  //           grid-template-columns: 75px 75px;
-  //         }
-  //         .edit-education {
-  //           grid-template-columns: 150px;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
   @media (min-width: 520px) {
     & {
-      input {
-        padding: 1px 5px;
-      }
       .edit-mode {
         max-width: 480px;
         margin: 20px auto;
@@ -311,9 +287,9 @@
             width: unset;
             margin-right: 0px;
           }
-          // .title {
-          //   width: 70px;
-          // }
+          .title {
+            width: 70px;
+          }
           //   input[type="text"],
           //   input[type="number"],
           //   select {
@@ -327,66 +303,101 @@
           //     display: grid;
           //     grid-template-columns: 75px 75px;
           //   }
+          input,
+          select {
+            outline: none;
+            border: 1px solid grey;
+            border-radius: 5px;
+            padding: 1px 0;
+          }
+          input[type="text"],
+          input[type="number"],
+          select {
+            background-color: blanchedalmond;
+            width: 80px;
+            padding-left: 5px;
+          }
+          .edit-gender {
+            display: grid;
+            grid-template-columns: 40px 40px;
+          }
+          .edit-education {
+            display: grid;
+            grid-template-columns: 80px;
+          }
         }
 
         .flexbox {
           display: flex;
           align-items: center;
           justify-content: space-around;
-
+          margin-right: 15px;
+          margin-bottom: 10px !important;
           .img {
             img {
               width: 180px;
               height: 180px;
-              margin-left: 17px;
+              margin-left: 25px;
             }
             .uploadImg {
-              display: block;
-              cursor: pointer;
-
-              width: 35px;
-              height: 35px;
-              font-size: 20px;
               left: 130px;
-              right: 0;
-              margin: auto;
-              bottom: 5px;
-              padding: 2px 5px;
+            }
+          }
+          .data-item {
+            margin: 0;
+            margin-left: 10px;
+            &:nth-of-type(2) {
+              margin: 5px 0 2px 10px;
             }
           }
         }
         .flexbox + .flexbox {
           align-items: unset;
         }
-        .flexbox:first-of-type {
-          & > div:nth-child(2) {
-            margin-bottom: 25px;
+        .flexbox ~ .flexbox {
+          margin-right: 0;
+          margin-bottom: 0 !important;
+          margin-left: 15px;
+          .data-item {
+            margin: 0;
+            margin-right: 10px;
+            &:nth-of-type(2) {
+              margin: 0 0 13px;
+              margin-left: 25px;
+            }
           }
-          & > div .data-item:nth-child(2) {
-            margin: 10px 0;
+          & > div:first-child {
+            margin: 0;
+            .title + div {
+              width: 40px;
+            }
           }
         }
-        .flexbox:nth-child(3) {
-          margin-top: 4px;
-        }
+        // .flexbox:first-of-type {
+        //   & > div:nth-child(2) {
+        //     margin-bottom: 25px;
+        //   }
+        //   & > div .data-item:nth-child(2) {
+        //     margin: 10px 0;
+
+        //   }
+        // }
+        // .flexbox:nth-child(3) {
+        //   margin-top: 4px;
+        // }
 
         .col {
           margin: 8px 0;
-          display: flex;
-          .title {
-            width: 70px;
-            text-align: right;
-            margin-top: 4px;
-            span {
-              display: inline-block;
-              text-align: left;
-              width: 90px;
+          margin-left: 48px;
+          .data-item {
+            .title {
+              width: 70px;
+              text-align: right;
             }
-          }
-          textarea {
-            width: 450px;
-            margin-left: 18px;
-            height: 5rem;
+            textarea {
+              width: 300px;
+              height: 5rem;
+            }
           }
         }
       }
@@ -395,16 +406,66 @@
   @media (min-width: 768px) {
     & {
       .edit-mode {
-        // max-width: 650px;
+        max-width: 580px;
+        .data-item {
+          input[type="text"],
+          input[type="number"],
+          select {
+            width: 120px;
+          }
+          .edit-gender {
+            display: grid;
+            grid-template-columns: 48px 72px;
+          }
+          .edit-education {
+            display: grid;
+            grid-template-columns: 60px 60px;
+          }
+        }
         .flexbox {
-          margin: auto;
-          justify-content: space-around;
+          .img {
+            img {
+              margin-left: 74px;
+            }
+            .uploadImg {
+              left: 180px;
+            }
+          }
+          .data-item {
+            margin: 0;
+            margin-left: 10px;
+            margin-right: 9px;
+            &:nth-of-type(2) {
+              margin: 5px 0 2px 10px;
+            }
+          }
+          // margin: auto;
+          // justify-content: space-around;
+        }
+        .flexbox ~ .flexbox {
+          margin-right: 0;
+          margin-bottom: 0 !important;
+          margin-left: 55px;
+          .data-item {
+            margin: 0;
+            margin-right: 10px;
+            &:nth-of-type(2) {
+              margin: 0 0 13px;
+              margin-left: 10px;
+            }
+          }
+          & > div:first-child {
+            margin: 0;
+            .title + div {
+              width: 40px;
+            }
+          }
         }
         .col {
-          .title {
-            width: 113px;
-            span {
-              width: 110px;
+          margin-left: 97px;
+          .data-item {
+            textarea {
+              width: 310px;
             }
           }
         }
@@ -413,46 +474,48 @@
   }
   @media (min-width: 1024px) {
     & {
+      padding: 5px;
+      margin-top: 30px;
+      margin-left: 260px;
+      overflow-x: hidden;
       .edit-mode {
-        background-color: wheat;
-        width: 800px;
         margin: 0;
-        .flexbox {
-          justify-content: space-around;
-          & > div:last-of-type {
-            position: relative;
-            right: 80px;
-          }
-        }
-        .flexcol {
-          display: flex;
-          justify-content: center;
-          .col {
-            margin-top: 0;
-            display: block;
-            .title {
-              &:first-of-type {
-                label {
-                  display: flex;
-                  width: 250px;
-                  align-items: center;
-                  span {
-                    text-align: left;
-                    width: 180px;
-                  }
-                }
-              }
-            }
-            textarea {
-              width: 250px;
-              margin-left: 0;
-              height: 5rem;
-            }
-          }
-          .col {
-            margin-right: 28px;
-          }
-        }
+        // .flexbox {
+        //   justify-content: space-around;
+        //   & > div:last-of-type {
+        //     position: relative;
+        //     right: 80px;
+        //   }
+        // }
+        // .flexcol {
+        //   display: flex;
+        //   justify-content: center;
+        //   .col {
+        //     margin-top: 0;
+        //     display: block;
+        //     .title {
+        //       &:first-of-type {
+        //         label {
+        //           display: flex;
+        //           width: 250px;
+        //           align-items: center;
+        //           span {
+        //             text-align: left;
+        //             width: 180px;
+        //           }
+        //         }
+        //       }
+        //     }
+        //     textarea {
+        //       width: 250px;
+        //       margin-left: 0;
+        //       height: 5rem;
+        //     }
+        //   }
+        //   .col {
+        //     margin-right: 28px;
+        //   }
+        // }
       }
     }
   }

@@ -441,44 +441,45 @@ function EditCustomerProfile({ profile, setProfile }) {
 
           <div className={`${style.flexcol} `}>
             <div className={style.col}>
-              <div className={style.title}>
-                <label htmlFor="customerSport">運動習慣</label>
-              </div>
-              <div>
-                <textarea
-                  id="customerSport"
-                  name="sport"
-                  value={
-                    input.sport || input.sport === ""
-                      ? input.sport
-                      : sport
-                      ? sport
-                      : ""
-                  }
-                  onChange={getInputHandler}
-                ></textarea>
+              <div className={style["data-item"]}>
+                <div className={style.title}>
+                  <label htmlFor="customerSport">運動習慣</label>
+                </div>
+                <div>
+                  <textarea
+                    id="customerSport"
+                    name="sport"
+                    value={
+                      input.sport || input.sport === ""
+                        ? input.sport
+                        : sport
+                        ? sport
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  ></textarea>
+                </div>
               </div>
             </div>
             <div className={style.col}>
-              <div className={style.title}>
-                <label htmlFor="customerOther">
-                  <div>其他</div>
-                  <span>（例：自身狀況、特別需求）</span>
-                </label>
-              </div>
-              <div>
-                <textarea
-                  name="other"
-                  id="customerOther"
-                  value={
-                    input.other || input.other === ""
-                      ? input.other
-                      : other
-                      ? other
-                      : ""
-                  }
-                  onChange={getInputHandler}
-                ></textarea>
+              <div className={style["data-item"]}>
+                <div className={style.title}>
+                  <label htmlFor="customerOther">其他</label>
+                </div>
+                <div>
+                  <textarea
+                    name="other"
+                    id="customerOther"
+                    value={
+                      input.other || input.other === ""
+                        ? input.other
+                        : other
+                        ? other
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  ></textarea>
+                </div>
               </div>
             </div>
           </div>
