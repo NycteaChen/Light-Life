@@ -386,7 +386,7 @@ function Customer() {
                 onClick={activeHandler}
                 to={`/customer/${profile.id}/profile`}
               >
-                <i class="fa fa-user" aria-hidden="true"></i>
+                <i class="fa fa-user" aria-hidden="true" title="profile"></i>
                 <div title="profile">會員資料</div>
               </Link>
               <Link
@@ -395,7 +395,7 @@ function Customer() {
                 onClick={activeHandler}
                 to={`/customer/${profile.id}/dietary`}
               >
-                <i class="fa fa-cutlery" aria-hidden="true"></i>
+                <i class="fa fa-cutlery" aria-hidden="true" title="dietary"></i>
                 <div title="dietary">飲食記錄</div>
               </Link>
               <Link
@@ -404,7 +404,7 @@ function Customer() {
                 onClick={activeHandler}
                 to={`/customer/${profile.id}/target`}
               >
-                <i class="fa fa-bullseye" aria-hidden="true"></i>
+                <i class="fa fa-bullseye" aria-hidden="true" title="target"></i>
                 <div title="target">目標設定</div>
               </Link>
 
@@ -414,7 +414,11 @@ function Customer() {
                 onClick={activeHandler}
                 to={`/customer/${customerID}/publish`}
               >
-                <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                <i
+                  class="fa fa-file-text-o"
+                  aria-hidden="true"
+                  title="publish"
+                ></i>
                 <div title="publish">刊登需求</div>
               </Link>
 
@@ -424,7 +428,11 @@ function Customer() {
                 onClick={activeHandler}
                 to={`/customer/${customerID}/findDietitians`}
               >
-                <i class="fa fa-search" aria-hidden="true"></i>
+                <i
+                  class="fa fa-search"
+                  aria-hidden="true"
+                  title="findDietitian"
+                ></i>
                 <div title="findDietitian">找營養師</div>
               </Link>
 
@@ -434,7 +442,11 @@ function Customer() {
                 onClick={activeHandler}
                 to={`/customer/${customerID}/reserve-list`}
               >
-                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                <i
+                  class="fa fa-list-alt"
+                  aria-hidden="true"
+                  title="reserve"
+                ></i>
                 <div title="reserve">預約清單</div>
               </Link>
               <Link
@@ -467,49 +479,73 @@ function Customer() {
 
             <div className={style["mobile-list"]}>
               <Link
+                title="profile"
                 className={style["nav-title"]}
                 to={`/customer/${profile.id}/profile`}
+                onClick={activeHandler}
               >
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <div>會員資料</div>
+                <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                <div title="profile">會員資料</div>
               </Link>
               <Link
+                title="dietary"
                 className={style["nav-title"]}
                 to={`/customer/${profile.id}/dietary`}
+                onClick={activeHandler}
               >
-                <i class="fa fa-cutlery" aria-hidden="true"></i>
-                <div>飲食記錄</div>
+                <i class="fa fa-cutlery" aria-hidden="true" title="dietary"></i>
+                <div title="dietary">飲食記錄</div>
               </Link>
               <Link
+                title="target"
                 className={style["nav-title"]}
                 to={`/customer/${profile.id}/target`}
+                onClick={activeHandler}
               >
-                <i class="fa fa-bullseye" aria-hidden="true"></i>
-                <div>目標設定</div>
+                <i class="fa fa-bullseye" aria-hidden="true" title="target"></i>
+                <div title="target">目標設定</div>
               </Link>
 
               <Link
+                title="publish"
                 className={style["nav-title"]}
                 to={`/customer/${customerID}/publish`}
+                onClick={activeHandler}
               >
-                <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                <div>刊登需求</div>
+                <i
+                  class="fa fa-file-text-o"
+                  aria-hidden="true"
+                  title="publish"
+                ></i>
+                <div title="publish">刊登需求</div>
               </Link>
 
               <Link
+                title="findDietitian"
                 className={style["nav-title"]}
+                onClick={activeHandler}
                 to={`/customer/${customerID}/findDietitians`}
               >
-                <i class="fa fa-search" aria-hidden="true"></i>
-                <div>找營養師</div>
+                <i
+                  class="fa fa-search"
+                  aria-hidden="true"
+                  title="findDietitian"
+                ></i>
+                <div title="findDietitian">找營養師</div>
               </Link>
 
               <Link
+                title="reserve"
                 className={style["nav-title"]}
+                onClick={activeHandler}
                 to={`/customer/${customerID}/reserve-list`}
               >
-                <i class="fa fa-list-alt" aria-hidden="true"></i>
-                <div>預約清單</div>
+                <i
+                  class="fa fa-list-alt"
+                  aria-hidden="true"
+                  title="reserve"
+                ></i>
+                <div title="reserve">預約清單</div>
               </Link>
             </div>
           </div>

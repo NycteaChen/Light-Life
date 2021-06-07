@@ -377,26 +377,34 @@ function Dietitian() {
                 <div title="profile">會員資料</div>
               </Link>
               <ul>
-                <div
-                  title="customerList"
-                  className={`${basic["nav-title"]} list ${
-                    nav.customerList || ""
-                  }`}
-                  onClick={bindListHandler}
-                >
-                  <i
-                    class="fa fa-users list"
-                    aria-hidden="true"
-                    title="customerList"
-                  ></i>
+                {users && users.length > 0 ? (
                   <div
                     title="customerList"
-                    className="list"
+                    className={`${basic["nav-title"]} list ${
+                      nav.customerList || ""
+                    }`}
                     onClick={bindListHandler}
                   >
-                    客戶清單
+                    <i
+                      class="fa fa-users list"
+                      aria-hidden="true"
+                      title="customerList"
+                    ></i>
+                    <div
+                      title="customerList"
+                      className="list"
+                      onClick={bindListHandler}
+                    >
+                      客戶清單
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className={basic["no-customers"]}>
+                    <i class="fa fa-users list" aria-hidden="true"></i>
+                    <div>客戶清單</div>
+                  </div>
+                )}
+
                 <div
                   className={`${basic.customerList} list `}
                   style={{ display: display }}
