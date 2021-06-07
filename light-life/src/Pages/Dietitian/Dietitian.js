@@ -6,6 +6,7 @@ import {
   Link,
   useParams,
   useLocation,
+  useHistory,
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -44,6 +45,7 @@ function Dietitian() {
   const props = {};
   const [nav, setNav] = useState("");
   const keyword = useLocation().pathname;
+  let history = useHistory();
   useEffect(() => {
     firebase
       .firestore()
@@ -78,6 +80,7 @@ function Dietitian() {
                     usersArray.splice(index, 1);
                   } else {
                     usersArray[index].endDate = res.data().endDate;
+                    usersArray[index].startDate = res.data().startDate;
                     setUsers(usersArray);
                   }
                 }
@@ -232,16 +235,18 @@ function Dietitian() {
           });
         });
     }
-    if (keyword.includes("profile")) {
-      setNav({ profile: basic["nav-active"] });
-    } else if (keyword.includes("customer")) {
+    if (keyword.includes("customer") || keyword.includes("customers")) {
       setNav({ customerList: basic["nav-active"] });
+    } else if (keyword.includes("profile")) {
+      setNav({ profile: basic["nav-active"] });
     } else if (keyword.includes("findCustomer")) {
       setNav({ findCustomer: basic["nav-active"] });
     } else if (keyword.includes("inviteMe")) {
       setNav({ whoInvite: basic["nav-active"] });
     }
   }, []);
+
+  console.log(date);
 
   const getSelectedCustomer = (e) => {
     setSelectedID(e.target.className);
@@ -286,15 +291,8 @@ function Dietitian() {
           .auth()
           .signOut()
           .then(function () {
-            Swal.fire({
-              text: "已登出，感謝您的使用",
-              icon: "success",
-              confirmButtonText: "確定",
-              confirmButtonColor: "#1e4d4e",
-            }).then(() => {
-              // 登出後強制重整一次頁面
-              window.location.href = "/";
-            });
+            // 登出後強制重整一次頁面
+            window.location.href = "/";
           })
           .catch(function (error) {
             console.log(error.message);
@@ -315,7 +313,49 @@ function Dietitian() {
       alert("您的個人資料尚未填寫完整喔");
     }
   };
-  console.log(users);
+  const showMobileCustomerList = async () => {
+    const userObject = {};
+    users.forEach((e) => {
+      userObject[e["name"]] = e.name;
+    });
+    if (users.length > 0) {
+      const { value: customer } = await Swal.fire({
+        cancelButtonText: "取消",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+        input: "select",
+        inputOptions: userObject,
+        inputPlaceholder: "選取客戶",
+        showCancelButton: true,
+        inputValidator: (value) => {
+          return new Promise((resolve) => {
+            if (value) {
+              const selectedUser = users.find((u) => u.name === value);
+              setDate({
+                start: selectedUser.startDate,
+                end: selectedUser.endDate,
+              });
+              history.push(
+                `/dietitian/${selectedUser.dietitian}/customer/${selectedUser.id}/`
+              );
+              resolve();
+            } else {
+              resolve("沒有選取");
+            }
+          });
+        },
+      });
+    } else {
+      Swal.fire({
+        text: "目前沒有客戶喔",
+        cancelButtonText: "取消",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+        showCancelButton: true,
+      });
+    }
+  };
+
   // if (users.length > 0) {
   if (profile.name) {
     return (
@@ -333,7 +373,7 @@ function Dietitian() {
                 to={`/dietitian/${dietitianID}/profile`}
                 onClick={bindListHandler}
               >
-                <i class="fa fa-user" aria-hidden="true"></i>
+                <i class="fa fa-user" aria-hidden="true" title="profile"></i>
                 <div title="profile">會員資料</div>
               </Link>
               <ul>
@@ -344,7 +384,11 @@ function Dietitian() {
                   }`}
                   onClick={bindListHandler}
                 >
-                  <i class="fa fa-users" aria-hidden="true"></i>
+                  <i
+                    class="fa fa-users list"
+                    aria-hidden="true"
+                    title="customerList"
+                  ></i>
                   <div
                     title="customerList"
                     className="list"
@@ -360,7 +404,7 @@ function Dietitian() {
                   {users.length > 0
                     ? users.map((c, index) => (
                         <Link
-                          to={`/dietitian/${c.dietitian}/customer/${c.id}`}
+                          to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
                           key={index}
                           className={c.id}
                           onClick={getSelectedCustomer}
@@ -378,7 +422,11 @@ function Dietitian() {
                 onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}/findCustomers`}
               >
-                <i class="fa fa-search" aria-hidden="true"></i>
+                <i
+                  class="fa fa-search"
+                  aria-hidden="true"
+                  title="findCustomer"
+                ></i>
                 <div title="findCustomer">找客戶</div>
               </Link>
 
@@ -388,7 +436,11 @@ function Dietitian() {
                 onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}/inviteMe`}
               >
-                <i class="fa fa-envira" aria-hidden="true"></i>
+                <i
+                  class="fa fa-envira"
+                  aria-hidden="true"
+                  title="whoInvite"
+                ></i>
                 <div title="whoInvite">誰找我</div>
               </Link>
               <Link
@@ -426,38 +478,57 @@ function Dietitian() {
             </div>
             <div className={basic["d-List"]}>
               <Link
+                title="profile"
                 className={`${basic["nav-title"]}`}
                 to={`/dietitian/${dietitianID}/profile`}
                 onClick={bindListHandler}
               >
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <div>會員資料</div>
+                <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                <div title="profile">會員資料</div>
               </Link>
               <Link
+                title="findCustomer"
                 className={basic["nav-title"]}
                 to={`/dietitian/${dietitianID}/findCustomers`}
                 onClick={bindListHandler}
               >
-                <i class="fa fa-search" aria-hidden="true"></i>
-                <div>找客戶</div>
+                <i
+                  class="fa fa-search"
+                  aria-hidden="true"
+                  title="findCustomer"
+                ></i>
+                <div title="findCustomer">找客戶</div>
               </Link>
 
               <Link
                 className={`${basic["nav-title"]} list`}
                 to={`/dietitian/${dietitianID}/customers`}
-                onClick={bindListHandler}
+                title="customerList"
+                // onClick={bindListHandler}
+                onClick={showMobileCustomerList}
               >
-                <i class="fa fa-users" aria-hidden="true"></i>
-                <div className="list">客戶清單</div>
+                <i
+                  class="fa fa-users list"
+                  aria-hidden="true"
+                  title="customerList"
+                ></i>
+                <div className="list" title="customerList">
+                  客戶清單
+                </div>
               </Link>
 
               <Link
                 className={basic["nav-title"]}
                 to={`/dietitian/${dietitianID}/inviteMe`}
                 onClick={bindListHandler}
+                title="whoInvite"
               >
-                <i class="fa fa-envira" aria-hidden="true"></i>
-                <div>誰找我</div>
+                <i
+                  class="fa fa-envira"
+                  aria-hidden="true"
+                  title="whoInvite"
+                ></i>
+                <div title="whoInvite">誰找我</div>
               </Link>
             </div>
           </div>
@@ -533,18 +604,14 @@ function Dietitian() {
               >
                 {users.length > 0 ? (
                   users.map((c, index) => (
-                    <li
+                    <Link
+                      to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
                       key={index}
                       className={c.id}
                       onClick={getSelectedCustomer}
                     >
-                      <Link
-                        to={`/dietitian/${c.dietitian}/customer/${c.id}`}
-                        className={c.id}
-                      >
-                        {c.name}
-                      </Link>
-                    </li>
+                      <li className={c.id}>{c.name} </li>
+                    </Link>
                   ))
                 ) : (
                   <div>目前沒有客戶喔</div>
@@ -570,7 +637,7 @@ function Dietitian() {
             >
               {/* <Router> */}
               <div className={style["customer-data"]}>
-                <div>
+                {/* <div>
                   <Link
                     className={style["customer-name"]}
                     to={`/dietitian/${dietitianID}/customer/${
@@ -581,7 +648,7 @@ function Dietitian() {
                       ? users.filter((e) => e.id === customerID)[0].name
                       : ""}
                   </Link>
-                </div>
+                </div> */}
                 <div className={style["customer-dataSelect"]}>
                   <Link
                     className={style["link-select"]}
@@ -589,7 +656,9 @@ function Dietitian() {
                       customerID ? customerID : selectedID
                     }/profile`}
                   >
-                    基本資料
+                    {users.length > 0 && customerID
+                      ? users.filter((e) => e.id === customerID)[0].name
+                      : ""}
                   </Link>
                   <Link
                     className={style["link-select"]}
@@ -610,25 +679,31 @@ function Dietitian() {
                 </div>
               </div>
               <Switch>
-                <Route exact path={`/dietitian/:dID/customer/:cID/`}>
-                  <div className={style["service-time"]}>
-                    服務時間：{date.start ? date.start : ""}~
-                    {date.end ? date.end : ""}
-                  </div>
-                </Route>
+                {/* <Route exact path={`/dietitian/:dID/customer/:cID/`}></Route> */}
                 <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
-                  <div
-                    id="customer-profile"
-                    className={customer["customer-profile"]}
-                  >
-                    <div className={customer["profile-data"]}>
-                      <CustomerProfile
-                        props={props}
-                        // id={selectedID}
-                        input={input}
-                      />
+                  <>
+                    <div
+                      id="customer-profile"
+                      className={customer["customer-profile"]}
+                    >
+                      <div className={style["service-time"]}>
+                        <div>
+                          服務時間<span>：</span>
+                        </div>
+                        <div>
+                          {date.start ? date.start : ""}~
+                          {date.end ? date.end : ""}
+                        </div>
+                      </div>
+                      <div className={customer["profile-data"]}>
+                        <CustomerProfile
+                          props={props}
+                          // id={selectedID}
+                          input={input}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  </>
                 </Route>
                 <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
                   <DietrayRecord />
