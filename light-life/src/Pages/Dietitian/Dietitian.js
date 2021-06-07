@@ -457,7 +457,7 @@ function Dietitian() {
                 to={`/dietitian/${dietitianID}`}
               >
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                會員主頁
+                <div>會員主頁</div>
               </Link>
               <a onClick={logoutHandler}>
                 <img src={exit} alt="logout" id={basic.logout} />
