@@ -16,7 +16,6 @@ import style from "../../../style/target.module.scss";
 function CustomerTarget() {
   const [target, setTarget] = useState([]);
   const params = useParams();
-  console.log(params);
   useEffect(() => {
     firebase
       .firestore()
@@ -48,7 +47,7 @@ function CustomerTarget() {
   return (
     <>
       <div className={style["target-setting"]} id="dietitian-target">
-        <h3>已設立目標</h3>
+        <h5>已設立目標</h5>
         <div className={style["c-targets"]}>
           <TargetHandler target={target} />
         </div>
