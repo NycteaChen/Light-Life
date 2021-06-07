@@ -123,7 +123,7 @@ function EditCustomerProfile({ profile, setProfile }) {
             </button>
           </div>
           <div className={style.flexbox}>
-            <div>
+            <div className={style.img}>
               <img
                 src={
                   input.previewImg
@@ -147,7 +147,6 @@ function EditCustomerProfile({ profile, setProfile }) {
                     onChange={getInputHandler}
                   />
                   <i className="fa fa-picture-o" aria-hidden="true"></i>
-                  上傳大頭照
                 </label>
               </div>
             </div>
