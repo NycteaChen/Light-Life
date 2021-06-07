@@ -127,15 +127,8 @@ function Home() {
           .auth()
           .signOut()
           .then(function () {
-            Swal.fire({
-              text: "已登出，感謝您的使用",
-              icon: "success",
-              confirmButtonText: "確定",
-              confirmButtonColor: "#1e4d4e",
-            }).then(() => {
-              // 登出後強制重整一次頁面
-              window.location.href = "/";
-            });
+            // 登出後強制重整一次頁面
+            window.location.href = "/";
           })
           .catch(function (error) {
             console.log(error.message);
