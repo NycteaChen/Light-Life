@@ -102,7 +102,6 @@ function EditCustomerProfile({ profile, setProfile }) {
     }
     setIsEditing(false);
   };
-  console.log(profile);
   const bindEditHandler = () => {
     setIsEditing(true);
   };

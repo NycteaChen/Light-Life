@@ -281,6 +281,8 @@
     img {
       width: 80px;
       height: 80px;
+
+      object-fit: cover;
       position: absolute;
       top: 100px;
       right: 0;
