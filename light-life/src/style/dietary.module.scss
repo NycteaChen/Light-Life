@@ -3,46 +3,179 @@
 }
 
 .daily-diet {
-  text-align: center;
+  // text-align: center;
   .date-selector {
+    margin: auto;
+    max-width: 580px;
     input[type="date"] {
       width: 150px;
       margin-bottom: 20px;
     }
   }
-  .meal {
-    margin: 10px 0;
-    .meal-title {
-      background-color: yellow;
-      padding: 10px 0;
-      border-radius: 10px;
+  .title {
+    font-weight: bold;
+  }
+  h5 {
+    max-width: 580px;
+    padding: 15px 0 10px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: left;
+  }
+  ul {
+    max-width: 580px;
+    margin: auto;
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 15px 5px 5px;
+    li.meal-title {
+      list-style: none;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      border-left: 5px solid #286d46;
+      color: #286d46;
+      box-shadow: 0 1px 1px #8a8888;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      border-radius: 3px;
+      transition: all 0.4s;
+      font-size: 14px;
       cursor: pointer;
+      padding: 3px 10px;
+      width: 80%;
+      opacity: 0.8;
+      &:hover {
+        transform: rotateZ(-5deg);
+        font-weight: bold;
+        box-shadow: 0 2px 3px #8a8888;
+      }
     }
-    .diet-record {
-      margin: 20px 0;
-      .eat-time {
-        display: flex;
-        justify-content: center;
-        .title {
-          margin-right: 5px;
+    .li-active {
+      transform: rotateZ(-5deg);
+      font-weight: bold;
+      box-shadow: 0 2px 3px #8a8888 !important;
+      opacity: 1 !important;
+    }
+  }
+
+  .mealCol {
+    max-width: 580px;
+    margin: 20px auto 40px;
+    padding: 10px 25px;
+    min-height: 200px;
+    box-shadow: 0 1px 3px #515a56;
+    border-radius: 5px;
+    background-color: #fafafaad;
+    .meal {
+      margin: 10px 0;
+      .diet-record {
+        margin: 20px 0;
+        .eat-time {
+          display: flex;
+          // justify-content: center;
+          .title {
+            margin-right: 5px;
+          }
+          #eat-time {
+            width: 80px;
+          }
         }
-        #eat-time {
-          width: 80px;
+        .col {
+          margin-top: 10px;
+          .food-images {
+            max-height: 320px;
+            overflow: auto;
+            margin: 10px 0;
+            .food-image {
+              img {
+                width: 150px;
+                height: 150px;
+                transition: all 0.3s;
+                object-fit: cover;
+              }
+              i {
+                transition: all 0.5s;
+                cursor: pointer;
+                &:hover {
+                  transform: scale(1.2);
+                  color: red;
+                }
+              }
+            }
+          }
+          .image-record {
+            margin-bottom: 10px;
+          }
+          .uploadImg {
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 2px 5px;
+            margin-top: 20px;
+            border: 1px solid black;
+            background-color: #fdf8ee;
+            input {
+              display: none;
+            }
+          }
+        }
+        .meal-content {
+          text-align: left;
+          .title {
+            margin-right: 5px;
+            vertical-align: middle;
+          }
+          .content-text {
+            margin-top: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            padding: 5px 10px;
+            max-height: 5rem;
+            overflow: auto;
+          }
+          .customer-text {
+            margin-top: 10px;
+            padding: 5px;
+            height: 3rem;
+            width: 100%;
+          }
         }
       }
-      .col {
-        margin-top: 10px;
-        .food-images {
-          max-height: 200px;
-          overflow: auto;
-          margin: 10px 0;
-          .food-image {
-            img {
-              width: 100px;
-              height: 100px;
-              object-fit: cover;
+      .dietitian-record {
+        font-size: 12px;
+        background-color: #ffffff;
+        text-align: center;
+        table {
+          padding: 2px 2px 120px;
+          display: block;
+          overflow-x: auto;
+          border-collapse: collapse;
+          th {
+            padding: 5px 0;
+          }
+
+          th:last-of-type {
+            border: none;
+          }
+          th:nth-child(2) {
+            padding-right: 20px;
+          }
+          thead {
+            .item-title {
+              background-color: #286d46;
+              color: white;
             }
+          }
+          tbody {
+            tr:nth-child(even) {
+              background-color: #e0ffef;
+            }
+
             i {
+              padding-left: 10px;
               transition: all 0.5s;
               cursor: pointer;
               &:hover {
@@ -50,150 +183,92 @@
                 color: red;
               }
             }
-          }
-        }
-        .image-record {
-          margin-bottom: 10px;
-        }
-        .uploadImg {
-          cursor: pointer;
-          border-radius: 5px;
-          padding: 2px 5px;
-          margin-top: 20px;
-          border: 1px solid black;
-          background-color: #fdf8ee;
-          input {
-            display: none;
-          }
-        }
-      }
-      .meal-content {
-        text-align: left;
-        .content-title {
-          margin-right: 5px;
-          vertical-align: middle;
-        }
-        .content-text {
-          margin-top: 10px;
-          border: 1px solid black;
-          padding: 5px;
-          max-height: 80px;
-          overflow: auto;
-        }
-        .customer-text {
-          margin-top: 10px;
-          padding: 5px;
-          height: 3rem;
-          width: 100%;
-        }
-      }
-    }
-    .dietitian-record {
-      font-size: 12px;
 
-      table {
-        padding: 2px 2px 20px;
-        display: block;
-        overflow-x: auto;
-        border-collapse: collapse;
-        th {
-          padding: 5px 0;
-        }
-        th + th {
-          border-right: 1px solid #2c2a28;
-        }
-        th:last-of-type {
-          border: none;
-        }
-        th:nth-child(2) {
-          padding-right: 20px;
-        }
-        thead {
-          .item-title {
-            background-color: aquamarine;
-          }
-        }
-        tbody {
-          tr:nth-child(even) {
-            background-color: aqua;
-          }
-
-          i {
-            padding-left: 10px;
-            transition: all 0.5s;
-            cursor: pointer;
-            &:hover {
-              transform: scale(1.2);
-              color: red;
+            .food-input {
+              background-color: #c7c7c76c !important;
+              padding: 5px 0;
+              th + th {
+                min-width: 120px;
+              }
+              input {
+                text-align: center;
+                width: 150px;
+                border: none;
+                background-color: unset;
+              }
+              .input-number {
+                padding-left: 0;
+                width: 100px;
+              }
             }
           }
+          tfoot {
+            .meal-plus::after {
+              background-image: url("../images/add.svg");
+              background-size: cover;
+              display: inline-block;
+              width: 20px;
+              height: 20px;
+              content: "";
+              cursor: pointer;
+              &:hover {
+                transform: scale(1.3);
+              }
+            }
+          }
+        }
+      }
 
-          .food-input {
-            background-color: #c7c7c76c !important;
+      .customer-table {
+        font-size: 12px;
+
+        table {
+          text-align: center;
+          padding: 2px 2px 20px;
+          display: block;
+          overflow-x: auto;
+          border-collapse: collapse;
+          th {
             padding: 5px 0;
-            th + th {
-              min-width: 120px;
-            }
-            input {
-              text-align: center;
-              width: 150px;
-              border: none;
-              background-color: unset;
-            }
-            .input-number {
-              padding-left: 0;
-              width: 100px;
+            min-width: 120px;
+          }
+          th + th {
+            border-left: 1px solid #2c2a28;
+          }
+          thead {
+            .item-title {
+              background-color: aquamarine;
             }
           }
-        }
-        tfoot {
-          .meal-plus::after {
-            background-image: url("../images/add.svg");
-            background-size: cover;
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            content: "";
-            cursor: pointer;
-            &:hover {
-              transform: scale(1.3);
+          tbody {
+            tr:nth-child(even) {
+              background-color: aqua;
             }
           }
         }
       }
     }
 
-    .customer-table {
-      font-size: 12px;
-
-      table {
-        text-align: center;
-        padding: 2px 2px 20px;
-        display: block;
-        overflow-x: auto;
-        border-collapse: collapse;
-        th {
-          padding: 5px 0;
-          min-width: 120px;
-        }
-        th + th {
-          border-left: 1px solid #2c2a28;
-        }
-        thead {
-          .item-title {
-            background-color: aquamarine;
-          }
-        }
-        tbody {
-          tr:nth-child(even) {
-            background-color: aqua;
-          }
-        }
+    .searchBox {
+      width: 150px;
+      max-height: 120px;
+      background-color: white;
+      border: 1px solid black;
+      position: absolute;
+      text-align: left;
+      font-weight: 500;
+      font-size: 14px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      padding: 7px 10px;
+      @media (min-width: 520px) {
+        max-height: 150px;
       }
     }
   }
 
   .diet-analysis {
+    text-align: center;
     margin: 30px auto 0;
     padding: 10px 0;
     h3 {
@@ -202,51 +277,84 @@
     .analysis-table {
       margin: auto;
       table {
+        background-color: #ffffff;
         font-size: 12px;
         display: block;
         overflow-x: auto;
         border-collapse: collapse;
-        padding: 2px 2px 20px;
+        padding: 2px 2px;
         th {
           min-width: 90px;
           padding: 5px 2px;
         }
-        th + th {
-          border-left: 1px solid #2c2a28;
-        }
+
         thead {
           .item-title {
-            background-color: aquamarine;
+            background-color: #286d46;
+            color: white;
           }
         }
         tbody {
           tr:nth-child(even) {
-            background-color: aqua;
+            background-color: #e0ffef;
           }
         }
       }
     }
     .advice {
+      margin-top: 20px;
       text-align: left;
-      font-size: 16px;
       textarea {
-        margin-top: 10px;
+        display: block;
+        font-size: 14px;
         padding: 5px;
         width: 100%;
         max-width: 450px;
         height: 5rem;
+        border-radius: 5px;
+        border: 1px solid grey;
       }
       .advice-title {
         margin-bottom: 5px;
       }
+      .button {
+        text-align: center;
+        max-width: 450px;
+        margin-top: 10px;
+        button {
+          width: 90px;
+          margin: 10px 0 5px;
+          padding: 2px 8px;
+          border-radius: 5px;
+          outline: none;
+          border: none;
+          transition: opacity 0.3s, width 0.3s;
+          background-color: #015830;
+          color: white;
+          letter-spacing: 2px;
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+      }
     }
   }
 
-  button {
-    margin-top: 10px;
-    padding: 2px 10px;
-    border: 1px solid black;
-    background-color: bisque;
+  @media (min-width: 480px) {
+    & {
+      .mealCol {
+        .meal {
+          .diet-record {
+            .col {
+              .food-images {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   @media (min-width: 520px) {
@@ -254,83 +362,79 @@
       text-align: left;
       .date-selector {
         text-align: center;
-        max-width: 720px;
+
         margin: auto;
         input[type="date"] {
           margin: 20px 0 0;
         }
       }
-      h3 {
-        margin: 20px auto 10px;
-        max-width: 720px;
-      }
-      .meal {
-        .meal-title {
-          max-width: 720px;
-          padding: 10px 30px;
-          margin: auto;
+      ul {
+        li.meal-title {
+          padding: 8px 10px;
+          letter-spacing: 20px;
+          font-size: 14px;
+          text-indent: 20px;
         }
-        .diet-record {
-          text-align: center;
-          margin: 20px auto;
-          max-width: 600px;
-          .eat-time {
-            justify-content: flex-start;
-            input {
-              padding-left: 10px;
-              letter-spacing: 5px;
+      }
+      .mealCol {
+        .meal {
+          .diet-record {
+            text-align: center;
+            margin: 20px auto;
+            .eat-time {
+              justify-content: flex-start;
+              input {
+                padding-left: 10px;
+                letter-spacing: 5px;
+              }
             }
-          }
-          .col {
-            text-align: left;
-            .food-images {
-              display: grid;
-              grid-template-columns: repeat(3, 1fr);
-              .food-image {
-                img {
-                  width: 150px;
-                  height: 150px;
-                }
-                div {
-                  width: 150px;
-                  text-align: center;
+            .col {
+              text-align: left;
+              .food-images {
+                max-height: 380px;
+                .food-image {
+                  img {
+                    width: 180px;
+                    height: 180px;
+                  }
+                  div {
+                    width: 150px;
+                    text-align: center;
+                  }
                 }
               }
             }
-          }
-          .meal-content {
-            .customer-text {
-              height: 5rem;
+            .meal-content {
+              .customer-text {
+                height: 5rem;
+              }
             }
           }
-        }
-        .dietitian-record {
-          text-align: center;
-          margin: auto;
-          width: 80%;
-          font-size: 1rem;
-          table {
-            th {
-              padding: 10px 0;
+          .dietitian-record {
+            text-align: center;
+            // width: 100%;
+            font-size: 1rem;
+            table {
+              th {
+                padding: 10px 0;
+              }
             }
           }
-        }
-        .customer-table {
-          text-align: center;
-          margin: auto;
-          width: 80%;
-          font-size: 1rem;
-          table {
-            th {
-              padding: 10px 0;
+          .customer-table {
+            text-align: center;
+            margin: auto;
+            width: 80%;
+            font-size: 1rem;
+            table {
+              th {
+                padding: 10px 0;
+              }
             }
           }
         }
       }
       .diet-analysis {
-        width: 85%;
-        max-width: 750px;
-
+        max-width: 722px;
         .analysis-table {
           table {
             font-size: 16px;
@@ -340,15 +444,29 @@
             }
           }
         }
+        .advice {
+          .button {
+            text-align: left;
+            button {
+              width: 120px;
+            }
+          }
+        }
       }
     }
   }
 
   @media (min-width: 1024px) {
     & {
-      margin-left: 300px;
-      h3 {
+      margin-left: 260px;
+      margin-right: 20px;
+      max-width: 1000px;
+      h5 {
         margin: 0;
+        max-width: 1000px;
+      }
+      .title {
+        font-size: 18px;
       }
       .date-selector {
         margin: 0;
@@ -359,68 +477,83 @@
           letter-spacing: 2px;
         }
       }
-      .meal {
-        .meal-title {
-          max-width: 720px;
-          padding: 10px 30px;
-          margin: 0;
+      ul {
+        margin: 0;
+        max-width: 1000px;
+        grid-template-columns: repeat(6, 1fr);
+        li.meal-title {
+          letter-spacing: 10px;
+          font-size: 16px;
+          text-indent: 10px;
         }
-        .diet-record {
-          text-align: center;
-          max-width: 720px;
-          margin: 20px 0;
-          .eat-time {
-            justify-content: flex-start;
-          }
-          .col {
-            text-align: left;
-            .food-images {
-              display: grid;
-              grid-template-columns: repeat(4, 1fr);
-              .food-image {
-                img {
-                  width: 150px;
-                  height: 150px;
+      }
+      .mealCol {
+        max-width: 1000px;
+        .meal {
+          .diet-record {
+            text-align: center;
+            margin: 20px 0;
+            .eat-time {
+              justify-content: flex-start;
+            }
+            .col {
+              text-align: left;
+              .food-images {
+                margin: 0;
+                max-width: 1000px;
+                max-height: 450px;
+                grid-template-columns: repeat(3, 1fr);
+                grid-gap: 10px;
+                .food-image {
+                  img {
+                    width: 200px;
+                    height: 200px;
+                  }
+                  div {
+                    width: 150px;
+                    text-align: center;
+                  }
                 }
-                div {
-                  width: 150px;
-                  text-align: center;
+                @media (min-width: 1200px) {
+                  grid-template-columns: repeat(4, 1fr);
                 }
               }
             }
-          }
-          .meal-content {
-            .customer-text {
-              height: 7rem;
+            .meal-content {
+              max-width: 600px;
+              .customer-text {
+                height: 7rem;
+              }
             }
           }
-        }
 
-        .dietitian-record {
-          width: 95%;
-          display: inline;
-          table {
-            th {
-              padding: 10px 0;
-            }
-            input {
-              font-size: 16px;
+          .dietitian-record {
+            width: 95%;
+            display: inline;
+            table {
+              th {
+                padding: 10px 0;
+              }
+              input {
+                font-size: 16px;
+              }
             }
           }
-        }
-        .customer-table {
-          width: 95%;
-          display: inline;
-          table {
-            th {
-              padding: 10px 0;
-            }
-            input {
-              font-size: 16px;
+          .customer-table {
+            width: 95%;
+            display: inline;
+            table {
+              th {
+                padding: 10px 0;
+              }
+              input {
+                font-size: 16px;
+              }
             }
           }
         }
       }
+
       .diet-analysis {
         margin: 0;
       }

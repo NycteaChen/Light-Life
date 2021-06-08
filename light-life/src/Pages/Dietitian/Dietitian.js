@@ -246,8 +246,6 @@ function Dietitian() {
     }
   }, []);
 
-  console.log(date);
-
   const getSelectedCustomer = (e) => {
     setSelectedID(e.target.className);
     firebase
