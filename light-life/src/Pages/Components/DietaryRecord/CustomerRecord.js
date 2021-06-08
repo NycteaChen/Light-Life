@@ -16,6 +16,7 @@ function CustomerRecord({ date, count, setCount }) {
 
   // const [images, setImages] = useState([]);
   const cID = useParams().cID;
+  const [active, setAcitve] = useState("");
 
   useEffect(() => {
     firebase
@@ -26,10 +27,15 @@ function CustomerRecord({ date, count, setCount }) {
       .then((doc) => {
         setDID(doc.data().dietitian);
       });
+
+    setMeal([]);
+    setAcitve("");
   }, [date]);
 
   const getMealHandler = (e) => {
     const mealClass = e.target.className.split(" ")[1];
+    const { id } = e.target;
+    setAcitve({ [id]: style["li-active"] });
     if (meal !== mealClass) {
       setCount(2);
     } else {
@@ -226,7 +232,7 @@ function CustomerRecord({ date, count, setCount }) {
       <ul>
         {mealKeywords.map((m) => (
           <li
-            className={`${style["meal-title"]} ${m[1]}`}
+            className={`${style["meal-title"]} ${m[1]} ${active[m[2]] || ""}`}
             id={`${m[2]}`}
             role="presentation"
             onClick={getMealHandler}
