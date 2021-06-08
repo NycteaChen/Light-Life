@@ -6,18 +6,21 @@ import {
   Link,
   useParams,
   useLocation,
+  useHistory,
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import logo from "../../images/lightlife-straight.png";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import InvitedList from "./Invite/InvitedList.js";
 import DietitianProfile from "../Dietitian/DietitianProfile/DietitianProfile.js";
-import CusotmerProfile from "../Components/CustomerProfile/CusotmerProfile.js";
+import CustomerProfile from "../Components/CustomerProfile/CustomerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
 import GetPublication from "../Dietitian/FindCustomers/GetPublication.js";
+import MobileBottom from "../Components/MobileBottom.js";
 import basic from "../../style/basic.module.scss";
 import style from "../../style/customerData.module.scss";
 import customer from "../../style/customerProfile.module.scss";
@@ -33,7 +36,16 @@ function Dietitian() {
   const dietitianID = useParams().dID;
   const customerID = useLocation().pathname.split("/")[4];
   const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
+  const getToday = new Date(+new Date() + 8 * 3600 * 1000)
+    .toISOString()
+    .substr(0, 10);
+  const todayTime = new Date(getToday).getTime();
+  const [pending, setPending] = useState(null);
   const input = {};
+  const props = {};
+  const [nav, setNav] = useState("");
+  const keyword = useLocation().pathname;
+  let history = useHistory();
   useEffect(() => {
     firebase
       .firestore()
@@ -42,12 +54,149 @@ function Dietitian() {
       .get()
       .then((snapshot) => {
         const usersArray = [];
-        snapshot.forEach((doc) => {
-          usersArray.push(doc.data());
-        });
-        setUsers(usersArray);
-      });
+        if (!snapshot.empty) {
+          snapshot.forEach((doc) => {
+            usersArray.push(doc.data());
+          });
+          usersArray.forEach((i, index) => {
+            firebase
+              .firestore()
+              .collection("dietitians")
+              .doc(dietitianID)
+              .collection("customers")
+              .doc(i.id)
+              .get()
+              .then((res) => {
+                if (res.exists) {
+                  const endDate = new Date(res.data().endDate).getTime();
+                  if (endDate < todayTime) {
+                    firebase
+                      .firestore()
+                      .collection("customers")
+                      .doc(i.id)
+                      .update({
+                        dietitian: firebase.firestore.FieldValue.delete(),
+                      });
+                    usersArray.splice(index, 1);
+                  } else {
+                    usersArray[index].endDate = res.data().endDate;
+                    usersArray[index].startDate = res.data().startDate;
+                    setUsers(usersArray);
+                  }
+                }
+              });
+          });
+        }
 
+        firebase
+          .firestore()
+          .collection("pending")
+          .where("dietitian", "==", dietitianID)
+          .get()
+          .then((docs) => {
+            const pendingArray = [];
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                pendingArray.push(doc.data());
+              });
+              const promises = [];
+              pendingArray.forEach((p) => {
+                const promise = firebase
+                  .firestore()
+                  .collection("customers")
+                  .doc(p.customer)
+                  .get()
+                  .then((res) => {
+                    return {
+                      ...p,
+                      customerName: res.data().name,
+                      customerGender: res.data().gender,
+                    };
+                  });
+                promises.push(promise);
+              });
+              Promise.all(promises).then((res) => {
+                res.sort((a, b) => {
+                  const dateA = new Date(a.startDate).getTime();
+                  const dateB = new Date(b.startDate).getTime();
+                  if (dateA < dateB) {
+                    return -1;
+                  } else if (dateA > dateB) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                });
+                const newPendingArray = [];
+                res.forEach((r) => {
+                  const start = new Date(r.startDate).getTime();
+                  console.log(r);
+                  if (r.startDate === getToday) {
+                    firebase
+                      .firestore()
+                      .collection("customers")
+                      .doc(r.customer)
+                      .update({ dietitian: r.dietitian })
+                      .then(() => {
+                        firebase
+                          .firestore()
+                          .collection("customers")
+                          .doc(r.customer)
+                          .get()
+                          .then((doc) => {
+                            console.log(usersArray);
+                            if (
+                              usersArray.length > 0 &&
+                              !usersArray.find((i) => i.id === doc.data().id)
+                            ) {
+                              setUsers([...usersArray, doc.data()]);
+                            } else if (usersArray.length > 0) {
+                              setUsers([...usersArray]);
+                            } else {
+                              setUsers([doc.data()]);
+                            }
+                          })
+                          .then(() => {
+                            firebase
+                              .firestore()
+                              .collection("pending")
+                              .doc(r.id)
+                              .delete()
+                              .then(() => {
+                                console.log("Document successfully deleted!");
+                              })
+                              .catch((error) => {
+                                console.error(
+                                  "Error removing document: ",
+                                  error
+                                );
+                              });
+                          });
+                      });
+                    firebase
+                      .firestore()
+                      .collection("dietitians")
+                      .doc(r.dietitian)
+                      .collection("customers")
+                      .doc(r.customer)
+                      .set({
+                        startDate: r.startDate,
+                        endDate: r.endDate,
+                      });
+                  } else if (start < todayTime) {
+                    console.log("晚");
+                  } else {
+                    newPendingArray.push(r);
+                  }
+                });
+                setPending(newPendingArray);
+              });
+            } else {
+              setPending([]);
+            }
+            // });
+          });
+      });
     firebase
       .firestore()
       .collection("reserve")
@@ -57,7 +206,7 @@ function Dietitian() {
         const invitedArray = [];
         docs.forEach((doc) => {
           const startDate = new Date(doc.data().reserveStartDate).getTime();
-          console.log(doc.data());
+
           if (startDate > today && doc.data().status === "0") {
             invitedArray.push(doc.data());
           }
@@ -70,16 +219,6 @@ function Dietitian() {
       .doc(dietitianID)
       .get()
       .then((res) => setProfile(res.data()));
-
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dietitianID)
-      .collection("customers")
-      .get()
-      .then((doc) => {
-        console.log(doc);
-      });
 
     if (customerID) {
       firebase
@@ -96,7 +235,18 @@ function Dietitian() {
           });
         });
     }
+    if (keyword.includes("customer") || keyword.includes("customers")) {
+      setNav({ customerList: basic["nav-active"] });
+    } else if (keyword.includes("profile")) {
+      setNav({ profile: basic["nav-active"] });
+    } else if (keyword.includes("findCustomer")) {
+      setNav({ findCustomer: basic["nav-active"] });
+    } else if (keyword.includes("inviteMe")) {
+      setNav({ whoInvite: basic["nav-active"] });
+    }
   }, []);
+
+  console.log(date);
 
   const getSelectedCustomer = (e) => {
     setSelectedID(e.target.className);
@@ -121,22 +271,35 @@ function Dietitian() {
     } else {
       setDisplay("none");
     }
+    const { title } = e.target;
+    if (title) {
+      setNav({ [title]: basic["nav-active"] });
+    } else {
+      setNav({});
+    }
   };
   const logoutHandler = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(function () {
-        alert("已登出");
-        // 登出後強制重整一次頁面
-        window.location.href = "/";
-      })
-      .catch(function (error) {
-        console.log(error.message);
-      });
+    Swal.fire({
+      text: "確定登出嗎?",
+      confirmButtonText: "確定",
+      cancelButtonText: "取消",
+      confirmButtonColor: "#1e4d4e",
+      showCancelButton: true,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        firebase
+          .auth()
+          .signOut()
+          .then(function () {
+            // 登出後強制重整一次頁面
+            window.location.href = "/";
+          })
+          .catch(function (error) {
+            console.log(error.message);
+          });
+      }
+    });
   };
-
-  console.log(profile);
 
   const changeServiceStatusHandler = () => {
     if (profile.education && profile.gender) {
@@ -150,10 +313,53 @@ function Dietitian() {
       alert("您的個人資料尚未填寫完整喔");
     }
   };
+  const showMobileCustomerList = async () => {
+    const userObject = {};
+    users.forEach((e) => {
+      userObject[e["name"]] = e.name;
+    });
+    if (users.length > 0) {
+      const { value: customer } = await Swal.fire({
+        cancelButtonText: "取消",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+        input: "select",
+        inputOptions: userObject,
+        inputPlaceholder: "選取客戶",
+        showCancelButton: true,
+        inputValidator: (value) => {
+          return new Promise((resolve) => {
+            if (value) {
+              const selectedUser = users.find((u) => u.name === value);
+              setDate({
+                start: selectedUser.startDate,
+                end: selectedUser.endDate,
+              });
+              history.push(
+                `/dietitian/${selectedUser.dietitian}/customer/${selectedUser.id}/`
+              );
+              resolve();
+            } else {
+              resolve("沒有選取");
+            }
+          });
+        },
+      });
+    } else {
+      Swal.fire({
+        text: "目前沒有客戶喔",
+        cancelButtonText: "取消",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+        showCancelButton: true,
+      });
+    }
+  };
   // if (users.length > 0) {
-  if (profile.name) {
+  if (profile && profile.email) {
     return (
       <>
+        <MobileBottom />
         <main className={basic["d-main"]}>
           <nav>
             <a href="/">
@@ -161,59 +367,96 @@ function Dietitian() {
             </a>
             <div className={basic["straight-nav"]}>
               <Link
-                className={basic["nav-title"]}
+                title="profile"
+                className={`${basic["nav-title"]} ${nav.profile || ""}`}
                 to={`/dietitian/${dietitianID}/profile`}
+                onClick={bindListHandler}
               >
-                <div onClick={bindListHandler}>編輯會員資料</div>
+                <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                <div title="profile">會員資料</div>
               </Link>
               <ul>
+                {users && users.length > 0 ? (
+                  <div
+                    title="customerList"
+                    className={`${basic["nav-title"]} list ${
+                      nav.customerList || ""
+                    }`}
+                    onClick={bindListHandler}
+                  >
+                    <i
+                      class="fa fa-users list"
+                      aria-hidden="true"
+                      title="customerList"
+                    ></i>
+                    <div
+                      title="customerList"
+                      className="list"
+                      onClick={bindListHandler}
+                    >
+                      客戶清單
+                    </div>
+                  </div>
+                ) : (
+                  <div className={basic["no-customers"]}>
+                    <i class="fa fa-users list" aria-hidden="true"></i>
+                    <div>客戶清單</div>
+                  </div>
+                )}
+
                 <div
-                  className={`${basic["nav-title"]} list`}
-                  onClick={bindListHandler}
-                >
-                  客戶清單
-                </div>
-                <div
-                  className={`${basic.customerList} list`}
+                  className={`${basic.customerList} list `}
                   style={{ display: display }}
                 >
-                  {users.map((c, index) => (
-                    <li
-                      key={index}
-                      className={c.id}
-                      onClick={getSelectedCustomer}
-                    >
-                      <Link
-                        to={`/dietitian/${c.dietitian}/customer/${c.id}`}
-                        className={c.id}
-                        style={{ fontSize: "16px" }}
-                      >
-                        {c.name}
-                      </Link>
-                    </li>
-                  ))}
+                  {users.length > 0
+                    ? users.map((c, index) => (
+                        <Link
+                          to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
+                          key={index}
+                          className={c.id}
+                          onClick={getSelectedCustomer}
+                        >
+                          <li className={c.id}>{c.name} </li>
+                        </Link>
+                      ))
+                    : ""}
                 </div>
               </ul>
 
               <Link
-                className={basic["nav-title"]}
+                title="findCustomer"
+                className={`${basic["nav-title"]} ${nav.findCustomer || ""}`}
+                onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}/findCustomers`}
               >
-                <div onClick={bindListHandler}>找客戶</div>
+                <i
+                  class="fa fa-search"
+                  aria-hidden="true"
+                  title="findCustomer"
+                ></i>
+                <div title="findCustomer">找客戶</div>
               </Link>
 
               <Link
-                className={basic["nav-title"]}
+                title="whoInvite"
+                className={`${basic["nav-title"]} ${nav.whoInvite || ""}`}
+                onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}/inviteMe`}
               >
-                <div onClick={bindListHandler}>誰找我</div>
+                <i
+                  class="fa fa-envira"
+                  aria-hidden="true"
+                  title="whoInvite"
+                ></i>
+                <div title="whoInvite">誰找我</div>
               </Link>
               <Link
                 className={basic["nav-title"]}
                 onClick={bindListHandler}
                 to={`/dietitian/${dietitianID}`}
               >
-                返回會員主頁
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                <div>會員主頁</div>
               </Link>
               <a onClick={logoutHandler}>
                 <img src={exit} alt="logout" id={basic.logout} />
@@ -242,31 +485,54 @@ function Dietitian() {
             </div>
             <div className={basic["d-List"]}>
               <Link
+                title="profile"
+                className={`${basic["nav-title"]}`}
                 to={`/dietitian/${dietitianID}/profile`}
                 onClick={bindListHandler}
               >
-                <div>編輯會員資料</div>
+                <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                <div title="profile">會員資料</div>
               </Link>
               <Link
+                title="findCustomer"
+                className={basic["nav-title"]}
                 to={`/dietitian/${dietitianID}/findCustomers`}
                 onClick={bindListHandler}
               >
-                <div>找客戶</div>
+                <i
+                  class="fa fa-search"
+                  aria-hidden="true"
+                  title="findCustomer"
+                ></i>
+                <div title="findCustomer">找客戶</div>
               </Link>
 
               <Link
-                className="list"
+                className={`${basic["nav-title"]}`}
                 to={`/dietitian/${dietitianID}/customers`}
-                onClick={bindListHandler}
+                title="customerList"
+                onClick={showMobileCustomerList}
               >
-                <div className="list">客戶清單</div>
+                <i
+                  class="fa fa-users"
+                  aria-hidden="true"
+                  title="customerList"
+                ></i>
+                <div title="customerList">客戶清單</div>
               </Link>
 
               <Link
+                className={basic["nav-title"]}
                 to={`/dietitian/${dietitianID}/inviteMe`}
                 onClick={bindListHandler}
+                title="whoInvite"
               >
-                <div> 誰找我</div>
+                <i
+                  class="fa fa-envira"
+                  aria-hidden="true"
+                  title="whoInvite"
+                ></i>
+                <div title="whoInvite">誰找我</div>
               </Link>
             </div>
           </div>
@@ -274,7 +540,57 @@ function Dietitian() {
           <Switch>
             <Route exact path="/dietitian/:dID">
               <div className={basic.indexMessage}>
-                {profile.name}營養師，歡迎回來！
+                <div className={basic.title}>服務狀況</div>
+                <div className={basic.content}>
+                  <div className={basic.serving}>
+                    <div className={basic.subtitle}>
+                      目前服務人數：
+                      <span>
+                        {users && users.length > 0 ? users.length : 0}
+                      </span>
+                      人
+                    </div>
+                    <div>
+                      {users && users.length > 0 ? (
+                        users.map((u) => (
+                          <div className={basic.each}>
+                            <div>
+                              {u.name} {u.gender === "男" ? "先生" : "小姐"}
+                            </div>
+                            <div>結束日期：{u.endDate}</div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className={basic.each}>暫無</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className={basic.pendingService}>
+                    <div className={basic.subtitle}>尚未進行的服務</div>
+                    <div>
+                      {pending ? (
+                        pending.length > 0 ? (
+                          pending.map((p) => (
+                            <div className={basic.each}>
+                              <div>
+                                {p.customerName}{" "}
+                                {p.customerGender === "男" ? "先生" : "小姐"}
+                              </div>
+                              <div>
+                                <div>開始日期：{p.startDate}</div>
+                                <div>結束日期：{p.endDate}</div>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className={basic.each}>暫無</div>
+                        )
+                      ) : (
+                        <div className={basic.each}>loading</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </Route>
             <Route exact path={`/dietitian/:dID/profile`}>
@@ -284,33 +600,12 @@ function Dietitian() {
             <Route exact path={`/dietitian/:dID/findCustomers`}>
               <GetPublication />
             </Route>
-
-            <Route exact path={`/dietitian/:dID/customers`}>
-              <div
-                className={basic.mobileCustomerList}
-                style={{ display: display }}
-              >
-                {users.map((c, index) => (
-                  <li
-                    key={index}
-                    className={c.id}
-                    onClick={getSelectedCustomer}
-                  >
-                    <Link
-                      to={`/dietitian/${c.dietitian}/customer/${c.id}`}
-                      className={c.id}
-                    >
-                      {c.name}
-                    </Link>
-                  </li>
-                ))}
-              </div>
-            </Route>
             <Route exact path={`/dietitian/:dID/inviteMe`}>
               <div>
                 <InvitedList
                   invitedList={invitedList}
                   setInvitedList={setInvitedList}
+                  setPending={setPending}
                 />
               </div>
             </Route>
@@ -322,72 +617,84 @@ function Dietitian() {
                 customerID ? customerID : selectedID
               }`}
             >
-              <Router>
-                <div className={style["customer-data"]}>
-                  <div>
-                    <Link
-                      className={style["customer-name"]}
-                      to={`/dietitian/${dietitianID}/customer/${
-                        customerID ? customerID : selectedID
-                      }`}
-                    >
-                      {users && customerID
-                        ? users.filter((e) => e.id === customerID)[0].name
-                        : ""}
-                    </Link>
-                  </div>
-                  <div className={style["customer-dataSelect"]}>
-                    <Link
-                      className={style["link-select"]}
-                      to={`/dietitian/${dietitianID}/customer/${
-                        customerID ? customerID : selectedID
-                      }/profile`}
-                    >
-                      基本資料
-                    </Link>
-                    <Link
-                      className={style["link-select"]}
-                      to={`/dietitian/${dietitianID}/customer/${
-                        customerID ? customerID : selectedID
-                      }/dietary`}
-                    >
-                      飲食記錄
-                    </Link>
-                    <Link
-                      className={style["link-select"]}
-                      to={`/dietitian/${dietitianID}/customer/${
-                        customerID ? customerID : selectedID
-                      }/target`}
-                    >
-                      目標設定
-                    </Link>
-                  </div>
+              {/* <Router> */}
+              <div className={style["customer-data"]}>
+                {/* <div>
+                  <Link
+                    className={style["customer-name"]}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }`}
+                  >
+                    {users.length > 0 && customerID
+                      ? users.filter((e) => e.id === customerID)[0].name
+                      : ""}
+                  </Link>
+                </div> */}
+                <div className={style["customer-dataSelect"]}>
+                  <Link
+                    className={style["link-select"]}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }/profile`}
+                  >
+                    {users.length > 0 && customerID
+                      ? users.filter((e) => e.id === customerID)[0].name
+                      : ""}
+                  </Link>
+                  <Link
+                    className={style["link-select"]}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }/dietary`}
+                  >
+                    飲食記錄
+                  </Link>
+                  <Link
+                    className={style["link-select"]}
+                    to={`/dietitian/${dietitianID}/customer/${
+                      customerID ? customerID : selectedID
+                    }/target`}
+                  >
+                    目標設定
+                  </Link>
                 </div>
-                <Switch>
-                  <Route exact path={`/dietitian/:dID/customer/:cID/`}>
+              </div>
+              <Switch>
+                {/* <Route exact path={`/dietitian/:dID/customer/:cID/`}></Route> */}
+                <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
+                  <>
                     <div className={style["service-time"]}>
-                      服務時間：{date.start ? date.start : ""}~
-                      {date.end ? date.end : ""}
+                      <div>
+                        服務時間<span>：</span>
+                      </div>
+                      <div>
+                        {date.start ? date.start : ""}~
+                        {date.end ? date.end : ""}
+                      </div>
                     </div>
-                  </Route>
-                  <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
                     <div
                       id="customer-profile"
                       className={customer["customer-profile"]}
                     >
                       <div className={customer["profile-data"]}>
-                        <CusotmerProfile props={users[0]} input={input} />
+                        <CustomerProfile
+                          props={props}
+                          // id={selectedID}
+                          input={input}
+                        />
                       </div>
                     </div>
-                  </Route>
-                  <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
-                    <DietrayRecord />
-                  </Route>
-                  <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
-                    <DietitianTarget />
-                  </Route>
-                </Switch>
-              </Router>
+                  </>
+                </Route>
+                <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
+                  <DietrayRecord />
+                </Route>
+                <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
+                  <DietitianTarget />
+                </Route>
+              </Switch>
+              {/* </Router> */}
             </Route>
           </Switch>
         </main>

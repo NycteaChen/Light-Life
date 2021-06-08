@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import ReserveForm from "../Reverse/ReserveForm.js";
 import style from "../../../style/findDietitian.module.scss";
 
-function DietitianData({ props, setIsChecked, setReserve, profile }) {
+function DietitianData({ props, setIsChecked, setReserve, reserve }) {
   const bindCloseHandler = () => {
     setIsChecked(false);
   };
   return (
-    <div className={style["dietitian-details"]}>
+    <div className={`${style["dietitian-details"]} animated animate__fadeIn`}>
       <div>
         <i
           className={`${style.close} fa fa-times`}
@@ -16,20 +16,26 @@ function DietitianData({ props, setIsChecked, setReserve, profile }) {
         ></i>
       </div>
       <div>
-        <div className={style.name}>{props.name}營養師</div>
+        <div className={style.name}>{props.name || ""}營養師</div>
         <div className={style.img}>
           <img src={props.image} alt="dietitian" />
         </div>
       </div>
       <div className={style.content}>
-        <div className={style.gender}>
-          性別：<span>{props.gender}</span>
-        </div>
-        <div className={style.education}>
-          <div>最高學歷：{props.education.school}</div>
-          <div>
-            <span>{props.education.department} </span>
-            <span>{props.education.degree}</span>
+        <div className={style.flexbox}>
+          <div className={style.gender}>
+            <span className={style.title}>性別</span>　
+            <span>{props.gender}</span>
+          </div>
+          <div className={style.education}>
+            <div>
+              <span className={style.title}>學歷</span>　
+              {props.education.school}
+            </div>
+            <div>
+              <span>{props.education.department}　</span>
+              <span>{props.education.degree}</span>
+            </div>
           </div>
         </div>
         <>
@@ -38,13 +44,13 @@ function DietitianData({ props, setIsChecked, setReserve, profile }) {
           props.skills.threeHigh ||
           props.skills.bloodSugar ? (
             <div className={style.skills}>
-              專長：
-              <span>
-                {props.skills.weightControl ? "體重管理　" : ""}
-                {props.skills.sportNT ? "運動營養　" : ""}
-                {props.skills.threeHigh ? "三高控制　" : ""}
-                {props.skills.bloodSugar ? "血糖控制" : ""}
-              </span>
+              <div className={style.title}>專長　</div>
+              <div>
+                {props.skills.weightControl ? <span>體重管理　</span> : ""}
+                {props.skills.sportNT ? <span>運動營養　</span> : ""}
+                {props.skills.threeHigh ? <span>三高控制　</span> : ""}
+                {props.skills.bloodSugar ? <span>血糖控制　</span> : ""}
+              </div>
             </div>
           ) : (
             ""
@@ -52,7 +58,7 @@ function DietitianData({ props, setIsChecked, setReserve, profile }) {
         </>
         {props.other ? (
           <div className={style.other}>
-            <div>其他</div>
+            <div className={style.title}>其他</div>
             <div>{props.other}</div>
           </div>
         ) : (
@@ -62,8 +68,8 @@ function DietitianData({ props, setIsChecked, setReserve, profile }) {
       <ReserveForm
         props={props}
         setReserve={setReserve}
-        profile={profile}
         setIsChecked={setIsChecked}
+        reserve={reserve}
       />
     </div>
   );

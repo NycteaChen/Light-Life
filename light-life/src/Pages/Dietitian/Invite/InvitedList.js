@@ -4,9 +4,8 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import ShowInviterData from "./ShowInviterData.js";
 import style from "../../../style/whoInvite.module.scss";
-import { setMilliseconds } from "date-fns";
 
-function InvitedList({ invitedList, setInvitedList }) {
+function InvitedList({ invitedList, setInvitedList, setPending }) {
   const [isChecked, setIsChecked] = useState(false);
   const [buttonIndex, setButtonIndex] = useState();
   const { dID } = useParams();
@@ -15,12 +14,13 @@ function InvitedList({ invitedList, setInvitedList }) {
     if (e.target.id) {
       setButtonIndex(e.target.id);
       setIsChecked(true);
+      console.log("test");
     } else {
       setIsChecked(false);
+      console.log("test");
     }
   };
 
-  console.log(invitedList);
   return (
     <div className={style.whoInvite}>
       {invitedList.length > 0 ? (
@@ -31,24 +31,33 @@ function InvitedList({ invitedList, setInvitedList }) {
         <div className={style["invite-number"]}>目前沒有預約喔</div>
       )}
       <div className={style.inviters}>
-        {invitedList.map((i, index) => (
-          <div key={index} className={style.inviter}>
-            <div className={style["invite-message"]}>
-              <div className={style["inviter-name"]}>
-                <span>
-                  {i.inviterName} {i.inviterGender === "男" ? "先生" : "小姐"}
-                </span>
-                指定您的服務
+        {invitedList.length > 0 ? (
+          invitedList.map((i, index) => (
+            <div key={index} className={style.inviter}>
+              <div className={style["invite-message"]}>
+                <div className={style["inviter-name"]}>
+                  <span>
+                    {i.inviterName} {i.inviterGender === "男" ? "先生" : "小姐"}
+                  </span>
+                  指定您的服務
+                </div>
+                <div className={style.button}>
+                  <button onClick={checkInviter} id={index}>
+                    查看詳情
+                  </button>
+                </div>
               </div>
-              <button onClick={checkInviter} id={index}>
-                查看詳情
-              </button>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div>沒有預約</div>
+        )}
       </div>
       {isChecked && invitedList.length > 0 ? (
-        <div className={style["invite-data"]} style={{ display: "block" }}>
+        <div
+          className={`${style["invite-data"]} animated animate__fadeIn`}
+          style={{ display: "block" }}
+        >
           <i
             className="fa fa-times"
             aria-hidden="true"
@@ -59,6 +68,7 @@ function InvitedList({ invitedList, setInvitedList }) {
             invitedList={invitedList}
             setInvitedList={setInvitedList}
             setIsChecked={setIsChecked}
+            setPending={setPending}
           />
         </div>
       ) : (

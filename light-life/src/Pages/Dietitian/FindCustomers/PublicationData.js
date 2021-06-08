@@ -8,6 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import noImage from "../../../images/noimage.png";
 import firebase from "firebase/app";
 import style from "../../../style/findCustomers.module.scss";
@@ -49,38 +50,55 @@ function PublicationData({ publish, display, setDisplay }) {
   };
 
   const sendMessageHandler = () => {
-    console.log(invite);
     if (invite && invite.message) {
       if (publish.whoInvite) {
-        firebase
-          .firestore()
-          .collection("publish")
-          .doc(publish.publishID)
-          .set(
-            {
-              whoInvite: [...publish.whoInvite, invite],
-            },
-            { merge: true }
-          )
-          .then(() => {
-            alert("邀請成功!");
-            window.location.reload();
-          });
+        Swal.fire({
+          text: "確定送出嗎?",
+          confirmButtonText: "確定",
+          cancelButtonText: "取消",
+          confirmButtonColor: "#1e4d4e",
+          showCancelButton: true,
+        }).then((res) => {
+          if (res.isConfirmed) {
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(publish.publishID)
+              .set(
+                {
+                  whoInvite: [...publish.whoInvite, invite],
+                },
+                { merge: true }
+              )
+              .then(() => {
+                window.location.reload();
+              });
+          }
+        });
       } else {
-        firebase
-          .firestore()
-          .collection("publish")
-          .doc(publish.publishID)
-          .set(
-            {
-              whoInvite: [invite],
-            },
-            { merge: true }
-          )
-          .then(() => {
-            alert("邀請成功!");
-            window.location.reload();
-          });
+        Swal.fire({
+          text: "確定送出嗎?",
+          confirmButtonText: "確定",
+          cancelButtonText: "取消",
+          confirmButtonColor: "#1e4d4e",
+          showCancelButton: true,
+        }).then((res) => {
+          if (res.isConfirmed) {
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(publish.publishID)
+              .set(
+                {
+                  whoInvite: [invite],
+                },
+                { merge: true }
+              )
+              .then(() => {
+                window.location.reload();
+              });
+          }
+        });
       }
     } else {
       alert("請填寫邀請訊息!");
@@ -91,7 +109,10 @@ function PublicationData({ publish, display, setDisplay }) {
     setDisplay("none");
   };
   return (
-    <div className={style.publicationForm} style={{ display: display }}>
+    <div
+      className={`${style.publicationForm} animated animate__fadeIn`}
+      style={{ display: display }}
+    >
       <div>
         <i
           className={`${style.close} fa fa-times`}
@@ -102,7 +123,7 @@ function PublicationData({ publish, display, setDisplay }) {
 
       <div className={style.flexbox}>
         <img id="profile-img" src={profile.image || noImage} alt="customer" />
-        <div>
+        <div className={style.basicData}>
           <div className={style["data-item"]}>
             <div className={style.title}>姓名</div>
             <div id="name">{profile.name}</div>
@@ -157,30 +178,16 @@ function PublicationData({ publish, display, setDisplay }) {
       </div>
 
       <div className={style.message}>
-        <h3>需求描述</h3>
-        <div style={{ maxHeight: "5rem", overflow: "auto" }}>
-          {publish.content}
-        </div>
+        <h5>需求描述</h5>
+        <div>{publish.content}</div>
       </div>
 
       <div className={style.message}>
-        <h3>邀請訊息</h3>
-
+        <h5>邀請訊息</h5>
         {publish.whoInvite &&
         publish.whoInvite.find((e) => e.dietitianID === dID) ? (
           publish.whoInvite.map((e) =>
-            e.dietitianID === dID ? (
-              <div
-                style={{
-                  maxHeight: "5rem",
-                  overflow: "auto",
-                }}
-              >
-                {e.message}
-              </div>
-            ) : (
-              ""
-            )
+            e.dietitianID === dID ? <div>{e.message}</div> : ""
           )
         ) : (
           <>

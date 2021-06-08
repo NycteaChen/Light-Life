@@ -1,36 +1,30 @@
-.edit-Dprofile {
-  font-size: 12px;
-  padding: 20px 0;
+.dietitian-profile {
   text-align: center;
-  //   border: 2px solid #016126;
-  //   background-color: white;
-  //   box-shadow: 0 1px 1px black;
-  //   border-radius: 10px;
-
+  padding: 15px 0;
+  margin: auto;
+  border-radius: 5px;
+  font-size: 14px;
+  input,
+  textarea {
+    border-radius: 5px;
+    border: 1px solid grey;
+    font-size: 14px;
+  }
+  .title {
+    font-weight: bold;
+  }
   @media (min-width: 520px) {
-    width: 450px;
-    margin: auto;
+    width: 480px;
+    margin: 20px auto;
   }
   @media (min-width: 1024px) {
     text-align: left;
-    margin-left: 300px;
+    width: 580px;
+    margin-left: 260px;
+    margin-top: 30px;
     padding: 0;
     font-size: 16px;
     .basic-profile {
-      .uploadImg {
-        display: block;
-        cursor: pointer;
-        width: 100px;
-        margin: auto;
-        margin-top: 10px;
-        border-radius: 5px;
-        padding: 2px 5px;
-        border: 1px solid black;
-        background-color: #fdf8ee;
-        input[type="file"] {
-          display: none;
-        }
-      }
       .flexbox {
         display: flex;
         align-items: center;
@@ -44,123 +38,105 @@
       }
     }
   }
-  .basic-profile {
-    .img {
-      div {
-        margin: 0 auto 10px;
-      }
-      img {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-      }
-      .uploadImg {
-        display: block;
-        cursor: pointer;
-        width: 100px;
-        margin: 10px auto;
-        border-radius: 5px;
-        padding: 2px 5px;
-        border: 1px solid black;
-        background-color: #fdf8ee;
-        text-align: center;
-        input[type="file"] {
-          display: none;
+  .edit-mode {
+    background-color: #ffffff;
+    box-shadow: 0 2px 3px #3f4442;
+    border: 1px solid #515a5670;
+    padding: 15px 5px 30px;
+    .basic-profile {
+      .img {
+        position: relative;
+        margin-bottom: 20px;
+        img {
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          object-fit: cover;
         }
-      }
-      @media (min-width: 1024px) {
-        & {
-          div {
-            margin: 10px 20px;
-            margin-left: 35px;
-            font-size: 12px;
-            white-space: nowrap;
+        .uploadImg {
+          display: block;
+          cursor: pointer;
+          // width: 150px;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          position: absolute;
+          left: 100px;
+          right: 0;
+          margin: auto;
+          bottom: 5px;
+          padding: 2px 5px;
+          font-size: 16px;
+          background-color: #9ebeabc9;
+          &:hover {
+            background-color: #9ebeab;
           }
+          input[type="file"] {
+            display: none;
+          }
+          i {
+            color: #f1fffc;
+          }
+        }
+        @media (min-width: 520px) {
           img {
-            margin-left: 48px;
+            width: 180px;
+            height: 180px;
           }
-          .uploadImg {
-            margin-left: 38px;
-            width: 100px;
-            margin-top: 10px;
-          }
-        }
-      }
-    }
-
-    // input[type="text"]:focus {
-    //   outline: none;
-    //   &:invalid {
-    //     border: 1px solid red !important;
-    //   }
-    // }
-
-    div {
-      .determined {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        div {
-          margin-right: auto;
-          margin-bottom: 10px;
-        }
-        .title {
-          margin-left: auto;
-          margin-right: 20px;
-        }
-        @media (min-width: 520px) {
-          display: flex;
         }
         @media (min-width: 1024px) {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-      .basic {
-        margin-bottom: 10px;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        div {
-          margin-right: auto;
-          margin-top: 10px;
-        }
-        label {
-          margin: 10px 20px 0 auto;
-          &:first-of-type {
-            margin-top: 2px;
-          }
-        }
-        input[type="text"] {
-          width: 90%;
-          max-width: 150px;
-        }
-
-        input[type="radio"] {
-          vertical-align: middle;
-          margin: auto 5px 1px 3px;
-        }
-        @media (min-width: 520px) {
           & {
-            display: flex;
-            margin: auto;
-            justify-content: center;
-            label {
-              margin: 0px 15px 0 39px;
-            }
-
-            #name {
-              width: 139px;
-            }
             div {
-              margin-top: 0;
+              margin: 10px 20px;
+              margin-left: 35px;
+              font-size: 12px;
+              white-space: nowrap;
+            }
+            img {
+              margin-left: 48px;
+            }
+            .uploadImg {
+              bottom: 15px;
+              left: 150px;
             }
           }
         }
-        @media (min-width: 1024px) {
+      }
+
+      // input[type="text"]:focus {
+      //   outline: none;
+      //   &:invalid {
+      //     border: 1px solid red !important;
+      //   }
+      // }
+
+      div {
+        .determined {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          #name {
-            margin-top: 3px;
+          div {
+            margin-right: auto;
+            margin-bottom: 10px;
           }
+          .title {
+            margin-left: auto;
+            margin-right: 20px;
+          }
+
+          @media (min-width: 520px) {
+            display: flex;
+          }
+          @media (min-width: 1024px) {
+            margin-left: 74px;
+            margin-top: 66px;
+            display: grid;
+            grid-template-columns: 55px 210px;
+          }
+        }
+        .basic {
+          margin-bottom: 10px;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
           div {
             margin-right: auto;
             margin-top: 10px;
@@ -171,181 +147,513 @@
               margin-top: 2px;
             }
           }
+          input[type="text"] {
+            width: 90%;
+            max-width: 150px;
+          }
+
           input[type="radio"] {
             vertical-align: middle;
             margin: auto 5px 1px 3px;
           }
+          @media (min-width: 520px) {
+            & {
+              display: flex;
+              margin: auto;
+              align-items: center;
+              justify-content: center;
+              label {
+                margin: 0px 15px 0 39px;
+              }
+
+              #name {
+                width: 140px;
+              }
+              div {
+                margin-top: 0;
+              }
+            }
+          }
+          @media (min-width: 1024px) {
+            display: grid;
+            width: 200px;
+            grid-template-columns: repeat(2, 1fr);
+            #name {
+              margin-top: 3px;
+            }
+            div {
+              margin-right: auto;
+              margin-top: 10px;
+            }
+            label {
+              margin: 10px 20px 0 auto;
+              &:first-of-type {
+                margin-top: 2px;
+              }
+            }
+            input[type="radio"] {
+              vertical-align: middle;
+              margin: auto 5px 1px 3px;
+            }
+          }
         }
-      }
-      .education {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        margin-bottom: 10px;
-        #highestDegree {
-          margin-left: auto;
-          margin-right: 20px;
+        .education {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          margin-bottom: 10px;
+          #highestDegree {
+            margin-left: auto;
+            margin-right: 20px;
+          }
+          .edu-select {
+            & > input {
+              display: block;
+              margin: -2px 0 10px 0;
+              width: 90%;
+              max-width: 150px;
+            }
+            & > div {
+              text-align: left;
+              label:last-of-type {
+                display: block;
+                @media (min-width: 280px) {
+                  display: inline-block;
+                }
+              }
+              input {
+                width: 20px;
+                vertical-align: middle;
+                margin: auto 1px 1px -2px;
+              }
+            }
+          }
+
+          @media (min-width: 520px) {
+            & {
+              display: flex;
+              margin-top: 10px;
+              #highestDegree {
+                margin-left: 38px;
+                margin-right: 17px;
+              }
+              .edu-select {
+                & > input {
+                  display: inline-block;
+                  width: 140px;
+                  & + input {
+                    margin-left: 35px;
+                  }
+                }
+                div {
+                  label {
+                    width: 60px;
+                  }
+                }
+              }
+            }
+          }
+          @media (min-width: 1024px) {
+            & {
+              margin-left: 20px;
+              #highestDegree {
+                margin-top: 2px;
+              }
+              .edu-select {
+                & > input {
+                  width: 150px;
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
         }
-        .edu-select {
-          & > input {
-            display: block;
-            margin: -2px 0 10px 0;
+        .skills {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          margin-bottom: 10px;
+          .skill {
+            display: inline-block;
+            margin-left: auto;
+            margin-right: 20px;
+          }
+          .select-skill {
+            margin-right: auto;
+            label {
+              display: block;
+              margin-bottom: 5px;
+              input {
+                margin-right: 10px;
+              }
+            }
+          }
+          @media (min-width: 520px) {
+            & {
+              display: flex;
+              .skill {
+                display: block;
+                margin-left: 38px;
+                margin-right: 12px;
+              }
+              .select-skill {
+                label {
+                  display: inline-block;
+                  input {
+                    vertical-align: middle;
+                    margin: auto 8px 1px 8px;
+                  }
+                }
+              }
+            }
+          }
+          @media (min-width: 1024px) {
+            & {
+              margin-left: 10px;
+              .skill {
+                margin-left: 48px;
+              }
+              .select-skill {
+                margin-left: -5px;
+                label {
+                  display: inline-block;
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
+        }
+        .other {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          // margin: auto 10px;
+          .title {
+            text-align: right;
+            margin-right: 20px;
+          }
+          textarea {
+            padding: 5px;
+            height: 4rem;
             width: 90%;
             max-width: 150px;
           }
-          & > div {
-            text-align: left;
-            label:last-of-type {
-              display: block;
-              @media (min-width: 280px) {
-                display: inline-block;
-              }
-            }
-            input {
-              width: 20px;
-              vertical-align: middle;
-              margin: auto 1px 1px -2px;
-            }
-          }
-        }
-
-        @media (min-width: 520px) {
-          & {
-            display: flex;
-            margin-top: 10px;
-            #highestDegree {
-              margin-left: 15px;
-              margin-right: 15px;
-            }
-            .edu-select {
-              & > input {
-                display: inline-block;
-                width: 140px;
-                & + input {
-                  margin-left: 35px;
-                }
-              }
-            }
-          }
-        }
-        @media (min-width: 1024px) {
-          & {
-            width: 750px;
-            #highestDegree {
-              margin-top: 2px;
-            }
-            .edu-select {
+          @media (min-width: 520px) {
+            & {
               display: flex;
-              & > input {
-                width: 150px;
-                margin-top: 1px;
-                margin-right: 10px;
-                & + input {
-                  margin-left: 0px;
-                }
+              text-align: left;
+              // margin-left: 35px;
+              .title {
+                margin-left: 38px;
+                margin-right: 17px;
               }
-              div {
-                display: flex;
-                label {
-                  width: 80px;
-                }
+              textarea {
+                max-width: 350px;
               }
+            }
+          }
+          @media (min-width: 1024px) {
+            & {
+              margin-left: 20px;
             }
           }
         }
       }
-      .skills {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        margin-bottom: 10px;
-        .skill {
-          display: inline-block;
-          margin-left: auto;
-          margin-right: 20px;
-        }
-        .select-skill {
-          margin-right: auto;
-          label {
-            display: block;
-            margin-bottom: 5px;
-            input {
-              margin-right: 10px;
-            }
-          }
+    }
+    .buttons {
+      text-align: right;
+      // &#save {
+      //   margin-right: 5px;
+      // }
+      // &#cancel {
+      //   margin-left: 5px;
+      // }
+    }
+  }
+}
+
+.dietitian-profile {
+  .profile-data {
+    background-color: #edf5f0b2;
+    box-shadow: 0 1px 3px #515a56;
+    border: 1px solid #515a5670;
+    padding: 15px 5px 30px;
+    .basic-profile {
+      .img {
+        margin-bottom: 20px;
+        img {
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          object-fit: cover;
         }
         @media (min-width: 520px) {
-          & {
-            display: flex;
-            .skill {
-              display: block;
-              margin-left: 35px;
-              margin-right: 18px;
-            }
-            .select-skill {
-              label {
-                display: inline-block;
-                input {
-                  vertical-align: middle;
-                  margin: auto 5px 1px 3px;
-                }
-              }
-            }
+          img {
+            width: 180px;
+            height: 180px;
           }
         }
         @media (min-width: 1024px) {
           & {
-            width: 750px;
-            .skill {
+            div {
+              margin: 10px 20px;
+              margin-left: 35px;
+              font-size: 12px;
+              white-space: nowrap;
+            }
+            img {
               margin-left: 48px;
             }
-            .select-skill {
-              margin-left: -5px;
+          }
+        }
+      }
+      div {
+        .determined {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          div {
+            margin-right: auto;
+            margin-bottom: 10px;
+          }
+          .title {
+            margin-left: auto;
+            margin-right: 20px;
+          }
+          @media (min-width: 520px) {
+            display: flex;
+          }
+          @media (min-width: 1024px) {
+            & {
+              margin-top: 85px;
+              margin-left: 74px;
+              display: grid;
+              grid-template-columns: 55px 210px;
+            }
+          }
+        }
+        .basic {
+          margin-bottom: 10px;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          div {
+            margin-right: auto;
+            &#name {
+              padding-top: 2px;
+            }
+            &.gender {
+              padding-top: 10px;
+            }
+          }
+          label {
+            margin: 10px 20px 0 auto;
+            &:first-of-type {
+              margin-top: 2px;
+            }
+          }
+
+          @media (min-width: 520px) {
+            & {
+              text-align: left;
+              display: flex;
+              align-items: center;
               label {
-                display: inline-block;
-                margin-right: 10px;
+                margin: 0px 15px 0 39px;
+              }
+              div {
+                margin-right: 0;
+                margin-top: 0;
+                &#name {
+                  width: 140px;
+                }
+                &.gender {
+                  padding-top: 0;
+                }
+              }
+            }
+          }
+          @media (min-width: 1024px) {
+            display: grid;
+            width: 270px;
+            grid-template-columns: repeat(2, 1fr);
+            #name {
+              margin-top: 3px;
+            }
+            div {
+              margin-right: auto;
+              margin-top: 10px;
+            }
+            label {
+              margin: 10px 20px 0 auto;
+              &:first-of-type {
+                margin-top: 2px;
               }
             }
           }
         }
-      }
-      .other {
-        margin: auto 10px;
-        textarea {
-          padding: 5px;
-          margin-top: 5px;
-          width: 95%;
-          max-width: 340px;
+        .education {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          margin-bottom: 10px;
+          #highestDegree {
+            margin-left: auto;
+            margin-right: 20px;
+          }
+          .edu-select {
+            & > input {
+              display: block;
+              margin: -2px 0 10px 0;
+              width: 90%;
+              max-width: 150px;
+            }
+            & > div {
+              text-align: left;
+              label:last-of-type {
+                display: block;
+                @media (min-width: 280px) {
+                  display: inline-block;
+                }
+              }
+              input {
+                width: 20px;
+                vertical-align: middle;
+                margin: auto 1px 1px -2px;
+              }
+            }
+          }
+
+          @media (min-width: 520px) {
+            & {
+              display: flex;
+              margin-top: 10px;
+              margin-bottom: 5px;
+              #highestDegree {
+                margin-left: 38px;
+                margin-right: 15px;
+              }
+              .edu-select {
+                text-align: left;
+                display: flex;
+                & > div:last-of-type {
+                  margin-left: 20px;
+                }
+              }
+            }
+          }
+          @media (min-width: 1024px) {
+            & {
+              margin-left: 20px;
+              margin-top: 22px;
+              #highestDegree {
+                margin-top: 0;
+              }
+              .edu-select {
+                display: flex;
+                & > input {
+                  width: 150px;
+                  margin-top: 1px;
+                  margin-right: 10px;
+                  & + input {
+                    margin-left: 0px;
+                  }
+                }
+                div {
+                  display: flex;
+                  label {
+                    width: 80px;
+                  }
+                }
+              }
+            }
+          }
         }
-        @media (min-width: 520px) {
-          & {
+        .skills {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          margin: 0 auto 10px;
+          .skill {
+            text-align: right;
+            margin-right: 20px;
+          }
+          .select-skill {
+            margin-right: auto;
+            display: grid;
+            @media (min-width: 320px) {
+              grid-template-columns: repeat(2, 1fr);
+            }
+            @media (min-width: 440px) {
+              grid-template-columns: repeat(3, 1fr);
+            }
+          }
+          @media (min-width: 520px) {
+            & {
+              margin-bottom: 5px;
+              display: flex;
+              .skill {
+                display: block;
+                margin-left: 38px;
+                margin-right: 15px;
+              }
+              .select-skill {
+                label {
+                  display: inline-block;
+                  input {
+                    vertical-align: middle;
+                    margin: auto 5px 1px 3px;
+                  }
+                }
+              }
+            }
+          }
+          @media (min-width: 1024px) {
+            & {
+              margin-left: 10px;
+              .skill {
+                margin-left: 48px;
+              }
+              .select-skill {
+                margin-left: -5px;
+                label {
+                  display: inline-block;
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
+        }
+        .other {
+          // margin: auto 10px;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          .title {
+            text-align: right;
+            margin-right: 20px;
+          }
+          .title + div {
             text-align: left;
-            margin-left: 35px;
-            textarea {
-              max-width: unset;
+            height: 4rem;
+            overflow: auto;
+            width: 90%;
+            max-width: 150px;
+          }
+          @media (min-width: 520px) {
+            & {
+              display: flex;
+              text-align: left;
+              margin-left: 38px;
+              .title + div {
+                max-width: 350px;
+              }
             }
           }
-        }
-        @media (min-width: 1024px) {
-          & {
-            width: 600px;
-            margin-left: 48px;
-            p {
-              font-size: 12px;
+          @media (min-width: 1024px) {
+            & {
+              margin-left: 58px;
             }
           }
         }
       }
-      button {
-        margin-top: 10px;
-        width: 80px;
-        height: 30px;
-        border: none;
-        border-radius: 5px;
-        @media (min-width: 1024px) {
-          & {
-            margin-left: 300px;
-          }
-        }
-      }
+    }
+    .button {
+      text-align: right;
+      position: relative;
+      z-index: 5;
     }
   }
 }

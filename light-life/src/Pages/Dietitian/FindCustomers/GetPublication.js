@@ -8,8 +8,10 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import PublicationData from "./PublicationData.js";
 import style from "../../../style/findCustomers.module.scss";
+import "animate.css/animate.min.css";
 
 function GetPublication() {
   const [publish, setPublish] = useState(null);
@@ -26,7 +28,6 @@ function GetPublication() {
       .then((docs) => {
         const publishArray = [];
         if (!docs.empty) {
-          console.log(docs);
           docs.forEach((doc) => {
             publishArray.push(doc.data());
           });
@@ -52,52 +53,63 @@ function GetPublication() {
         setPublish(res);
       });
   }, []);
-  console.log(publish);
   const checkDetailsHandler = (e) => {
     setIdx(e.target.id);
     setDisplay("block");
   };
   const cancelInviteHandler = (e) => {
     const { publishID, whoInvite } = publish[+e.target.id];
-    firebase
-      .firestore()
-      .collection("publish")
-      .doc(publishID)
-      .set(
-        {
-          whoInvite: [...whoInvite.filter((i) => i.dietitianID !== dID)],
-        },
-        { merge: true }
-      )
-      .then(() => {
-        alert("取消成功!");
-        window.location.reload();
-      });
+    Swal.fire({
+      text: "確定取消嗎?",
+      confirmButtonText: "確定",
+      cancelButtonText: "返回",
+      confirmButtonColor: "#1e4d4e",
+      showCancelButton: true,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        firebase
+          .firestore()
+          .collection("publish")
+          .doc(publishID)
+          .set(
+            {
+              whoInvite: [...whoInvite.filter((i) => i.dietitianID !== dID)],
+            },
+            { merge: true }
+          )
+          .then(() => {
+            window.location.reload();
+          });
+      }
+    });
   };
 
   return (
     <>
       <div className={style.publicationData}>
-        <h3>刊登中</h3>
-
-        {publish ? (
-          publish.find(
-            (i) =>
-              !i.whoInvite ||
-              (i.whoInvite && !i.whoInvite.find((d) => d.dietitianID === dID))
-          ) ? (
-            publish.map((p, pubIndex) =>
-              (!p.whoInvite ||
-                (p.whoInvite &&
-                  !p.whoInvite.find((e) => e.dietitianID === dID))) &&
-              p.status === "0" ? (
-                <>
-                  <div className={style.publicationList} key={pubIndex}>
-                    <div className={style.publication}>
+        <h5>刊登中</h5>
+        <div className={style.publicationList}>
+          {publish ? (
+            publish.find(
+              (i) =>
+                i.status === "0" &&
+                (!i.whoInvite ||
+                  (i.whoInvite &&
+                    !i.whoInvite.find((d) => d.dietitianID === dID)))
+            ) ? (
+              publish.map((p, pubIndex) =>
+                (!p.whoInvite ||
+                  (p.whoInvite &&
+                    !p.whoInvite.find((e) => e.dietitianID === dID))) &&
+                p.status === "0" ? (
+                  <>
+                    <div className={style.publication} key={pubIndex}>
                       <div className={style.col}>
                         <div className={style.flexbox}>
                           <div className={style.flexbox}>
-                            <div>預約時間</div>
+                            <div>
+                              預約時間<span>：</span>
+                            </div>
                             <div>
                               {p.startDate}~{p.endDate}
                             </div>
@@ -108,36 +120,39 @@ function GetPublication() {
                         </div>
                         <div className={style.subject}>主旨：{p.subject}</div>
                       </div>
-                      <button id={pubIndex} onClick={checkDetailsHandler}>
-                        查看詳情
-                      </button>
+                      <div className={style.button}>
+                        <button id={pubIndex} onClick={checkDetailsHandler}>
+                          查看詳情
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  {+idx == pubIndex ? (
-                    <PublicationData
-                      key={p.name}
-                      publish={p}
-                      display={display}
-                      setDisplay={setDisplay}
-                    />
-                  ) : (
-                    ""
-                  )}
-                </>
-              ) : (
-                ""
+
+                    {+idx == pubIndex ? (
+                      <PublicationData
+                        key={p.name}
+                        publish={p}
+                        display={display}
+                        setDisplay={setDisplay}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </>
+                ) : (
+                  ""
+                )
               )
+            ) : (
+              <div>尚未有刊登</div>
             )
           ) : (
-            <div>尚未有刊登</div>
-          )
-        ) : (
-          <div>loading</div>
-        )}
+            <div>loading</div>
+          )}
+        </div>{" "}
       </div>
 
       <div className={style["inviting-status"]}>
-        <h3>邀請狀態</h3>
+        <h5>邀請狀態</h5>
         <div className={style["inviting-list"]}>
           {publish ? (
             publish.find(
@@ -182,12 +197,12 @@ function GetPublication() {
                                   >
                                     查看詳情
                                   </button>
-                                  <button className={style.cancel}>成功</button>
+                                  <span className={style.success}>成功</span>
                                 </>
                               ) : p.whoInvite[index].status === "2" ? (
-                                <button className={style.cancel}>婉拒</button>
+                                <span className={style.failed}>婉拒</span>
                               ) : p.whoInvite[index].status === "3" ? (
-                                <button className={style.cancel}>逾期</button>
+                                <span className={style.failed}>逾期</span>
                               ) : (
                                 ""
                               )}

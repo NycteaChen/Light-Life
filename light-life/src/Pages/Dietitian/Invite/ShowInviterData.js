@@ -6,7 +6,13 @@ import noImage from "../../../images/noimage.png";
 import style from "../../../style/whoInvite.module.scss";
 import { add } from "date-fns";
 
-function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
+function ShowInviterData({
+  idx,
+  invitedList,
+  setInvitedList,
+  setIsChecked,
+  setPending,
+}) {
   const props = invitedList[+idx];
   const [inviterData, setInviterData] = useState({});
   const [show, setShow] = useState("");
@@ -26,6 +32,7 @@ function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
   }, []);
   const inviteButtonHandler = (e) => {
     const { id } = e.target;
+    console.log(id);
     switch (id) {
       case "accept":
         firebase
@@ -47,6 +54,12 @@ function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
             customer: props.inviterID,
           })
           .then(() => {
+            setPending({
+              startDate: props.reserveStartDate,
+              endDate: props.reserveEndDate,
+              dietitian: dID,
+              customer: props.inviterID,
+            });
             firebase
               .firestore()
               .collection("reserve")
@@ -97,7 +110,7 @@ function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
   };
 
   return (
-    <div>
+    <>
       <div className={`${style.declineMessage} ${show}`}>
         <label>
           <div>婉拒訊息</div>
@@ -113,18 +126,17 @@ function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
 
       <div>
         <div className={style["reserve-time"]}>
-          預約服務時間：
-          <span>
+          <div>預約服務時間</div>
+          <div>
             {props.reserveStartDate}~{props.reserveEndDate}
-          </span>
+          </div>
         </div>
-        <h4 className={style["data-title"]}>客戶資料</h4>
         <div className={style["flexbox"]}>
           <img
             src={inviterData.image ? inviterData.image : noImage}
             alt="customer"
           />
-          <div>
+          <div className={style.basicData}>
             <div className={style["data-item"]}>
               <div className={style.title}>姓名</div>
               <div>{inviterData.name}</div>
@@ -170,18 +182,27 @@ function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
           </div>
         </div>
 
-        <div className={style.col}>
-          <div className={style.title}>其他</div>
+        <div className={style.flexcol}>
           <div>
-            <span>{inviterData.other}</span>
+            <div className={style["data-item"]}>
+              <div className={style.title}>運動習慣</div>
+              <div id="sport">{inviterData.sport}</div>
+            </div>
+          </div>
+          <div>
+            <div className={style["data-item"]}>
+              <div className={style.title}>其他</div>
+              <div id="other">{inviterData.other}</div>
+            </div>
           </div>
         </div>
+
         <div className={style.col}>
           <div className={style.title}>預約訊息</div>
           <div>{props.reserveMessage}</div>
         </div>
       </div>
-      <div className={style.choose}>
+      <div className={style.buttons}>
         <button
           onClick={inviteButtonHandler}
           id="accept"
@@ -197,7 +218,7 @@ function ShowInviterData({ idx, invitedList, setInvitedList, setIsChecked }) {
           婉拒
         </button>
       </div>
-    </div>
+    </>
   );
 }
 

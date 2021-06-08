@@ -1,0 +1,87 @@
+.mobileBottom {
+  position: fixed;
+  z-index: 1;
+  height: 50px;
+  bottom: 0;
+  width: 100%;
+  background: #e0fcee;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  .link {
+    font-size: 12px;
+    width: 50%;
+    text-align: center;
+    &:first-of-type {
+      border-right: 2px solid #407e64;
+    }
+    img {
+      width: 20px;
+      margin-right: 10px;
+    }
+
+    transition: opacity 0.3s;
+    &:hover {
+      opacity: 0.5;
+      color: unset;
+    }
+  }
+
+  @media (min-width: 520px) {
+    position: absolute;
+    height: 73px;
+    background: unset;
+    bottom: unset;
+    top: 0;
+    right: 0;
+    justify-content: flex-end;
+    width: 150px;
+    .link {
+      &:first-of-type {
+        border-right: unset;
+      }
+      font-size: 1rem;
+      display: inline-block;
+      margin-right: 20px;
+      width: unset;
+      text-align: center;
+      img {
+        width: 30px;
+      }
+      span {
+        display: none;
+      }
+    }
+    @media (min-width: 1024px) {
+      display: none;
+    }
+  }
+}
+
+#toTop {
+  display: inline-block;
+  position: fixed;
+  z-index: 5;
+  right: -5px;
+  bottom: 40px;
+  opacity: 0.7;
+  transition: all 0.5s;
+  transform: scale(0.6);
+  &:hover {
+    opacity: 1;
+    transform: scale(0.8);
+  }
+  &::before {
+    content: url("../images/monotone_arrow_next_right.svg");
+    width: 50px;
+    height: 50px;
+  }
+  @media (min-width: 520px) {
+    bottom: -5px;
+    right: 0px;
+  }
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
