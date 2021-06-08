@@ -346,7 +346,7 @@ function Publish({ reserve }) {
                       <span className={style.success}>成功</span>
                     </>
                   ) : o.status === "3" ? (
-                    <span className={style.expired}>已過期</span>
+                    <span className={style.expired}>逾期</span>
                   ) : (
                     ""
                   )}
