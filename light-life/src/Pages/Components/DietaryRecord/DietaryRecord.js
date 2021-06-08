@@ -128,12 +128,7 @@ function RenderDietaryRecord() {
           {getRecord ? (
             <Switch>
               <Route exact path={`/dietitian/:dID/customer/:cID/dietary/`}>
-                <DietitianRecord
-                  date={recordDate}
-                  count={count}
-                  setCount={setCount}
-                  style={{ boxSizing: "border-box" }}
-                />
+                <DietitianRecord date={recordDate} />
               </Route>
             </Switch>
           ) : (

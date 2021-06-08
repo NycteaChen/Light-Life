@@ -219,16 +219,21 @@ function CustomerRecord({ date, count, setCount }) {
 
   return (
     <>
-      <h3>{date} 飲食記錄</h3>
-      {mealKeywords.map((m) => (
-        <div className={style.meal}>
-          <div
+      <h5>{date} 飲食記錄</h5>
+      <ul>
+        {mealKeywords.map((m) => (
+          <li
             className={`${style["meal-title"]} ${m[1]}`}
             id={`${m[2]}`}
+            role="presentation"
             onClick={getMealHandler}
           >
             {m[0]}
-          </div>
+          </li>
+        ))}
+      </ul>
+      {mealKeywords.map((m) => (
+        <div className={style.meal}>
           {meal === m[1] && count % 2 === 0 ? (
             <>
               <div className={`${style["diet-record"]} ${style.col}`}>

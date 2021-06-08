@@ -124,7 +124,7 @@ function Analysis({ date, cID, data }) {
   return (
     <>
       <div id="diet-analysis" className={style["diet-analysis"]}>
-        <h3>{date} 飲食分析</h3>
+        <h5>{date} 飲食分析</h5>
         <div className={style["analysis-table"]}>
           <table>
             <thead>
@@ -217,19 +217,22 @@ function Analysis({ date, cID, data }) {
         {pathName.includes("dietitian") ? (
           <div className={style.advice}>
             <div>
-              <label>
-                <div>給予建議</div>
-                <textarea
-                  value={advice}
-                  onChange={bindAdviceHandler}
-                ></textarea>
+              <label htmlFor="advice">
+                <h5>給予建議</h5>
               </label>
+              <textarea
+                id="advice"
+                value={advice}
+                onChange={bindAdviceHandler}
+              ></textarea>
             </div>
-            <button onClick={bindSaveAdviceHandler}>儲存</button>
+            <div className={style.button}>
+              <button onClick={bindSaveAdviceHandler}>儲存</button>
+            </div>
           </div>
         ) : (
           <div className={style.advice}>
-            <div className={style["advice-title"]}>營養師建議</div>
+            <h5 className={style["advice-title"]}>營養師建議</h5>
             <div id="advice">{advice}</div>
           </div>
         )}
