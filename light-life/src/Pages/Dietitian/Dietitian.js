@@ -44,6 +44,7 @@ function Dietitian() {
   const input = {};
   const props = {};
   const [nav, setNav] = useState("");
+  const [active, setActive] = useState("");
   const keyword = useLocation().pathname;
   let history = useHistory();
   useEffect(() => {
@@ -244,6 +245,14 @@ function Dietitian() {
     } else if (keyword.includes("inviteMe")) {
       setNav({ whoInvite: basic["nav-active"] });
     }
+
+    if (keyword.includes("customer") && keyword.includes("profile")) {
+      setActive({ cProfile: style.active });
+    } else if (keyword.includes("customer") && keyword.includes("dietary")) {
+      setActive({ cDietary: style.active });
+    } else if (keyword.includes("customer") && keyword.includes("target")) {
+      setActive({ cTarget: style.active });
+    }
   }, []);
 
   const getSelectedCustomer = (e) => {
@@ -270,10 +279,17 @@ function Dietitian() {
       setDisplay("none");
     }
     const { title } = e.target;
+    const { id } = e.target;
     if (title) {
       setNav({ [title]: basic["nav-active"] });
+    } else if (id) {
+      setActive({ [id]: style.active });
     } else {
-      setNav({});
+      if (!title) {
+        setNav({});
+      } else if (!id) {
+        setActive({});
+      }
     }
   };
   const logoutHandler = () => {
@@ -617,42 +633,42 @@ function Dietitian() {
             >
               {/* <Router> */}
               <div className={style["customer-data"]}>
-                {/* <div>
-                  <Link
-                    className={style["customer-name"]}
-                    to={`/dietitian/${dietitianID}/customer/${
-                      customerID ? customerID : selectedID
-                    }`}
-                  >
-                    {users.length > 0 && customerID
-                      ? users.filter((e) => e.id === customerID)[0].name
-                      : ""}
-                  </Link>
-                </div> */}
                 <div className={style["customer-dataSelect"]}>
                   <Link
-                    className={style["link-select"]}
+                    id="cProfile"
+                    className={`${style["link-select"]} ${
+                      active.cProfile || ""
+                    }`}
                     to={`/dietitian/${dietitianID}/customer/${
                       customerID ? customerID : selectedID
                     }/profile`}
+                    onClick={bindListHandler}
                   >
                     {users.length > 0 && customerID
                       ? users.filter((e) => e.id === customerID)[0].name
                       : ""}
                   </Link>
                   <Link
-                    className={style["link-select"]}
+                    id="cDietary"
+                    className={`${style["link-select"]} ${
+                      active.cDietary || ""
+                    }`}
                     to={`/dietitian/${dietitianID}/customer/${
                       customerID ? customerID : selectedID
                     }/dietary`}
+                    onClick={bindListHandler}
                   >
                     飲食記錄
                   </Link>
                   <Link
-                    className={style["link-select"]}
+                    id="cTarget"
+                    className={`${style["link-select"]} ${
+                      active.cTarget || ""
+                    }`}
                     to={`/dietitian/${dietitianID}/customer/${
                       customerID ? customerID : selectedID
                     }/target`}
+                    onClick={bindListHandler}
                   >
                     目標設定
                   </Link>
