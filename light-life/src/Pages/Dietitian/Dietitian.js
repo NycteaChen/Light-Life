@@ -355,9 +355,8 @@ function Dietitian() {
       });
     }
   };
-
   // if (users.length > 0) {
-  if (profile.name) {
+  if (profile && profile.email) {
     return (
       <>
         <MobileBottom />
