@@ -205,23 +205,17 @@ function Analysis({ date, cID, data }) {
                   {parseFloat(getNutrientTotal("fiber").toFixed(1)) || "-"}
                 </th>
               </tr>
-              {/* <tr id="target">
-                <th>目標</th>
-              </tr>
-              <tr id="resr">
-                <th>剩餘</th>
-              </tr> */}
             </tbody>
           </table>
         </div>
         {pathName.includes("dietitian") ? (
           <div className={style.advice}>
             <div>
-              <label htmlFor="advice">
+              <label htmlFor="d-advice">
                 <h5>給予建議</h5>
               </label>
               <textarea
-                id="advice"
+                id="d-advice"
                 value={advice}
                 onChange={bindAdviceHandler}
               ></textarea>
@@ -232,8 +226,8 @@ function Analysis({ date, cID, data }) {
           </div>
         ) : (
           <div className={style.advice}>
-            <h5 className={style["advice-title"]}>營養師建議</h5>
-            <div id="advice">{advice}</div>
+            <h5>營養師建議</h5>
+            <div className={style["c-advice"]}>{advice}</div>
           </div>
         )}
       </div>
