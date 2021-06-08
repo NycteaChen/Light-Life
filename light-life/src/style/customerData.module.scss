@@ -1,12 +1,9 @@
 .customer-data {
   text-align: center;
-  .customer-name {
-    margin: 20px auto;
-    padding: 10px 15px;
-    background-color: wheat;
-    width: 100px;
-  }
+  max-width: 480px;
+  margin: auto;
   .customer-dataSelect {
+    display: grid;
     .link-select {
       border-radius: 15px;
       display: block;
@@ -18,19 +15,45 @@
     }
   }
 
+  @media (min-width: 380px) {
+    & {
+      .customer-dataSelect {
+        grid-template-columns: repeat(2, 1fr);
+        // width: 95%;
+        // max-width: 600px;
+        // margin: auto;
+
+        // .link-select {
+        //   margin: 10px auto;
+        //   background-color: azure;
+        //   transform: scale(1.2);
+        //   line-height: 90px;
+        // }
+      }
+    }
+  }
+
+  @media (min-width: 450px) {
+    & {
+      .customer-dataSelect {
+        grid-template-columns: repeat(3, 1fr);
+        // width: 95%;
+        // max-width: 600px;
+        // margin: auto;
+
+        // .link-select {
+        //   margin: 10px auto;
+        //   background-color: azure;
+        //   transform: scale(1.2);
+        //   line-height: 90px;
+        // }
+      }
+    }
+  }
+
   @media (min-width: 520px) {
     & {
-      // .customer-name {
-      // margin: 20px auto;
-      // width: 95%;
-      // max-width: 600px;
-      // }
       .customer-dataSelect {
-        display: flex;
-        width: 95%;
-        max-width: 600px;
-        margin: auto;
-
         .link-select {
           margin: 10px auto;
           background-color: azure;
@@ -45,30 +68,38 @@
       display: flex;
       align-items: center;
       margin-left: 250px;
-      .customer-name {
-        margin: 0;
-        width: unset;
-        max-width: unset;
-        height: 40px;
-        padding-bottom: 2px;
-      }
       .customer-dataSelect {
         width: unset;
         max-width: unset;
         margin: 0;
         margin-right: 10px;
-
         .link-select {
           border-radius: 0;
           border-top-right-radius: 15px;
-          border-right: 2px solid #014b38;
-          border-bottom: 2px solid #014b38;
+          border-top-left-radius: 15px;
+          // border-right: 2px solid #014b38;
+          // border-bottom: 2px solid #014b38;
+          // border: 2px solid #014b38;
+          // background-color: #c6f3f3;
+          letter-spacing: 2px;
+          color: #929292;
+          border: 1px solid #286d46;
+          border-bottom: 2px solid #286d46;
+          background-color: white;
           margin: 10px 0;
-          background-color: #c6f3f3;
           transform: unset;
           width: 120px;
           height: 40px;
           line-height: 30px;
+          transition: background-color 0.3s, color 0.3s;
+          &:hover {
+            background-color: #286d46;
+            color: white;
+          }
+        }
+        .active {
+          background-color: #286d46;
+          color: white !important;
         }
       }
     }

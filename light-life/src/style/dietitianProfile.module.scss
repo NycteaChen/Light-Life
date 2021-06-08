@@ -359,6 +359,8 @@
     }
     .buttons {
       text-align: right;
+      position: relative;
+      z-index: 5;
       // &#save {
       //   margin-right: 5px;
       // }
@@ -608,7 +610,7 @@
                 margin-left: 48px;
               }
               .select-skill {
-                margin-left: -5px;
+                margin-left: 0;
                 label {
                   display: inline-block;
                   margin-right: 10px;
@@ -645,6 +647,9 @@
           @media (min-width: 1024px) {
             & {
               margin-left: 58px;
+              .title + div {
+                margin-left: -5px;
+              }
             }
           }
         }
