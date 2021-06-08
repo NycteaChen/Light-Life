@@ -332,7 +332,14 @@ function Customer() {
                   });
                   setDietitians(user);
                 } else {
-                  setDietitians(res["users"]);
+                  res["users"].forEach((u) => {
+                    if (
+                      !res["reserveArray"].find((r) => r.dietitian === u.id)
+                    ) {
+                      user.push(u);
+                    }
+                  });
+                  setDietitians(user);
                 }
               });
           });
