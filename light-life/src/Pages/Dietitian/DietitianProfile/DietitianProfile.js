@@ -143,9 +143,9 @@ function DietitianProfile({ profile, setProfile }) {
     }
   };
   return (
-    <>
+    <div className={style["dietitian-profile"]}>
       {isEditing ? (
-        <div className={style["edit-Dprofile"]}>
+        <div className={style["edit-mode"]}>
           <div className={style.buttons}>
             <button onClick={saveProfileHandler} id="save">
               儲存
@@ -190,9 +190,7 @@ function DietitianProfile({ profile, setProfile }) {
                       onChange={getInputHandler}
                     />
                     <i className="fa fa-picture-o" aria-hidden="true"></i>
-                    上傳大頭照
                   </label>
-                  <div>專業形象將為您加分</div>
                 </div>
               </div>
               <div>
@@ -201,7 +199,7 @@ function DietitianProfile({ profile, setProfile }) {
                   <div className="email">{email}</div>
                 </div>
                 <div className={style.basic}>
-                  <label className="name">姓名</label>
+                  <label className={style.title}>姓名</label>
                   <input
                     type="text"
                     name="name"
@@ -216,7 +214,7 @@ function DietitianProfile({ profile, setProfile }) {
                     }
                     onChange={getInputHandler}
                   />
-                  <label className="gender">性別</label>
+                  <label className={style.title}>性別</label>
                   <div>
                     <input
                       type="radio"
@@ -258,7 +256,9 @@ function DietitianProfile({ profile, setProfile }) {
             </div>
             <div>
               <div className={style.education}>
-                <label id={style.highestDegree}>學歷</label>
+                <label id={style.highestDegree} className={style.title}>
+                  學歷
+                </label>
                 <div className={style["edu-select"]}>
                   <input
                     type="text"
@@ -317,7 +317,7 @@ function DietitianProfile({ profile, setProfile }) {
                 </div>
               </div>
               <div className={style.skills}>
-                <label className={style.skill}>專長</label>
+                <label className={`${style.skill} ${style.title}`}>專長</label>
                 <div className={style["select-skill"]}>
                   <label>
                     <input
@@ -363,7 +363,7 @@ function DietitianProfile({ profile, setProfile }) {
               </div>
 
               <div className={style.other}>
-                <label>其他</label>
+                <label className={style.title}>其他</label>
                 <textarea
                   cols="40"
                   rows="6"
@@ -382,10 +382,12 @@ function DietitianProfile({ profile, setProfile }) {
           </form>
         </div>
       ) : (
-        <div className={style["edit-Dprofile"]}>
-          <button onClick={profileButtonHandler} id="edit">
-            編輯
-          </button>
+        <div className={style["profile-data"]}>
+          <div className={style.button}>
+            <button onClick={profileButtonHandler} id="edit">
+              編輯
+            </button>
+          </div>
           <form className={style["basic-profile"]} action="javascript:void(0);">
             <div className={style.flexbox}>
               <div className={style.img}>
@@ -417,7 +419,7 @@ function DietitianProfile({ profile, setProfile }) {
                   <div className="email">{email}</div>
                 </div>
                 <div className={style.basic}>
-                  <label className="name">姓名</label>
+                  <label className={style.title}>姓名</label>
                   <div id={style.name}>
                     {input.name || input.name === ""
                       ? input.name
@@ -425,8 +427,8 @@ function DietitianProfile({ profile, setProfile }) {
                       ? name
                       : ""}
                   </div>
-                  <label className="gender">性別</label>
-                  <div>
+                  <label className={style.title}>性別</label>
+                  <div className={style.gender}>
                     {input.gender ? input.gender : gender ? gender : ""}
                   </div>
                 </div>
@@ -434,7 +436,9 @@ function DietitianProfile({ profile, setProfile }) {
             </div>
             <div>
               <div className={style.education}>
-                <label id={style.highestDegree}>學歷</label>
+                <label id={style.highestDegree} className={style.title}>
+                  學歷
+                </label>
                 <div className={style["edu-select"]}>
                   <div>{edu.school ? edu.school : ""}</div>
                   <div>{edu.department ? edu.department : ""}</div>
@@ -442,17 +446,17 @@ function DietitianProfile({ profile, setProfile }) {
                 </div>
               </div>
               <div className={style.skills}>
-                <label className={style.skill}>專長</label>
+                <label className={`${style.skill} ${style.title}`}>專長</label>
                 <div className={style["select-skill"]}>
-                  {skills.weightControl ? "體重管理　" : ""}
-                  {skills.sportNT ? "運動營養　" : ""}
-                  {skills.threeHigh ? "三高控制　" : ""}
-                  {skills.bloodSugar ? "血糖控制" : ""}
+                  {skills.weightControl ? <span>體重管理　</span> : ""}
+                  {skills.sportNT ? <span>運動營養　</span> : ""}
+                  {skills.threeHigh ? <span>三高控制　</span> : ""}
+                  {skills.bloodSugar ? <span>血糖控制　</span> : ""}
                 </div>
               </div>
 
               <div className={style.other}>
-                <label>其他</label>
+                <label className={style.title}>其他</label>
                 <div>
                   {input.other || input.other === ""
                     ? input.otehr
@@ -465,7 +469,7 @@ function DietitianProfile({ profile, setProfile }) {
           </form>
         </div>
       )}
-    </>
+    </div>
   );
 }
 export default DietitianProfile;
