@@ -12,7 +12,7 @@
   }
 
   .emailForm {
-    transition: all 0.5s;
+    transition: all 0.5s, height 0s !important;
     text-align: center;
     position: fixed;
     width: 80%;
@@ -34,11 +34,14 @@
       width: 150px;
       border-radius: 5px;
       padding: 2px 7px;
-      margin: 5px 0;
       border: 1px solid grey;
-      transition: all 0.5s;
+      outline: none;
+      margin: 5px 0 0;
+      transition: border-color 0.3s;
     }
+
     button {
+      margin-top: 5px;
       padding: 2px 12px;
       border-radius: 5px;
       border: 1px solid #037570;
@@ -56,15 +59,35 @@
         margin-left: 5px;
         background-color: white;
         color: #037570;
+        transition: opacity 0.5s;
+        &:hover {
+          opacity: 0.5;
+        }
       }
     }
+
+    .message {
+      margin: auto;
+      width: 150px;
+      color: #ff4d4d;
+      font-size: 12px;
+      height: 0;
+      opacity: 0;
+    }
+    .showMessage {
+      height: 18px;
+      opacity: 1;
+    }
+  }
+  .formHeight {
+    height: 150px;
   }
 
   .close {
     transition: all 0.5s;
     cursor: pointer;
     &:hover {
-      color: red !important;
+      color: #037570 !important;
       transform: scale(1.2) !important;
     }
   }
@@ -81,6 +104,26 @@
     transform: translateY(0px);
     opacity: 1;
   }
+
+  .invalid {
+    border: 1.5px solid #ff4d4d !important;
+    background: url("../images/alert-circle.svg") no-repeat;
+    background-size: 17px;
+    background-position: 95%;
+    @media (min-width: 320px) {
+      background-position: 97%;
+    }
+  }
+  .valid {
+    background: url("../images/check.svg") no-repeat;
+    background-size: 17px;
+    background-position: 95%;
+    border: 1.5px solid #78d494 !important;
+    @media (min-width: 320px) {
+      background-position: 97%;
+    }
+  }
+
   .login,
   .signup {
     width: 80%;
@@ -89,7 +132,7 @@
     box-shadow: 2px 5px 10px 3px #818181;
     text-align: center;
     padding-bottom: 15px;
-    transition: all 0.5s;
+    transition: all 0.5s !important;
     position: fixed;
     z-index: 10;
     height: 620px;
@@ -120,8 +163,8 @@
       }
       & > li {
         width: 40%;
-
         margin-left: auto;
+        transition: opacity 0.5s;
 
         &:last-of-type {
           margin-left: 0;
@@ -130,6 +173,7 @@
 
         & > a {
           color: #929292;
+          letter-spacing: 3px;
           transition: all 0.3s;
           border-top-left-radius: 10px;
           border-top-right-radius: 10px;
@@ -149,11 +193,11 @@
       padding: 5px 0;
       border-radius: 5px;
       border: none;
-      background-color: cadetblue;
+      background-color: #64b795;
       color: white;
       transition: all 0.5s;
       &:hover {
-        background-color: #163031;
+        background-color: #094346;
         transform: scale(1.1);
       }
       &:first-of-type {
@@ -168,23 +212,21 @@
         font-size: 14px;
         padding: 5px 10px;
         width: 90%;
-        transition: all 0.5s;
-        border: 1px solid black;
+        border: 1px solid grey;
         padding-left: 7px;
         border-radius: 5px;
-        &:valid {
-          background-color: white !important;
-        }
+        outline: none;
+        transition: border-color 0.2s;
+        padding-right: 30px;
+        position: relative;
       }
       div {
         width: 90%;
-        transition: all 0.5s;
         margin: auto;
         text-align: left;
       }
       .eye-slash,
       .eye-on {
-        transition: all 0.5s;
         position: absolute;
         top: 3px;
         right: 14px;
@@ -196,7 +238,7 @@
       }
     }
     .hint {
-      margin-top: 5px;
+      margin-top: 15px;
       font-size: 12px;
       letter-spacing: 2px;
       a {
@@ -219,8 +261,43 @@
         }
       }
     }
+    form {
+      position: relative;
+      .message {
+        position: absolute;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        color: #ff4d4d;
+        font-size: 12px;
+        opacity: 0;
+      }
+      .showMessage {
+        opacity: 1 !important;
+      }
+    }
   }
 
+  .signup {
+    button {
+      margin-top: 35px !important;
+    }
+  }
+  .login {
+    form {
+      .message {
+        position: absolute;
+        bottom: 175px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        color: #ff4d4d;
+        font-size: 12px;
+        opacity: 0;
+      }
+    }
+  }
   .login-image {
     display: none;
   }
@@ -280,87 +357,171 @@
       button {
         width: 65%;
       }
+      form {
+        .message {
+          bottom: 85px;
+        }
+      }
     }
     .signup {
       button {
         margin-top: 40px !important;
       }
     }
-    .emailForm {
-      input {
-        width: 300px;
-      }
-    }
-  }
-
-  @media (min-width: 1024px) {
-    position: fixed;
-    z-index: 10;
-    height: 600px;
-    text-align: center;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-
-    .login-image {
-      display: block;
-      width: 420px;
-      height: 630px;
-      background-image: url("../images/food.png");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: top 25% right 10%;
-      border-radius: 15px;
-      position: absolute;
-      top: -15px;
-      z-index: 11;
-      transition: all 0.5s;
-    }
-
-    .right {
-      transform: translateX(210px);
-    }
-    .left {
-      transform: translate(-210px);
-    }
-
-    .login,
-    .signup {
-      transition: opacity 0.5s;
-      position: static;
-      border-radius: 0;
+    .login {
       .hint {
-        font-size: 14px;
-        text-align: right;
-        margin-right: 35px;
+        margin-top: 10px;
       }
-      .hints {
-        justify-content: flex-end;
-        .hint {
-          &:first-of-type {
-            margin-right: 0;
-          }
+      form {
+        .message {
+          bottom: 170px;
+          left: 0;
+          right: 0;
         }
       }
     }
 
-    .signup {
-      .close {
-        left: 350px;
-        top: 15px;
-        font-size: 20px;
-        width: 30px;
+    .login {
+      button {
+        &:first-of-type {
+          margin-top: 15px;
+        }
+      }
+      .emailForm {
+        input {
+          width: 300px;
+        }
+        .message {
+          width: 300px;
+          text-align: left;
+        }
       }
     }
-    .disappear {
-      transform: unset;
-      opacity: 0;
+
+    @media (min-width: 1024px) {
+      position: fixed;
+      z-index: 10;
+      height: 600px;
+      text-align: center;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+
+      .login-image {
+        display: block;
+        width: 420px;
+        height: 630px;
+        background-image: url("../images/food.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top 25% right 10%;
+        border-radius: 15px;
+        position: absolute;
+        top: -15px;
+        z-index: 11;
+        transition: all 0.5s;
+      }
+
+      .right {
+        transform: translateX(210px);
+      }
+      .left {
+        transform: translate(-210px);
+      }
+
+      .login,
+      .signup {
+        position: static;
+        border-radius: 0;
+        .hint {
+          font-size: 14px;
+          text-align: right;
+          margin-right: 35px;
+        }
+        .hints {
+          justify-content: flex-end;
+          .hint {
+            &:first-of-type {
+              margin-right: 0;
+            }
+          }
+        }
+        form {
+          .message {
+            bottom: 88px;
+          }
+        }
+      }
+
+      .disappear {
+        transform: unset;
+        opacity: 0;
+      }
+      .appear {
+        transform: unset;
+        opacity: 1;
+      }
+      .signup {
+        .close {
+          left: 350px;
+          top: 15px;
+          font-size: 20px;
+          width: 30px;
+        }
+      }
+      .login {
+        form {
+          .message {
+            bottom: 175px;
+            right: unset;
+            left: 80px;
+          }
+        }
+      }
     }
-    .appear {
-      transform: unset;
-      opacity: 1;
-    }
+  }
+}
+
+.loginMessage {
+  visibility: hidden;
+  position: fixed;
+  min-width: 250px;
+  margin-left: -125px;
+  opacity: 0.9;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px #505050;
+  letter-spacing: 3px;
+  // color: #fff;
+  font-weight: bold;
+  color: #4d4d4d;
+  text-align: center;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 20;
+  left: 50%;
+  top: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  img {
+    width: 50px;
+  }
+}
+.showloginMessage {
+  visibility: visible;
+  z-index: 20;
+  animation: fadein 0.5s;
+}
+
+@keyframes fadein {
+  from {
+    top: 8%;
+    opacity: 0;
+  }
+  to {
+    top: 15%;
+    opacity: 0.85;
   }
 }

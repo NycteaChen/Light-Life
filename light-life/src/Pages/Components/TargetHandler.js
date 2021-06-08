@@ -13,8 +13,6 @@ function TargetHandler({ target, setTarget }) {
   const pathName = useLocation().pathname;
   const params = useParams();
 
-  console.log(targetIndex);
-
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name === "startDate") {
@@ -33,8 +31,7 @@ function TargetHandler({ target, setTarget }) {
   const bindEditHandler = (e) => {
     setIsEditing(true);
     setTargetIndex(e.target.id);
-    console.log(targetIndex);
-    console.log(e.target.id);
+
     // setInput(target[e.target.id]);
     setInput({});
     if (targetIndex !== e.target.id) {
@@ -50,7 +47,6 @@ function TargetHandler({ target, setTarget }) {
             targetArray.push(doc.data());
           });
           setTarget(targetArray);
-          console.log("here");
         });
     } else {
       setInput({ ...input });
@@ -82,7 +78,6 @@ function TargetHandler({ target, setTarget }) {
         return getID;
       })
       .then((res) => {
-        console.log(input);
         db.collection("dietitians")
           .doc(params.dID)
           .collection("customers")
@@ -115,7 +110,6 @@ function TargetHandler({ target, setTarget }) {
         return getID;
       })
       .then((res) => {
-        console.log(input);
         db.collection("dietitians")
           .doc(params.dID)
           .collection("customers")
@@ -195,7 +189,7 @@ function TargetHandler({ target, setTarget }) {
                     <div className={style.title}>目標體重</div>
                     <div>
                       <input
-                        type="text"
+                        type="number"
                         name="weight"
                         value={
                           input.weight || input.weight === ""
@@ -211,7 +205,7 @@ function TargetHandler({ target, setTarget }) {
                     <div className={style.title}>目標水分</div>
                     <div>
                       <input
-                        type="text"
+                        type="number"
                         name="water"
                         value={
                           input.water || input.water === ""

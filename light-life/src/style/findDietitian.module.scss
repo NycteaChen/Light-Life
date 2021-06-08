@@ -1,74 +1,109 @@
 .dietitianList {
+  margin: auto;
+  max-width: 580px;
+  transition: all 0.5s;
   img {
     transition: all 0.5s;
+    object-fit: cover;
   }
-  text-align: center;
-  display: grid;
-  margin: auto;
-  transition: all 0.5s;
-  .dietitian {
-    width: 100%;
-    max-width: 220px;
-    padding: 20px 20px 10px;
-    margin: 15px auto;
-    background-color: white;
-    img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-    }
-    .info {
-      display: none;
-    }
-    .col {
-      margin: 10px 0;
-      .name {
-        margin-bottom: 5px;
+  & > .title {
+    padding: 12px 0 10px;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .dietitians {
+    text-align: center;
+    display: grid;
+    margin: 20px auto 0;
+    .dietitian {
+      width: 100%;
+      max-width: 220px;
+      padding: 20px 20px 10px;
+      margin: 0 auto 30px;
+      background-color: #f8f8f8a6;
+      box-shadow: 0 1px 3px #515a56;
+      border: 1px solid #515a5670;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      &:hover {
+        background-color: #fff;
       }
-      button {
-        padding: 4px 7px;
-        border: 1px solid blue;
-        background-color: aqua;
+      img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+      }
+      .info {
+        display: none;
+      }
+      .col {
+        margin: 10px 0;
+        .name {
+          margin-bottom: 5px;
+        }
+        button {
+          letter-spacing: 2px;
+          font-size: 12px;
+          width: 80px;
+          padding: 3px 7px;
+          outline: none;
+          border: none;
+          border-radius: 5px;
+          transition: opacity 0.3s, width 0.3s;
+          margin-right: 5px;
+          background-color: #015830;
+          color: white;
+          &:hover {
+            opacity: 0.7;
+          }
+        }
       }
     }
   }
   @media (min-width: 520px) {
     max-width: 500px;
     margin: auto;
-    grid-template-columns: repeat(2, 1fr);
+    .dietitians {
+      grid-template-columns: repeat(2, 1fr);
 
-    .dietitian {
-      img {
-        width: 180px;
-        height: 180px;
+      .dietitian {
+        img {
+          width: 180px;
+          height: 180px;
+        }
       }
     }
   }
   @media (min-width: 768px) {
-    max-width: 850px;
-    grid-template-columns: repeat(3, 1fr);
+    max-width: 780px;
+    .dietitians {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
   }
   @media (min-width: 1024px) {
-    display: block;
-    margin-left: 300px;
-    .dietitian {
-      max-width: unset;
-      display: grid;
-      grid-template-columns: 25% 75%;
-      .col {
-        display: flex;
-        margin-left: 30px;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px dotted blue;
-        height: 50px;
-        padding-bottom: 5px;
-      }
-      .info {
-        display: block;
-        margin-left: 30px;
-        & > div:first-of-type {
-          margin: 20px 0 10px;
+    margin-left: 260px;
+    .dietitians {
+      display: block;
+      .dietitian {
+        max-width: unset;
+        display: grid;
+        grid-template-columns: 25% 75%;
+        padding: 20px;
+        .col {
+          display: flex;
+          margin-left: 30px;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 2px solid #00753f;
+          height: 50px;
+          padding-bottom: 5px;
+        }
+        .info {
+          display: block;
+          margin-left: 30px;
+          & > div:first-of-type {
+            margin: 20px 0 10px;
+          }
         }
       }
     }
@@ -79,61 +114,95 @@
   text-align: left;
   width: 90%;
   max-width: 450px;
-  max-height: 90%;
+  max-height: calc(100vh - 80px);
   overflow: auto;
   position: fixed;
-  padding: 20px 10px;
-  top: 30px;
+  z-index: 3;
+  padding: 10px 0;
+  top: 10px;
   right: 0;
   left: 0;
   margin: auto;
-  background-color: white;
-
+  background-color: #edf5f0;
+  box-shadow: 0 1px 2px #515a56;
+  border-radius: 5px;
+  font-size: 14px;
   & > div:first-of-type {
     text-align: right;
     margin-right: 20px;
-
     cursor: pointer;
-
     .close {
       transition: all 0.5s;
       font-size: 20px;
       &:hover {
         transform: scale(1.2);
+        color: #037570;
       }
     }
   }
-
+  img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 10px auto;
+    object-fit: cover;
+  }
+  .name {
+    font-size: 20px;
+    font-weight: bold;
+  }
   .img,
-  .name,
-  .invite-button {
+  .name {
     text-align: center;
+    margin: auto;
   }
 
   .content {
+    margin-left: 30px;
     transition: all 0.5s;
+    .title {
+      font-weight: bold;
+    }
     .education {
-      margin: auto;
+      margin: 10px auto;
       & > div:first-of-type {
         white-space: nowrap;
       }
       & > div:last-of-type {
-        margin-left: 81px;
+        margin-left: 43px;
         & > span:last-of-type {
           display: block;
         }
       }
     }
+    .skills {
+      display: flex;
+      & > div:last-of-type {
+        display: grid;
+        @media (min-width: 280px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        @media (min-width: 320px) {
+          grid-template-columns: repeat(1, 1fr);
+        }
+        @media (min-width: 380px) {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+    }
     .other {
       margin-bottom: 10px;
+      display: flex;
+      & > div:first-of-type {
+        margin-top: 8px;
+      }
       & > div:last-of-type {
         margin-top: 5px;
         padding: 3px 7px;
-        max-width: 250px;
+        width: 70%;
+        margin-left: 5px;
         max-height: 100px;
         overflow: auto;
-        border-radius: 5px;
-        border: 1px solid blue;
       }
     }
     & > div {
@@ -142,17 +211,29 @@
   }
   @media (min-width: 320px) {
     .content {
-      margin-left: 20%;
-      .gender,
-      .skills,
+      margin-left: 80px;
       .other {
-        margin-left: 32px;
+        & > div:last-of-type {
+          width: 80%;
+        }
       }
     }
   }
   @media (min-width: 520px) {
     max-width: 520px;
+    max-height: calc(100vh - 50px);
+    img {
+      width: 180px;
+      height: 180px;
+    }
     .content {
+      margin-left: 120px;
+      .flexbox {
+        display: flex;
+        .gender {
+          margin-top: 12px;
+        }
+      }
       .education {
         & span:last-of-type {
           display: inline-block !important;
@@ -162,67 +243,137 @@
   }
 
   .reserve-form {
+    max-width: 580px;
+    margin: auto;
     margin-top: 20px;
-    border-top: 1px solid black;
-    text-align: center;
+    border-top: 1.5px solid #105a3c;
     padding: 10px;
+    .form-title {
+      margin-bottom: 0;
+      font-size: 20px;
+      padding: 10px 0;
+      font-weight: bold;
+    }
     .form {
-      margin: 10px 0;
+      margin-bottom: 10px;
       label {
+        width: 100%;
+        margin: auto;
+        div {
+          font-weight: bold;
+        }
         input,
         textarea {
           margin: 5px 0 10px;
+          width: 100%;
+          outline: none;
+          border: 1px solid grey;
+          padding: 0 5px;
+          border-radius: 5px;
         }
         textarea {
-          height: 3rem;
-          width: 100%;
-          max-width: 180px;
+          height: 5rem;
+          &:focus {
+            outline: none;
+            border: 1.5px solid #105a3c;
+          }
+        }
+      }
+      .button {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        text-align: center;
+        background-color: #ffffff;
+        padding: 15px 0;
+        button {
+          letter-spacing: 2px;
+          width: 120px;
+          padding: 5px 10px;
+          border-radius: 5px;
+          outline: none;
+          border: none;
+          transition: opacity 0.3s, width 0.3s;
+          background-color: #b5f5d3;
+          color: #046b40;
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+      }
 
-          transition: all 0.5s;
+      .reserveCol {
+        background-color: #ffffff;
+        padding: 12px;
+        .reserveLabel {
+          display: flex;
+          // justify-content: space-around;
+          & > div:last-of-type {
+            margin-left: 20px;
+          }
+        }
+      }
+      .reserveLabel {
+        margin: 0;
+        background-color: #ffffff;
+        &.reserveMessage {
+          padding: 0 12px 12px;
+          & > div:last-of-type {
+            max-height: 5rem;
+            overflow: auto;
+          }
+        }
+      }
+
+      @media (min-width: 280px) {
+        & > div {
+          label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            input {
+              width: 160px;
+              margin-left: 20px;
+            }
+          }
+        }
+      }
+      @media (min-width: 400px) {
+        .reserveCol {
+          display: flex;
         }
       }
     }
     @media (min-width: 520px) {
+      width: 90%;
+      margin: 20px auto;
       .form {
-        label {
+        .flexbox {
           display: flex;
-          justify-content: center;
-          align-items: center;
-          div {
-            margin-right: 15px;
-          }
-        }
-        & > label {
-          align-items: unset;
-          margin-left: 5px;
-          div {
-            margin-top: 5px;
-          }
-        }
-      }
-    }
-    @media (min-width: 1024px) {
-      .form {
-        & > div:first-of-type {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 10px;
           label {
+            justify-content: space-between;
+            input {
+              width: 150px;
+              margin-left: 0;
+            }
             div {
               margin-bottom: 5px;
             }
-          }
-        }
-
-        & > label {
-          justify-content: unset;
-          margin-left: 0;
-          textarea {
-            max-width: 384px;
-            height: 5rem;
+            &:first-of-type > input {
+              margin-right: 15px;
+            }
+            &:last-of-type > div {
+              margin-left: 15px;
+            }
           }
         }
       }
     }
+  }
+  @media (min-width: 1024px) {
+    max-height: 665px;
+    top: 10px;
+    bottom: 10px;
+    margin: auto;
   }
 }

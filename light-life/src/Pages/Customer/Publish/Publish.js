@@ -11,7 +11,8 @@ import "firebase/firestore";
 import style from "../../../style/publish.module.scss";
 import Invited from "./Invited.js";
 
-function Publish() {
+function Publish({ reserve }) {
+  console.log(reserve);
   const { cID } = useParams();
   const [display, setDisplay] = useState("none");
   const [profile, setProfile] = useState({});
@@ -19,8 +20,24 @@ function Publish() {
   const [oldPublish, setOldPublish] = useState(null);
   const [idx, setIdx] = useState("");
   const [isChecked, setIsChecked] = useState(false);
-  const today = new Date(+new Date() + 8 * 3600 * 1000);
   const [input, setInput] = useState({});
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [occupationTime, setOccupationTime] = useState([]);
+  const today = new Date(+new Date() + 8 * 3600 * 1000);
+  const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
+  const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
+  const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
+  const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
+  initStartDate.setDate(initStartDate.getDate() + 1);
+  startMostDate.setDate(startMostDate.getDate() + 21);
+  endLessDate.setDate(endLessDate.getDate() + 7);
+  endMostDate.setDate(endMostDate.getDate() + 14);
+  const transDateToTime = (date) => {
+    const time = new Date(date).getTime();
+    return time;
+  };
 
   useEffect(() => {
     firebase
@@ -29,10 +46,22 @@ function Publish() {
       .where("id", "==", cID)
       .get()
       .then((docs) => {
+        const occupation = reserve
+          .filter((r) => r.status === "0" || r.status === "1")
+          .map((u) => [
+            transDateToTime(u.reserveStartDate),
+            transDateToTime(u.reserveEndDate),
+          ]);
         if (!docs.empty) {
           const publishArray = [];
           const oldPublishArray = [];
           docs.forEach((doc) => {
+            if (doc.data().status === "1" || doc.data().status === "0") {
+              occupation.push([
+                transDateToTime(doc.data().startDate),
+                transDateToTime(doc.data().endDate),
+              ]);
+            }
             const startDate = new Date(doc.data().startDate).getTime();
             if (startDate > today && doc.data().status === "0") {
               publishArray.push(doc.data());
@@ -49,10 +78,11 @@ function Publish() {
               oldPublishArray.push(doc.data());
             }
           });
-
+          setOccupationTime(occupation);
           setOldPublish(oldPublishArray);
           setPublishData(publishArray);
         } else {
+          setOccupationTime(occupation);
           setPublishData([]);
           setOldPublish([]);
         }
@@ -63,7 +93,16 @@ function Publish() {
       .doc(cID)
       .get()
       .then((res) => setProfile(res.data()));
+    setStartDate({
+      min: initStartDate.toISOString().substr(0, 10),
+      max: startMostDate.toISOString().substr(0, 10),
+    });
+    setEndDate({
+      min: endLessDate.toISOString().substr(0, 10),
+      max: endMostDate.toISOString().substr(0, 10),
+    });
   }, []);
+
   const publishModalHandler = (e) => {
     switch (e.target.id) {
       case "add":
@@ -105,47 +144,97 @@ function Publish() {
 
   const getInputHandler = (e) => {
     const { name } = e.target;
-    setInput({
-      ...input,
-      [name]: e.target.value,
-      publishDate: today.toISOString().substr(0, 10),
-      name: profile.name,
-      gender: profile.gender,
-      id: cID,
-      status: "0",
-    });
+    const test = transDateToTime(e.target.value);
+    if (name === "startDate" || name === "endDate") {
+      if (
+        occupationTime.find((r) => test >= r[0] && test <= r[1]) ||
+        (name === "startDate" &&
+          occupationTime.find(
+            (r) => test < r[0] && transDateToTime(input.endDate) > r[1]
+          )) ||
+        (name === "endDate" &&
+          occupationTime.find(
+            (r) => transDateToTime(input.startDate) < r[0] && test > r[1]
+          ))
+      ) {
+        alert("您所選的區間已有安排!");
+      } else {
+        if (name === "startDate") {
+          const newEndLessDate = new Date();
+          const newEndMostDate = new Date();
+
+          newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
+          newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
+
+          setEndDate({
+            min: newEndLessDate.toISOString().substr(0, 10),
+            max: newEndMostDate.toISOString().substr(0, 10),
+          });
+        }
+        setInput({
+          ...input,
+          [name]: e.target.value,
+          publishDate: today.toISOString().substr(0, 10),
+          name: profile.name,
+          gender: profile.gender,
+          id: cID,
+          status: "0",
+        });
+      }
+    } else {
+      setInput({
+        ...input,
+        [name]: e.target.value,
+        publishDate: today.toISOString().substr(0, 10),
+        name: profile.name,
+        gender: profile.gender,
+        id: cID,
+        status: "0",
+      });
+    }
   };
 
   const newPublishHandler = (e) => {
-    if (input.endDate && input.startDate && input.subject && input.content) {
-      firebase
-        .firestore()
-        .collection("publish")
-        .add(input)
-        .then((res) => {
-          firebase
-            .firestore()
-            .collection("publish")
-            .doc(res.id)
-            .update({ publishID: res.id });
-          return res.id;
-        })
-        .then((res) => {
-          alert("發布成功");
-          setPublishData([{ ...input, publishID: res }]);
-          setDisplay("none");
-          setInput({});
-        });
+    if (
+      !profile.gender ||
+      !profile.name ||
+      !profile.weight ||
+      !profile.height ||
+      !profile.career ||
+      !profile.education ||
+      !profile.age
+    ) {
+      alert("您的個人資料尚未填寫完整喔");
     } else {
-      alert("資料不完整喔");
+      if (input.endDate && input.startDate && input.subject && input.content) {
+        firebase
+          .firestore()
+          .collection("publish")
+          .add(input)
+          .then((res) => {
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(res.id)
+              .update({ publishID: res.id });
+            return res.id;
+          })
+          .then((res) => {
+            alert("發布成功");
+            setPublishData([{ ...input, publishID: res }]);
+            setDisplay("none");
+            setInput({});
+          });
+      } else {
+        alert("資料不完整喔");
+      }
     }
   };
-  console.log(publishData);
   return (
     <div className={style.publish}>
       <div className={style.waiting}>
         <div className={style.header}>
-          <h3>刊登需求</h3>
+          <h4>刊登需求</h4>
           <div className={style.buttons}>
             <button
               className={style.add}
@@ -163,29 +252,30 @@ function Publish() {
             </button>
           </div>
         </div>
-        <h4>您目前的刊登</h4>
-        {/* <div className={style["publication-list"]}> */}
+        <h5>您目前的刊登</h5>
         {publishData ? (
           publishData.length > 0 && publishData[0].status === "0" ? (
             <div className={style.publication}>
               <div className={style.col}>
-                <div className={style["pulish-time"]}>
-                  刊登時間：{publishData[0].publishDate}
+                <div className={style.para}>
+                  <span className={style.title}>刊登時間</span>：
+                  {publishData[0].publishDate}
                 </div>
-                <div className={style["service-time"]}>
+                <div className={style.para}>
                   <div>
-                    預約時間：
+                    <span className={style.title}>預約時間：</span>
                     <span>
                       {publishData[0].startDate}~{publishData[0].endDate}
                     </span>
                   </div>
                 </div>
               </div>
-              <div className={style.subject}>
-                標題：{publishData[0].subject}
+              <div className={style.para}>
+                <span className={style.title}>主旨：</span>
+                {publishData[0].subject}
               </div>
-              <div className={style.message}>
-                <div>內容：</div>
+              <div className={`${style.message} ${style.para}`}>
+                <div className={style.title}>內容：</div>
                 <div>{publishData[0].content}</div>
               </div>
             </div>
@@ -195,10 +285,9 @@ function Publish() {
         ) : (
           <div>loading</div>
         )}
-        {/* </div> */}
       </div>
       <div className={style.invited}>
-        <h3>誰來應徵</h3>
+        <h4>誰來應徵</h4>
         <div className={style.inviters}>
           {publishData ? (
             publishData[0] &&
@@ -240,7 +329,7 @@ function Publish() {
         </div>
       </div>
       <div className={style.published}>
-        <h3>過去刊登</h3>
+        <h4>過去刊登</h4>
         <div className={style.list}>
           {oldPublish ? (
             oldPublish.length > 0 ? (
@@ -254,10 +343,10 @@ function Publish() {
                   </div>
                   {o.status === "1" ? (
                     <>
-                      <div className={style.success}>成功</div>
+                      <span className={style.success}>成功</span>
                     </>
                   ) : o.status === "3" ? (
-                    <div className={style.expired}>已過期</div>
+                    <span className={style.expired}>已過期</span>
                   ) : (
                     ""
                   )}
@@ -272,31 +361,38 @@ function Publish() {
         </div>
       </div>
 
-      <div className={style.form} style={{ display: display }}>
-        <h3>刊登</h3>
+      <div
+        className={`${style.form} animated animate__fadeIn`}
+        style={{ display: display }}
+      >
+        <h4>刊登</h4>
         <div>
           <label>
-            <div>開始</div>
+            <div className={style.title}>開始</div>
             <input
               type="date"
               name="startDate"
+              min={startDate ? startDate.min : ""}
+              max={startDate ? startDate.max : ""}
               value={input.startDate || ""}
               onChange={getInputHandler}
             ></input>
           </label>
           <label>
-            <div>結束</div>
+            <div className={style.title}>結束</div>
             <input
               type="date"
               name="endDate"
+              min={endDate ? endDate.min : ""}
+              max={endDate ? endDate.max : ""}
               value={input.endDate || ""}
               onChange={getInputHandler}
             ></input>
           </label>
         </div>
-        <div className={style.title}>
+        <div className={style.subject}>
           <label>
-            <div>標題</div>
+            <div className={style.title}>主旨</div>
             <input
               type="text"
               name="subject"
@@ -307,7 +403,7 @@ function Publish() {
         </div>
         <div className={style.content}>
           <label>
-            <div>內容</div>
+            <div className={style.title}>內容</div>
             <textarea
               name="content"
               value={input.content || ""}

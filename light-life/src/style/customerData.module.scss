@@ -76,24 +76,29 @@
 }
 
 .service-time {
-  font-weight: 700;
-  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 0 10px;
+  margin-bottom: 0;
+  font-size: 16px;
   text-align: center;
-  position: absolute;
   width: 80%;
   margin: auto;
-  top: 510px;
-  left: 0;
-  right: 0;
+  span {
+    display: none;
+  }
   @media (min-width: 520px) {
-    font-size: 16px;
-    top: 440px;
+    font-size: 20px;
+    margin-top: 20px;
+    display: flex;
+    width: 580px;
+    span {
+      display: inline;
+    }
   }
   @media (min-width: 1024px) {
     font-size: 20px;
     width: unset;
-    margin: 10px auto 0 250px;
-    position: static;
-    text-align: left;
+    margin: 0;
+    margin-left: 260px;
   }
 }

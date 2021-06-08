@@ -4,15 +4,17 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import noImage from "../../../images/noimage.png";
-import CustomerProfile from "./CusotmerProfile.js";
+import CustomerProfile from "./CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
 import { param } from "jquery";
 
-function EditCustomerProfile({ props }) {
+function EditCustomerProfile({ profile, setProfile }) {
   const db = firebase.firestore();
   const storage = firebase.storage();
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const { cID } = useParams();
+
   const {
     name,
     image,
@@ -25,8 +27,7 @@ function EditCustomerProfile({ props }) {
     career,
     sport,
     other,
-  } = props;
-
+  } = profile;
   async function postImg(image) {
     if (image) {
       const storageRef = storage.ref(`${id}/` + image.name);
@@ -51,7 +52,6 @@ function EditCustomerProfile({ props }) {
 
   const getInputHandler = (e) => {
     const { name } = e.target;
-    console.log(e.target);
     if (name !== "customerImage") {
       setInput({ ...input, [name]: e.target.value });
     } else if (e.target.files[0]) {
@@ -76,6 +76,11 @@ function EditCustomerProfile({ props }) {
       const imageUrl = await getImg(input.imageFile);
       delete input.imageFile;
       delete input.previewImg;
+      setProfile({
+        ...profile,
+        ...input,
+        image: imageUrl,
+      });
       setInput({
         ...input,
         image: imageUrl,
@@ -86,8 +91,14 @@ function EditCustomerProfile({ props }) {
           ...input,
           image: imageUrl,
         });
+      setInput({});
     } else {
+      setProfile({
+        ...profile,
+        ...input,
+      });
       db.collection("customers").doc(id).update(input);
+      setInput({});
     }
     setIsEditing(false);
   };
@@ -96,6 +107,7 @@ function EditCustomerProfile({ props }) {
   };
   const bindCancelHandler = () => {
     setIsEditing(false);
+    setInput({});
   };
 
   return (
@@ -111,7 +123,7 @@ function EditCustomerProfile({ props }) {
             </button>
           </div>
           <div className={style.flexbox}>
-            <div>
+            <div className={style.img}>
               <img
                 src={
                   input.previewImg
@@ -135,7 +147,6 @@ function EditCustomerProfile({ props }) {
                     onChange={getInputHandler}
                   />
                   <i className="fa fa-picture-o" aria-hidden="true"></i>
-                  上傳大頭照
                 </label>
               </div>
             </div>
@@ -430,44 +441,45 @@ function EditCustomerProfile({ props }) {
 
           <div className={`${style.flexcol} `}>
             <div className={style.col}>
-              <div className={style.title}>
-                <label htmlFor="customerSport">運動習慣</label>
-              </div>
-              <div>
-                <textarea
-                  id="customerSport"
-                  name="sport"
-                  value={
-                    input.sport || input.sport === ""
-                      ? input.sport
-                      : sport
-                      ? sport
-                      : ""
-                  }
-                  onChange={getInputHandler}
-                ></textarea>
+              <div className={style["data-item"]}>
+                <div className={style.title}>
+                  <label htmlFor="customerSport">運動習慣</label>
+                </div>
+                <div>
+                  <textarea
+                    id="customerSport"
+                    name="sport"
+                    value={
+                      input.sport || input.sport === ""
+                        ? input.sport
+                        : sport
+                        ? sport
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  ></textarea>
+                </div>
               </div>
             </div>
             <div className={style.col}>
-              <div className={style.title}>
-                <label htmlFor="customerOther">
-                  <div>其他</div>
-                  <span>（例：自身狀況、特別需求）</span>
-                </label>
-              </div>
-              <div>
-                <textarea
-                  name="other"
-                  id="customerOther"
-                  value={
-                    input.other || input.other === ""
-                      ? input.other
-                      : other
-                      ? other
-                      : ""
-                  }
-                  onChange={getInputHandler}
-                ></textarea>
+              <div className={style["data-item"]}>
+                <div className={style.title}>
+                  <label htmlFor="customerOther">其他</label>
+                </div>
+                <div>
+                  <textarea
+                    name="other"
+                    id="customerOther"
+                    value={
+                      input.other || input.other === ""
+                        ? input.other
+                        : other
+                        ? other
+                        : ""
+                    }
+                    onChange={getInputHandler}
+                  ></textarea>
+                </div>
               </div>
             </div>
           </div>
@@ -477,7 +489,7 @@ function EditCustomerProfile({ props }) {
           <div className={style.edit}>
             <button onClick={bindEditHandler}>編輯</button>
           </div>
-          <CustomerProfile props={props} input={input} />
+          <CustomerProfile props={profile} input={input} />
         </div>
       )}
     </div>
