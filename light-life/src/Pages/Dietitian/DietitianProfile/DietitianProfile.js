@@ -325,7 +325,7 @@ function DietitianProfile({ profile, setProfile }) {
                       name="skills"
                       value="weightControl"
                       onChange={getInputHandler}
-                      checked={skill.weightControl}
+                      checked={skill.weightControl || false}
                     />
                     體重管理
                   </label>
@@ -335,7 +335,7 @@ function DietitianProfile({ profile, setProfile }) {
                       name="skills"
                       value="sportNT"
                       onChange={getInputHandler}
-                      checked={skill.sportNT}
+                      checked={skill.sportNT || false}
                     />
                     運動營養
                   </label>
@@ -345,7 +345,7 @@ function DietitianProfile({ profile, setProfile }) {
                       name="skills"
                       value="bloodSugar"
                       onChange={getInputHandler}
-                      checked={skill.bloodSugar}
+                      checked={skill.bloodSugar || false}
                     />
                     血糖控制
                   </label>
@@ -355,7 +355,7 @@ function DietitianProfile({ profile, setProfile }) {
                       name="skills"
                       value="threeHigh"
                       onChange={getInputHandler}
-                      checked={skill.threeHigh}
+                      checked={skill.threeHigh || false}
                     />
                     三高控制
                   </label>
@@ -448,10 +448,14 @@ function DietitianProfile({ profile, setProfile }) {
               <div className={style.skills}>
                 <label className={`${style.skill} ${style.title}`}>專長</label>
                 <div className={style["select-skill"]}>
-                  {skills.weightControl ? <span>體重管理　</span> : ""}
-                  {skills.sportNT ? <span>運動營養　</span> : ""}
-                  {skills.threeHigh ? <span>三高控制　</span> : ""}
-                  {skills.bloodSugar ? <span>血糖控制　</span> : ""}
+                  {skills && skills.weightControl ? (
+                    <span>體重管理　</span>
+                  ) : (
+                    ""
+                  )}
+                  {skills && skills.sportNT ? <span>運動營養　</span> : ""}
+                  {skills && skills.threeHigh ? <span>三高控制　</span> : ""}
+                  {skills && skills.bloodSugar ? <span>血糖控制　</span> : ""}
                 </div>
               </div>
 

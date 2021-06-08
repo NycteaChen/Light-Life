@@ -652,6 +652,8 @@
     }
     .button {
       text-align: right;
+      position: relative;
+      z-index: 5;
     }
   }
 }
