@@ -247,7 +247,7 @@ function DietitianRecord({ date }) {
           </li>
         ))}
       </ul>
-      <div className={`${style.mealCol}`}>
+      <div className={style.mealCol}>
         <h5>{date} 飲食記錄</h5>
         {mealKeywords.map((m) => (
           <div className={style.meal}>
@@ -287,7 +287,7 @@ function DietitianRecord({ date }) {
                   <div className={`${style.col} ${style["meal-content"]}`}>
                     <div className={style.title}>飲食內容</div>
                     <div className={style["content-text"]}>
-                      {mealDetails.description || ""}
+                      {mealDetails.description || "尚未有內容"}
                     </div>
                   </div>
                 </div>
