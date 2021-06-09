@@ -224,9 +224,6 @@ function CustomerRecord({ date, count, setCount }) {
     ["晚點", "customerNight-snack", "night-snack"],
   ];
 
-  if (input.imageFile) {
-    console.log(input.imageFile.length);
-  }
   return (
     <>
       <ul>

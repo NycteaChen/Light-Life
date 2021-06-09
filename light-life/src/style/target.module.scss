@@ -2,6 +2,11 @@
   h5 {
     font-size: 20px;
     font-weight: bold;
+    &.customer-h5 {
+      padding: 15px 0 10px;
+      max-width: 580px;
+      margin: auto;
+    }
   }
 
   .flex {
@@ -253,6 +258,12 @@
     max-height: unset;
     margin-left: 260px;
     max-width: 800px;
+    h5 {
+      &.customer-h5 {
+        max-width: 580px;
+        margin: 0;
+      }
+    }
     .flex {
       max-width: 700px;
       margin: 0;

@@ -84,7 +84,9 @@ function RenderDietaryRecord() {
   const [serviceDate, setServiceDate] = useState(null);
   const { dID } = useParams();
   const { cID } = useParams();
-
+  const today = new Date(+new Date() + 8 * 3600 * 1000)
+    .toISOString()
+    .substr(0, 10);
   useEffect(() => {
     if (dID) {
       firebase
@@ -114,13 +116,17 @@ function RenderDietaryRecord() {
   return (
     <div className={style["daily-diet"]}>
       <div className={style["date-selector"]}>
-        <input
-          type="date"
-          min={serviceDate ? serviceDate.startDate : ""}
-          max={serviceDate ? serviceDate.endDate : ""}
-          onChange={getDietaryRecordDate}
-          required="required"
-        ></input>
+        <h5>請選擇記錄日期</h5>
+        {dID ? (
+          <input
+            type="date"
+            min={serviceDate ? serviceDate.startDate : ""}
+            max={serviceDate ? serviceDate.endDate : ""}
+            onChange={getDietaryRecordDate}
+          ></input>
+        ) : (
+          <input type="date" max={today} onChange={getDietaryRecordDate} />
+        )}
       </div>
       {dID ? (
         <Router>
