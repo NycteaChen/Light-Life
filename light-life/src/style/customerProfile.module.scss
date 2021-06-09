@@ -165,7 +165,6 @@
       .uploadImg {
         display: block;
         cursor: pointer;
-        // width: 150px;
         width: 30px;
         height: 30px;
         border-radius: 50%;
@@ -175,6 +174,7 @@
         margin: auto;
         bottom: 5px;
         padding: 2px 5px;
+        font-size: 18px;
         background-color: #9ebeabc9;
         &:hover {
           background-color: #9ebeab;

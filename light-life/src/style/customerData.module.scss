@@ -73,8 +73,8 @@
           // background-color: #c6f3f3;
           letter-spacing: 2px;
           color: #929292;
-          border: 1px solid #286d46;
-          border-bottom: 2px solid #286d46;
+          border: 1px solid #105345;
+          border-bottom: 2px solid #105345;
           background-color: white;
           margin: 10px 0;
           padding: 6px;
@@ -84,7 +84,7 @@
           line-height: 30px;
           transition: background-color 0.3s, color 0.3s;
           &:hover {
-            background-color: #286d46;
+            background-color: #105345;
             color: white;
             transform: unset;
             font-weight: normal;
@@ -94,7 +94,7 @@
           }
         }
         .active {
-          background-color: #286d46;
+          background-color: #105345;
           color: white !important;
         }
       }
