@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import { useLocation, useParams } from "react-router-dom";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import style from "../../../style/dietary.module.scss";
 function Analysis({ date, cID, data }) {
   const pathName = useLocation().pathname;
@@ -117,6 +118,14 @@ function Analysis({ date, cID, data }) {
       .doc(date)
       .update({
         advice: advice,
+      })
+      .then(() => {
+        Swal.fire({
+          text: "儲存建議成功",
+          icon: "success",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       });
   };
 

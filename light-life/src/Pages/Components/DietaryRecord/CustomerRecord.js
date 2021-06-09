@@ -260,6 +260,8 @@ function CustomerRecord({ date, count, setCount }) {
     ["晚點", "customerNight-snack", "night-snack"],
   ];
 
+  console.log(dataAnalysis);
+
   return (
     <>
       <ul>
@@ -367,7 +369,7 @@ function CustomerRecord({ date, count, setCount }) {
                   </div>
                 </div>
 
-                {dataAnalysis ? (
+                {dataAnalysis.length > 0 ? (
                   <div className={style["customer-table"]}>
                     <table>
                       <thead>

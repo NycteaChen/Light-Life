@@ -211,27 +211,37 @@ function DietitianRecord({ date }) {
       // }
     }
   });
-
   const removeItemHandler = (e) => {
-    setDataAnalysis([
-      ...dataAnalysis.filter((d, index) => index !== +e.target.id),
-    ]);
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dID)
-      .collection("customers")
-      .doc(cID)
-      .collection("diet")
-      .doc(date)
-      .set(
-        {
-          [meal[1]]: [
-            ...dataAnalysis.filter((d, index) => index !== +e.target.id),
-          ],
-        },
-        { merge: true }
-      );
+    Swal.fire({
+      text: "確定刪除食材資料嗎?",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "取消",
+      confirmButtonText: "確定",
+      confirmButtonColor: "#1e4d4e",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        setDataAnalysis([
+          ...dataAnalysis.filter((d, index) => index !== +e.target.id),
+        ]);
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .doc(dID)
+          .collection("customers")
+          .doc(cID)
+          .collection("diet")
+          .doc(date)
+          .set(
+            {
+              [meal[1]]: [
+                ...dataAnalysis.filter((d, index) => index !== +e.target.id),
+              ],
+            },
+            { merge: true }
+          );
+      }
+    });
   };
 
   const mealKeywords = [
