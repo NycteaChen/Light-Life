@@ -121,7 +121,7 @@
         max-width: 580px;
         .col {
           margin: 10px 0 15px;
-          margin-left: 45px;
+          margin-left: 47px;
           width: 450px;
           .data-item {
             .title + div {
@@ -136,27 +136,6 @@
     & {
       .profile-data {
         margin: 0;
-
-        .flexcol {
-          // display: flex;
-          // justify-content: center;
-          // .col {
-          //   margin-top: 0;
-          //   .data-item {
-          //     display: block;
-          //     .title {
-          //       text-align: left;
-          //     }
-          //     .title + div {
-          //       width: 250px;
-          //       margin-top: 5px;
-          //     }
-          //   }
-          // }
-          // .col {
-          //   margin-right: 28px;
-          // }
-        }
       }
     }
   }
@@ -454,44 +433,30 @@
         .flexbox {
           .img {
             img {
-              margin-left: 74px;
+              margin-left: 73px;
             }
             .uploadImg {
               left: 180px;
             }
-          }
-          .data-item {
-            margin: 0;
-            margin-left: 10px;
-            margin-right: 9px;
-            &:nth-of-type(2) {
-              margin: 5px 0 2px 10px;
+            & + div {
+              margin-bottom: 12px;
+              margin-left: 0px;
+              margin-right: 28px;
             }
           }
-          // margin: auto;
-          // justify-content: space-around;
         }
         .flexbox ~ .flexbox {
-          margin-right: 0;
-          margin-bottom: 0 !important;
-          margin-left: 55px;
+          margin-left: 52px;
           .data-item {
-            margin: 0;
             margin-right: 10px;
             &:nth-of-type(2) {
-              margin: 0 0 13px;
-              margin-left: 10px;
-            }
-          }
-          & > div:first-child {
-            margin: 0;
-            .title + div {
-              width: 40px;
+              margin-left: 0px;
+              margin-right: 17px;
             }
           }
         }
         .col {
-          margin-left: 97px;
+          margin-left: 90px;
           .data-item {
             textarea {
               width: 310px;
@@ -509,42 +474,6 @@
       overflow-x: hidden;
       .edit-mode {
         margin: 0;
-        // .flexbox {
-        //   justify-content: space-around;
-        //   & > div:last-of-type {
-        //     position: relative;
-        //     right: 80px;
-        //   }
-        // }
-        // .flexcol {
-        //   display: flex;
-        //   justify-content: center;
-        //   .col {
-        //     margin-top: 0;
-        //     display: block;
-        //     .title {
-        //       &:first-of-type {
-        //         label {
-        //           display: flex;
-        //           width: 250px;
-        //           align-items: center;
-        //           span {
-        //             text-align: left;
-        //             width: 180px;
-        //           }
-        //         }
-        //       }
-        //     }
-        //     textarea {
-        //       width: 250px;
-        //       margin-left: 0;
-        //       height: 5rem;
-        //     }
-        //   }
-        //   .col {
-        //     margin-right: 28px;
-        //   }
-        // }
       }
     }
   }
