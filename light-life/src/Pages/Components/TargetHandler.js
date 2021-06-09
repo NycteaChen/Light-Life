@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { useLocation, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import style from "../../style/target.module.scss";
 
 function TargetHandler({ target, setTarget }) {
@@ -60,41 +61,52 @@ function TargetHandler({ target, setTarget }) {
   };
 
   const bindRemoveTarget = (e) => {
-    setTargetIndex(e.target.id);
-
-    setTarget([...target.filter((t, index) => index !== +e.target.id)]);
-    db.collection("dietitians")
-      .doc(params.dID)
-      .collection("customers")
-      .doc(params.cID)
-      .collection("target")
-      .get()
-      .then((docs) => {
-        const docsArray = [];
-        docs.forEach((doc) => {
-          docsArray.push(doc.id);
-        });
-        const getID = docsArray.find((d, index) => index === +e.target.id);
-        return getID;
-      })
-      .then((res) => {
+    Swal.fire({
+      text: "確定刪除嗎?",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "取消",
+      confirmButtonText: "確定",
+      confirmButtonColor: "#1e4d4e",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        setTargetIndex(e.target.id);
+        setTarget([...target.filter((t, index) => index !== +e.target.id)]);
         db.collection("dietitians")
           .doc(params.dID)
           .collection("customers")
           .doc(params.cID)
           .collection("target")
-          .doc(`${res}`)
-          .delete()
-          .then(() => {
-            console.log("delete");
+          .get()
+          .then((docs) => {
+            const docsArray = [];
+            docs.forEach((doc) => {
+              docsArray.push(doc.id);
+            });
+            const getID = docsArray.find((d, index) => index === +e.target.id);
+            return getID;
           })
-          .catch((error) => {
-            console.log("Error:", error);
+          .then((res) => {
+            db.collection("dietitians")
+              .doc(params.dID)
+              .collection("customers")
+              .doc(params.cID)
+              .collection("target")
+              .doc(`${res}`)
+              .delete()
+              .then(() => {
+                console.log("delete");
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
           });
-      });
+      }
+    });
   };
 
   const bindSaveHandler = (e) => {
+    console.log(e.target.id);
     db.collection("dietitians")
       .doc(params.dID)
       .collection("customers")
@@ -146,7 +158,11 @@ function TargetHandler({ target, setTarget }) {
                 <div className={style["target-header"]}>
                   <div className={style["alter-button"]}>
                     <button onClick={bindSaveHandler} id={index}>
-                      儲存
+                      <i
+                        class="fa fa-floppy-o"
+                        aria-hidden="true"
+                        id={index}
+                      ></i>
                     </button>
                     {/* <i className="fa fa-trash-o" aria-hidden="true"></i> */}
                     {/* <i className="fa fa-trash" aria-hidden="true"></i> */}
@@ -235,7 +251,12 @@ function TargetHandler({ target, setTarget }) {
                 <div className={style["target-header"]}>
                   <div className={style["alter-button"]}>
                     <button onClick={bindEditHandler} id={index}>
-                      編輯
+                      <i
+                        class="fa fa-pencil"
+                        aria-hidden="true"
+                        id={index}
+                        onClick={bindEditHandler}
+                      ></i>
                     </button>
                     <button onClick={bindRemoveTarget} id={index}>
                       <i
@@ -286,7 +307,12 @@ function TargetHandler({ target, setTarget }) {
                     {pathName.includes("dietitian") ? (
                       <div className={style["alter-button"]}>
                         <button onClick={bindEditHandler} id={index}>
-                          編輯
+                          <i
+                            class="fa fa-pencil"
+                            aria-hidden="true"
+                            id={index}
+                            onClick={bindEditHandler}
+                          ></i>
                         </button>
                         <button onClick={bindRemoveTarget} id={index}>
                           <i
@@ -347,7 +373,12 @@ function TargetHandler({ target, setTarget }) {
                   {pathName.includes("dietitian") ? (
                     <div className={style["alter-button"]}>
                       <button onClick={bindEditHandler} id={index}>
-                        編輯
+                        <i
+                          class="fa fa-pencil"
+                          aria-hidden="true"
+                          id={index}
+                          onClick={bindEditHandler}
+                        ></i>
                       </button>
                       <button onClick={bindRemoveTarget} id={index}>
                         <i

@@ -16,7 +16,20 @@
     justify-content: space-between;
     margin: auto;
     button {
+      font-size: 20px;
+      border: 1px solid beige;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      background-color: #87a39875;
+      transition: background-color 0.3s;
       margin-right: 15px;
+      i {
+        color: #ffffff;
+      }
+      &:hover {
+        background-color: #87a398;
+      }
     }
   }
 
@@ -62,21 +75,22 @@
       box-shadow: 0 2px 2px #515a56;
       transition: opacity 0.3s;
       .alter-button {
-        margin: 10px 20px auto auto;
         text-align: right;
-
-        i {
-          font-size: 20px;
-          transition: all 0.5s;
-          cursor: pointer;
-          &:hover {
-            transform: scale(1.2);
-            color: #037570;
-          }
-        }
         button {
+          font-size: 20px;
+          border: 1px solid beige;
+          border-radius: 50%;
+          width: 35px;
+          height: 35px;
+          background-color: #87a39875;
+          transition: background-color 0.3s;
           margin-right: 10px;
-          padding: 2px 8px;
+          i {
+            color: #ffffff;
+          }
+          &:hover {
+            background-color: #87a398;
+          }
         }
       }
       .flexbox {
@@ -220,20 +234,6 @@
           padding: 4px 0;
           border-bottom: 2px solid #00753f;
         }
-        .alter-button {
-          margin: 10px 20px auto auto;
-          text-align: right;
-
-          i {
-            font-size: 20px;
-            transition: all 0.5s;
-            cursor: pointer;
-          }
-          button {
-            margin-right: 10px;
-            padding: 0;
-          }
-        }
         .col {
           display: flex;
           white-space: nowrap;
@@ -292,6 +292,11 @@
       margin: 0;
       margin-top: 20px;
       max-width: 700px;
+    }
+    .flexbox {
+      .set-content {
+        width: 155px;
+      }
     }
   }
 }
