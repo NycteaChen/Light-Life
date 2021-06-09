@@ -256,6 +256,7 @@ function Dietitian() {
   }, []);
 
   const getSelectedCustomer = (e) => {
+    setActive({});
     setSelectedID(e.target.className);
     firebase
       .firestore()
