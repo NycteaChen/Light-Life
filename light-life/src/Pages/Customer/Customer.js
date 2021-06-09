@@ -277,7 +277,7 @@ function Customer() {
             users.push(doc.data());
           } else if (!dID && doc.data().isServing) {
             users.push(doc.data());
-          } else if (doc.data().isServing) {
+          } else if (dID && doc.data().id === dID) {
             setDName(doc.data().name);
           }
         });

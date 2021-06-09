@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import Swal from "sweetalert2";
 import style from "../../../style/dietitianProfile.module.scss";
 
 function DietitianProfile({ profile, setProfile }) {
