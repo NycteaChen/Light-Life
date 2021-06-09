@@ -14,7 +14,7 @@ import TargetHandler from "../../Components/TargetHandler.js";
 import style from "../../../style/target.module.scss";
 
 function CustomerTarget() {
-  const [target, setTarget] = useState([]);
+  const [target, setTarget] = useState(null);
   const params = useParams();
   useEffect(() => {
     firebase

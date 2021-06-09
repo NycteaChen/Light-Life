@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DietitianData from "./DietitianData.js";
 import style from "../../../style/findDietitian.module.scss";
+import spinner from "../../../images/loading.gif";
 
 function GetDietitiansData({ props, setReserve, profile, reserve }) {
   const [isChecked, setIsChecked] = useState(false); //false
@@ -65,7 +66,9 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
             <div>暫無</div>
           )
         ) : (
-          <div>loading</div>
+          <div style={{ textAlign: "center" }}>
+            <img src={spinner} style={{ width: "50px", height: "50px" }} />
+          </div>
         )}
       </div>
     </div>

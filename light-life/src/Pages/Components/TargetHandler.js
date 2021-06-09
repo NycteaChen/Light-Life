@@ -4,6 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import Swal from "sweetalert2";
 import style from "../../style/target.module.scss";
+import spinner from "../../images/loading.gif";
 
 function TargetHandler({ target, setTarget }) {
   const db = firebase.firestore();
@@ -149,10 +150,12 @@ function TargetHandler({ target, setTarget }) {
         setIsEditing(false);
       });
   };
+
   return (
     <>
-      {isEditing
-        ? target.map((t, index) =>
+      {target ? (
+        isEditing ? (
+          target.map((t, index) =>
             index === +targetIndex ? (
               <div key={index} className={style["customer-target"]}>
                 <div className={style["target-header"]}>
@@ -299,7 +302,8 @@ function TargetHandler({ target, setTarget }) {
               </div>
             )
           )
-        : target.map((t, index) =>
+        ) : target.length > 0 ? (
+          target.map((t, index) =>
             index === +targetIndex ? (
               <>
                 <div key={index} className={style["customer-target"]}>
@@ -423,7 +427,15 @@ function TargetHandler({ target, setTarget }) {
                 </div>
               </div>
             )
-          )}
+          )
+        ) : (
+          <div>還沒設立目標喔</div>
+        )
+      ) : (
+        <div style={{ textAlign: "center" }}>
+          <img src={spinner} style={{ width: "50px", height: "50px" }} />
+        </div>
+      )}
     </>
   );
 }
