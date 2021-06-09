@@ -326,7 +326,7 @@ function Dietitian() {
   };
 
   useEffect(() => {
-    if (!profile.name) {
+    if (profile.email && !profile.name) {
       setProfile({ ...profile, isServing: false });
       firebase
         .firestore()
