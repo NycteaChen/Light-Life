@@ -11,9 +11,6 @@ import {
 import firebase from "firebase/app";
 import "firebase/firestore";
 import Swal from "sweetalert2";
-import logo from "../../images/lightlife-straight.png";
-import noImage from "../../images/noimage.png";
-import exit from "../../images/exit.png";
 import InvitedList from "./Invite/InvitedList.js";
 import DietitianProfile from "../Dietitian/DietitianProfile/DietitianProfile.js";
 import CustomerProfile from "../Components/CustomerProfile/CustomerProfile.js";
@@ -24,10 +21,17 @@ import MobileBottom from "../Components/MobileBottom.js";
 import basic from "../../style/basic.module.scss";
 import style from "../../style/customerData.module.scss";
 import customer from "../../style/customerProfile.module.scss";
+import logo from "../../images/lightlife-straight.png";
+import noImage from "../../images/noimage.png";
+import exit from "../../images/exit.png";
+import loadStyle from "../../style/home.module.scss";
+import loading from "../../images/lightlife-straight.png";
 import styled from "styled-components";
+import spinner from "../../images/loading.gif";
 
 function Dietitian() {
-  const [users, setUsers] = useState([]);
+  const [load, setLoad] = useState(loadStyle.loading);
+  const [users, setUsers] = useState(null);
   const [invitedList, setInvitedList] = useState([]);
   const [profile, setProfile] = useState({});
   const [selectedID, setSelectedID] = useState("");
@@ -219,7 +223,12 @@ function Dietitian() {
       .collection("dietitians")
       .doc(dietitianID)
       .get()
-      .then((res) => setProfile(res.data()));
+      .then((res) => setProfile(res.data()))
+      .then(() =>
+        setTimeout(() => {
+          setLoad(style.loadFadeout);
+        }, 500)
+      );
 
     if (customerID) {
       firebase
@@ -438,7 +447,7 @@ function Dietitian() {
                   className={`${basic.customerList} list `}
                   style={{ display: display }}
                 >
-                  {users.length > 0
+                  {users && users.length > 0
                     ? users.map((c, index) => (
                         <Link
                           to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
@@ -581,17 +590,26 @@ function Dietitian() {
                       人
                     </div>
                     <div>
-                      {users && users.length > 0 ? (
-                        users.map((u) => (
-                          <div className={basic.each}>
-                            <div>
-                              {u.name} {u.gender === "男" ? "先生" : "小姐"}
+                      {users ? (
+                        users.length > 0 ? (
+                          users.map((u) => (
+                            <div className={basic.each}>
+                              <div>
+                                {u.name} {u.gender === "男" ? "先生" : "小姐"}
+                              </div>
+                              <div>結束日期：{u.endDate}</div>
                             </div>
-                            <div>結束日期：{u.endDate}</div>
-                          </div>
-                        ))
+                          ))
+                        ) : (
+                          <div className={basic.each}>暫無</div>
+                        )
                       ) : (
-                        <div className={basic.each}>暫無</div>
+                        <div style={{ textAlign: "center" }}>
+                          <img
+                            src={spinner}
+                            style={{ width: "50px", height: "50px" }}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
@@ -616,7 +634,12 @@ function Dietitian() {
                           <div className={basic.each}>暫無</div>
                         )
                       ) : (
-                        <div className={basic.each}>loading</div>
+                        <div style={{ textAlign: "center" }}>
+                          <img
+                            src={spinner}
+                            style={{ width: "50px", height: "50px" }}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
@@ -661,7 +684,7 @@ function Dietitian() {
                     onClick={bindListHandler}
                   >
                     <i class="fa fa-address-book-o" aria-hidden="true"></i>
-                    {users.length > 0 && customerID
+                    {users && users.length > 0 && customerID
                       ? users.filter((e) => e.id === customerID)[0].name
                       : ""}
                   </Link>
@@ -744,7 +767,9 @@ function Dietitian() {
   } else {
     return (
       <main className="d-main">
-        <div style={{ marginLeft: "360px" }}>loading</div>
+        <div className={load}>
+          <img src={loading} />
+        </div>
       </main>
     );
   }

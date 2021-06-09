@@ -7,6 +7,9 @@ import {
   useParams,
   useLocation,
 } from "react-router-dom";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import Swal from "sweetalert2";
 import GetDietitiansData from "./FindDietitians/GetDietitinasData.js";
 import ReserveList from "./Reverse/ReserveList.js";
 import CustomerProfile from "../Components/CustomerProfile/EditCustomerProfile.js";
@@ -14,15 +17,16 @@ import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import CustomerTarget from "./Target/CustomerTarget.js";
 import Publish from "./Publish/Publish.js";
 import MobileBottom from "../Components/MobileBottom.js";
-import firebase from "firebase/app";
-import "firebase/firestore";
-import Swal from "sweetalert2";
 import style from "../../style/basic.module.scss";
+import loadStyle from "../../style/home.module.scss";
+import loading from "../../images/lightlife-straight.png";
+import spinner from "../../images/loading.gif";
 import logo from "../../images/lightlife-straight.png";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 
 function Customer() {
+  const [load, setLoad] = useState(loadStyle.loading);
   const [profile, setProfile] = useState({});
   const [dietitians, setDietitians] = useState(null);
   const [reserve, setReserve] = useState([]);
@@ -585,7 +589,12 @@ function Customer() {
                             <>暫無</>
                           )
                         ) : (
-                          <>loading</>
+                          <span>
+                            <img
+                              src={spinner}
+                              style={{ width: "50px", height: "50px" }}
+                            />
+                          </span>
                         )}
                       </div>
                     </div>
@@ -608,7 +617,12 @@ function Customer() {
                           <div className={style.each}>暫無</div>
                         )
                       ) : (
-                        <div className={style.each}>loading</div>
+                        <div style={{ textAlign: "center" }}>
+                          <img
+                            src={spinner}
+                            style={{ width: "50px", height: "50px" }}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
@@ -644,8 +658,10 @@ function Customer() {
     );
   } else {
     return (
-      <main className={style["d-main"]}>
-        <div style={{ marginLeft: "360px" }}>loading</div>
+      <main className="d-main">
+        <div className={load}>
+          <img src={loading} />
+        </div>
       </main>
     );
   }

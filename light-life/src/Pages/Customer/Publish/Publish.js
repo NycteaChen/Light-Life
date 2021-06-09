@@ -11,6 +11,7 @@ import "firebase/firestore";
 import Swal from "sweetalert2";
 import style from "../../../style/publish.module.scss";
 import Invited from "./Invited.js";
+import spinner from "../../../images/loading.gif";
 
 function Publish({ reserve }) {
   const { cID } = useParams();
@@ -324,7 +325,9 @@ function Publish({ reserve }) {
             <div>目前沒有刊登喔</div>
           )
         ) : (
-          <div>loading</div>
+          <div style={{ textAlign: "center" }}>
+            <img src={spinner} style={{ width: "50px", height: "50px" }} />
+          </div>
         )}
       </div>
       <div className={style.invited}>
@@ -353,7 +356,9 @@ function Publish({ reserve }) {
               <div>沒有應徵喔</div>
             )
           ) : (
-            <div>loading</div>
+            <div style={{ textAlign: "center" }}>
+              <img src={spinner} style={{ width: "50px", height: "50px" }} />
+            </div>
           )}
           {publishData && isChecked ? (
             <Invited
@@ -397,7 +402,9 @@ function Publish({ reserve }) {
               <div>沒有喔</div>
             )
           ) : (
-            <div>loading</div>
+            <div style={{ textAlign: "center" }}>
+              <img src={spinner} style={{ width: "50px", height: "50px" }} />
+            </div>
           )}
         </div>
       </div>

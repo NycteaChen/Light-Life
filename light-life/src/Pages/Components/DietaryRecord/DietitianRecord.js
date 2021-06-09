@@ -253,6 +253,8 @@ function DietitianRecord({ date }) {
     ["晚點", "customerNight-snack", "night-snack"],
   ];
 
+  console.log(mealDetails);
+
   return (
     <>
       <ul>

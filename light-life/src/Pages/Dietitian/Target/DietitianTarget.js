@@ -10,7 +10,7 @@ import { setMilliseconds } from "date-fns";
 function DietitianTarget() {
   const params = useParams();
   const [date, setDate] = useState({});
-  const [target, setTarget] = useState([]);
+  const [target, setTarget] = useState(null);
   const [input, setInput] = useState({});
   const [isClick, setIsClick] = useState(false);
   const [leastEndDate, setLeastEndDate] = useState(false);
