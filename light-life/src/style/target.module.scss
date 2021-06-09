@@ -176,7 +176,18 @@
       }
     }
   }
-
+  @media (min-width: 380px) {
+    .add-new-target {
+      input {
+        width: 150px;
+      }
+      .target-other {
+        .set-content {
+          width: 150px;
+        }
+      }
+    }
+  }
   @media (min-width: 570px) {
     .flexbox > h5 {
       text-align: left;
@@ -236,8 +247,10 @@
     }
 
     .add-new-target {
-      max-width: 460px;
+      width: 90%;
+      max-width: 520px;
       height: 310px;
+
       .col {
         display: flex;
       }
