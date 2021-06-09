@@ -68,7 +68,7 @@ function DietitianTarget() {
           const dateTime = Date.now();
           const timestamp = Math.floor(dateTime);
           Swal.fire({
-            text: "確定新增嗎嗎?",
+            text: "確定新增嗎?",
             showCancelButton: true,
             cancelButtonText: "取消",
             confirmButtonText: "確定",
@@ -90,7 +90,11 @@ function DietitianTarget() {
             }
           });
         } else {
-          alert("請填寫完整");
+          Swal.fire({
+            text: "請填寫完整",
+            confirmButtonText: "確定",
+            confirmButtonColor: "#1e4d4e",
+          });
         }
 
         break;

@@ -18,6 +18,19 @@
     align-items: center;
     .buttons {
       button {
+        font-size: 20px;
+        border: 1px solid beige;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        background-color: #87a39875;
+        transition: background-color 0.3s;
+        i {
+          color: #ffffff;
+        }
+        &:hover {
+          background-color: #87a398;
+        }
         &.remove {
           margin-left: 10px;
         }

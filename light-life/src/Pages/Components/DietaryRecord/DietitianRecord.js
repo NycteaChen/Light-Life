@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import { useParams } from "react-router-dom";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import getIngrediensData from "../../../utils/IngredientsAPI.js";
 import Analysis from "./Analysis.js";
 import style from "../../../style/dietary.module.scss";
@@ -158,10 +159,18 @@ function DietitianRecord({ date }) {
   const addNewFoodTable = (e) => {
     if (meal[0] === e.target.className.split(" ")[1]) {
       if (input.item === "" || !input.item) {
-        alert("請填入食材");
+        Swal.fire({
+          text: "請填入食材",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
         return;
       } else if (input.per === "0" || !input.per) {
-        alert("請填入單位數");
+        Swal.fire({
+          text: "請填入單位數",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       } else {
         firebase
           .firestore()

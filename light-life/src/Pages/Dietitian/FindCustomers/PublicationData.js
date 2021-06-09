@@ -101,7 +101,11 @@ function PublicationData({ publish, display, setDisplay }) {
         });
       }
     } else {
-      alert("請填寫邀請訊息!");
+      Swal.fire({
+        text: "請填寫邀請訊息",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      });
     }
   };
 

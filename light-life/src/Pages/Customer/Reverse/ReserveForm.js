@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import style from "../../../style/findDietitian.module.scss";
-// , profile
 function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   const params = useParams();
   const [input, setInput] = useState({});
@@ -83,7 +83,12 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
             (r) => transDateToTime(input.reserveStartDate) < r[0] && test > r[1]
           ))
       ) {
-        alert("您所選的區間已有安排!");
+        Swal.fire({
+          text: "您所選的區間已有安排",
+          icon: "warning",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       } else {
         if (name === "reserveStartDate") {
           const newEndLessDate = new Date();
@@ -136,7 +141,12 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       !profile.education ||
       !profile.age
     ) {
-      alert("您的個人資料尚未填寫完整喔");
+      Swal.fire({
+        text: "個人資料填寫完整才能執行預約喔",
+        icon: "warning",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      });
     } else if (
       input.reserveStartDate &&
       input.reserveEndDate &&
@@ -144,29 +154,49 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
     ) {
       const dateTime = Date.now();
       const timestamp = Math.floor(dateTime);
-      db.collection("reserve")
-        .doc(`${timestamp}`)
-        .set({ ...input, reserveID: `${timestamp}` })
-        .then(() => {
+      Swal.fire({
+        text: "確定預約嗎?",
+        showCancelButton: true,
+        cancelButtonText: "取消",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      }).then((res) => {
+        if (res.isConfirmed) {
           db.collection("reserve")
-            .get()
-            .then((docs) => {
-              const reserveArray = [];
-              docs.forEach((doc) => {
-                if (doc.data().inviterID === params.cID) {
-                  reserveArray.push(doc.data());
-                }
+            .doc(`${timestamp}`)
+            .set({ ...input, reserveID: `${timestamp}` })
+            .then(() => {
+              db.collection("reserve")
+                .get()
+                .then((docs) => {
+                  const reserveArray = [];
+                  docs.forEach((doc) => {
+                    if (doc.data().inviterID === params.cID) {
+                      reserveArray.push(doc.data());
+                    }
+                  });
+                  setReserve(reserveArray);
+                });
+            })
+            .then(() => {
+              Swal.fire({
+                text: "已發送您的預約邀請",
+                icon: "success",
+                confirmButtonText: "確定",
+                confirmButtonColor: "#1e4d4e",
               });
-              setReserve(reserveArray);
-            });
-        })
-        .then(() => {
-          alert("已發送!");
-          setIsChecked(false);
-        })
-        .catch((error) => "Error:" + error);
+              setIsChecked(false);
+            })
+            .catch((error) => "Error:" + error);
+        }
+      });
     } else {
-      alert("請填寫日期與訊息");
+      Swal.fire({
+        text: "日期與邀請訊息都要填寫喔",
+        icon: "warning",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      });
     }
   };
   const nowReserve = reserve.find((r) => r.dietitian === props.id);
@@ -229,7 +259,9 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
               ></textarea>
             </label>
             <div className={style.button}>
-              <button onClick={sendReverseHandler}>發送預約邀請</button>
+              <button onClick={sendReverseHandler}>
+                <i class="fa fa-paper-plane" aria-hidden="true"></i>發送預約邀請
+              </button>
             </div>
           </>
         )}

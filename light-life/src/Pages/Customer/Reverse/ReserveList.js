@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import DietitianData from "../FindDietitians/DietitianData.js";
 import style from "../../../style/reserveList.module.scss";
 
@@ -47,18 +48,37 @@ function ReserveList({ reserve, setReserve }) {
   };
   const removeReserveHandler = (e) => {
     const docID = reserve[+e.target.id].reserveID;
-    firebase
-      .firestore()
-      .collection("reserve")
-      .doc(docID)
-      .delete()
-      .then(() => {
-        alert("delete");
-        setReserve([...reserve.filter((r, index) => index !== +e.target.id)]);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
+    Swal.fire({
+      text: "確定取消預約嗎?",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "取消",
+      confirmButtonText: "確定",
+      confirmButtonColor: "#1e4d4e",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        firebase
+          .firestore()
+          .collection("reserve")
+          .doc(docID)
+          .delete()
+          .then(() => {
+            Swal.fire({
+              text: "取消成功",
+              icon: "success",
+              confirmButtonText: "確定",
+              confirmButtonColor: "#1e4d4e",
+            }).then(() => {
+              setReserve([
+                ...reserve.filter((r, index) => index !== +e.target.id),
+              ]);
+            });
+          })
+          .catch((error) => {
+            console.log("Error:", error);
+          });
+      }
+    });
   };
   return (
     <div className={style["reserve-list"]}>
