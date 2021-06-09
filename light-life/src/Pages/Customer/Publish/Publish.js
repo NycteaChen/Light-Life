@@ -275,7 +275,11 @@ function Publish({ reserve }) {
               title="add"
               onClick={publishModalHandler}
             >
-              <i class="fa fa-pencil" aria-hidden="true" title="add"></i>
+              <i
+                class="fa fa-pencil-square-o"
+                aria-hidden="true"
+                title="add"
+              ></i>
             </button>
             <button
               className={style.remove}

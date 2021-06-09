@@ -237,12 +237,14 @@ function TargetHandler({ target, setTarget }) {
                     <button onClick={bindEditHandler} id={index}>
                       編輯
                     </button>
-                    <i
-                      id={index}
-                      className="fa fa-trash-o"
-                      aria-hidden="true"
-                      onClick={bindRemoveTarget}
-                    ></i>
+                    <button onClick={bindRemoveTarget} id={index}>
+                      <i
+                        id={index}
+                        className="fa fa-trash-o"
+                        aria-hidden="true"
+                        onClick={bindRemoveTarget}
+                      ></i>
+                    </button>
                   </div>
                   <div className={style.flexbox}>
                     <div className={style.title}>建立時間</div>
@@ -286,12 +288,14 @@ function TargetHandler({ target, setTarget }) {
                         <button onClick={bindEditHandler} id={index}>
                           編輯
                         </button>
-                        <i
-                          id={index}
-                          className="fa fa-trash-o"
-                          aria-hidden="true"
-                          onClick={bindRemoveTarget}
-                        ></i>
+                        <button onClick={bindRemoveTarget} id={index}>
+                          <i
+                            id={index}
+                            className="fa fa-trash-o"
+                            aria-hidden="true"
+                            onClick={bindRemoveTarget}
+                          ></i>
+                        </button>
                       </div>
                     ) : (
                       ""
@@ -345,12 +349,14 @@ function TargetHandler({ target, setTarget }) {
                       <button onClick={bindEditHandler} id={index}>
                         編輯
                       </button>
-                      <i
-                        id={index}
-                        className="fa fa-trash-o"
-                        aria-hidden="true"
-                        onClick={bindRemoveTarget}
-                      ></i>
+                      <button onClick={bindRemoveTarget} id={index}>
+                        <i
+                          id={index}
+                          className="fa fa-trash-o"
+                          aria-hidden="true"
+                          onClick={bindRemoveTarget}
+                        ></i>
+                      </button>
                     </div>
                   ) : (
                     ""
