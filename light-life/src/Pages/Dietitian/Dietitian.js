@@ -659,6 +659,7 @@ function Dietitian() {
                     }/profile`}
                     onClick={bindListHandler}
                   >
+                    <i class="fa fa-address-book-o" aria-hidden="true"></i>
                     {users.length > 0 && customerID
                       ? users.filter((e) => e.id === customerID)[0].name
                       : ""}
@@ -673,6 +674,11 @@ function Dietitian() {
                     }/dietary`}
                     onClick={bindListHandler}
                   >
+                    <i
+                      class="fa fa-cutlery"
+                      aria-hidden="true"
+                      title="dietary"
+                    ></i>
                     飲食記錄
                   </Link>
                   <Link
@@ -685,6 +691,11 @@ function Dietitian() {
                     }/target`}
                     onClick={bindListHandler}
                   >
+                    <i
+                      class="fa fa-bullseye"
+                      aria-hidden="true"
+                      title="target"
+                    ></i>
                     目標設定
                   </Link>
                 </div>
