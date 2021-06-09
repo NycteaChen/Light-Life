@@ -8,7 +8,7 @@
     margin: auto;
     max-width: 580px;
     input[type="date"] {
-      width: 150px;
+      width: 180px;
       margin-bottom: 20px;
     }
   }
@@ -400,12 +400,7 @@
     & {
       text-align: left;
       .date-selector {
-        text-align: center;
-
-        margin: auto;
-        input[type="date"] {
-          margin: 20px 0 0;
-        }
+        // text-align: center;
       }
       ul {
         li.meal-title {
