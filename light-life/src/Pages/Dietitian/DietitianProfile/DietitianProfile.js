@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import style from "../../../style/dietitianProfile.module.scss";
 
 function DietitianProfile({ profile, setProfile }) {
@@ -109,7 +110,6 @@ function DietitianProfile({ profile, setProfile }) {
         })
         .then(() => {
           setTrigger(!trigger);
-          alert("儲存囉");
           setProfile({ ...profile, ...input, image: imageUrl });
           setIsEditing(false);
         });
@@ -120,7 +120,7 @@ function DietitianProfile({ profile, setProfile }) {
         .update(input)
         .then(() => {
           setTrigger(!trigger);
-          alert("儲存囉");
+
           setIsEditing(false);
         });
     }

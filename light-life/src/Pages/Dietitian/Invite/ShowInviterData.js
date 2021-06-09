@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import noImage from "../../../images/noimage.png";
 import style from "../../../style/whoInvite.module.scss";
 import { add } from "date-fns";
@@ -70,7 +71,12 @@ function ShowInviterData({
               });
           })
           .then(() => {
-            alert("接受預約!");
+            Swal.fire({
+              text: "接受預約",
+              icon: "success",
+              confirmButtonText: "確定",
+              confirmButtonColor: "#1e4d4e",
+            });
             setInvitedList([
               ...invitedList.filter((i, index) => index !== +idx),
             ]);
@@ -105,7 +111,12 @@ function ShowInviterData({
           setIsChecked(false);
         });
     } else {
-      alert("沒有輸入喔");
+      Swal.fire({
+        text: "請輸入婉拒訊息",
+        icon: "warning",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      });
     }
   };
 

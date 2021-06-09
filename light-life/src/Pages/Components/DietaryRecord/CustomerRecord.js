@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import { useParams } from "react-router-dom";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import Analysis from "./Analysis.js";
 import style from "../../../style/dietary.module.scss";
 
@@ -125,28 +126,43 @@ function CustomerRecord({ date, count, setCount }) {
     }
   };
   const removeImageHandler = (e) => {
-    setMealDetails({
-      ...mealDetails,
-      images: [...mealDetails.images.filter((i, idx) => idx !== +e.target.id)],
+    Swal.fire({
+      text: "確定刪除飲食照片嗎?",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "取消",
+      confirmButtonText: "確定",
+      confirmButtonColor: "#1e4d4e",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        setMealDetails({
+          ...mealDetails,
+          images: [
+            ...mealDetails.images.filter((i, idx) => idx !== +e.target.id),
+          ],
+        });
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .doc(dID)
+          .collection("customers")
+          .doc(cID)
+          .collection("diet")
+          .doc(date)
+          .set(
+            {
+              [meal]: {
+                images: [
+                  ...mealDetails.images.filter(
+                    (i, idx) => idx !== +e.target.id
+                  ),
+                ],
+              },
+            },
+            { merge: true }
+          );
+      }
     });
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dID)
-      .collection("customers")
-      .doc(cID)
-      .collection("diet")
-      .doc(date)
-      .set(
-        {
-          [meal]: {
-            images: [
-              ...mealDetails.images.filter((i, idx) => idx !== +e.target.id),
-            ],
-          },
-        },
-        { merge: true }
-      );
   };
   const bindSaveHandler = async (e) => {
     if (meal === e.target.className) {
@@ -155,9 +171,19 @@ function CustomerRecord({ date, count, setCount }) {
         input.imageFile.forEach((i, index) => {
           if (i.size >= 2097152) {
             if (input.imageFile.length > 1) {
-              alert(`您想上傳的第${index + 1}張圖片超過2MB囉!`);
+              Swal.fire({
+                text: `您想上傳的第${index + 1}張圖片超過2MB囉!`,
+                icon: "warning",
+                confirmButtonText: "確定",
+                confirmButtonColor: "#1e4d4e",
+              });
             } else {
-              alert(`圖片超過2MB囉!`);
+              Swal.fire({
+                text: "圖片超過2MB囉!",
+                icon: "warning",
+                confirmButtonText: "確定",
+                confirmButtonColor: "#1e4d4e",
+              });
             }
             valid++;
           }
@@ -195,7 +221,12 @@ function CustomerRecord({ date, count, setCount }) {
             setMealDetails({ ...mealDetails, images: imageUrlsArray });
             setValue("");
           });
-          alert("儲存囉!");
+          Swal.fire({
+            text: "儲存成功",
+            icon: "success",
+            confirmButtonText: "確定",
+            confirmButtonColor: "#1e4d4e",
+          });
           delete input.imageFile;
         }
       } else {
@@ -210,7 +241,12 @@ function CustomerRecord({ date, count, setCount }) {
           .collection("diet")
           .doc(date)
           .set({ [meal]: input }, { merge: true });
-        alert("儲存囉!");
+        Swal.fire({
+          text: "儲存成功",
+          icon: "success",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       }
     }
   };

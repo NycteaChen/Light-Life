@@ -315,8 +315,19 @@ function Dietitian() {
     });
   };
 
+  useEffect(() => {
+    if (!profile.name) {
+      setProfile({ ...profile, isServing: false });
+      firebase
+        .firestore()
+        .collection("dietitians")
+        .doc(dietitianID)
+        .update({ isServing: false });
+    }
+  }, [profile.name]);
+
   const changeServiceStatusHandler = () => {
-    if (profile.education && profile.gender) {
+    if (profile.name && profile.education && profile.gender) {
       setProfile({ ...profile, isServing: !profile.isServing });
       firebase
         .firestore()
@@ -324,7 +335,11 @@ function Dietitian() {
         .doc(dietitianID)
         .update({ isServing: !profile.isServing });
     } else {
-      alert("您的個人資料尚未填寫完整喔");
+      Swal.fire({
+        text: "個人資料填寫完整才能開放服務喔",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      });
     }
   };
   const showMobileCustomerList = async () => {

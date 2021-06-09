@@ -116,7 +116,7 @@ function RenderDietaryRecord() {
   return (
     <div className={style["daily-diet"]}>
       <div className={style["date-selector"]}>
-        <h5>請選擇記錄日期</h5>
+        <h5>選擇飲食記錄日期</h5>
         {dID ? (
           <input
             type="date"

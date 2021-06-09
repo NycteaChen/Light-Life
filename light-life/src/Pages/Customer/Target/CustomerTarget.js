@@ -48,6 +48,7 @@ function CustomerTarget() {
     <>
       <div className={style["target-setting"]} id="dietitian-target">
         <h5 className={style["customer-h5"]}>已設立目標</h5>
+        <p>您的營養師為您設立的目標</p>
         <div className={style["c-targets"]}>
           <TargetHandler target={target} />
         </div>

@@ -3,7 +3,6 @@ import firebase from "firebase/app";
 import { useLocation, useParams } from "react-router-dom";
 import "firebase/firestore";
 import style from "../../../style/dietary.module.scss";
-
 function Analysis({ date, cID, data }) {
   const pathName = useLocation().pathname;
   const [breakfast, setBreakfast] = useState({});
