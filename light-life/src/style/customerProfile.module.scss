@@ -1,12 +1,12 @@
 .customer-profile {
   .profile-data {
     text-align: center;
-    padding: 15px 0;
+    padding: 15px 5px 30px;
     background-color: #edf5f0b2;
     box-shadow: 0 1px 3px #515a56;
     border: 1px solid #515a5670;
     border-radius: 5px;
-    margin: 20px 0;
+    // margin: 20px 0;
     position: relative;
     img {
       width: 150px;
@@ -39,8 +39,19 @@
     .edit {
       text-align: right;
       button {
-        padding: 3px 7px;
-        background-color: yellow;
+        font-size: 20px;
+        border: 1px solid beige;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        background-color: #87a39875;
+        transition: background-color 0.3s;
+        i {
+          color: #ffffff;
+        }
+        &:hover {
+          background-color: #87a398;
+        }
       }
     }
   }
@@ -50,11 +61,9 @@
       .profile-data {
         max-width: 480px;
         margin: 20px auto;
-        padding: 20px 0 30px;
-
         .data-item {
           div {
-            width: 170px;
+            width: 190px;
             margin-right: 0px;
           }
           .title {
@@ -68,12 +77,12 @@
           justify-content: space-around;
           margin-left: 70px;
           img {
-            margin-left: 30px;
+            margin-left: 30.5px;
             width: 180px;
             height: 180px;
           }
           img + div {
-            margin-left: 50px;
+            margin-left: 35.5px;
           }
           .data-item {
             &:nth-of-type(2) {
@@ -85,7 +94,7 @@
           & > div:first-child {
             margin: 0 35px;
             .title + div {
-              width: 100px;
+              width: 85px;
             }
           }
         }
@@ -95,7 +104,7 @@
           width: 400px;
           .data-item {
             display: flex;
-            margin-left: 53px;
+            margin-left: 44px;
             .title + div {
               max-height: 100px;
               overflow: auto;
@@ -159,7 +168,7 @@
     box-shadow: 0 2px 3px #3f4442;
     border: 1px solid #515a5670;
     text-align: center;
-    padding: 15px 0;
+    padding: 15px 5px 30px;
     margin: auto;
     border-radius: 5px;
     // margin: 20px 0;
@@ -219,7 +228,6 @@
       input[type="number"],
       select,
       textarea {
-        background-color: blanchedalmond;
         width: 120px;
         padding-left: 5px;
         outline: none;
@@ -265,13 +273,26 @@
     }
     .buttons {
       text-align: right;
-      .save {
-        padding: 3px 7px;
-        background-color: yellow;
-      }
-      .cancel {
-        padding: 3px 7px;
-        background-color: yellow;
+      button {
+        font-size: 20px;
+        border: 1px solid beige;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        background-color: #87a39875;
+        transition: background-color 0.3s;
+        i {
+          color: white;
+        }
+        &[title="save"] {
+          margin-right: 5px;
+        }
+        &[title="cancel"] {
+          margin-left: 5px;
+        }
+        &:hover {
+          background-color: #87a398;
+        }
       }
     }
   }
@@ -280,7 +301,6 @@
       .edit-mode {
         max-width: 480px;
         margin: 20px auto;
-        padding: 20px 0 30px;
 
         .data-item {
           div {
@@ -313,8 +333,7 @@
           input[type="text"],
           input[type="number"],
           select {
-            background-color: blanchedalmond;
-            width: 80px;
+            width: 100px;
             padding-left: 5px;
           }
           .edit-gender {
@@ -343,11 +362,18 @@
               left: 130px;
             }
           }
+          .img + div {
+            margin-bottom: 12px;
+            margin-left: 2px;
+          }
           .data-item {
-            margin: 0;
+            // margin: 12px 0;
             margin-left: 10px;
+            div {
+              height: 24px;
+            }
             &:nth-of-type(2) {
-              margin: 5px 0 2px 10px;
+              margin: 13px 0 10px 10px;
             }
           }
         }
@@ -361,6 +387,9 @@
           .data-item {
             margin: 0;
             margin-right: 10px;
+            div {
+              height: unset;
+            }
             &:nth-of-type(2) {
               margin: 0 0 13px;
               margin-left: 25px;
@@ -388,7 +417,7 @@
 
         .col {
           margin: 8px 0;
-          margin-left: 48px;
+          margin-left: 40px;
           .data-item {
             .title {
               width: 70px;
