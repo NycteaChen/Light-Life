@@ -18,6 +18,7 @@ import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
 import GetPublication from "../Dietitian/FindCustomers/GetPublication.js";
 import MobileBottom from "../Components/MobileBottom.js";
+import NotFound from "../NotFound/NotFound.js";
 import basic from "../../style/basic.module.scss";
 import style from "../../style/customerData.module.scss";
 import customer from "../../style/customerProfile.module.scss";
@@ -40,6 +41,7 @@ function Dietitian() {
   const [date, setDate] = useState({});
   const dietitianID = useParams().dID;
   const customerID = useLocation().pathname.split("/")[4];
+  const customer = useLocation().pathname.includes("customer");
   const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
   const getToday = new Date(+new Date() + 8 * 3600 * 1000)
     .toISOString()
@@ -51,7 +53,24 @@ function Dietitian() {
   const [nav, setNav] = useState("");
   const [active, setActive] = useState("");
   const keyword = useLocation().pathname;
+  const [member, setMember] = useState([]);
+  const [notFound, setNotFound] = useState(false);
   let history = useHistory();
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("dietitians")
+      .get()
+      .then((docs) => {
+        const memberArray = [];
+        docs.forEach((doc) => memberArray.push(doc.data().id));
+        if (!memberArray.find((m) => m === dietitianID)) {
+          setNotFound(true);
+        }
+      });
+  }, []);
+
   useEffect(() => {
     firebase
       .firestore()
@@ -92,6 +111,11 @@ function Dietitian() {
                 }
               });
           });
+        } else {
+          setUsers(usersArray);
+          if (customer) {
+            history.push(`/dietitian/${dietitianID}`);
+          }
         }
 
         firebase
@@ -136,7 +160,6 @@ function Dietitian() {
                 const newPendingArray = [];
                 res.forEach((r) => {
                   const start = new Date(r.startDate).getTime();
-                  console.log(r);
                   if (r.startDate === getToday) {
                     firebase
                       .firestore()
@@ -150,7 +173,6 @@ function Dietitian() {
                           .doc(r.customer)
                           .get()
                           .then((doc) => {
-                            console.log(usersArray);
                             if (
                               usersArray.length > 0 &&
                               !usersArray.find((i) => i.id === doc.data().id)
@@ -240,10 +262,14 @@ function Dietitian() {
         .doc(customerID)
         .get()
         .then((doc) => {
-          setDate({
-            start: doc.data().startDate,
-            end: doc.data().endDate,
-          });
+          if (doc.exists) {
+            setDate({
+              start: doc.data().startDate,
+              end: doc.data().endDate,
+            });
+          } else {
+            setNotFound(true);
+          }
         });
     }
     if (keyword.includes("customer") || keyword.includes("customers")) {
@@ -264,6 +290,16 @@ function Dietitian() {
       setActive({ cTarget: style.active });
     }
   }, []);
+  useEffect(() => {
+    if (profile && profile.email && !profile.name) {
+      setProfile({ ...profile, isServing: false });
+      firebase
+        .firestore()
+        .collection("dietitians")
+        .doc(dietitianID)
+        .update({ isServing: false });
+    }
+  }, [profile && profile.name]);
 
   const getSelectedCustomer = (e) => {
     setActive({});
@@ -326,17 +362,6 @@ function Dietitian() {
     });
   };
 
-  useEffect(() => {
-    if (profile.email && !profile.name) {
-      setProfile({ ...profile, isServing: false });
-      firebase
-        .firestore()
-        .collection("dietitians")
-        .doc(dietitianID)
-        .update({ isServing: false });
-    }
-  }, [profile.name]);
-
   const changeServiceStatusHandler = () => {
     if (profile.name && profile.education && profile.gender) {
       setProfile({ ...profile, isServing: !profile.isServing });
@@ -395,377 +420,385 @@ function Dietitian() {
       });
     }
   };
-  // if (users.length > 0) {
-  if (profile && profile.email) {
-    return (
-      <>
-        <MobileBottom />
-        <main className={basic["d-main"]}>
-          <nav>
-            <a href="/">
-              <img src={logo} id={basic["menu-logo"]} />
-            </a>
-            <div className={basic["straight-nav"]}>
-              <Link
-                title="profile"
-                className={`${basic["nav-title"]} ${nav.profile || ""}`}
-                to={`/dietitian/${dietitianID}/profile`}
-                onClick={bindListHandler}
-              >
-                <i class="fa fa-user" aria-hidden="true" title="profile"></i>
-                <div title="profile">會員資料</div>
-              </Link>
-              <ul>
-                {users && users.length > 0 ? (
-                  <div
-                    title="customerList"
-                    className={`${basic["nav-title"]} list ${
-                      nav.customerList || ""
-                    }`}
-                    onClick={bindListHandler}
-                  >
-                    <i
-                      class="fa fa-users list"
-                      aria-hidden="true"
-                      title="customerList"
-                    ></i>
+
+  if (!notFound) {
+    if (profile && profile.email) {
+      return (
+        <>
+          <MobileBottom />
+          <main className={basic["d-main"]}>
+            <nav>
+              <a href="/">
+                <img src={logo} id={basic["menu-logo"]} />
+              </a>
+              <div className={basic["straight-nav"]}>
+                <Link
+                  title="profile"
+                  className={`${basic["nav-title"]} ${nav.profile || ""}`}
+                  to={`/dietitian/${dietitianID}/profile`}
+                  onClick={bindListHandler}
+                >
+                  <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                  <div title="profile">會員資料</div>
+                </Link>
+                <ul>
+                  {users && users.length > 0 ? (
                     <div
                       title="customerList"
-                      className="list"
+                      className={`${basic["nav-title"]} list ${
+                        nav.customerList || ""
+                      }`}
                       onClick={bindListHandler}
                     >
-                      客戶清單
+                      <i
+                        class="fa fa-users list"
+                        aria-hidden="true"
+                        title="customerList"
+                      ></i>
+                      <div
+                        title="customerList"
+                        className="list"
+                        onClick={bindListHandler}
+                      >
+                        客戶清單
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className={basic["no-customers"]}>
-                    <i class="fa fa-users list" aria-hidden="true"></i>
-                    <div>客戶清單</div>
-                  </div>
-                )}
-
-                <div
-                  className={`${basic.customerList} list `}
-                  style={{ display: display }}
-                >
-                  {users && users.length > 0
-                    ? users.map((c, index) => (
-                        <Link
-                          to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
-                          key={index}
-                          className={c.id}
-                          onClick={getSelectedCustomer}
-                        >
-                          <li className={c.id}>{c.name} </li>
-                        </Link>
-                      ))
-                    : ""}
-                </div>
-              </ul>
-
-              <Link
-                title="findCustomer"
-                className={`${basic["nav-title"]} ${nav.findCustomer || ""}`}
-                onClick={bindListHandler}
-                to={`/dietitian/${dietitianID}/findCustomers`}
-              >
-                <i
-                  class="fa fa-search"
-                  aria-hidden="true"
-                  title="findCustomer"
-                ></i>
-                <div title="findCustomer">找客戶</div>
-              </Link>
-
-              <Link
-                title="whoInvite"
-                className={`${basic["nav-title"]} ${nav.whoInvite || ""}`}
-                onClick={bindListHandler}
-                to={`/dietitian/${dietitianID}/inviteMe`}
-              >
-                <i
-                  class="fa fa-envira"
-                  aria-hidden="true"
-                  title="whoInvite"
-                ></i>
-                <div title="whoInvite">誰找我</div>
-              </Link>
-              <Link
-                className={basic["nav-title"]}
-                onClick={bindListHandler}
-                to={`/dietitian/${dietitianID}`}
-              >
-                <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                <div>會員主頁</div>
-              </Link>
-              <a onClick={logoutHandler}>
-                <img src={exit} alt="logout" id={basic.logout} />
-              </a>
-              <div className={basic.copyright}>&copy;2021 Light Life</div>
-            </div>
-          </nav>
-
-          <div className={basic.profile}>
-            <img src={profile.image ? profile.image : noImage} />
-            <div className={basic.welcome}>
-              <div>{profile.name ? profile.name : ""}，您好</div>
-              <div className={basic["service-status"]}>
-                <div>服務狀態：{profile.isServing ? "公開" : "私人"}</div>
-                <div>
-                  <input
-                    type="checkbox"
-                    id="service"
-                    className={`${basic.toggle} ${basic["toggle-round"]}`}
-                    checked={profile.isServing ? true : false}
-                    onClick={changeServiceStatusHandler}
-                  />
-                  <label className={basic.label} for="service"></label>
-                </div>
-              </div>
-            </div>
-            <div className={basic["d-List"]}>
-              <Link
-                title="profile"
-                className={`${basic["nav-title"]}`}
-                to={`/dietitian/${dietitianID}/profile`}
-                onClick={bindListHandler}
-              >
-                <i class="fa fa-user" aria-hidden="true" title="profile"></i>
-                <div title="profile">會員資料</div>
-              </Link>
-              <Link
-                title="findCustomer"
-                className={basic["nav-title"]}
-                to={`/dietitian/${dietitianID}/findCustomers`}
-                onClick={bindListHandler}
-              >
-                <i
-                  class="fa fa-search"
-                  aria-hidden="true"
-                  title="findCustomer"
-                ></i>
-                <div title="findCustomer">找客戶</div>
-              </Link>
-
-              <Link
-                className={`${basic["nav-title"]}`}
-                to={`/dietitian/${dietitianID}/customers`}
-                title="customerList"
-                onClick={showMobileCustomerList}
-              >
-                <i
-                  class="fa fa-users"
-                  aria-hidden="true"
-                  title="customerList"
-                ></i>
-                <div title="customerList">客戶清單</div>
-              </Link>
-
-              <Link
-                className={basic["nav-title"]}
-                to={`/dietitian/${dietitianID}/inviteMe`}
-                onClick={bindListHandler}
-                title="whoInvite"
-              >
-                <i
-                  class="fa fa-envira"
-                  aria-hidden="true"
-                  title="whoInvite"
-                ></i>
-                <div title="whoInvite">誰找我</div>
-              </Link>
-            </div>
-          </div>
-
-          <Switch>
-            <Route exact path="/dietitian/:dID">
-              <div className={basic.indexMessage}>
-                <div className={basic.title}>服務狀況</div>
-                <div className={basic.content}>
-                  <div className={basic.serving}>
-                    <div className={basic.subtitle}>
-                      目前服務人數：
-                      <span>
-                        {users && users.length > 0 ? users.length : 0}
-                      </span>
-                      人
+                  ) : (
+                    <div className={basic["no-customers"]}>
+                      <i class="fa fa-users list" aria-hidden="true"></i>
+                      <div>客戶清單</div>
                     </div>
-                    <div>
-                      {users ? (
-                        users.length > 0 ? (
-                          users.map((u) => (
-                            <div className={basic.each}>
-                              <div>
-                                {u.name} {u.gender === "男" ? "先生" : "小姐"}
-                              </div>
-                              <div>結束日期：{u.endDate}</div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className={basic.each}>暫無</div>
-                        )
-                      ) : (
-                        <div className={image.spinner}>
-                          <img src={spinner} />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className={basic.pendingService}>
-                    <div className={basic.subtitle}>尚未進行的服務</div>
-                    <div>
-                      {pending ? (
-                        pending.length > 0 ? (
-                          pending.map((p) => (
-                            <div className={basic.each}>
-                              <div>
-                                {p.customerName}{" "}
-                                {p.customerGender === "男" ? "先生" : "小姐"}
-                              </div>
-                              <div>
-                                <div>開始日期：{p.startDate}</div>
-                                <div>結束日期：{p.endDate}</div>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className={basic.each}>暫無</div>
-                        )
-                      ) : (
-                        <div className={image.spinner}>
-                          <img src={spinner} />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Route>
-            <Route exact path={`/dietitian/:dID/profile`}>
-              <DietitianProfile profile={profile} setProfile={setProfile} />
-            </Route>
+                  )}
 
-            <Route exact path={`/dietitian/:dID/findCustomers`}>
-              <GetPublication />
-            </Route>
-            <Route exact path={`/dietitian/:dID/inviteMe`}>
-              <div>
-                <InvitedList
-                  invitedList={invitedList}
-                  setInvitedList={setInvitedList}
-                  setPending={setPending}
-                />
-              </div>
-            </Route>
-          </Switch>
-
-          <Switch>
-            <Route
-              path={`/dietitian/${dietitianID}/customer/${
-                customerID ? customerID : selectedID
-              }`}
-            >
-              {/* <Router> */}
-              <div className={style["customer-data"]}>
-                <div className={style["customer-dataSelect"]}>
-                  <Link
-                    id="cProfile"
-                    className={`${style["link-select"]} ${
-                      active.cProfile || ""
-                    }`}
-                    to={`/dietitian/${dietitianID}/customer/${
-                      customerID ? customerID : selectedID
-                    }/profile`}
-                    onClick={bindListHandler}
+                  <div
+                    className={`${basic.customerList} list `}
+                    style={{ display: display }}
                   >
-                    <i class="fa fa-address-book-o" aria-hidden="true"></i>
-                    {users && users.length > 0 && customerID
-                      ? users.filter((e) => e.id === customerID)[0].name
+                    {users && users.length > 0
+                      ? users.map((c, index) => (
+                          <Link
+                            to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
+                            key={index}
+                            className={c.id}
+                            onClick={getSelectedCustomer}
+                          >
+                            <li className={c.id}>{c.name} </li>
+                          </Link>
+                        ))
                       : ""}
-                  </Link>
-                  <Link
-                    id="cDietary"
-                    className={`${style["link-select"]} ${
-                      active.cDietary || ""
-                    }`}
-                    to={`/dietitian/${dietitianID}/customer/${
-                      customerID ? customerID : selectedID
-                    }/dietary`}
-                    onClick={bindListHandler}
-                  >
-                    <i
-                      class="fa fa-cutlery"
-                      aria-hidden="true"
-                      title="dietary"
-                    ></i>
-                    飲食記錄
-                  </Link>
-                  <Link
-                    id="cTarget"
-                    className={`${style["link-select"]} ${
-                      active.cTarget || ""
-                    }`}
-                    to={`/dietitian/${dietitianID}/customer/${
-                      customerID ? customerID : selectedID
-                    }/target`}
-                    onClick={bindListHandler}
-                  >
-                    <i
-                      class="fa fa-bullseye"
-                      aria-hidden="true"
-                      title="target"
-                    ></i>
-                    目標設定
-                  </Link>
+                  </div>
+                </ul>
+
+                <Link
+                  title="findCustomer"
+                  className={`${basic["nav-title"]} ${nav.findCustomer || ""}`}
+                  onClick={bindListHandler}
+                  to={`/dietitian/${dietitianID}/findCustomers`}
+                >
+                  <i
+                    class="fa fa-search"
+                    aria-hidden="true"
+                    title="findCustomer"
+                  ></i>
+                  <div title="findCustomer">找客戶</div>
+                </Link>
+
+                <Link
+                  title="whoInvite"
+                  className={`${basic["nav-title"]} ${nav.whoInvite || ""}`}
+                  onClick={bindListHandler}
+                  to={`/dietitian/${dietitianID}/inviteMe`}
+                >
+                  <i
+                    class="fa fa-envira"
+                    aria-hidden="true"
+                    title="whoInvite"
+                  ></i>
+                  <div title="whoInvite">誰找我</div>
+                </Link>
+                <Link
+                  className={basic["nav-title"]}
+                  onClick={bindListHandler}
+                  to={`/dietitian/${dietitianID}`}
+                >
+                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                  <div>會員主頁</div>
+                </Link>
+                <a onClick={logoutHandler}>
+                  <img src={exit} alt="logout" id={basic.logout} />
+                </a>
+                <div className={basic.copyright}>&copy;2021 Light Life</div>
+              </div>
+            </nav>
+
+            <div className={basic.profile}>
+              <img src={profile.image ? profile.image : noImage} />
+              <div className={basic.welcome}>
+                <div>{profile.name ? profile.name : ""}，您好</div>
+                <div className={basic["service-status"]}>
+                  <div>服務狀態：{profile.isServing ? "公開" : "私人"}</div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id="service"
+                      className={`${basic.toggle} ${basic["toggle-round"]}`}
+                      checked={profile.isServing ? true : false}
+                      onClick={changeServiceStatusHandler}
+                    />
+                    <label className={basic.label} for="service"></label>
+                  </div>
                 </div>
               </div>
-              <Switch>
-                {/* <Route exact path={`/dietitian/:dID/customer/:cID/`}></Route> */}
-                <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
-                  <>
-                    <div className={style["service-time"]}>
-                      <div>
-                        服務時間<span>：</span>
+              <div className={basic["d-List"]}>
+                <Link
+                  title="profile"
+                  className={`${basic["nav-title"]}`}
+                  to={`/dietitian/${dietitianID}/profile`}
+                  onClick={bindListHandler}
+                >
+                  <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                  <div title="profile">會員資料</div>
+                </Link>
+                <Link
+                  title="findCustomer"
+                  className={basic["nav-title"]}
+                  to={`/dietitian/${dietitianID}/findCustomers`}
+                  onClick={bindListHandler}
+                >
+                  <i
+                    class="fa fa-search"
+                    aria-hidden="true"
+                    title="findCustomer"
+                  ></i>
+                  <div title="findCustomer">找客戶</div>
+                </Link>
+
+                <a
+                  className={`${basic["nav-title"]}`}
+                  title="customerList"
+                  onClick={showMobileCustomerList}
+                >
+                  <i
+                    class="fa fa-users"
+                    aria-hidden="true"
+                    title="customerList"
+                  ></i>
+                  <div title="customerList">客戶清單</div>
+                </a>
+
+                <Link
+                  className={basic["nav-title"]}
+                  to={`/dietitian/${dietitianID}/inviteMe`}
+                  onClick={bindListHandler}
+                  title="whoInvite"
+                >
+                  <i
+                    class="fa fa-envira"
+                    aria-hidden="true"
+                    title="whoInvite"
+                  ></i>
+                  <div title="whoInvite">誰找我</div>
+                </Link>
+              </div>
+            </div>
+
+            <Switch>
+              <Route exact path="/dietitian/:dID">
+                <div className={basic.indexMessage}>
+                  <div className={basic.title}>服務狀況</div>
+                  <div className={basic.content}>
+                    <div className={basic.serving}>
+                      <div className={basic.subtitle}>
+                        目前服務人數：
+                        <span>
+                          {users && users.length > 0 ? users.length : 0}
+                        </span>
+                        人
                       </div>
                       <div>
-                        {date.start ? date.start : ""}~
-                        {date.end ? date.end : ""}
+                        {users ? (
+                          users.length > 0 ? (
+                            users.map((u) => (
+                              <div className={basic.each}>
+                                <div>
+                                  {u.name} {u.gender === "男" ? "先生" : "小姐"}
+                                </div>
+                                <div>結束日期：{u.endDate}</div>
+                              </div>
+                            ))
+                          ) : (
+                            <div className={basic.each}>暫無</div>
+                          )
+                        ) : (
+                          <div className={image.spinner}>
+                            <img src={spinner} />
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <div
-                      id="customer-profile"
-                      className={customer["customer-profile"]}
+                    <div className={basic.pendingService}>
+                      <div className={basic.subtitle}>尚未進行的服務</div>
+                      <div>
+                        {pending ? (
+                          pending.length > 0 ? (
+                            pending.map((p) => (
+                              <div className={basic.each}>
+                                <div>
+                                  {p.customerName}{" "}
+                                  {p.customerGender === "男" ? "先生" : "小姐"}
+                                </div>
+                                <div>
+                                  <div>開始日期：{p.startDate}</div>
+                                  <div>結束日期：{p.endDate}</div>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <div className={basic.each}>暫無</div>
+                          )
+                        ) : (
+                          <div className={image.spinner}>
+                            <img src={spinner} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Route>
+              <Route exact path={`/dietitian/:dID/profile`}>
+                <DietitianProfile profile={profile} setProfile={setProfile} />
+              </Route>
+
+              <Route exact path={`/dietitian/:dID/findCustomers`}>
+                <GetPublication />
+              </Route>
+              <Route exact path={`/dietitian/:dID/inviteMe`}>
+                <div>
+                  <InvitedList
+                    invitedList={invitedList}
+                    setInvitedList={setInvitedList}
+                    setPending={setPending}
+                  />
+                </div>
+              </Route>
+            </Switch>
+
+            <Switch>
+              <Route
+                path={`/dietitian/${dietitianID}/customer/${
+                  customerID ? customerID : selectedID
+                }`}
+              >
+                <div className={style["customer-data"]}>
+                  <div className={style["customer-dataSelect"]}>
+                    <Link
+                      id="cProfile"
+                      className={`${style["link-select"]} ${
+                        active.cProfile || ""
+                      }`}
+                      to={`/dietitian/${dietitianID}/customer/${
+                        customerID ? customerID : selectedID
+                      }/profile`}
+                      onClick={bindListHandler}
                     >
-                      <div className={customer["profile-data"]}>
-                        <CustomerProfile
-                          props={props}
-                          // id={selectedID}
-                          input={input}
-                        />
+                      <i class="fa fa-address-book-o" aria-hidden="true"></i>
+                      {users && users.length > 0 && customerID
+                        ? users.filter((e) => e.id === customerID)[0].name
+                        : ""}
+                    </Link>
+                    <Link
+                      id="cDietary"
+                      className={`${style["link-select"]} ${
+                        active.cDietary || ""
+                      }`}
+                      to={`/dietitian/${dietitianID}/customer/${
+                        customerID ? customerID : selectedID
+                      }/dietary`}
+                      onClick={bindListHandler}
+                    >
+                      <i
+                        class="fa fa-cutlery"
+                        aria-hidden="true"
+                        title="dietary"
+                      ></i>
+                      飲食記錄
+                    </Link>
+                    <Link
+                      id="cTarget"
+                      className={`${style["link-select"]} ${
+                        active.cTarget || ""
+                      }`}
+                      to={`/dietitian/${dietitianID}/customer/${
+                        customerID ? customerID : selectedID
+                      }/target`}
+                      onClick={bindListHandler}
+                    >
+                      <i
+                        class="fa fa-bullseye"
+                        aria-hidden="true"
+                        title="target"
+                      ></i>
+                      目標設定
+                    </Link>
+                  </div>
+                </div>
+                <Switch>
+                  {/* <Route exact path={`/dietitian/:dID/customer/:cID/`}></Route> */}
+                  <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
+                    <>
+                      <div className={style["service-time"]}>
+                        <div>
+                          服務時間<span>：</span>
+                        </div>
+                        <div>
+                          {date.start ? date.start : ""}~
+                          {date.end ? date.end : ""}
+                        </div>
                       </div>
-                    </div>
-                  </>
-                </Route>
-                <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
-                  <DietrayRecord />
-                </Route>
-                <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
-                  <DietitianTarget />
-                </Route>
-              </Switch>
-              {/* </Router> */}
-            </Route>
-          </Switch>
+                      <div
+                        id="customer-profile"
+                        className={customer["customer-profile"]}
+                      >
+                        <div className={customer["profile-data"]}>
+                          <CustomerProfile
+                            props={props}
+                            // id={selectedID}
+                            input={input}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  </Route>
+                  <Route exact path={`/dietitian/:dID/customer/:cID/dietary`}>
+                    <DietrayRecord />
+                  </Route>
+                  <Route exact path={`/dietitian/:dID/customer/:cID/target`}>
+                    <DietitianTarget />
+                  </Route>
+                </Switch>
+                {/* </Router> */}
+              </Route>
+            </Switch>
+          </main>
+        </>
+      );
+    } else {
+      return (
+        <main className="d-main">
+          <div className={load}>
+            <img src={loading} />
+          </div>
         </main>
-      </>
-    );
+      );
+    }
   } else {
     return (
-      <main className="d-main">
-        <div className={load}>
-          <img src={loading} />
-        </div>
-      </main>
+      <Switch>
+        <Route>
+          <NotFound />
+        </Route>
+      </Switch>
     );
   }
 }
