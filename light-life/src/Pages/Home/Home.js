@@ -18,12 +18,13 @@ function Home() {
   const [button, setButton] = useState("submit");
   const [input, setInput] = useState({});
   const [load, setLoad] = useState(style.loading);
+  const [valid, setValid] = useState({});
   const bindLoginButton = () => {
     setDisplay("flex");
   };
 
   const sendContactHandler = () => {
-    if (input.name && input.email && input.text) {
+    if (valid.name && valid.email && valid.text) {
       setButton("button");
       Swal.fire({
         text: "確定送出嗎?",
@@ -50,7 +51,13 @@ function Home() {
 
   const getInputHandler = (e) => {
     const { name } = e.target;
-    setInput({ ...input, [name]: e.target.value });
+    if (e.target.validity.valid) {
+      setValid({ ...valid, [name]: e.target.value });
+      setInput({ ...input, [name]: e.target.value });
+    } else {
+      setInput({ ...input, [name]: e.target.value });
+      setValid({ ...valid, [name]: "" });
+    }
   };
 
   useEffect(() => {

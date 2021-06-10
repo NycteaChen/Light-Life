@@ -234,29 +234,40 @@ function Publish({ reserve }) {
       });
     } else {
       if (input.endDate && input.startDate && input.subject && input.content) {
-        firebase
-          .firestore()
-          .collection("publish")
-          .add(input)
-          .then((res) => {
+        Swal.fire({
+          text: "確定發佈刊登嗎?",
+          icon: "warning",
+          showCancelButton: true,
+          cancelButtonText: "取消",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        }).then((res) => {
+          if (res.isConfirmed) {
             firebase
               .firestore()
               .collection("publish")
-              .doc(res.id)
-              .update({ publishID: res.id });
-            return res.id;
-          })
-          .then((res) => {
-            Swal.fire({
-              text: "發佈成功",
-              icon: "success",
-              confirmButtonText: "確定",
-              confirmButtonColor: "#1e4d4e",
-            });
-            setPublishData([{ ...input, publishID: res }]);
-            setDisplay("none");
-            setInput({});
-          });
+              .add(input)
+              .then((res) => {
+                firebase
+                  .firestore()
+                  .collection("publish")
+                  .doc(res.id)
+                  .update({ publishID: res.id });
+                return res.id;
+              })
+              .then((res) => {
+                Swal.fire({
+                  text: "發佈成功",
+                  icon: "success",
+                  confirmButtonText: "確定",
+                  confirmButtonColor: "#1e4d4e",
+                });
+                setPublishData([{ ...input, publishID: res }]);
+                setDisplay("none");
+                setInput({});
+              });
+          }
+        });
       } else {
         Swal.fire({
           text: "刊登資料要填寫完整喔",
