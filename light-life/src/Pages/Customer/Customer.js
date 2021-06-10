@@ -6,6 +6,7 @@ import {
   Link,
   useParams,
   useLocation,
+  useHistory,
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -45,8 +46,31 @@ function Customer() {
   const keyword = useLocation().pathname;
   const path = keyword.split("/")[3];
   const [notFound, setNotFound] = useState(false);
+  let history = useHistory();
 
   useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+
+        firebase
+          .firestore()
+          .collection("customers")
+          .where("email", "==", user.email)
+          .get()
+          .then((docs) => {
+            docs.forEach((doc) => {
+              if (doc.data().id !== customerID) {
+                history.push("/");
+              }
+            });
+          });
+      } else {
+        history.push("/");
+      }
+    });
+
     firebase
       .firestore()
       .collection("customers")
