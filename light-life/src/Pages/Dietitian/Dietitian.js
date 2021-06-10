@@ -284,7 +284,6 @@ function Dietitian() {
       path !== "profile" &&
       path !== "findCustomers"
     ) {
-      console.log("here");
       setNotFound(true);
     }
 
