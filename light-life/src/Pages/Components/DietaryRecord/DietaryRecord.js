@@ -12,7 +12,6 @@ import "firebase/firestore";
 import DietitianRecord from "./DietitianRecord.js";
 import CustomerRecord from "./CustomerRecord.js";
 import style from "../../../style/dietary.module.scss";
-
 // function ShowImages({ mealDetails, input, removeImageHandler }) {
 //   if (!input.images) {
 //     return (

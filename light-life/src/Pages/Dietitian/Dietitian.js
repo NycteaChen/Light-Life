@@ -21,6 +21,7 @@ import MobileBottom from "../Components/MobileBottom.js";
 import basic from "../../style/basic.module.scss";
 import style from "../../style/customerData.module.scss";
 import customer from "../../style/customerProfile.module.scss";
+import image from "../../style/image.module.scss";
 import logo from "../../images/lightlife-straight.png";
 import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
@@ -604,11 +605,8 @@ function Dietitian() {
                           <div className={basic.each}>暫無</div>
                         )
                       ) : (
-                        <div style={{ textAlign: "center" }}>
-                          <img
-                            src={spinner}
-                            style={{ width: "50px", height: "50px" }}
-                          />
+                        <div className={image.spinner}>
+                          <img src={spinner} />
                         </div>
                       )}
                     </div>
@@ -634,11 +632,8 @@ function Dietitian() {
                           <div className={basic.each}>暫無</div>
                         )
                       ) : (
-                        <div style={{ textAlign: "center" }}>
-                          <img
-                            src={spinner}
-                            style={{ width: "50px", height: "50px" }}
-                          />
+                        <div className={image.spinner}>
+                          <img src={spinner} />
                         </div>
                       )}
                     </div>

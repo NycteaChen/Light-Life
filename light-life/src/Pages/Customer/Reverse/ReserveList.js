@@ -4,7 +4,8 @@ import "firebase/firestore";
 import Swal from "sweetalert2";
 import DietitianData from "../FindDietitians/DietitianData.js";
 import style from "../../../style/reserveList.module.scss";
-
+import image from "../../../style/image.module.scss";
+import nothing from "../../../images/nothing.svg";
 function ReserveList({ reserve, setReserve }) {
   const [index, setIndex] = useState();
   const [dietitians, setDietitians] = useState([]);
@@ -133,7 +134,9 @@ function ReserveList({ reserve, setReserve }) {
             </div>
           </>
         ) : (
-          <h4>目前沒有預約喔</h4>
+          <div className={image.nothing}>
+            <img src={nothing} />
+          </div>
         )}
       </div>
       <div className={style.checked}>
@@ -190,7 +193,9 @@ function ReserveList({ reserve, setReserve }) {
               )
             )
           ) : (
-            <div>尚未有回覆</div>
+            <div className={image.nothing}>
+              <img src={nothing} />
+            </div>
           )}
         </div>
       </div>

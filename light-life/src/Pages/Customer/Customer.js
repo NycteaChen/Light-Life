@@ -19,6 +19,7 @@ import Publish from "./Publish/Publish.js";
 import MobileBottom from "../Components/MobileBottom.js";
 import style from "../../style/basic.module.scss";
 import loadStyle from "../../style/home.module.scss";
+import image from "../../style/image.module.scss";
 import loading from "../../images/lightlife-straight.png";
 import spinner from "../../images/loading.gif";
 import logo from "../../images/lightlife-straight.png";
@@ -589,12 +590,9 @@ function Customer() {
                             <>暫無</>
                           )
                         ) : (
-                          <span>
-                            <img
-                              src={spinner}
-                              style={{ width: "50px", height: "50px" }}
-                            />
-                          </span>
+                          <div className={image.spinner}>
+                            <img src={spinner} />
+                          </div>
                         )}
                       </div>
                     </div>
@@ -617,11 +615,8 @@ function Customer() {
                           <div className={style.each}>暫無</div>
                         )
                       ) : (
-                        <div style={{ textAlign: "center" }}>
-                          <img
-                            src={spinner}
-                            style={{ width: "50px", height: "50px" }}
-                          />
+                        <div className={image.spinner}>
+                          <img src={spinner} />
                         </div>
                       )}
                     </div>

@@ -4,7 +4,9 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import Swal from "sweetalert2";
 import style from "../../style/target.module.scss";
+import image from "../../style/image.module.scss";
 import spinner from "../../images/loading.gif";
+import nothing from "../../images/nothing.svg";
 
 function TargetHandler({ target, setTarget }) {
   const db = firebase.firestore();
@@ -429,11 +431,13 @@ function TargetHandler({ target, setTarget }) {
             )
           )
         ) : (
-          <div>還沒設立目標喔</div>
+          <div className={image.nothing}>
+            <img src={nothing} />
+          </div>
         )
       ) : (
-        <div style={{ textAlign: "center" }}>
-          <img src={spinner} style={{ width: "50px", height: "50px" }} />
+        <div className={image.spinner}>
+          <img src={spinner} />
         </div>
       )}
     </>
