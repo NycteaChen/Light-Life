@@ -1,0 +1,130 @@
+.customer-data {
+  text-align: center;
+  max-width: 480px;
+  margin: auto;
+  .customer-dataSelect {
+    display: grid;
+    .link-select {
+      border-radius: 15px;
+      display: block;
+      margin: 20px auto;
+      width: 120px;
+
+      background: #f1faf4c4;
+      border: 1px solid #658a7ca1;
+      box-shadow: 0 2px 3px #4d4d4d;
+      color: #286d46;
+      padding: 20px 0;
+      transition: all 0.3s;
+      i {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 30px;
+      }
+      &:hover {
+        transform: rotateZ(-5deg);
+        font-weight: bold;
+      }
+    }
+  }
+
+  @media (min-width: 380px) {
+    & {
+      .customer-dataSelect {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+
+  @media (min-width: 450px) {
+    & {
+      .customer-dataSelect {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  }
+
+  @media (min-width: 520px) {
+    & {
+      .customer-dataSelect {
+        .link-select {
+          margin: 10px auto;
+        }
+      }
+    }
+  }
+  @media (min-width: 1024px) {
+    & {
+      display: flex;
+      align-items: center;
+      margin-left: 250px;
+      .customer-dataSelect {
+        width: unset;
+        max-width: unset;
+        margin: 0;
+        margin-right: 10px;
+        .link-select {
+          border-radius: 0;
+          border-top-right-radius: 15px;
+          border-top-left-radius: 15px;
+          // border-right: 2px solid #014b38;
+          // border-bottom: 2px solid #014b38;
+          // border: 2px solid #014b38;
+          // background-color: #c6f3f3;
+          letter-spacing: 2px;
+          color: #929292;
+          border: 1px solid #105345;
+          border-bottom: 2px solid #105345;
+          background-color: white;
+          margin: 10px 0;
+          padding: 6px;
+          box-shadow: none;
+          width: 120px;
+          height: 40px;
+          line-height: 30px;
+          transition: background-color 0.3s, color 0.3s;
+          &:hover {
+            background-color: #105345;
+            color: white;
+            transform: unset;
+            font-weight: normal;
+          }
+          i {
+            display: none;
+          }
+        }
+        .active {
+          background-color: #105345;
+          color: white !important;
+        }
+      }
+    }
+  }
+}
+
+.service-time {
+  font-weight: bold;
+  padding: 12px 0 10px;
+  margin-bottom: 0;
+  font-size: 16px;
+  text-align: center;
+  width: 80%;
+  margin: auto;
+  span {
+    display: none;
+  }
+  @media (min-width: 520px) {
+    font-size: 20px;
+    display: flex;
+    width: 580px;
+    span {
+      display: inline;
+    }
+  }
+  @media (min-width: 1024px) {
+    font-size: 20px;
+    width: unset;
+    margin: 0;
+    margin-left: 260px;
+  }
+}

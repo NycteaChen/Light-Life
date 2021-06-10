@@ -1,0 +1,403 @@
+.whoInvite {
+  max-width: 580px;
+  margin: auto;
+  .invite-number {
+    white-space: nowrap;
+    font-size: 20px;
+    padding: 12px 0;
+    font-weight: bold;
+  }
+  .inviters {
+    // max-height: 350px;
+    font-size: 14px;
+    height: 400px;
+    padding: 15px;
+    background-color: #edf5f0b2;
+    box-shadow: 0 1px 3px #515a56;
+    border: 1px solid #515a5670;
+    margin: 20px auto 0;
+    overflow: auto;
+    .inviter {
+      padding: 15px 15px 10px;
+      background-color: white;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+      border-top: 2px dashed #515a56;
+      &:first-of-type {
+        border-top: none;
+      }
+      &:hover {
+        opacity: 1;
+      }
+      .invite-message {
+        .inviter-name {
+          margin-bottom: 5px;
+        }
+        .button {
+          text-align: center;
+          font-size: 12px;
+          button {
+            width: 90px;
+            margin: 5px 0;
+            padding: 2px 8px;
+            border-radius: 5px;
+            outline: none;
+            border: none;
+            transition: opacity 0.3s, width 0.3s;
+            background-color: #015830;
+            color: white;
+            letter-spacing: 2px;
+            &:hover {
+              opacity: 0.7;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .invite-data {
+    text-align: center;
+    animation-duration: 0.4s;
+    padding-top: 15px;
+    background-color: #edf5f0;
+    box-shadow: 0 1px 2px #515a56;
+    border-radius: 5px;
+    z-index: 3;
+    margin: 20px;
+    width: 80%;
+    max-height: calc(100vh - 80px);
+    overflow: auto;
+    position: fixed;
+    top: 20px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    // transition: all 0.5s;
+    font-size: 14px;
+    i {
+      position: absolute;
+      z-index: 3;
+      cursor: pointer;
+      right: 10px;
+      font-size: 20px;
+      transition: all 0.5s;
+      &:hover {
+        transform: scale(1.2);
+        color: #037570;
+      }
+    }
+    .reserve-time {
+      // transition: all 0.5s;
+      font-weight: bold;
+      font-size: 16px;
+      display: block;
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      // transition: all 0.5s;
+      object-fit: cover;
+      margin: 20px 0 27px;
+    }
+    .title {
+      font-weight: bold;
+    }
+
+    .data-item {
+      margin: 5px 0;
+      display: flex;
+      div {
+        width: 50%;
+        text-align: left;
+        margin-right: 20px;
+      }
+      .title {
+        text-align: right;
+        margin-right: 20px;
+      }
+    }
+    .flexcol {
+      div > .data-item > div:last-of-type {
+        max-height: 100px;
+        overflow: auto;
+      }
+    }
+
+    .col {
+      margin: 25px 0 10px;
+      text-align: left;
+      border-top: 1.5px solid #105a3c;
+      padding-top: 10px;
+      .title {
+        padding: 12px 0 10px;
+        margin-left: 10px;
+        font-size: 18px;
+      }
+      .title + div {
+        width: 95%;
+        padding: 5px;
+        margin: 0 auto 20px;
+        background-color: #ffffff;
+        border-radius: 5px;
+        max-height: 5rem;
+        // transition: all 0.3s;
+        overflow: auto;
+      }
+    }
+
+    .buttons {
+      text-align: center;
+      margin-top: 20px;
+      width: 100%;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      height: 60px;
+      padding: 15px 0;
+      button {
+        letter-spacing: 2px;
+        width: 80px;
+        padding: 2px 8px;
+        border-radius: 5px;
+        outline: none;
+        border: none;
+        transition: opacity 0.3s, width 0.3s;
+        &.accept {
+          background-color: #b5f5d3;
+          color: #046b40;
+        }
+        &.decline {
+          background-color: #dadada;
+          color: #464444;
+        }
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+
+  .show {
+    z-index: 25 !important;
+    opacity: 1 !important;
+    bottom: 0px !important;
+  }
+
+  .declineMessage {
+    transition: all 0.5s;
+    text-align: center;
+    position: fixed;
+    width: 80%;
+    max-width: 400px;
+    height: 160px;
+    top: 0;
+    right: 0;
+    bottom: 100px;
+    left: 0;
+    margin: auto;
+    background-color: white;
+    z-index: -1;
+    opacity: 0;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px #515a56;
+    padding-top: 20px;
+    label {
+      width: 80%;
+      textarea {
+        width: 100%;
+        border-radius: 5px;
+        padding: 2px 7px;
+        margin: 5px 0;
+        border: 1px solid grey;
+        transition: all 0.5s;
+      }
+    }
+    button {
+      padding: 2px 12px;
+      border-radius: 5px;
+      border: none;
+      width: 60px;
+      transition: opacity 0.5s;
+      letter-spacing: 2px;
+      &:first-of-type {
+        margin-right: 15px;
+        background-color: #b5f5d3;
+        color: #046b40;
+      }
+      &:last-of-type {
+        margin-left: 15px;
+        background-color: #dadada;
+        color: #464444;
+      }
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+
+  @media (min-width: 520px) {
+    & {
+      .inviters {
+        .inviter {
+          .invite-message {
+            display: flex;
+            // width: 60%;
+            // max-width: 400px;
+            justify-content: space-between;
+            align-items: center;
+            margin: auto;
+            .inviter-name {
+              padding-top: 4px;
+            }
+          }
+        }
+      }
+
+      .invite-data {
+        width: 90%;
+        margin: 20px auto;
+        padding: 20px 0 0 30px;
+        text-align: center;
+        max-width: 500px;
+        max-height: unset;
+        height: 548px;
+        overflow-x: hidden;
+        i {
+          right: 25px;
+        }
+        .reserve-time {
+          // transition: all 0.5s;
+          font-weight: bold;
+          display: block;
+        }
+        .data-item {
+          margin: 5px 0;
+          div {
+            width: 280px;
+          }
+          .title {
+            width: 70px;
+          }
+        }
+        & > div > .data-item {
+          div {
+            width: 350px;
+          }
+        }
+
+        .flexbox {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          & + .flexbox {
+            .data-item:first-of-type {
+              margin-left: 25px;
+              & > div:last-of-type {
+                width: 106px;
+              }
+            }
+            .data-item:last-of-type {
+              margin-right: 40px;
+            }
+          }
+          img {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 35px;
+          }
+          .basicData {
+            margin-left: 60px;
+            .data-item:nth-child(2) {
+              margin: 8px 0;
+            }
+          }
+        }
+        .flexcol {
+          margin-left: 25px;
+          width: 400px;
+          & > div {
+            margin: 8px 0;
+          }
+        }
+        .col {
+          margin-right: 30px;
+          text-align: left;
+          border-top: 1.5px solid #105a3c;
+          padding-top: 10px;
+          .title {
+            margin-left: 10px;
+            font-size: 18px;
+          }
+          .title + div {
+            max-height: 6rem;
+          }
+        }
+        .buttons {
+          justify-content: space-around;
+          margin-top: 0;
+          position: absolute;
+          width: 100%;
+          left: 0;
+          button {
+            width: 120px;
+          }
+        }
+      }
+      .declineMessage {
+        height: 200px;
+        padding-top: 0;
+        margin: auto;
+
+        label {
+          margin-top: 25px;
+          textarea {
+            height: 5rem;
+          }
+        }
+      }
+    }
+  }
+  @media (min-width: 1024px) {
+    & {
+      margin-left: 260px;
+      text-align: left;
+      max-width: 800px;
+
+      .invite-number {
+        font-size: 20px;
+        // margin-bottom: 10px;
+      }
+      .inviters {
+        margin-top: 17px;
+        font-size: 16px;
+        padding-bottom: 10px;
+        height: calc(100vh - 200px);
+        overflow: auto;
+        .inviter:first-of-type {
+          margin-top: 10px;
+        }
+        .button {
+          button {
+            font-size: 14px;
+          }
+        }
+      }
+      .invite-data {
+        text-align: center;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        height: 620px;
+        .reserve-time,
+        .col:last-of-type {
+          div + div {
+            max-height: 150px;
+          }
+        }
+      }
+    }
+  }
+}

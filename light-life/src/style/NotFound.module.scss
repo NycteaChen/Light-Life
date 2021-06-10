@@ -1,0 +1,29 @@
+.main {
+  background-color: #e7fdf5;
+  height: calc(100vh - 77px);
+  text-align: center;
+  img {
+    max-width: 80vw;
+    animation: img 3s ease-in-out infinite;
+  }
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  @media (min-width: 768px) {
+    height: 150px;
+  }
+}
+
+@keyframes img {
+  0% {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: 10px;
+  }
+  100% {
+    margin-top: 0;
+  }
+}
