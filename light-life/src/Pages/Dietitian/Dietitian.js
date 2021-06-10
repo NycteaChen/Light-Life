@@ -60,6 +60,29 @@ function Dietitian() {
   let history = useHistory();
 
   useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        console.log(user);
+
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .where("email", "==", user.email)
+          .get()
+          .then((docs) => {
+            docs.forEach((doc) => {
+              if (doc.data().id !== dietitianID) {
+                history.push("/");
+              }
+            });
+          });
+      } else {
+        history.push("/");
+      }
+    });
+
     firebase
       .firestore()
       .collection("dietitians")
