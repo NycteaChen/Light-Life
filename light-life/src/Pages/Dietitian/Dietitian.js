@@ -30,6 +30,7 @@ import loadStyle from "../../style/home.module.scss";
 import loading from "../../images/lightlife-straight.png";
 import styled from "styled-components";
 import spinner from "../../images/loading.gif";
+import { faUserLock } from "@fortawesome/free-solid-svg-icons";
 
 function Dietitian() {
   const [load, setLoad] = useState(loadStyle.loading);
@@ -40,8 +41,10 @@ function Dietitian() {
   const [display, setDisplay] = useState("none");
   const [date, setDate] = useState({});
   const dietitianID = useParams().dID;
+  const path = useLocation().pathname.split("/")[3];
   const customerID = useLocation().pathname.split("/")[4];
-  const customer = useLocation().pathname.includes("customer");
+  const customerDataPath = useLocation().pathname.split("/")[5];
+  const customerPath = useLocation().pathname.includes("customer");
   const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
   const getToday = new Date(+new Date() + 8 * 3600 * 1000)
     .toISOString()
@@ -53,11 +56,33 @@ function Dietitian() {
   const [nav, setNav] = useState("");
   const [active, setActive] = useState("");
   const keyword = useLocation().pathname;
-  const [member, setMember] = useState([]);
   const [notFound, setNotFound] = useState(false);
   let history = useHistory();
 
   useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        console.log(user);
+
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .where("email", "==", user.email)
+          .get()
+          .then((docs) => {
+            docs.forEach((doc) => {
+              if (doc.data().id !== dietitianID) {
+                history.push("/");
+              }
+            });
+          });
+      } else {
+        history.push("/");
+      }
+    });
+
     firebase
       .firestore()
       .collection("dietitians")
@@ -113,7 +138,7 @@ function Dietitian() {
           });
         } else {
           setUsers(usersArray);
-          if (customer) {
+          if (customerPath) {
             history.push(`/dietitian/${dietitianID}`);
           }
         }
@@ -253,25 +278,47 @@ function Dietitian() {
         }, 500)
       );
 
-    if (customerID) {
-      firebase
-        .firestore()
-        .collection("dietitians")
-        .doc(dietitianID)
-        .collection("customers")
-        .doc(customerID)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            setDate({
-              start: doc.data().startDate,
-              end: doc.data().endDate,
-            });
-          } else {
-            setNotFound(true);
-          }
-        });
+    if (customerPath && customerID) {
+      if (customerID !== "") {
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .doc(dietitianID)
+          .collection("customers")
+          .doc(customerID)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              setDate({
+                start: doc.data().startDate,
+                end: doc.data().endDate,
+              });
+            } else {
+              setNotFound(true);
+            }
+          });
+      }
+    } else if (customerPath && !customerID) {
+      setNotFound(true);
+    } else if (
+      path &&
+      path !== "customer" &&
+      path !== "inviteMe" &&
+      path !== "profile" &&
+      path !== "findCustomers"
+    ) {
+      setNotFound(true);
     }
+
+    if (
+      customerDataPath &&
+      customerDataPath !== "profile" &&
+      customerDataPath !== "dietary" &&
+      customerDataPath !== "target"
+    ) {
+      setNotFound(true);
+    }
+
     if (keyword.includes("customer") || keyword.includes("customers")) {
       setNav({ customerList: basic["nav-active"] });
     } else if (keyword.includes("profile")) {
@@ -290,6 +337,7 @@ function Dietitian() {
       setActive({ cTarget: style.active });
     }
   }, []);
+
   useEffect(() => {
     if (profile && profile.email && !profile.name) {
       setProfile({ ...profile, isServing: false });
