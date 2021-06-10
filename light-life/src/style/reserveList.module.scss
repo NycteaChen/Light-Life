@@ -1,0 +1,227 @@
+.reserve-list {
+  max-width: 580px;
+  margin: auto;
+  .buttons,
+  .reservation-state {
+    text-align: center;
+  }
+
+  h4 {
+    padding: 14.5px 0 10px;
+    font-weight: bold;
+    margin-bottom: 0;
+    font-size: 20px;
+  }
+  .reservations {
+    font-size: 14px;
+    max-height: 400px;
+    overflow: auto;
+    margin-top: 20px;
+    padding: 12px 5px;
+    background-color: #edf5f0b2;
+    box-shadow: 0 1px 3px #515a56;
+    border: 1px solid #515a5670;
+    .reservation {
+      transition: all 0.5s;
+      padding: 10px 12px;
+      background-color: #ffffffc5;
+      box-shadow: 0 1px 3px #515a56;
+      margin: 1px 10px 20px;
+    }
+  }
+
+  .waiting {
+    // padding: 10px 0 20px;
+    .buttons {
+      margin: 5px auto;
+      button {
+        font-size: 12px;
+        width: 80px;
+        margin: 10px 0 5px;
+        padding: 2px 8px;
+        border-radius: 5px;
+        outline: none;
+        border: none;
+        letter-spacing: 2px;
+        transition: opacity 0.3s, width 0.3s;
+        &.check {
+          margin-right: 5px;
+          background-color: #015830;
+          color: white;
+        }
+        &.cancel {
+          margin-left: 5px;
+          background-color: #dadada;
+          color: #464444;
+        }
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+
+  .checked {
+    margin-top: 20px;
+    .reservations {
+      // max-height: unset;
+      // height: 400px;
+    }
+    .reservation-state {
+      margin: 5px auto;
+      button {
+        font-size: 12px;
+        width: 80px;
+        margin: 10px 0 5px;
+        padding: 2px 8px;
+        border-radius: 5px;
+        outline: none;
+        border: none;
+        letter-spacing: 2px;
+        transition: opacity 0.3s, width 0.3s;
+        background-color: #015830;
+        color: white;
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+      span {
+        font-size: 12px;
+        display: inline-block;
+        width: 60px;
+        margin-left: 15px;
+        margin-right: 10px;
+        text-align: center;
+        letter-spacing: 2px;
+        padding: 0 8px;
+        border-radius: 5px;
+        line-height: 22px;
+        &.success {
+          background-color: #b5f5d3;
+          color: #046b40;
+        }
+        &.decline {
+          background-color: #fcc9b5;
+          color: #661b05;
+        }
+      }
+    }
+  }
+
+  .message {
+    text-align: center;
+    position: fixed;
+    width: 80%;
+    max-width: 400px;
+    height: 180px;
+    top: 0;
+    right: 0;
+    bottom: 100px;
+    left: 0;
+    margin: auto;
+    background-color: white;
+    z-index: 3;
+    opacity: 0;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px #515a56;
+    padding-top: 20px;
+    animation-duration: 0.3s;
+    .content {
+      div {
+        overflow: auto;
+        padding: 5px;
+        &:first-of-type {
+          font-weight: bold;
+        }
+        &:last-of-type {
+          width: 80%;
+          margin: 5px auto;
+          height: 4rem;
+          // background-color: blue;
+          border: 1px solid grey;
+          border-radius: 5px;
+          text-align: left;
+        }
+      }
+    }
+    button {
+      font-size: 12px;
+      width: 80px;
+      margin: 10px 0 5px;
+      padding: 2px 8px;
+      border-radius: 5px;
+      outline: none;
+      border: none;
+      letter-spacing: 2px;
+      transition: opacity 0.3s, width 0.3s;
+      margin-right: 5px;
+      background-color: #015830;
+      color: white;
+    }
+  }
+
+  @media (min-width: 520px) {
+    max-width: 580px;
+    margin: auto;
+    .reservations {
+      min-height: 310px;
+      .reservation {
+        padding: 20px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .waiting .buttons,
+    .checked .reservation-state {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+  }
+
+  .message {
+    .addDate {
+      text-align: right;
+      margin-right: 10px;
+    }
+    .content {
+      div {
+        max-height: 100px;
+      }
+    }
+  }
+
+  @media (min-width: 1024px) {
+    margin-left: 260px;
+    max-width: 800px;
+
+    .reservations {
+      font-size: 16px;
+    }
+    .waiting {
+      // padding: 10px 0 20px;
+      padding-bottom: 10px;
+      .buttons {
+        button {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .checked {
+      padding: 15px 0 0;
+      margin-top: 0;
+      .reservation:first-of-type {
+        margin-top: 0;
+      }
+      .reservation-state {
+        span,
+        button {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
