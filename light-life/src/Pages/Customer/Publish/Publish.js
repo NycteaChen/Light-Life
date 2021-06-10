@@ -10,8 +10,10 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import Swal from "sweetalert2";
 import style from "../../../style/publish.module.scss";
+import image from "../../../style/image.module.scss";
 import Invited from "./Invited.js";
 import spinner from "../../../images/loading.gif";
+import nothing from "../../../images/nothing.svg";
 
 function Publish({ reserve }) {
   const { cID } = useParams();
@@ -322,11 +324,13 @@ function Publish({ reserve }) {
               </div>
             </>
           ) : (
-            <div>目前沒有刊登喔</div>
+            <div className={image.nothing}>
+              <img src={nothing} />
+            </div>
           )
         ) : (
-          <div style={{ textAlign: "center" }}>
-            <img src={spinner} style={{ width: "50px", height: "50px" }} />
+          <div className={image.spinner}>
+            <img src={spinner} />
           </div>
         )}
       </div>
@@ -353,11 +357,13 @@ function Publish({ reserve }) {
                 </>
               ))
             ) : (
-              <div>沒有應徵喔</div>
+              <div className={image.nothing}>
+                <img src={nothing} />
+              </div>
             )
           ) : (
-            <div style={{ textAlign: "center" }}>
-              <img src={spinner} style={{ width: "50px", height: "50px" }} />
+            <div className={image.spinner}>
+              <img src={spinner} />
             </div>
           )}
           {publishData && isChecked ? (
@@ -399,11 +405,13 @@ function Publish({ reserve }) {
                 </div>
               ))
             ) : (
-              <div>沒有喔</div>
+              <div className={image.nothing}>
+                <img src={nothing} />
+              </div>
             )
           ) : (
-            <div style={{ textAlign: "center" }}>
-              <img src={spinner} style={{ width: "50px", height: "50px" }} />
+            <div className={image.spinner}>
+              <img src={spinner} />
             </div>
           )}
         </div>

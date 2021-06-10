@@ -11,6 +11,7 @@ import "firebase/firestore";
 import noImage from "../../../images/noimage.png";
 import spinner from "../../../images/loading.gif";
 import style from "../../../style/customerProfile.module.scss";
+import image from "../../../style/image.module.scss";
 
 function CustomerProfile({ props, input }) {
   const [profile, setProfile] = useState({});
@@ -179,10 +180,12 @@ function CustomerProfile({ props, input }) {
                 </div>
               </div>
             </div>
-          </div>{" "}
+          </div>
         </>
       ) : (
-        <img src={spinner} style={{ width: "50px", height: "50px" }} />
+        <div className={image.spinner}>
+          <img src={spinner} />
+        </div>
       )}
     </>
   );

@@ -12,7 +12,9 @@ import Swal from "sweetalert2";
 import PublicationData from "./PublicationData.js";
 import style from "../../../style/findCustomers.module.scss";
 import "animate.css/animate.min.css";
+import image from "../../../style/image.module.scss";
 import spinner from "../../../images/loading.gif";
+import nothing from "../../../images/nothing.svg";
 
 function GetPublication() {
   const [publish, setPublish] = useState(null);
@@ -144,11 +146,13 @@ function GetPublication() {
                 )
               )
             ) : (
-              <div>尚未有刊登</div>
+              <div className={image.nothing}>
+                <img src={nothing} />
+              </div>
             )
           ) : (
-            <div style={{ textAlign: "center" }}>
-              <img src={spinner} style={{ width: "50px", height: "50px" }} />
+            <div className={image.spinner}>
+              <img src={spinner} />
             </div>
           )}
         </div>
@@ -230,11 +234,13 @@ function GetPublication() {
                   : ""
               )
             ) : (
-              <div>尚未有邀請</div>
+              <div className={image.nothing}>
+                <img src={nothing} />
+              </div>
             )
           ) : (
-            <div style={{ textAlign: "center" }}>
-              <img src={spinner} style={{ width: "50px", height: "50px" }} />
+            <div className={image.spinner}>
+              <img src={spinner} />
             </div>
           )}
         </div>

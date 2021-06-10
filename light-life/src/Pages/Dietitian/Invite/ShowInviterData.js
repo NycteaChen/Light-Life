@@ -5,7 +5,6 @@ import "firebase/firestore";
 import Swal from "sweetalert2";
 import noImage from "../../../images/noimage.png";
 import style from "../../../style/whoInvite.module.scss";
-import { add } from "date-fns";
 
 function ShowInviterData({
   idx,
