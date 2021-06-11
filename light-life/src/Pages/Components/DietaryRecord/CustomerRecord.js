@@ -5,6 +5,12 @@ import "firebase/firestore";
 import Swal from "sweetalert2";
 import Analysis from "./Analysis.js";
 import style from "../../../style/dietary.module.scss";
+import styled from "styled-components";
+
+const Save = styled.button`
+  cursor: default;
+  opacity: 0.7;
+`;
 
 function CustomerRecord({ date, count, setCount }) {
   const storage = firebase.storage();
@@ -12,13 +18,11 @@ function CustomerRecord({ date, count, setCount }) {
   const [meal, setMeal] = useState("");
   const [dID, setDID] = useState();
   const [mealDetails, setMealDetails] = useState("");
-  const [value, setValue] = useState("");
   const [dataAnalysis, setDataAnalysis] = useState(false);
 
   // const [images, setImages] = useState([]);
   const cID = useParams().cID;
   const [active, setAcitve] = useState("");
-
   useEffect(() => {
     firebase
       .firestore()
@@ -28,7 +32,7 @@ function CustomerRecord({ date, count, setCount }) {
       .then((doc) => {
         setDID(doc.data().dietitian);
       });
-
+    setInput({});
     setMeal([]);
     setAcitve("");
   }, [date]);
@@ -62,14 +66,17 @@ function CustomerRecord({ date, count, setCount }) {
       .doc(date)
       .get()
       .then((doc) => {
+        console.log(doc);
         if (doc.exists && doc.data()[mealClass]) {
           setMealDetails(doc.data()[mealClass]);
         } else {
+          console.log("here");
           setMealDetails("");
         }
         if (doc.exists && doc.data()[e.target.id]) {
           setDataAnalysis(doc.data()[e.target.id]);
         } else {
+          console.log("here");
           setDataAnalysis(false);
         }
       });
@@ -107,7 +114,6 @@ function CustomerRecord({ date, count, setCount }) {
         // imageUrlArray.push(imageUrl);
         imagesArray.push(e.target.files[i]);
       }
-      setValue(e.target.value);
       // if (mealDetails.images) {
       //   mealDetails.images.forEach((m) => {
       //     imageUrlArray.push(m);
@@ -122,7 +128,6 @@ function CustomerRecord({ date, count, setCount }) {
     } else {
       // delete input.image;
       // setInput({ ...input });
-      setValue("");
     }
   };
   const removeImageHandler = (e) => {
@@ -219,7 +224,6 @@ function CustomerRecord({ date, count, setCount }) {
                 { merge: true }
               );
             setMealDetails({ ...mealDetails, images: imageUrlsArray });
-            setValue("");
           });
           Swal.fire({
             text: "儲存成功",
@@ -260,7 +264,9 @@ function CustomerRecord({ date, count, setCount }) {
     ["晚點", "customerNight-snack", "night-snack"],
   ];
 
-  console.log(dataAnalysis);
+  // console.log(dataAnalysis);
+  console.log(input);
+  console.log(mealDetails);
 
   return (
     <>
@@ -335,7 +341,6 @@ function CustomerRecord({ date, count, setCount }) {
                         type="file"
                         accept="image/*"
                         name="image"
-                        value={value}
                         id="0"
                         multiple="multiple"
                         onChange={getInputHandler}
@@ -363,9 +368,15 @@ function CustomerRecord({ date, count, setCount }) {
                     ></textarea>
                   </div>
                   <div className={style.button}>
-                    <button className={m[1]} onClick={bindSaveHandler}>
-                      儲存
-                    </button>
+                    {input ? (
+                      <button className={m[1]} onClick={bindSaveHandler}>
+                        儲存
+                      </button>
+                    ) : (
+                      <Save style={{ cursor: "default" }} className={m[1]}>
+                        儲存
+                      </Save>
+                    )}
                   </div>
                 </div>
 
