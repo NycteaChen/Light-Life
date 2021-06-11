@@ -62,6 +62,8 @@ function GetPublication() {
   };
   const cancelInviteHandler = (e) => {
     const { publishID, whoInvite } = publish[+e.target.id];
+    console.log(publish[+e.target.id]);
+    console.log(publish);
     Swal.fire({
       text: "確定取消嗎?",
       confirmButtonText: "確定",
@@ -81,7 +83,19 @@ function GetPublication() {
             { merge: true }
           )
           .then(() => {
-            window.location.reload();
+            firebase
+              .firestore()
+              .collection("publish")
+              .get()
+              .then((docs) => {
+                const publishArray = [];
+                if (!docs.empty) {
+                  docs.forEach((doc) => {
+                    publishArray.push(doc.data());
+                  });
+                }
+                setPublish(publishArray);
+              });
           });
       }
     });
@@ -136,6 +150,7 @@ function GetPublication() {
                         publish={p}
                         display={display}
                         setDisplay={setDisplay}
+                        setPublish={setPublish}
                       />
                     ) : (
                       ""

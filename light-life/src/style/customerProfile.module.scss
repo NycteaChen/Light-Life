@@ -202,6 +202,11 @@
       .title {
         text-align: right;
         margin-right: 20px;
+        width: 71px !important;
+        &::after {
+          content: "*";
+          color: red;
+        }
       }
       input[type="text"],
       input[type="number"],
@@ -233,6 +238,10 @@
         .title {
           text-align: right;
           margin-right: 20px;
+          width: 67px !important;
+          &::after {
+            content: "";
+          }
         }
         .title + div {
           max-height: 100px;

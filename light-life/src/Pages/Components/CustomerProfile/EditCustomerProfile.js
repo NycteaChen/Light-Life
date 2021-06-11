@@ -14,7 +14,6 @@ function EditCustomerProfile({ profile, setProfile }) {
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const { cID } = useParams();
-
   const {
     name,
     image,
@@ -76,28 +75,48 @@ function EditCustomerProfile({ profile, setProfile }) {
       const imageUrl = await getImg(input.imageFile);
       delete input.imageFile;
       delete input.previewImg;
-      setProfile({
-        ...profile,
-        ...input,
-        image: imageUrl,
-      });
       setInput({
         ...input,
         image: imageUrl,
       });
-      db.collection("customers")
-        .doc(id)
-        .update({
+      if (!career) {
+        setProfile({ ...profile, ...input, image: imageUrl, career: "軍公教" });
+        db.collection("customers")
+          .doc(id)
+          .update({
+            ...input,
+            image: imageUrl,
+            career: "軍公教",
+          });
+      } else {
+        setProfile({
+          ...profile,
           ...input,
           image: imageUrl,
         });
+        db.collection("customers")
+          .doc(id)
+          .update({
+            ...input,
+            image: imageUrl,
+          });
+      }
+
       setInput({});
     } else {
-      setProfile({
-        ...profile,
-        ...input,
-      });
-      db.collection("customers").doc(id).update(input);
+      if (!career) {
+        setProfile({ ...profile, ...input, career: "軍公教" });
+        db.collection("customers")
+          .doc(id)
+          .update({ ...input, career: "軍公教" });
+      } else {
+        setProfile({
+          ...profile,
+          ...input,
+        });
+        db.collection("customers").doc(id).update(input);
+      }
+
       setInput({});
     }
     setIsEditing(false);
