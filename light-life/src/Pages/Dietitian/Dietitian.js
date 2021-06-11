@@ -71,11 +71,15 @@ function Dietitian() {
           .where("email", "==", user.email)
           .get()
           .then((docs) => {
-            docs.forEach((doc) => {
-              if (doc.data().id !== dietitianID) {
-                history.push("/");
-              }
-            });
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                if (doc.data().id !== dietitianID) {
+                  history.push("/");
+                }
+              });
+            } else {
+              history.push("/");
+            }
           });
       } else {
         history.push("/");

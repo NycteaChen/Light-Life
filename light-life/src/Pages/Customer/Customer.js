@@ -60,11 +60,16 @@ function Customer() {
           .where("email", "==", user.email)
           .get()
           .then((docs) => {
-            docs.forEach((doc) => {
-              if (doc.data().id !== customerID) {
-                history.push("/");
-              }
-            });
+            console.log(docs);
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                if (doc.data().id !== customerID) {
+                  history.push("/");
+                }
+              });
+            } else {
+              history.push("/");
+            }
           });
       } else {
         history.push("/");
