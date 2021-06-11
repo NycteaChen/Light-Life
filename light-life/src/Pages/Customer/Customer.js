@@ -445,6 +445,14 @@ function Customer() {
     });
   };
 
+  const alertHandler = () => {
+    Swal.fire({
+      text: "有使用營養師服務才可以使用喔",
+      confirmButtonText: "確定",
+      confirmButtonColor: "#1e4d4e",
+    });
+  };
+
   if (!notFound) {
     if (profile.id) {
       return (
@@ -465,19 +473,30 @@ function Customer() {
                   <i class="fa fa-user" aria-hidden="true" title="profile"></i>
                   <div title="profile">會員資料</div>
                 </Link>
-                <Link
-                  title="dietary"
-                  className={`${style["nav-title"]} ${nav.dietary || ""}`}
-                  onClick={activeHandler}
-                  to={`/customer/${profile.id}/dietary`}
-                >
-                  <i
-                    class="fa fa-cutlery"
-                    aria-hidden="true"
+                {profile.dietitian ? (
+                  <Link
                     title="dietary"
-                  ></i>
-                  <div title="dietary">飲食記錄</div>
-                </Link>
+                    className={`${style["nav-title"]} ${nav.dietary || ""}`}
+                    onClick={activeHandler}
+                    to={`/customer/${profile.id}/dietary`}
+                  >
+                    <i
+                      class="fa fa-cutlery"
+                      aria-hidden="true"
+                      title="dietary"
+                    ></i>
+                    <div title="dietary">飲食記錄</div>
+                  </Link>
+                ) : (
+                  <a className={style["nav-unactive"]} onClick={alertHandler}>
+                    <i
+                      class="fa fa-cutlery"
+                      aria-hidden="true"
+                      title="dietary"
+                    ></i>
+                    <div title="dietary">飲食記錄</div>
+                  </a>
+                )}
                 <Link
                   title="target"
                   className={`${style["nav-title"]} ${nav.target || ""}`}
@@ -571,19 +590,30 @@ function Customer() {
                   <i class="fa fa-user" aria-hidden="true" title="profile"></i>
                   <div title="profile">會員資料</div>
                 </Link>
-                <Link
-                  title="dietary"
-                  className={style["nav-title"]}
-                  to={`/customer/${profile.id}/dietary`}
-                  onClick={activeHandler}
-                >
-                  <i
-                    class="fa fa-cutlery"
-                    aria-hidden="true"
+                {profile.dietitian ? (
+                  <Link
                     title="dietary"
-                  ></i>
-                  <div title="dietary">飲食記錄</div>
-                </Link>
+                    className={style["nav-title"]}
+                    to={`/customer/${profile.id}/dietary`}
+                    onClick={activeHandler}
+                  >
+                    <i
+                      class="fa fa-cutlery"
+                      aria-hidden="true"
+                      title="dietary"
+                    ></i>
+                    <div title="dietary">飲食記錄</div>
+                  </Link>
+                ) : (
+                  <a onClick={alertHandler} className={style["nav-title"]}>
+                    <i
+                      class="fa fa-cutlery"
+                      aria-hidden="true"
+                      title="dietary"
+                    ></i>
+                    <div title="dietary">飲食記錄</div>
+                  </a>
+                )}
                 <Link
                   title="target"
                   className={style["nav-title"]}

@@ -514,7 +514,7 @@ function Dietitian() {
                       </div>
                     </div>
                   ) : (
-                    <div className={basic["no-customers"]}>
+                    <div className={basic["nav-unactive"]}>
                       <i
                         class="fa fa-users list"
                         aria-hidden="true"
