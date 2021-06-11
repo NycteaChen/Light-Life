@@ -28,7 +28,6 @@ import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import loadStyle from "../../style/home.module.scss";
 import loading from "../../images/lightlife-straight.png";
-import styled from "styled-components";
 import spinner from "../../images/loading.gif";
 
 function Dietitian() {

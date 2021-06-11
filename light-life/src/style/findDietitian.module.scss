@@ -2,10 +2,7 @@
   margin: auto;
   max-width: 580px;
   transition: all 0.5s;
-  img {
-    transition: all 0.5s;
-    object-fit: cover;
-  }
+
   & > .title {
     padding: 12px 0 10px;
     font-weight: bold;
@@ -17,6 +14,7 @@
     text-align: center;
     display: grid;
     margin: 20px auto 0;
+
     .dietitian {
       width: 100%;
       max-width: 220px;
@@ -34,6 +32,8 @@
         width: 150px;
         height: 150px;
         border-radius: 50%;
+        transition: all 0.5s;
+        object-fit: cover;
       }
       .info {
         display: none;

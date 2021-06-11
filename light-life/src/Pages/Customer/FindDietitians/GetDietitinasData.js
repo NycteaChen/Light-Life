@@ -8,6 +8,12 @@ import nothing from "../../../images/nothing.svg";
 function GetDietitiansData({ props, setReserve, profile, reserve }) {
   const [isChecked, setIsChecked] = useState(false); //false
   const [checkIndex, setCheckIndex] = useState("");
+  const [display, setDisplay] = useState("inline-block");
+  useEffect(() => {
+    if (props) {
+      setDisplay("none");
+    }
+  });
   const bindCheckHandler = (e) => {
     setCheckIndex(e.target.id);
     setIsChecked(true);
@@ -70,7 +76,7 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
           )
         ) : (
           <div className={image.spinner}>
-            <img src={spinner} />
+            <img src={spinner} style={{ display: display }} />
           </div>
         )}
       </div>

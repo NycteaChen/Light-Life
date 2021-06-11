@@ -27,6 +27,7 @@ function Publish({ reserve }) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [occupationTime, setOccupationTime] = useState([]);
+  const [spinnerDisplay, setSpinnerDisplay] = useState("inline-block");
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
   const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
@@ -104,6 +105,12 @@ function Publish({ reserve }) {
       max: endMostDate.toISOString().substr(0, 10),
     });
   }, []);
+
+  useEffect(() => {
+    if (publishData && oldPublish) {
+      setSpinnerDisplay("none");
+    }
+  });
 
   const publishModalHandler = (e) => {
     switch (e.target.title) {
@@ -341,7 +348,7 @@ function Publish({ reserve }) {
           )
         ) : (
           <div className={image.spinner}>
-            <img src={spinner} />
+            <img src={spinner} style={{ display: spinnerDisplay }} />
           </div>
         )}
       </div>
@@ -374,7 +381,7 @@ function Publish({ reserve }) {
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} />
+              <img src={spinner} style={{ display: spinnerDisplay }} />
             </div>
           )}
           {publishData && isChecked ? (
@@ -422,7 +429,7 @@ function Publish({ reserve }) {
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} />
+              <img src={spinner} style={{ display: spinnerDisplay }} />
             </div>
           )}
         </div>
