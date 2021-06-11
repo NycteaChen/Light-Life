@@ -16,10 +16,10 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
     <div className={style.dietitianList}>
       <div className={style.title}>營養師清單</div>
 
-      {props ? (
-        props.length > 0 ? (
-          props.map((d, index) => (
-            <div className={style.dietitians}>
+      <div className={style.dietitians}>
+        {props ? (
+          props.length > 0 ? (
+            props.map((d, index) => (
               <div key={index} className={style.dietitian}>
                 <img src={props ? d.image : ""} alt="dietitian"></img>
                 <div>
@@ -62,18 +62,18 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
                   </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className={image.nothing} style={{ marginTop: "-3.5px" }}>
+              <img src={nothing} />
             </div>
-          ))
+          )
         ) : (
-          <div className={image.nothing} style={{ marginTop: "-3.5px" }}>
-            <img src={nothing} />
+          <div className={image.spinner}>
+            <img src={spinner} />
           </div>
-        )
-      ) : (
-        <div className={image.spinner}>
-          <img src={spinner} />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

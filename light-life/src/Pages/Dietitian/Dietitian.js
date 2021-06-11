@@ -30,7 +30,6 @@ import loadStyle from "../../style/home.module.scss";
 import loading from "../../images/lightlife-straight.png";
 import styled from "styled-components";
 import spinner from "../../images/loading.gif";
-import { faUserLock } from "@fortawesome/free-solid-svg-icons";
 
 function Dietitian() {
   const [load, setLoad] = useState(loadStyle.loading);
@@ -513,8 +512,14 @@ function Dietitian() {
                     </div>
                   ) : (
                     <div className={basic["no-customers"]}>
-                      <i class="fa fa-users list" aria-hidden="true"></i>
-                      <div>客戶清單</div>
+                      <i
+                        class="fa fa-users list"
+                        aria-hidden="true"
+                        title="customerList"
+                      ></i>
+                      <div title="customerList" className="list">
+                        客戶清單
+                      </div>
                     </div>
                   )}
 
