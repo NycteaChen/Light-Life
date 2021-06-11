@@ -6,7 +6,6 @@ import "firebase/storage";
 import noImage from "../../../images/noimage.png";
 import CustomerProfile from "./CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
-import { param } from "jquery";
 
 function EditCustomerProfile({ profile, setProfile }) {
   const db = firebase.firestore();

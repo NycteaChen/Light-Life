@@ -19,6 +19,7 @@ import nothing from "../../../images/nothing.svg";
 function GetPublication() {
   const [publish, setPublish] = useState(null);
   const [display, setDisplay] = useState("none");
+  const [spinnerDisplay, setSpinnerDisplay] = useState("inline-block");
   const [idx, setIdx] = useState("");
   const { dID } = useParams();
   const date = new Date(+new Date() + 8 * 3600 * 1000).getTime();
@@ -56,6 +57,13 @@ function GetPublication() {
         setPublish(res);
       });
   }, []);
+
+  useEffect(() => {
+    if (publish) {
+      setSpinnerDisplay("none");
+    }
+  });
+
   const checkDetailsHandler = (e) => {
     setIdx(e.target.id);
     setDisplay("block");
@@ -167,7 +175,7 @@ function GetPublication() {
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} />
+              <img src={spinner} style={{ display: spinnerDisplay }} />
             </div>
           )}
         </div>
@@ -255,7 +263,7 @@ function GetPublication() {
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} />
+              <img src={spinner} style={{ display: spinnerDisplay }} />
             </div>
           )}
         </div>

@@ -11,7 +11,6 @@ import styled from "styled-components";
 function InvitedList({ invitedList, setInvitedList, setPending }) {
   const [isChecked, setIsChecked] = useState(false);
   const [buttonIndex, setButtonIndex] = useState();
-  const { dID } = useParams();
 
   const checkInviter = (e) => {
     if (e.target.id) {
