@@ -12,6 +12,10 @@
       margin-bottom: 20px;
       border: 1px solid grey;
       border-radius: 5px;
+      &:focus {
+        outline: none !important;
+        border: 2px solid #64b795;
+      }
     }
   }
   .title {
@@ -89,6 +93,10 @@
             width: 50%;
             max-width: 150px;
             margin-left: 10px;
+            &:focus {
+              outline: none !important;
+              border: 2px solid #64b795;
+            }
           }
         }
         .col {
@@ -164,6 +172,10 @@
             padding: 5px 10px;
             height: 5rem;
             width: 100%;
+            &:focus {
+              outline: none !important;
+              border: 2px solid #64b795;
+            }
           }
         }
 
@@ -364,6 +376,10 @@
         height: 5rem;
         border-radius: 5px;
         border: 1px solid grey;
+        &:focus {
+          outline: none !important;
+          border: 2px solid #64b795;
+        }
       }
       .button {
         text-align: center;

@@ -433,7 +433,7 @@
         border-style: none;
         width: 90%;
         border: 1px solid #4d4d4d;
-        border-radius: 2px;
+        border-radius: 5px;
         padding: 0 5px;
         &:focus {
           outline: none !important;
@@ -441,6 +441,7 @@
         }
       }
       textarea {
+        border-radius: 5px;
         padding: 2px 5px;
         width: 90%;
         &:focus {

@@ -56,6 +56,10 @@
     border-radius: 5px;
     padding: 2px 5px;
     font-size: 14px;
+    &:focus {
+      outline: none !important;
+      border: 2px solid #64b795;
+    }
   }
 
   .customer-targets,

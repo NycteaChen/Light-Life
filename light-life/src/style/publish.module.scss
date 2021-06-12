@@ -193,6 +193,10 @@
         padding-left: 5px;
         border-radius: 5px;
         border: 1px solid grey;
+        &:focus {
+          outline: none !important;
+          border: 2px solid #64b795;
+        }
       }
       textarea {
         height: 3rem;
