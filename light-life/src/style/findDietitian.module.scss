@@ -277,13 +277,13 @@
           border: 1px solid grey;
           padding: 0 5px;
           border-radius: 5px;
+          &:focus {
+            outline: none !important;
+            border: 2px solid #64b795;
+          }
         }
         textarea {
           height: 5rem;
-          &:focus {
-            outline: none;
-            border: 1.5px solid #105a3c;
-          }
         }
       }
       .button {

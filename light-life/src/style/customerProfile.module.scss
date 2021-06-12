@@ -217,6 +217,10 @@
         border: 1px solid grey;
         border-radius: 5px;
         font-size: 14px;
+        &:focus {
+          outline: none !important;
+          border: 2px solid #64b795;
+        }
       }
       .edit-gender {
         display: grid;

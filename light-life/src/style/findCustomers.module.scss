@@ -333,8 +333,8 @@
       padding: 2px 5px;
       border-color: #73af97;
       &:focus {
-        outline: none;
-        border: 1.5px solid #105a3c;
+        outline: none !important;
+        border: 2px solid #64b795;
       }
     }
 
