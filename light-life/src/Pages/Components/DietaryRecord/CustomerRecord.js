@@ -264,9 +264,7 @@ function CustomerRecord({ date, count, setCount }) {
     ["晚點", "customerNight-snack", "night-snack"],
   ];
 
-  // console.log(dataAnalysis);
-  console.log(input);
-  console.log(mealDetails);
+  console.log(dataAnalysis);
 
   return (
     <>

@@ -231,7 +231,8 @@ function Publish({ reserve }) {
       !profile.height ||
       !profile.career ||
       !profile.education ||
-      !profile.age
+      !profile.age ||
+      !profile.sport
     ) {
       Swal.fire({
         text: "個人資料填寫完整才能發佈刊登喔",
