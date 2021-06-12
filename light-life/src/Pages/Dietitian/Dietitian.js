@@ -411,9 +411,16 @@ function Dietitian() {
       }
     });
   };
-
+  console.log(profile);
   const changeServiceStatusHandler = () => {
-    if (profile.name && profile.education && profile.gender) {
+    if (
+      profile.name &&
+      profile.education &&
+      profile.education["degree"] &&
+      profile.education["school"] &&
+      profile.education["department"] &&
+      profile.gender
+    ) {
       setProfile({ ...profile, isServing: !profile.isServing });
       firebase
         .firestore()

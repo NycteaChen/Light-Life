@@ -255,6 +255,7 @@ function DietitianProfile({ profile, setProfile }) {
                     type="text"
                     className="education"
                     name="school"
+                    placeholder="學校名稱"
                     value={edu.school ? edu.school : ""}
                     onChange={getInputHandler}
                     required
@@ -262,6 +263,7 @@ function DietitianProfile({ profile, setProfile }) {
                   <input
                     type="text"
                     className="education"
+                    placeholder="系所名稱"
                     name="department"
                     value={edu.department ? edu.department : ""}
                     onChange={getInputHandler}
@@ -376,7 +378,6 @@ function DietitianProfile({ profile, setProfile }) {
         <div className={style["profile-data"]}>
           <div className={style.button}>
             <button onClick={profileButtonHandler} title="edit">
-              {/* 編輯 */}
               <i
                 title="edit"
                 class="fa fa-pencil"
