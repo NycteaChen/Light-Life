@@ -390,9 +390,12 @@ function Login({ display, setDisplay }) {
                       icon: "success",
                       confirmButtonText: "確定",
                       confirmButtonColor: "#1e4d4e",
-                    });
-                    setInput({});
-                    setValidStyle({});
+                    })
+                      .then(() => {
+                        setInput({});
+                        setValidStyle({});
+                      })
+                      .then(() => window.location.reload());
                   })
                   .catch((error) => {
                     Swal.fire({
@@ -604,7 +607,6 @@ function Login({ display, setDisplay }) {
         // ...
       });
   };
-  // animate__animated animate__slideInLeft
   return (
     <>
       <div className={`${style.loginMessage} ${showMessage.welcomeback || ""}`}>
