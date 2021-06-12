@@ -668,7 +668,7 @@ function Dietitian() {
             <Switch>
               <Route exact path="/dietitian/:dID">
                 <div className={basic.indexMessage}>
-                  <div className={basic.title}>服務狀況</div>
+                  <div className={basic.title}>客戶服務情況</div>
                   <div className={basic.content}>
                     <div className={basic.serving}>
                       <div className={basic.subtitle}>
