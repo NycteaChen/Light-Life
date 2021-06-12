@@ -58,11 +58,13 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
           className={`${style["invite-data"]} animated animate__fadeIn`}
           style={{ display: "block" }}
         >
-          <i
-            className="fa fa-times"
-            aria-hidden="true"
-            onClick={checkInviter}
-          ></i>
+          <div>
+            <i
+              className="fa fa-times"
+              aria-hidden="true"
+              onClick={checkInviter}
+            ></i>
+          </div>
           <ShowInviterData
             idx={buttonIndex}
             invitedList={invitedList}

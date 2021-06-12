@@ -260,17 +260,23 @@
   div {
     font-size: 14px;
   }
-  .close {
-    position: absolute;
-    right: 10px;
-    transition: all 0.5s;
-    font-size: 20px;
-    cursor: pointer;
-    &:hover {
-      transform: scale(1.2);
-      color: #037570;
+  & > div:first-of-type {
+    position: relative;
+    text-align: right;
+    margin-right: 30px;
+    .close {
+      position: fixed;
+      // right: 0px;
+      transition: all 0.5s;
+      font-size: 20px;
+      cursor: pointer;
+      &:hover {
+        transform: scale(1.2);
+        color: #037570;
+      }
     }
   }
+
   img {
     width: 150px;
     height: 150px;
@@ -414,9 +420,7 @@
         }
       }
     }
-    .close {
-      right: 25px;
-    }
+
     .col {
       width: 400px;
       margin: 8px 0;

@@ -75,16 +75,20 @@
     margin: auto;
     // transition: all 0.5s;
     font-size: 14px;
-    i {
-      position: absolute;
-      z-index: 3;
-      cursor: pointer;
-      right: 10px;
-      font-size: 20px;
-      transition: all 0.5s;
-      &:hover {
-        transform: scale(1.2);
-        color: #037570;
+    & > div:first-of-type {
+      position: relative;
+      text-align: right;
+      margin-right: 30px;
+      i {
+        position: fixed;
+        // right: 0px;
+        transition: all 0.5s;
+        font-size: 20px;
+        cursor: pointer;
+        &:hover {
+          transform: scale(1.2);
+          color: #037570;
+        }
       }
     }
     .reserve-time {
@@ -265,9 +269,14 @@
         max-height: unset;
         height: 548px;
         overflow-x: hidden;
-        i {
-          right: 25px;
-        }
+        // & > div:first-of-type {
+        //   position:relative;
+        //   text-align: right;
+        //   i {
+        //     position:fixed;
+        //     // right: 25px;
+        //   }
+        // }
         .reserve-time {
           // transition: all 0.5s;
           font-weight: bold;
