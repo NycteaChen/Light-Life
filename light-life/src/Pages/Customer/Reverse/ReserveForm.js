@@ -140,7 +140,8 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       !profile.height ||
       !profile.career ||
       !profile.education ||
-      !profile.age
+      !profile.age ||
+      !profile.sport
     ) {
       Swal.fire({
         text: "個人資料填寫完整才能執行預約喔",

@@ -235,13 +235,11 @@
       .data-item {
         margin: 5px 0;
         display: flex;
+
         .title {
           text-align: right;
           margin-right: 20px;
-          width: 67px !important;
-          &::after {
-            content: "";
-          }
+          width: 71px;
         }
         .title + div {
           max-height: 100px;
@@ -256,6 +254,14 @@
           margin: auto;
           height: 4rem;
           padding: 3px 5px;
+        }
+      }
+      &:last-of-type {
+        .title {
+          width: 65px;
+          &::after {
+            content: "";
+          }
         }
       }
     }
