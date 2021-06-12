@@ -343,7 +343,7 @@ function Login({ display, setDisplay }) {
             setShowMessage({ wrongAccount: style.showMessage });
             setValidStyle({
               email: style.invalid,
-              password: style.invalid,
+              // password: style.invalid,
             });
           }
         });
@@ -705,9 +705,8 @@ function Login({ display, setDisplay }) {
                 name="password"
                 className={validStyle.password || ""}
                 placeholder="abc123"
-                pattern="^([a-zA-Z]+\d+|\d+[a-zA-Z]+)[a-zA-Z0-9]*$"
                 minlength="6"
-                maxlength="12"
+                maxlength="15"
                 value={input.password ? input.password : ""}
                 onChange={getInputHandler}
               />
@@ -839,10 +838,9 @@ function Login({ display, setDisplay }) {
                 type={eye.mode}
                 name="password"
                 className={validStyle.password || ""}
-                placeholder="請輸入至少6位英數字"
-                pattern="^([a-zA-Z]+\d+|\d+[a-zA-Z]+)[a-zA-Z0-9]*$"
+                placeholder="請輸入至少6位字元"
                 minlength="6"
-                maxlength="12"
+                maxlength="15"
                 value={input.password ? input.password : ""}
                 onChange={getInputHandler}
               />

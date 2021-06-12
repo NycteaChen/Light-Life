@@ -112,7 +112,7 @@ function GetPublication() {
   return (
     <>
       <div className={style.publicationData}>
-        <h5>目前現有刊登</h5>
+        <h5>目前的客戶刊登</h5>
         <div className={style.publicationList}>
           {publish ? (
             publish.find(

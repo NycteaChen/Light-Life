@@ -575,7 +575,7 @@ function Customer() {
                   {profile.dietitian ? (
                     <div>您的營養師：{dName} 營養師</div>
                   ) : (
-                    <div>目前沒有使用服務喔</div>
+                    <div>目前沒有使用營養師服務</div>
                   )}
                 </div>
               </div>
@@ -675,7 +675,7 @@ function Customer() {
             <Switch>
               <Route exact path="/customer/:cID">
                 <div className={style.indexMessage}>
-                  <div className={style.title}>服務使用情形</div>
+                  <div className={style.title}>營養師服務使用狀態</div>
                   <div className={style.content}>
                     <div className={style.serving}>
                       <div className={style.subtitle}>進行中服務</div>
