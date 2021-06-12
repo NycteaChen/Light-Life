@@ -312,8 +312,10 @@
       }
 
       .reserveCol {
-        background-color: #ffffff;
+        background-color: #f9fffe;
         padding: 12px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
         .reserveLabel {
           display: flex;
           // justify-content: space-around;
@@ -324,7 +326,9 @@
       }
       .reserveLabel {
         margin: 0;
-        background-color: #ffffff;
+        background-color: #f9fffe;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
         &.reserveMessage {
           padding: 0 12px 12px;
           & > div:last-of-type {
