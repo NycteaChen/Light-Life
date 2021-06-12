@@ -101,6 +101,31 @@ function RenderDietaryRecord() {
             endDate: res.data().endDate,
           });
         });
+    } else {
+      firebase
+        .firestore()
+        .collection("customers")
+        .doc(cID)
+        .get()
+        .then((res) => {
+          console.log(res.data().dietitian);
+          return res.data().dietitian;
+        })
+        .then((res) => {
+          firebase
+            .firestore()
+            .collection("dietitians")
+            .doc(res)
+            .collection("customers")
+            .doc(cID)
+            .get()
+            .then((res) => {
+              setServiceDate({
+                startDate: res.data().startDate,
+                endDate: res.data().endDate,
+              });
+            });
+        });
     }
   }, []);
 
@@ -111,6 +136,7 @@ function RenderDietaryRecord() {
       setGetRecord(true);
     }
   };
+  console.log(serviceDate);
   // if (dID) {
   return (
     <div className={style["daily-diet"]}>
@@ -124,7 +150,12 @@ function RenderDietaryRecord() {
             onChange={getDietaryRecordDate}
           ></input>
         ) : (
-          <input type="date" max={today} onChange={getDietaryRecordDate} />
+          <input
+            type="date"
+            min={serviceDate ? serviceDate.startDate : ""}
+            max={serviceDate ? serviceDate.endDate : ""}
+            onChange={getDietaryRecordDate}
+          />
         )}
       </div>
       {dID ? (
