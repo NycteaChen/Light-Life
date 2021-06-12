@@ -8,7 +8,6 @@
     font-weight: bold;
   }
   .inviters {
-    // max-height: 350px;
     font-size: 14px;
     height: 400px;
     padding: 15px;
@@ -66,19 +65,14 @@
     z-index: 3;
     margin: 20px;
     width: 80%;
-    // max-height: calc(100vh - 80px);
     overflow: auto;
     position: fixed;
-    // top: 20px;
-    // right: 0;
-    // left: 0;
     top: 10px;
     bottom: 90px;
     right: 0;
     left: 0;
     max-height: 620px;
     margin: auto;
-    // transition: all 0.5s;
     font-size: 14px;
     & > div:first-of-type {
       position: relative;
@@ -86,7 +80,6 @@
       margin-right: 30px;
       i {
         position: fixed;
-        // right: 0px;
         transition: all 0.5s;
         font-size: 20px;
         cursor: pointer;
@@ -97,7 +90,6 @@
       }
     }
     .reserve-time {
-      // transition: all 0.5s;
       font-weight: bold;
       font-size: 16px;
       display: block;
@@ -106,7 +98,6 @@
       width: 150px;
       height: 150px;
       border-radius: 50%;
-      // transition: all 0.5s;
       object-fit: cover;
       margin: 20px 0 27px;
     }
@@ -151,7 +142,6 @@
         background-color: #f9fffe;
         border-radius: 5px;
         max-height: 5rem;
-        // transition: all 0.3s;
         overflow: auto;
       }
     }
@@ -253,8 +243,6 @@
         .inviter {
           .invite-message {
             display: flex;
-            // width: 60%;
-            // max-width: 400px;
             justify-content: space-between;
             align-items: center;
             margin: auto;
@@ -272,19 +260,8 @@
         text-align: center;
         max-width: 500px;
         top: 90px;
-        // max-height: unset;
-        // height: 548px;
         overflow-x: hidden;
-        // & > div:first-of-type {
-        //   position:relative;
-        //   text-align: right;
-        //   i {
-        //     position:fixed;
-        //     // right: 25px;
-        //   }
-        // }
         .reserve-time {
-          // transition: all 0.5s;
           font-weight: bold;
           display: block;
         }
@@ -383,7 +360,6 @@
 
       .invite-number {
         font-size: 20px;
-        // margin-bottom: 10px;
       }
       .inviters {
         margin-top: 17px;
@@ -402,10 +378,7 @@
       }
       .invite-data {
         text-align: center;
-        // top: 0;
-        // bottom: 0;
         margin: auto;
-        // height: 620px;
         .reserve-time,
         .col:last-of-type {
           div + div {
