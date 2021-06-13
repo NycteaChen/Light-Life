@@ -157,7 +157,8 @@ function DietitianRecord({ date }) {
   };
 
   const addNewFoodTable = (e) => {
-    if (meal[0] === e.target.className.split(" ")[1]) {
+    // if (meal[0] === e.target.className.split(" ")[1]) {
+    if (e.target.className.includes(meal[0])) {
       if (input.item === "" || !input.item) {
         Swal.fire({
           text: "請填入食材",
@@ -461,10 +462,15 @@ function DietitianRecord({ date }) {
                     <tfoot>
                       <tr>
                         <th></th>
-                        <th
-                          className={`${style["meal-plus"]} ${m[1]}`}
-                          onClick={addNewFoodTable}
-                        ></th>
+                        <th className={`${style["meal-plus"]} ${m[1]}`}>
+                          <div className={m[1]} onClick={addNewFoodTable}>
+                            <i
+                              class={`fa fa-plus ${m[1]}`}
+                              aria-hidden="true"
+                              onClick={addNewFoodTable}
+                            ></i>
+                          </div>
+                        </th>
                       </tr>
                     </tfoot>
                   </table>
