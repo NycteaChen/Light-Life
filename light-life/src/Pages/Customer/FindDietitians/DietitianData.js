@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReserveForm from "../Reverse/ReserveForm.js";
 import style from "../../../style/findDietitian.module.scss";
+import noImage from "../../../images/noimage.png";
 
 function DietitianData({ props, setIsChecked, setReserve, reserve }) {
   const bindCloseHandler = () => {
@@ -16,33 +17,34 @@ function DietitianData({ props, setIsChecked, setReserve, reserve }) {
         ></i>
       </div>
       <div>
-        <div className={style.name}>{props.name || ""}營養師</div>
+        <div className={style.name}>{props ? props.name : ""}營養師</div>
         <div className={style.img}>
-          <img src={props.image} alt="dietitian" />
+          <img src={props ? props.image : noImage} alt="dietitian" />
         </div>
       </div>
       <div className={style.content}>
         <div className={style.flexbox}>
           <div className={style.gender}>
             <span className={style.title}>性別</span>　
-            <span>{props.gender}</span>
+            <span>{props ? props.gender : ""}</span>
           </div>
           <div className={style.education}>
             <div>
               <span className={style.title}>學歷</span>　
-              {props.education.school}
+              {props ? props.education.school : ""}
             </div>
             <div>
-              <span>{props.education.department}　</span>
-              <span>{props.education.degree}</span>
+              <span>{props ? props.education.department : ""}　</span>
+              <span>{props ? props.education.degree : ""}</span>
             </div>
           </div>
         </div>
         <>
-          {props.skills.weightControl ||
-          props.skills.sportNT ||
-          props.skills.threeHigh ||
-          props.skills.bloodSugar ? (
+          {props &&
+          (props.skills.weightControl ||
+            props.skills.sportNT ||
+            props.skills.threeHigh ||
+            props.skills.bloodSugar) ? (
             <div className={style.skills}>
               <div className={style.title}>專長　</div>
               <div>
@@ -56,7 +58,7 @@ function DietitianData({ props, setIsChecked, setReserve, reserve }) {
             ""
           )}
         </>
-        {props.other ? (
+        {props && props.other ? (
           <div className={style.other}>
             <div className={style.title}>其他</div>
             <div>{props.other}</div>
