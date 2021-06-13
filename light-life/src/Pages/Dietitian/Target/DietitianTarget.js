@@ -185,7 +185,7 @@ function DietitianTarget() {
             </button>
             <button
               onClick={bindAddTarget}
-              className={style.cancle}
+              className={style.cancel}
               id="cancel"
             >
               取消
