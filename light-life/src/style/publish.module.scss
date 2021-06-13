@@ -23,13 +23,13 @@
         border-radius: 50%;
         width: 35px;
         height: 35px;
-        background-color: #87a39875;
+        background-color: #87a398;
         transition: background-color 0.3s;
         i {
           color: #ffffff;
         }
         &:hover {
-          background-color: #87a398;
+          background-color: #87a39875;
         }
         &.remove {
           margin-left: 10px;
@@ -221,7 +221,7 @@
           color: white;
         }
         &.cancel {
-          background-color: #dadada;
+          background-color: #dbdbdb;
           color: #464444;
         }
         &:hover {
@@ -398,7 +398,7 @@
       color: #046b40;
     }
     &.decline {
-      background-color: #dadada;
+      background-color: #dbdbdb;
       color: #464444;
     }
     &:hover {
