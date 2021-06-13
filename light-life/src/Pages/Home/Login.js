@@ -493,29 +493,60 @@ function Login({ display, setDisplay }) {
                       window.location.href = `/customer/${id}`;
                     }, 1500);
                   } else {
-                    firebase
-                      .firestore()
-                      .collection(`${client}s`)
-                      .add({
-                        name: user.displayName,
-                        image: user.photoURL,
-                        email: user.email,
-                      })
-                      .then((docRef) => {
+                    Swal.fire({
+                      title: `確定以${
+                        client === "dietitian" ? "營養師" : "客戶"
+                      }身分登入嗎?`,
+                      text: `若您是${
+                        client === "dietitian" ? "客戶" : "營養師"
+                      }，請選擇${
+                        client === "dietitian" ? "客戶" : "營養師"
+                      }端註冊`,
+                      icon: "warning",
+                      showCancelButton: true,
+                      cancelButtonText: "取消",
+                      confirmButtonText: "確定",
+                      confirmButtonColor: "#1e4d4e",
+                    }).then((res) => {
+                      if (res.isConfirmed) {
                         firebase
                           .firestore()
                           .collection(`${client}s`)
-                          .doc(docRef.id)
-                          .update("id", docRef.id);
+                          .add({
+                            name: user.displayName,
+                            image: user.photoURL,
+                            email: user.email,
+                          })
+                          .then((docRef) => {
+                            firebase
+                              .firestore()
+                              .collection(`${client}s`)
+                              .doc(docRef.id)
+                              .update("id", docRef.id);
 
-                        return docRef.id;
-                      })
-                      .then((res) => {
-                        setShowMessage({ welcomeback: style.showloginMessage });
-                        setTimeout(() => {
-                          window.location.href = `/${client}/${res}`;
-                        }, 1500);
-                      });
+                            return docRef.id;
+                          })
+                          .then((res) => {
+                            setShowMessage({
+                              welcomeback: style.showloginMessage,
+                            });
+                            setTimeout(() => {
+                              window.location.href = `/${client}/${res}`;
+                            }, 1500);
+                          });
+                      } else {
+                        const user = firebase.auth().currentUser;
+                        user
+                          .delete()
+                          .then(() => {
+                            // User deleted.
+                          })
+                          .catch((error) => {
+                            // An error ocurred
+                            // ...
+                          });
+                      }
+                    });
                   }
                 });
             }
@@ -530,6 +561,12 @@ function Login({ display, setDisplay }) {
         // The firebase.auth.AuthCredential type that was used.
         const credential = error.credential;
         // ...
+        Swal.fire({
+          text: "此帳號在別的登入端已經使用",
+          icon: "warning",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       });
   };
   const facebookLoginHandler = () => {
@@ -568,29 +605,60 @@ function Login({ display, setDisplay }) {
                       window.location.href = `/customer/${id}`;
                     }, 1500);
                   } else {
-                    firebase
-                      .firestore()
-                      .collection(`${client}s`)
-                      .add({
-                        name: user.displayName,
-                        image: `${user.photoURL}?height=500`,
-                        email: user.email,
-                      })
-                      .then((docRef) => {
+                    Swal.fire({
+                      title: `確定以${
+                        client === "dietitian" ? "營養師" : "客戶"
+                      }身分登入嗎?`,
+                      text: `若您是${
+                        client === "dietitian" ? "客戶" : "營養師"
+                      }，請選擇${
+                        client === "dietitian" ? "客戶" : "營養師"
+                      }端註冊`,
+                      icon: "warning",
+                      showCancelButton: true,
+                      cancelButtonText: "取消",
+                      confirmButtonText: "確定",
+                      confirmButtonColor: "#1e4d4e",
+                    }).then((res) => {
+                      if (res.isConfirmed) {
                         firebase
                           .firestore()
                           .collection(`${client}s`)
-                          .doc(docRef.id)
-                          .update("id", docRef.id);
+                          .add({
+                            name: user.displayName,
+                            image: `${user.photoURL}?height=500`,
+                            email: user.email,
+                          })
+                          .then((docRef) => {
+                            firebase
+                              .firestore()
+                              .collection(`${client}s`)
+                              .doc(docRef.id)
+                              .update("id", docRef.id);
 
-                        return docRef.id;
-                      })
-                      .then((res) => {
-                        setShowMessage({ welcomeback: style.showloginMessage });
-                        setTimeout(() => {
-                          window.location.href = `/${client}/${res}`;
-                        }, 1500);
-                      });
+                            return docRef.id;
+                          })
+                          .then((res) => {
+                            setShowMessage({
+                              welcomeback: style.showloginMessage,
+                            });
+                            setTimeout(() => {
+                              window.location.href = `/${client}/${res}`;
+                            }, 1500);
+                          });
+                      } else {
+                        const user = firebase.auth().currentUser;
+                        user
+                          .delete()
+                          .then(() => {
+                            // User deleted.
+                          })
+                          .catch((error) => {
+                            // An error ocurred
+                            // ...
+                          });
+                      }
+                    });
                   }
                 });
             }
@@ -600,11 +668,20 @@ function Login({ display, setDisplay }) {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
         // The email of the user's account used.
         const email = error.email;
+        console.log(email);
         // The firebase.auth.AuthCredential type that was used.
         const credential = error.credential;
+        console.log(credential);
         // ...
+        Swal.fire({
+          text: "此帳號在別的登入端已經使用",
+          icon: "warning",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       });
   };
   return (
