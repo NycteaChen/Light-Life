@@ -216,7 +216,7 @@
     .flexbox > h5 {
       text-align: left;
     }
-    .set-content {
+    .set-content + .set-content {
       width: 130px;
     }
     .customer-targets,
@@ -309,6 +309,13 @@
     .flexbox {
       .set-content {
         width: 155px;
+      }
+    }
+    .target-header {
+      .flexbox {
+        .set-content {
+          width: 100px;
+        }
       }
     }
   }
