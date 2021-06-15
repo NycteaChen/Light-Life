@@ -16,7 +16,12 @@ function TargetHandler({ target, setTarget }) {
   const [date, setDate] = useState({});
   const pathName = useLocation().pathname;
   const params = useParams();
-
+  const [display, setDisplay] = useState("inline-block");
+  useEffect(() => {
+    if (target) {
+      setDisplay("none");
+    }
+  });
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name === "startDate") {
@@ -152,6 +157,7 @@ function TargetHandler({ target, setTarget }) {
         setIsEditing(false);
       });
   };
+  console.log(target);
 
   return (
     <>
@@ -437,7 +443,7 @@ function TargetHandler({ target, setTarget }) {
         )
       ) : (
         <div className={image.spinner}>
-          <img src={spinner} />
+          <img src={spinner} style={{ display: display }} />
         </div>
       )}
     </>

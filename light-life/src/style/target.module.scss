@@ -22,6 +22,8 @@
     button {
       font-size: 20px;
       border: 1px solid beige;
+      position: relative;
+      bottom: 6px;
       border-radius: 50%;
       width: 35px;
       height: 35px;
@@ -54,6 +56,10 @@
     border-radius: 5px;
     padding: 2px 5px;
     font-size: 14px;
+    &:focus {
+      outline: none !important;
+      border: 2px solid #64b795;
+    }
   }
 
   .customer-targets,
@@ -171,7 +177,7 @@
           color: white;
         }
         &.cancel {
-          background-color: #dadada;
+          background-color: #dbdbdb;
           color: #464444;
         }
         &:hover {
@@ -210,7 +216,7 @@
     .flexbox > h5 {
       text-align: left;
     }
-    .set-content {
+    .set-content + .set-content {
       width: 130px;
     }
     .customer-targets,
@@ -303,6 +309,13 @@
     .flexbox {
       .set-content {
         width: 155px;
+      }
+    }
+    .target-header {
+      .flexbox {
+        .set-content {
+          width: 100px;
+        }
       }
     }
   }

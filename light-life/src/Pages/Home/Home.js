@@ -244,7 +244,7 @@ function Home() {
           <section className={`${style.wow} animated animate__fadeInUp`}>
             <form autocomplete="off">
               <label>
-                您的大名
+                <span>您的大名</span>
                 <div>
                   <input
                     type="text"
@@ -256,7 +256,7 @@ function Home() {
                 </div>
               </label>
               <label>
-                信箱
+                <span>信箱</span>
                 <div>
                   <input
                     type="email"
@@ -269,7 +269,7 @@ function Home() {
                 </div>
               </label>
               <label>
-                內容
+                <span>內容</span>
                 <div>
                   <textarea
                     name="text"

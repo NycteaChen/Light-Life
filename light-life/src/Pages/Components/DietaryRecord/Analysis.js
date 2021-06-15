@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "firebase/firestore";
 import Swal from "sweetalert2";
 import style from "../../../style/dietary.module.scss";
@@ -58,7 +58,7 @@ function Analysis({ date, cID, data }) {
             }
           });
       });
-  }, [date, data]);
+  }, [date, data, cID]);
 
   const calculator = (target, setMealNutrients) => {
     const reducer = (acc, cur) => acc + cur;

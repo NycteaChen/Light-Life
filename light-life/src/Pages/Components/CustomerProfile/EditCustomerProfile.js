@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import React, { useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import noImage from "../../../images/noimage.png";
 import CustomerProfile from "./CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
-import { param } from "jquery";
 
 function EditCustomerProfile({ profile, setProfile }) {
   const db = firebase.firestore();
   const storage = firebase.storage();
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const { cID } = useParams();
-
   const {
     name,
     image,
@@ -76,28 +72,48 @@ function EditCustomerProfile({ profile, setProfile }) {
       const imageUrl = await getImg(input.imageFile);
       delete input.imageFile;
       delete input.previewImg;
-      setProfile({
-        ...profile,
-        ...input,
-        image: imageUrl,
-      });
       setInput({
         ...input,
         image: imageUrl,
       });
-      db.collection("customers")
-        .doc(id)
-        .update({
+      if (!career) {
+        setProfile({ ...profile, ...input, image: imageUrl, career: "軍公教" });
+        db.collection("customers")
+          .doc(id)
+          .update({
+            ...input,
+            image: imageUrl,
+            career: "軍公教",
+          });
+      } else {
+        setProfile({
+          ...profile,
           ...input,
           image: imageUrl,
         });
+        db.collection("customers")
+          .doc(id)
+          .update({
+            ...input,
+            image: imageUrl,
+          });
+      }
+
       setInput({});
     } else {
-      setProfile({
-        ...profile,
-        ...input,
-      });
-      db.collection("customers").doc(id).update(input);
+      if (!career) {
+        setProfile({ ...profile, ...input, career: "軍公教" });
+        db.collection("customers")
+          .doc(id)
+          .update({ ...input, career: "軍公教" });
+      } else {
+        setProfile({
+          ...profile,
+          ...input,
+        });
+        db.collection("customers").doc(id).update(input);
+      }
+
       setInput({});
     }
     setIsEditing(false);
@@ -112,6 +128,8 @@ function EditCustomerProfile({ profile, setProfile }) {
         break;
       case "edit":
         setIsEditing(true);
+        break;
+      default:
         break;
     }
   };
