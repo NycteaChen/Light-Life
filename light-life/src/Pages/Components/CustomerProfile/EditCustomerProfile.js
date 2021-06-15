@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import React, { useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
@@ -12,7 +11,6 @@ function EditCustomerProfile({ profile, setProfile }) {
   const storage = firebase.storage();
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const { cID } = useParams();
   const {
     name,
     image,
@@ -130,6 +128,8 @@ function EditCustomerProfile({ profile, setProfile }) {
         break;
       case "edit":
         setIsEditing(true);
+        break;
+      default:
         break;
     }
   };

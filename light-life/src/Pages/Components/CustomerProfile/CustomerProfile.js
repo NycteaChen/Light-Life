@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import noImage from "../../../images/noimage.png";
@@ -24,7 +18,7 @@ function CustomerProfile({ props, input }) {
       .doc(cID)
       .get()
       .then((res) => setProfile(res.data()));
-  }, []);
+  }, [cID]);
   return (
     <>
       {profile.image ? (
@@ -184,7 +178,7 @@ function CustomerProfile({ props, input }) {
         </>
       ) : (
         <div className={image.spinner}>
-          <img src={spinner} />
+          <img src={spinner} alt="spinner" />
         </div>
       )}
     </>
