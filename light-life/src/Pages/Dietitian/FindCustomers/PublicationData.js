@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  useLocation,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "firebase/firestore";
 import Swal from "sweetalert2";
 import noImage from "../../../images/noimage.png";

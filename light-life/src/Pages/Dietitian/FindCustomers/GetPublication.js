@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import Swal from "sweetalert2";
@@ -152,7 +146,7 @@ function GetPublication() {
                       </div>
                     </div>
 
-                    {+idx == pubIndex ? (
+                    {+idx === pubIndex ? (
                       <PublicationData
                         key={p.name}
                         publish={p}
@@ -170,12 +164,16 @@ function GetPublication() {
               )
             ) : (
               <div className={image.nothing}>
-                <img src={nothing} />
+                <img src={nothing} alt="nothing" />
               </div>
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} style={{ display: spinnerDisplay }} />
+              <img
+                src={spinner}
+                style={{ display: spinnerDisplay }}
+                alt="spinner"
+              />
             </div>
           )}
         </div>
@@ -239,7 +237,7 @@ function GetPublication() {
                             </div>
                           </div>
 
-                          {+idx == pubIndex ? (
+                          {+idx === pubIndex ? (
                             <PublicationData
                               key={p.name}
                               publish={p}
@@ -258,12 +256,16 @@ function GetPublication() {
               )
             ) : (
               <div className={image.nothing}>
-                <img src={nothing} />
+                <img src={nothing} alt="nothing" />
               </div>
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} style={{ display: spinnerDisplay }} />
+              <img
+                src={spinner}
+                style={{ display: spinnerDisplay }}
+                alt="spinner"
+              />
             </div>
           )}
         </div>

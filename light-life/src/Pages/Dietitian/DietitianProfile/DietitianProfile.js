@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import style from "../../../style/dietitianProfile.module.scss";
@@ -77,8 +77,6 @@ function DietitianProfile({ profile, setProfile }) {
       delete input.imageFile;
       setInput({ ...input, image: input.image || image });
     }
-    {
-    }
   };
 
   const saveProfileHandler = async () => {
@@ -131,6 +129,8 @@ function DietitianProfile({ profile, setProfile }) {
       case "edit":
         setIsEditing(true);
         break;
+      default:
+        break;
     }
   };
   return (
@@ -145,7 +145,7 @@ function DietitianProfile({ profile, setProfile }) {
               <i class="fa fa-times" aria-hidden="true" title="cancel"></i>
             </button>
           </div>
-          <form className={style["basic-profile"]} action="javascript:void(0);">
+          <form className={style["basic-profile"]} action="javascript:void(0)">
             <div className={style.flexbox}>
               <div className={style.img}>
                 <a
@@ -157,6 +157,7 @@ function DietitianProfile({ profile, setProfile }) {
                       : image
                   }
                   target="_blank"
+                  rel="noreferrer"
                 >
                   <img
                     src={
@@ -398,6 +399,7 @@ function DietitianProfile({ profile, setProfile }) {
                       : image
                   }
                   target="_blank"
+                  rel="noreferrer"
                 >
                   <img
                     src={

@@ -5,7 +5,6 @@ import {
   Switch,
   Route,
   Link,
-  useLocation,
   useParams,
 } from "react-router-dom";
 import "firebase/firestore";
@@ -83,9 +82,6 @@ function RenderDietaryRecord() {
   const [serviceDate, setServiceDate] = useState(null);
   const { dID } = useParams();
   const { cID } = useParams();
-  const today = new Date(+new Date() + 8 * 3600 * 1000)
-    .toISOString()
-    .substr(0, 10);
   useEffect(() => {
     if (dID) {
       firebase
@@ -127,7 +123,7 @@ function RenderDietaryRecord() {
             });
         });
     }
-  }, []);
+  }, [cID, dID]);
 
   const getDietaryRecordDate = (e) => {
     if (e.target.value !== "") {
