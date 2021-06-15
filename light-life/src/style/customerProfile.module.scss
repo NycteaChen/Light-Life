@@ -44,13 +44,13 @@
         border-radius: 50%;
         width: 35px;
         height: 35px;
-        background-color: #87a39875;
+        background-color: #87a398;
         transition: background-color 0.3s;
         i {
           color: #ffffff;
         }
         &:hover {
-          background-color: #87a398;
+          background-color: #87a39875;
         }
       }
     }
@@ -201,7 +201,11 @@
       }
       .title {
         text-align: right;
-        margin-right: 20px;
+        margin-right: 10px;
+        &::after {
+          content: "*";
+          color: red;
+        }
       }
       input[type="text"],
       input[type="number"],
@@ -213,6 +217,10 @@
         border: 1px solid grey;
         border-radius: 5px;
         font-size: 14px;
+        &:focus {
+          outline: none !important;
+          border: 2px solid #64b795;
+        }
       }
       .edit-gender {
         display: grid;
@@ -232,7 +240,8 @@
         display: flex;
         .title {
           text-align: right;
-          margin-right: 20px;
+          margin-right: 10px;
+          // width: 67px !important;
         }
         .title + div {
           max-height: 100px;
@@ -249,6 +258,17 @@
           padding: 3px 5px;
         }
       }
+      &:last-of-type {
+        .title {
+          margin-right: 15px;
+          &::after {
+            content: "";
+          }
+          & + div {
+            margin-right: 55px;
+          }
+        }
+      }
     }
     .buttons {
       text-align: right;
@@ -258,7 +278,7 @@
         border-radius: 50%;
         width: 35px;
         height: 35px;
-        background-color: #87a39875;
+        background-color: #87a398;
         transition: background-color 0.3s;
         i {
           color: white;
@@ -270,7 +290,7 @@
           margin-left: 5px;
         }
         &:hover {
-          background-color: #87a398;
+          background-color: #87a39875;
         }
       }
     }
@@ -287,7 +307,7 @@
             margin-right: 0px;
           }
           .title {
-            width: 70px;
+            width: 71px;
           }
           //   input[type="text"],
           //   input[type="number"],
@@ -396,15 +416,20 @@
 
         .col {
           margin: 8px 0;
-          margin-left: 40px;
+          margin-left: 45px;
           .data-item {
             .title {
-              width: 70px;
+              width: 71px;
               text-align: right;
             }
             textarea {
               width: 300px;
               height: 5rem;
+            }
+          }
+          &:last-of-type {
+            .title {
+              width: 65px;
             }
           }
         }
@@ -458,8 +483,16 @@
         .col {
           margin-left: 90px;
           .data-item {
+            .title {
+              width: 77px;
+            }
             textarea {
               width: 310px;
+            }
+          }
+          &:last-of-type {
+            .title {
+              width: 71px;
             }
           }
         }

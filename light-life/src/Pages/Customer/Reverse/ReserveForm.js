@@ -12,6 +12,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [occupationTime, setOccupationTime] = useState([]);
+  const [nowReserve, setNowReserve] = useState({});
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const addDate = today.toISOString().substr(0, 10);
   const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
@@ -28,7 +29,6 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
     const time = new Date(date).getTime();
     return time;
   };
-
   useEffect(() => {
     db.collection("customers")
       .doc(params.cID)
@@ -67,6 +67,13 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
         setOccupationTime(occupation);
       });
   }, []);
+
+  useEffect(() => {
+    if (props) {
+      const now = reserve.find((r) => r.dietitian === props.id);
+      setNowReserve(now);
+    }
+  }, [props]);
 
   const getInputHandler = (e) => {
     const { name } = e.target;
@@ -132,6 +139,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   };
 
   const sendReverseHandler = () => {
+    console.log(profile);
     if (
       !profile.gender ||
       !profile.name ||
@@ -139,7 +147,8 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       !profile.height ||
       !profile.career ||
       !profile.education ||
-      !profile.age
+      !profile.age ||
+      !profile.sport
     ) {
       Swal.fire({
         text: "個人資料填寫完整才能執行預約喔",
@@ -199,7 +208,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       });
     }
   };
-  const nowReserve = reserve.find((r) => r.dietitian === props.id);
+
   return (
     <div className={style["reserve-form"]}>
       <div className={style["form-title"]}>
@@ -210,11 +219,11 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
           <div className={style.reserveCol}>
             <label className={style.reserveLabel}>
               <div>開始日期</div>
-              <div>{nowReserve.reserveStartDate}</div>
+              <div>{nowReserve ? nowReserve.reserveStartDate : ""}</div>
             </label>
             <label className={style.reserveLabel}>
               <div>結束日期</div>
-              <div>{nowReserve.reserveEndDate}</div>
+              <div>{nowReserve ? nowReserve.reserveEndDate : ""}</div>
             </label>
           </div>
         ) : (
@@ -247,7 +256,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
         {path.includes("reserve-list") ? (
           <label className={`${style.reserveLabel} ${style.reserveMessage}`}>
             <div>邀請訊息</div>
-            <div>{nowReserve.reserveMessage}</div>
+            <div>{nowReserve ? nowReserve.reserveMessage : ""}</div>
           </label>
         ) : (
           <>

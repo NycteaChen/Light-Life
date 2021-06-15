@@ -28,9 +28,7 @@ import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import loadStyle from "../../style/home.module.scss";
 import loading from "../../images/lightlife-straight.png";
-import styled from "styled-components";
 import spinner from "../../images/loading.gif";
-import { faUserLock } from "@fortawesome/free-solid-svg-icons";
 
 function Dietitian() {
   const [load, setLoad] = useState(loadStyle.loading);
@@ -72,11 +70,15 @@ function Dietitian() {
           .where("email", "==", user.email)
           .get()
           .then((docs) => {
-            docs.forEach((doc) => {
-              if (doc.data().id !== dietitianID) {
-                history.push("/");
-              }
-            });
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                if (doc.data().id !== dietitianID) {
+                  history.push("/");
+                }
+              });
+            } else {
+              history.push("/");
+            }
           });
       } else {
         history.push("/");
@@ -409,9 +411,16 @@ function Dietitian() {
       }
     });
   };
-
+  console.log(profile);
   const changeServiceStatusHandler = () => {
-    if (profile.name && profile.education && profile.gender) {
+    if (
+      profile.name &&
+      profile.education &&
+      profile.education["degree"] &&
+      profile.education["school"] &&
+      profile.education["department"] &&
+      profile.gender
+    ) {
       setProfile({ ...profile, isServing: !profile.isServing });
       firebase
         .firestore()
@@ -512,9 +521,15 @@ function Dietitian() {
                       </div>
                     </div>
                   ) : (
-                    <div className={basic["no-customers"]}>
-                      <i class="fa fa-users list" aria-hidden="true"></i>
-                      <div>客戶清單</div>
+                    <div className={basic["nav-unactive"]}>
+                      <i
+                        class="fa fa-users list"
+                        aria-hidden="true"
+                        title="customerList"
+                      ></i>
+                      <div title="customerList" className="list">
+                        客戶清單
+                      </div>
                     </div>
                   )}
 
@@ -653,7 +668,7 @@ function Dietitian() {
             <Switch>
               <Route exact path="/dietitian/:dID">
                 <div className={basic.indexMessage}>
-                  <div className={basic.title}>服務狀況</div>
+                  <div className={basic.title}>客戶服務情況</div>
                   <div className={basic.content}>
                     <div className={basic.serving}>
                       <div className={basic.subtitle}>

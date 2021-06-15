@@ -7,7 +7,6 @@ function DietitianProfile({ profile, setProfile }) {
   const db = firebase.firestore();
   const storage = firebase.storage();
   const { name, image, id, gender, email, education, skills, other } = profile;
-  const [trigger, setTrigger] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [edu, setEdu] = useState({
     school: education ? education.school : "",
@@ -81,9 +80,6 @@ function DietitianProfile({ profile, setProfile }) {
     {
     }
   };
-  useEffect(() => {
-    console.log("test");
-  }, [trigger]);
 
   const saveProfileHandler = async () => {
     // if (
@@ -108,7 +104,6 @@ function DietitianProfile({ profile, setProfile }) {
           image: imageUrl,
         })
         .then(() => {
-          setTrigger(!trigger);
           setProfile({ ...profile, ...input, image: imageUrl });
           setIsEditing(false);
         });
@@ -118,8 +113,6 @@ function DietitianProfile({ profile, setProfile }) {
         .doc(id)
         .update(input)
         .then(() => {
-          setTrigger(!trigger);
-
           setIsEditing(false);
         });
     }
@@ -262,6 +255,7 @@ function DietitianProfile({ profile, setProfile }) {
                     type="text"
                     className="education"
                     name="school"
+                    placeholder="學校名稱"
                     value={edu.school ? edu.school : ""}
                     onChange={getInputHandler}
                     required
@@ -269,6 +263,7 @@ function DietitianProfile({ profile, setProfile }) {
                   <input
                     type="text"
                     className="education"
+                    placeholder="系所名稱"
                     name="department"
                     value={edu.department ? edu.department : ""}
                     onChange={getInputHandler}
@@ -368,7 +363,7 @@ function DietitianProfile({ profile, setProfile }) {
                   name="other"
                   value={
                     input.other || input.other === ""
-                      ? input.otehr
+                      ? input.other
                       : other
                       ? other
                       : ""
@@ -383,7 +378,6 @@ function DietitianProfile({ profile, setProfile }) {
         <div className={style["profile-data"]}>
           <div className={style.button}>
             <button onClick={profileButtonHandler} title="edit">
-              {/* 編輯 */}
               <i
                 title="edit"
                 class="fa fa-pencil"
@@ -467,7 +461,7 @@ function DietitianProfile({ profile, setProfile }) {
                 <label className={style.title}>其他</label>
                 <div>
                   {input.other || input.other === ""
-                    ? input.otehr
+                    ? input.other
                     : other
                     ? other
                     : ""}

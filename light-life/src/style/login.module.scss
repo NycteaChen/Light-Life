@@ -38,6 +38,10 @@
       outline: none;
       margin: 5px 0 0;
       transition: border-color 0.3s;
+      &:focus {
+        outline: none !important;
+        border: 2px solid #64b795;
+      }
     }
 
     button {
@@ -215,10 +219,13 @@
         border: 1px solid grey;
         padding-left: 7px;
         border-radius: 5px;
-        outline: none;
         transition: border-color 0.2s;
         padding-right: 30px;
         position: relative;
+        &:focus {
+          outline: none !important;
+          border: 2px solid #64b795;
+        }
       }
       div {
         width: 90%;

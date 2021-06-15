@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import TargetHandler from "../../Components/TargetHandler.js";
 import style from "../../../style/target.module.scss";
-import { setMilliseconds } from "date-fns";
 
 function DietitianTarget() {
   const params = useParams();
@@ -186,7 +185,7 @@ function DietitianTarget() {
             </button>
             <button
               onClick={bindAddTarget}
-              className={style.cancle}
+              className={style.cancel}
               id="cancel"
             >
               取消

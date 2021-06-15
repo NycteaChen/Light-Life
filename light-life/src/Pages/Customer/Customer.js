@@ -60,11 +60,16 @@ function Customer() {
           .where("email", "==", user.email)
           .get()
           .then((docs) => {
-            docs.forEach((doc) => {
-              if (doc.data().id !== customerID) {
-                history.push("/");
-              }
-            });
+            console.log(docs);
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                if (doc.data().id !== customerID) {
+                  history.push("/");
+                }
+              });
+            } else {
+              history.push("/");
+            }
           });
       } else {
         history.push("/");
@@ -440,6 +445,14 @@ function Customer() {
     });
   };
 
+  const alertHandler = () => {
+    Swal.fire({
+      text: "有使用營養師服務才可以使用喔",
+      confirmButtonText: "確定",
+      confirmButtonColor: "#1e4d4e",
+    });
+  };
+
   if (!notFound) {
     if (profile.id) {
       return (
@@ -460,19 +473,30 @@ function Customer() {
                   <i class="fa fa-user" aria-hidden="true" title="profile"></i>
                   <div title="profile">會員資料</div>
                 </Link>
-                <Link
-                  title="dietary"
-                  className={`${style["nav-title"]} ${nav.dietary || ""}`}
-                  onClick={activeHandler}
-                  to={`/customer/${profile.id}/dietary`}
-                >
-                  <i
-                    class="fa fa-cutlery"
-                    aria-hidden="true"
+                {profile.dietitian ? (
+                  <Link
                     title="dietary"
-                  ></i>
-                  <div title="dietary">飲食記錄</div>
-                </Link>
+                    className={`${style["nav-title"]} ${nav.dietary || ""}`}
+                    onClick={activeHandler}
+                    to={`/customer/${profile.id}/dietary`}
+                  >
+                    <i
+                      class="fa fa-cutlery"
+                      aria-hidden="true"
+                      title="dietary"
+                    ></i>
+                    <div title="dietary">飲食記錄</div>
+                  </Link>
+                ) : (
+                  <a className={style["nav-unactive"]} onClick={alertHandler}>
+                    <i
+                      class="fa fa-cutlery"
+                      aria-hidden="true"
+                      title="dietary"
+                    ></i>
+                    <div title="dietary">飲食記錄</div>
+                  </a>
+                )}
                 <Link
                   title="target"
                   className={`${style["nav-title"]} ${nav.target || ""}`}
@@ -551,7 +575,7 @@ function Customer() {
                   {profile.dietitian ? (
                     <div>您的營養師：{dName} 營養師</div>
                   ) : (
-                    <div>目前沒有使用服務喔</div>
+                    <div>目前沒有使用營養師服務</div>
                   )}
                 </div>
               </div>
@@ -566,19 +590,30 @@ function Customer() {
                   <i class="fa fa-user" aria-hidden="true" title="profile"></i>
                   <div title="profile">會員資料</div>
                 </Link>
-                <Link
-                  title="dietary"
-                  className={style["nav-title"]}
-                  to={`/customer/${profile.id}/dietary`}
-                  onClick={activeHandler}
-                >
-                  <i
-                    class="fa fa-cutlery"
-                    aria-hidden="true"
+                {profile.dietitian ? (
+                  <Link
                     title="dietary"
-                  ></i>
-                  <div title="dietary">飲食記錄</div>
-                </Link>
+                    className={style["nav-title"]}
+                    to={`/customer/${profile.id}/dietary`}
+                    onClick={activeHandler}
+                  >
+                    <i
+                      class="fa fa-cutlery"
+                      aria-hidden="true"
+                      title="dietary"
+                    ></i>
+                    <div title="dietary">飲食記錄</div>
+                  </Link>
+                ) : (
+                  <a onClick={alertHandler} className={style["nav-title"]}>
+                    <i
+                      class="fa fa-cutlery"
+                      aria-hidden="true"
+                      title="dietary"
+                    ></i>
+                    <div title="dietary">飲食記錄</div>
+                  </a>
+                )}
                 <Link
                   title="target"
                   className={style["nav-title"]}
@@ -640,7 +675,7 @@ function Customer() {
             <Switch>
               <Route exact path="/customer/:cID">
                 <div className={style.indexMessage}>
-                  <div className={style.title}>服務使用情形</div>
+                  <div className={style.title}>營養師服務使用狀態</div>
                   <div className={style.content}>
                     <div className={style.serving}>
                       <div className={style.subtitle}>進行中服務</div>

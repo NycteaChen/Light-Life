@@ -19,6 +19,7 @@ import nothing from "../../../images/nothing.svg";
 function GetPublication() {
   const [publish, setPublish] = useState(null);
   const [display, setDisplay] = useState("none");
+  const [spinnerDisplay, setSpinnerDisplay] = useState("inline-block");
   const [idx, setIdx] = useState("");
   const { dID } = useParams();
   const date = new Date(+new Date() + 8 * 3600 * 1000).getTime();
@@ -56,12 +57,21 @@ function GetPublication() {
         setPublish(res);
       });
   }, []);
+
+  useEffect(() => {
+    if (publish) {
+      setSpinnerDisplay("none");
+    }
+  });
+
   const checkDetailsHandler = (e) => {
     setIdx(e.target.id);
     setDisplay("block");
   };
   const cancelInviteHandler = (e) => {
     const { publishID, whoInvite } = publish[+e.target.id];
+    console.log(publish[+e.target.id]);
+    console.log(publish);
     Swal.fire({
       text: "確定取消嗎?",
       confirmButtonText: "確定",
@@ -81,7 +91,19 @@ function GetPublication() {
             { merge: true }
           )
           .then(() => {
-            window.location.reload();
+            firebase
+              .firestore()
+              .collection("publish")
+              .get()
+              .then((docs) => {
+                const publishArray = [];
+                if (!docs.empty) {
+                  docs.forEach((doc) => {
+                    publishArray.push(doc.data());
+                  });
+                }
+                setPublish(publishArray);
+              });
           });
       }
     });
@@ -90,7 +112,7 @@ function GetPublication() {
   return (
     <>
       <div className={style.publicationData}>
-        <h5>目前現有刊登</h5>
+        <h5>目前的客戶刊登</h5>
         <div className={style.publicationList}>
           {publish ? (
             publish.find(
@@ -136,6 +158,7 @@ function GetPublication() {
                         publish={p}
                         display={display}
                         setDisplay={setDisplay}
+                        setPublish={setPublish}
                       />
                     ) : (
                       ""
@@ -152,7 +175,7 @@ function GetPublication() {
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} />
+              <img src={spinner} style={{ display: spinnerDisplay }} />
             </div>
           )}
         </div>
@@ -240,7 +263,7 @@ function GetPublication() {
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} />
+              <img src={spinner} style={{ display: spinnerDisplay }} />
             </div>
           )}
         </div>

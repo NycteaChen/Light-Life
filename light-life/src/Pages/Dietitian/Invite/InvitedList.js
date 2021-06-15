@@ -11,7 +11,6 @@ import styled from "styled-components";
 function InvitedList({ invitedList, setInvitedList, setPending }) {
   const [isChecked, setIsChecked] = useState(false);
   const [buttonIndex, setButtonIndex] = useState();
-  const { dID } = useParams();
 
   const checkInviter = (e) => {
     if (e.target.id) {
@@ -59,11 +58,13 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
           className={`${style["invite-data"]} animated animate__fadeIn`}
           style={{ display: "block" }}
         >
-          <i
-            className="fa fa-times"
-            aria-hidden="true"
-            onClick={checkInviter}
-          ></i>
+          <div>
+            <i
+              className="fa fa-times"
+              aria-hidden="true"
+              onClick={checkInviter}
+            ></i>
+          </div>
           <ShowInviterData
             idx={buttonIndex}
             invitedList={invitedList}

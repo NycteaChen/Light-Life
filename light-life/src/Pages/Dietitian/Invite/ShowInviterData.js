@@ -35,52 +35,62 @@ function ShowInviterData({
     console.log(id);
     switch (id) {
       case "accept":
-        firebase
-          .firestore()
-          // .collection("dietitians")
-          // .doc(dID)
-          // .collection("customers")
-          // .doc(props.inviterID)
-          // .set({
-          //   startDate: props.reserveStartDate,
-          //   endDate: props.reserveEndDate,
-          //   isServing: false,
-          // })
-          .collection("pending")
-          .add({
-            startDate: props.reserveStartDate,
-            endDate: props.reserveEndDate,
-            dietitian: dID,
-            customer: props.inviterID,
-          })
-          .then(() => {
-            setPending({
-              startDate: props.reserveStartDate,
-              endDate: props.reserveEndDate,
-              dietitian: dID,
-              customer: props.inviterID,
-            });
+        Swal.fire({
+          text: "確定接受客戶預約邀請嗎?",
+          showCancelButton: true,
+          cancelButtonText: "取消",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        }).then((result) => {
+          if (result.isConfirmed) {
             firebase
               .firestore()
-              .collection("reserve")
-              .doc(props.reserveID)
-              .update({
-                ...props,
-                status: "1",
+              // .collection("dietitians")
+              // .doc(dID)
+              // .collection("customers")
+              // .doc(props.inviterID)
+              // .set({
+              //   startDate: props.reserveStartDate,
+              //   endDate: props.reserveEndDate,
+              //   isServing: false,
+              // })
+              .collection("pending")
+              .add({
+                startDate: props.reserveStartDate,
+                endDate: props.reserveEndDate,
+                dietitian: dID,
+                customer: props.inviterID,
+              })
+              .then(() => {
+                setPending({
+                  startDate: props.reserveStartDate,
+                  endDate: props.reserveEndDate,
+                  dietitian: dID,
+                  customer: props.inviterID,
+                });
+                firebase
+                  .firestore()
+                  .collection("reserve")
+                  .doc(props.reserveID)
+                  .update({
+                    ...props,
+                    status: "1",
+                  });
+              })
+              .then(() => {
+                Swal.fire({
+                  text: "接受預約",
+                  icon: "success",
+                  confirmButtonText: "確定",
+                  confirmButtonColor: "#1e4d4e",
+                });
+                setInvitedList([
+                  ...invitedList.filter((i, index) => index !== +idx),
+                ]);
+                setIsChecked(false);
               });
-          })
-          .then(() => {
-            Swal.fire({
-              text: "接受預約",
-              icon: "success",
-              confirmButtonText: "確定",
-              confirmButtonColor: "#1e4d4e",
-            });
-            setInvitedList([
-              ...invitedList.filter((i, index) => index !== +idx),
-            ]);
-            setIsChecked(false);
-          });
+          }
+        });
         break;
       case "decline":
         setShow(style.show);

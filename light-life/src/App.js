@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./Pages/Home/Home.js";
 import Dietitian from "./Pages/Dietitian/Dietitian.js";
 import Customer from "./Pages/Customer/Customer.js";
 import NotFound from "./Pages/NotFound/NotFound.js";
-import styled from "styled-components";
 import logo from "./images/lightlife-horizontal.png";
 import style from "./style/basic.module.scss";
 
