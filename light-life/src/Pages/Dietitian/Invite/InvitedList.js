@@ -4,11 +4,13 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import ShowInviterData from "./ShowInviterData.js";
 import style from "../../../style/whoInvite.module.scss";
+import image from "../../../style/image.module.scss";
+import nothing from "../../../images/nothing.svg";
+import styled from "styled-components";
 
 function InvitedList({ invitedList, setInvitedList, setPending }) {
   const [isChecked, setIsChecked] = useState(false);
   const [buttonIndex, setButtonIndex] = useState();
-  const { dID } = useParams();
 
   const checkInviter = (e) => {
     if (e.target.id) {
@@ -23,13 +25,9 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
 
   return (
     <div className={style.whoInvite}>
-      {invitedList.length > 0 ? (
-        <div className={style["invite-number"]}>
-          有 <span>{invitedList.length}</span> 位客人預約您的服務
-        </div>
-      ) : (
-        <div className={style["invite-number"]}>目前沒有預約喔</div>
-      )}
+      <div className={style["invite-number"]}>
+        有 <span>{invitedList.length}</span> 位客人預約您的服務
+      </div>
       <div className={style.inviters}>
         {invitedList.length > 0 ? (
           invitedList.map((i, index) => (
@@ -50,7 +48,9 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
             </div>
           ))
         ) : (
-          <div>沒有預約</div>
+          <NothingImage className={image.nothing}>
+            <img src={nothing} />
+          </NothingImage>
         )}
       </div>
       {isChecked && invitedList.length > 0 ? (
@@ -58,11 +58,13 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
           className={`${style["invite-data"]} animated animate__fadeIn`}
           style={{ display: "block" }}
         >
-          <i
-            className="fa fa-times"
-            aria-hidden="true"
-            onClick={checkInviter}
-          ></i>
+          <div>
+            <i
+              className="fa fa-times"
+              aria-hidden="true"
+              onClick={checkInviter}
+            ></i>
+          </div>
           <ShowInviterData
             idx={buttonIndex}
             invitedList={invitedList}
@@ -77,5 +79,12 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
     </div>
   );
 }
+
+const NothingImage = styled.div`
+  line-height: 350px;
+  @media (min-width: 1024px) {
+    line-height: calc(100vh - 300px);
+  }
+`;
 
 export default InvitedList;

@@ -12,7 +12,6 @@ import "firebase/firestore";
 import DietitianRecord from "./DietitianRecord.js";
 import CustomerRecord from "./CustomerRecord.js";
 import style from "../../../style/dietary.module.scss";
-
 // function ShowImages({ mealDetails, input, removeImageHandler }) {
 //   if (!input.images) {
 //     return (
@@ -84,7 +83,9 @@ function RenderDietaryRecord() {
   const [serviceDate, setServiceDate] = useState(null);
   const { dID } = useParams();
   const { cID } = useParams();
-
+  const today = new Date(+new Date() + 8 * 3600 * 1000)
+    .toISOString()
+    .substr(0, 10);
   useEffect(() => {
     if (dID) {
       firebase
@@ -100,6 +101,31 @@ function RenderDietaryRecord() {
             endDate: res.data().endDate,
           });
         });
+    } else {
+      firebase
+        .firestore()
+        .collection("customers")
+        .doc(cID)
+        .get()
+        .then((res) => {
+          console.log(res.data().dietitian);
+          return res.data().dietitian;
+        })
+        .then((res) => {
+          firebase
+            .firestore()
+            .collection("dietitians")
+            .doc(res)
+            .collection("customers")
+            .doc(cID)
+            .get()
+            .then((res) => {
+              setServiceDate({
+                startDate: res.data().startDate,
+                endDate: res.data().endDate,
+              });
+            });
+        });
     }
   }, []);
 
@@ -110,17 +136,27 @@ function RenderDietaryRecord() {
       setGetRecord(true);
     }
   };
+  console.log(serviceDate);
   // if (dID) {
   return (
     <div className={style["daily-diet"]}>
       <div className={style["date-selector"]}>
-        <input
-          type="date"
-          min={serviceDate ? serviceDate.startDate : ""}
-          max={serviceDate ? serviceDate.endDate : ""}
-          onChange={getDietaryRecordDate}
-          required="required"
-        ></input>
+        <h5>選擇飲食記錄日期</h5>
+        {dID ? (
+          <input
+            type="date"
+            min={serviceDate ? serviceDate.startDate : ""}
+            max={serviceDate ? serviceDate.endDate : ""}
+            onChange={getDietaryRecordDate}
+          ></input>
+        ) : (
+          <input
+            type="date"
+            min={serviceDate ? serviceDate.startDate : ""}
+            max={serviceDate ? serviceDate.endDate : ""}
+            onChange={getDietaryRecordDate}
+          />
+        )}
       </div>
       {dID ? (
         <Router>
@@ -128,12 +164,7 @@ function RenderDietaryRecord() {
           {getRecord ? (
             <Switch>
               <Route exact path={`/dietitian/:dID/customer/:cID/dietary/`}>
-                <DietitianRecord
-                  date={recordDate}
-                  count={count}
-                  setCount={setCount}
-                  style={{ boxSizing: "border-box" }}
-                />
+                <DietitianRecord date={recordDate} />
               </Route>
             </Switch>
           ) : (

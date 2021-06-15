@@ -13,7 +13,7 @@ import noImage from "../../../images/noimage.png";
 import firebase from "firebase/app";
 import style from "../../../style/findCustomers.module.scss";
 
-function PublicationData({ publish, display, setDisplay }) {
+function PublicationData({ publish, display, setDisplay, setPublish }) {
   const [profile, setProfile] = useState({});
   const [invite, setInvite] = useState({});
   const { dID } = useParams();
@@ -27,6 +27,7 @@ function PublicationData({ publish, display, setDisplay }) {
       .doc(publish.id)
       .get()
       .then((res) => {
+        console.log(res);
         setProfile(res.data());
       });
     firebase
@@ -71,7 +72,20 @@ function PublicationData({ publish, display, setDisplay }) {
                 { merge: true }
               )
               .then(() => {
-                window.location.reload();
+                firebase
+                  .firestore()
+                  .collection("publish")
+                  .get()
+                  .then((docs) => {
+                    const publishArray = [];
+                    if (!docs.empty) {
+                      docs.forEach((doc) => {
+                        publishArray.push(doc.data());
+                      });
+                    }
+                    setPublish(publishArray);
+                  })
+                  .then(() => setDisplay("none"));
               });
           }
         });
@@ -95,19 +109,37 @@ function PublicationData({ publish, display, setDisplay }) {
                 { merge: true }
               )
               .then(() => {
-                window.location.reload();
+                firebase
+                  .firestore()
+                  .collection("publish")
+                  .get()
+                  .then((docs) => {
+                    const publishArray = [];
+                    if (!docs.empty) {
+                      docs.forEach((doc) => {
+                        publishArray.push(doc.data());
+                      });
+                    }
+                    setPublish(publishArray);
+                  })
+                  .then(() => setDisplay("none"));
               });
           }
         });
       }
     } else {
-      alert("請填寫邀請訊息!");
+      Swal.fire({
+        text: "請填寫邀請訊息",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      });
     }
   };
 
   const closeDetailsHandler = () => {
     setDisplay("none");
   };
+
   return (
     <div
       className={`${style.publicationForm} animated animate__fadeIn`}

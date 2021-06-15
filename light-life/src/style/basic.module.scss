@@ -33,7 +33,7 @@
     align-items: center;
     display: flex;
     #logo {
-      width: 150px;
+      width: 180px;
       transition: all 0.5s;
       &:hover,
       &:active {
@@ -215,7 +215,8 @@
         }
       }
 
-      .no-customers {
+      .nav-unactive {
+        color: #4d4d4d;
         display: flex;
         justify-content: center;
         align-items: center;

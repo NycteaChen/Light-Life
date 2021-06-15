@@ -8,11 +8,14 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import style from "../../../style/publish.module.scss";
+import image from "../../../style/image.module.scss";
 import Invited from "./Invited.js";
+import spinner from "../../../images/loading.gif";
+import nothing from "../../../images/nothing.svg";
 
 function Publish({ reserve }) {
-  console.log(reserve);
   const { cID } = useParams();
   const [display, setDisplay] = useState("none");
   const [profile, setProfile] = useState({});
@@ -21,10 +24,10 @@ function Publish({ reserve }) {
   const [idx, setIdx] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [input, setInput] = useState({});
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [occupationTime, setOccupationTime] = useState([]);
+  const [spinnerDisplay, setSpinnerDisplay] = useState("inline-block");
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
   const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
@@ -103,31 +106,52 @@ function Publish({ reserve }) {
     });
   }, []);
 
+  useEffect(() => {
+    if (publishData && oldPublish) {
+      setSpinnerDisplay("none");
+    }
+  });
+
   const publishModalHandler = (e) => {
-    switch (e.target.id) {
+    switch (e.target.title) {
       case "add":
         if (publishData.length < 1 || publishData[0].status !== "0") {
           setDisplay("block");
         } else {
-          alert("目前已有刊登了喔");
+          Swal.fire({
+            text: "目前已經有刊登囉",
+            confirmButtonText: "確定",
+            confirmButtonColor: "#1e4d4e",
+          });
         }
         break;
       case "remove":
         if (publishData.length > 0) {
-          if (window.confirm("確定移除嗎?")) {
-            alert("移除");
-            firebase
-              .firestore()
-              .collection("publish")
-              .doc(publishData[0].publishID)
-              .delete()
-              .then(() => {
-                alert("移除成功!");
-                setPublishData([]);
-              });
-          }
+          Swal.fire({
+            text: "確定移除刊登嗎?",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonText: "取消",
+            confirmButtonText: "確定",
+            confirmButtonColor: "#1e4d4e",
+          }).then((res) => {
+            if (res.isConfirmed) {
+              firebase
+                .firestore()
+                .collection("publish")
+                .doc(publishData[0].publishID)
+                .delete()
+                .then(() => {
+                  setPublishData([]);
+                });
+            }
+          });
         } else {
-          alert("沒有刊登可以移除");
+          Swal.fire({
+            text: "沒有刊登可以移除",
+            confirmButtonText: "確定",
+            confirmButtonColor: "#1e4d4e",
+          });
         }
         break;
       case "cancel":
@@ -157,7 +181,12 @@ function Publish({ reserve }) {
             (r) => transDateToTime(input.startDate) < r[0] && test > r[1]
           ))
       ) {
-        alert("您所選的區間已有安排!");
+        Swal.fire({
+          text: "您所選的區間已有安排",
+          icon: "warning",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       } else {
         if (name === "startDate") {
           const newEndLessDate = new Date();
@@ -202,31 +231,58 @@ function Publish({ reserve }) {
       !profile.height ||
       !profile.career ||
       !profile.education ||
-      !profile.age
+      !profile.age ||
+      !profile.sport
     ) {
-      alert("您的個人資料尚未填寫完整喔");
+      Swal.fire({
+        text: "個人資料填寫完整才能發佈刊登喔",
+        icon: "warning",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      });
     } else {
       if (input.endDate && input.startDate && input.subject && input.content) {
-        firebase
-          .firestore()
-          .collection("publish")
-          .add(input)
-          .then((res) => {
+        Swal.fire({
+          text: "確定發佈刊登嗎?",
+          icon: "warning",
+          showCancelButton: true,
+          cancelButtonText: "取消",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        }).then((res) => {
+          if (res.isConfirmed) {
             firebase
               .firestore()
               .collection("publish")
-              .doc(res.id)
-              .update({ publishID: res.id });
-            return res.id;
-          })
-          .then((res) => {
-            alert("發布成功");
-            setPublishData([{ ...input, publishID: res }]);
-            setDisplay("none");
-            setInput({});
-          });
+              .add(input)
+              .then((res) => {
+                firebase
+                  .firestore()
+                  .collection("publish")
+                  .doc(res.id)
+                  .update({ publishID: res.id });
+                return res.id;
+              })
+              .then((res) => {
+                Swal.fire({
+                  text: "發佈成功",
+                  icon: "success",
+                  confirmButtonText: "確定",
+                  confirmButtonColor: "#1e4d4e",
+                });
+                setPublishData([{ ...input, publishID: res }]);
+                setDisplay("none");
+                setInput({});
+              });
+          }
+        });
       } else {
-        alert("資料不完整喔");
+        Swal.fire({
+          text: "刊登資料要填寫完整喔",
+          icon: "warning",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       }
     }
   };
@@ -238,52 +294,63 @@ function Publish({ reserve }) {
           <div className={style.buttons}>
             <button
               className={style.add}
-              id="add"
+              title="add"
               onClick={publishModalHandler}
             >
-              新增
+              <i
+                class="fa fa-pencil-square-o"
+                aria-hidden="true"
+                title="add"
+              ></i>
             </button>
             <button
               className={style.remove}
-              id="remove"
+              title="remove"
               onClick={publishModalHandler}
             >
-              移除
+              <i class="fa fa-trash-o" aria-hidden="true" title="remove"></i>
             </button>
           </div>
         </div>
-        <h5>您目前的刊登</h5>
+        <p>一次僅能發佈一個刊登</p>
         {publishData ? (
           publishData.length > 0 && publishData[0].status === "0" ? (
-            <div className={style.publication}>
-              <div className={style.col}>
-                <div className={style.para}>
-                  <span className={style.title}>刊登時間</span>：
-                  {publishData[0].publishDate}
-                </div>
-                <div className={style.para}>
-                  <div>
-                    <span className={style.title}>預約時間：</span>
-                    <span>
-                      {publishData[0].startDate}~{publishData[0].endDate}
-                    </span>
+            <>
+              <h5>您目前的刊登</h5>
+              <div className={style.publication}>
+                <div className={style.col}>
+                  <div className={style.para}>
+                    <span className={style.title}>刊登時間</span>：
+                    {publishData[0].publishDate}
+                  </div>
+                  <div className={style.para}>
+                    <div>
+                      <span className={style.title}>預約時間：</span>
+                      <span>
+                        {publishData[0].startDate}~{publishData[0].endDate}
+                      </span>
+                    </div>
                   </div>
                 </div>
+                <div className={style.para}>
+                  <span className={style.title}>主旨：</span>
+                  {publishData[0].subject}
+                </div>
+                <div className={`${style.message} ${style.para}`}>
+                  <div className={style.title}>內容：</div>
+                  <div>{publishData[0].content}</div>
+                </div>
               </div>
-              <div className={style.para}>
-                <span className={style.title}>主旨：</span>
-                {publishData[0].subject}
-              </div>
-              <div className={`${style.message} ${style.para}`}>
-                <div className={style.title}>內容：</div>
-                <div>{publishData[0].content}</div>
-              </div>
-            </div>
+            </>
           ) : (
-            <div>沒有刊登喔</div>
+            <div className={image.nothing}>
+              <img src={nothing} />
+            </div>
           )
         ) : (
-          <div>loading</div>
+          <div className={image.spinner}>
+            <img src={spinner} style={{ display: spinnerDisplay }} />
+          </div>
         )}
       </div>
       <div className={style.invited}>
@@ -309,10 +376,14 @@ function Publish({ reserve }) {
                 </>
               ))
             ) : (
-              <div>沒有應徵喔</div>
+              <div className={image.nothing}>
+                <img src={nothing} />
+              </div>
             )
           ) : (
-            <div>loading</div>
+            <div className={image.spinner}>
+              <img src={spinner} style={{ display: spinnerDisplay }} />
+            </div>
           )}
           {publishData && isChecked ? (
             <Invited
@@ -346,17 +417,21 @@ function Publish({ reserve }) {
                       <span className={style.success}>成功</span>
                     </>
                   ) : o.status === "3" ? (
-                    <span className={style.expired}>已過期</span>
+                    <span className={style.expired}>逾期</span>
                   ) : (
                     ""
                   )}
                 </div>
               ))
             ) : (
-              <div>沒有喔</div>
+              <div className={image.nothing}>
+                <img src={nothing} />
+              </div>
             )
           ) : (
-            <div>loading</div>
+            <div className={image.spinner}>
+              <img src={spinner} style={{ display: spinnerDisplay }} />
+            </div>
           )}
         </div>
       </div>
@@ -417,7 +492,7 @@ function Publish({ reserve }) {
           </button>
           <button
             className={style.cancel}
-            id="cancel"
+            title="cancel"
             onClick={publishModalHandler}
           >
             取消

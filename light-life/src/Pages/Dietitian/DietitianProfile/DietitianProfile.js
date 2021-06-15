@@ -7,7 +7,6 @@ function DietitianProfile({ profile, setProfile }) {
   const db = firebase.firestore();
   const storage = firebase.storage();
   const { name, image, id, gender, email, education, skills, other } = profile;
-  const [trigger, setTrigger] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [edu, setEdu] = useState({
     school: education ? education.school : "",
@@ -81,9 +80,6 @@ function DietitianProfile({ profile, setProfile }) {
     {
     }
   };
-  useEffect(() => {
-    console.log("test");
-  }, [trigger]);
 
   const saveProfileHandler = async () => {
     // if (
@@ -108,19 +104,15 @@ function DietitianProfile({ profile, setProfile }) {
           image: imageUrl,
         })
         .then(() => {
-          setTrigger(!trigger);
-          alert("儲存囉");
           setProfile({ ...profile, ...input, image: imageUrl });
           setIsEditing(false);
         });
     } else {
+      setProfile({ ...profile, ...input });
       db.collection("dietitians")
         .doc(id)
         .update(input)
         .then(() => {
-          setTrigger(!trigger);
-          alert("儲存囉");
-          setProfile({ ...profile, ...input });
           setIsEditing(false);
         });
     }
@@ -130,9 +122,8 @@ function DietitianProfile({ profile, setProfile }) {
   };
 
   const profileButtonHandler = (e) => {
-    const { id } = e.target;
-    console.log(e.target);
-    switch (id) {
+    const { title } = e.target;
+    switch (title) {
       case "cancel":
         setIsEditing(false);
         setInput({});
@@ -147,11 +138,11 @@ function DietitianProfile({ profile, setProfile }) {
       {isEditing ? (
         <div className={style["edit-mode"]}>
           <div className={style.buttons}>
-            <button onClick={saveProfileHandler} id="save">
-              儲存
+            <button onClick={saveProfileHandler} title="save">
+              <i class="fa fa-floppy-o" aria-hidden="true" title="save"></i>
             </button>
-            <button onClick={profileButtonHandler} id="cancel">
-              取消
+            <button onClick={profileButtonHandler} title="cancel">
+              <i class="fa fa-times" aria-hidden="true" title="cancel"></i>
             </button>
           </div>
           <form className={style["basic-profile"]} action="javascript:void(0);">
@@ -264,6 +255,7 @@ function DietitianProfile({ profile, setProfile }) {
                     type="text"
                     className="education"
                     name="school"
+                    placeholder="學校名稱"
                     value={edu.school ? edu.school : ""}
                     onChange={getInputHandler}
                     required
@@ -271,6 +263,7 @@ function DietitianProfile({ profile, setProfile }) {
                   <input
                     type="text"
                     className="education"
+                    placeholder="系所名稱"
                     name="department"
                     value={edu.department ? edu.department : ""}
                     onChange={getInputHandler}
@@ -370,7 +363,7 @@ function DietitianProfile({ profile, setProfile }) {
                   name="other"
                   value={
                     input.other || input.other === ""
-                      ? input.otehr
+                      ? input.other
                       : other
                       ? other
                       : ""
@@ -384,8 +377,13 @@ function DietitianProfile({ profile, setProfile }) {
       ) : (
         <div className={style["profile-data"]}>
           <div className={style.button}>
-            <button onClick={profileButtonHandler} id="edit">
-              編輯
+            <button onClick={profileButtonHandler} title="edit">
+              <i
+                title="edit"
+                class="fa fa-pencil"
+                aria-hidden="true"
+                onClick={profileButtonHandler}
+              ></i>
             </button>
           </div>
           <form className={style["basic-profile"]} action="javascript:void(0);">
@@ -463,7 +461,7 @@ function DietitianProfile({ profile, setProfile }) {
                 <label className={style.title}>其他</label>
                 <div>
                   {input.other || input.other === ""
-                    ? input.otehr
+                    ? input.other
                     : other
                     ? other
                     : ""}
