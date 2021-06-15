@@ -18,7 +18,6 @@ function ShowInviterData({
   const [show, setShow] = useState("");
   const [message, setMessage] = useState("");
   const { dID } = useParams();
-  const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
 
   useEffect(() => {
     firebase
@@ -97,6 +96,8 @@ function ShowInviterData({
         break;
       case "cancel":
         setShow("");
+        break;
+      default:
         break;
     }
   };

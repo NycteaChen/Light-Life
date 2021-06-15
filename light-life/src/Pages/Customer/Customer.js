@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Link,
@@ -461,7 +460,7 @@ function Customer() {
           <main className={style["d-main"]}>
             <nav>
               <a href="/">
-                <img src={logo} id={style["menu-logo"]} />
+                <img src={logo} id={style["menu-logo"]} alt="logo" />
               </a>
               <div className={style["straight-nav"]}>
                 <Link
@@ -568,7 +567,7 @@ function Customer() {
             </nav>
 
             <div className={style.profile}>
-              <img src={profile ? profile.image : noImage} />
+              <img src={profile ? profile.image : noImage} alt="profile" />
               <div className={style.welcome}>
                 <div>{profile.name}，您好！</div>
                 <div className={style["service-status"]}>
@@ -701,7 +700,7 @@ function Customer() {
                             )
                           ) : (
                             <div className={image.spinner}>
-                              <img src={spinner} />
+                              <img src={spinner} alt="spinner" />
                             </div>
                           )}
                         </div>
@@ -726,7 +725,7 @@ function Customer() {
                           )
                         ) : (
                           <div className={image.spinner}>
-                            <img src={spinner} />
+                            <img src={spinner} alt="spinner" />
                           </div>
                         )}
                       </div>
@@ -765,7 +764,7 @@ function Customer() {
       return (
         <main className="d-main">
           <div className={load}>
-            <img src={loading} />
+            <img src={loading} alt="loading" />
           </div>
         </main>
       );

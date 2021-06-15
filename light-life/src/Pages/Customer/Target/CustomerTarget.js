@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useLocation,
-  useParams,
-} from "react-router-dom";
-
+import { useParams } from "react-router-dom";
 import TargetHandler from "../../Components/TargetHandler.js";
 import style from "../../../style/target.module.scss";
 

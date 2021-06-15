@@ -4,7 +4,6 @@ import "firebase/firestore";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from "../../style/login.module.scss";
 import logo from "../../images/lightlife-straight.png";
-import { Formik } from "formik";
 import Swal from "sweetalert2";
 import apple from "../../images/apple.gif";
 import "animate.css/animate.min.css";
@@ -378,7 +377,7 @@ function Login({ display, setDisplay }) {
               .createUserWithEmailAndPassword(valid.email, valid.password)
               .then((userCredential) => {
                 // Signed in
-                const user = userCredential.user;
+                // const user = userCredential.user;
 
                 const { currentUser } = firebase.auth();
                 currentUser
@@ -561,6 +560,9 @@ function Login({ display, setDisplay }) {
         // The firebase.auth.AuthCredential type that was used.
         const credential = error.credential;
         // ...
+        console.log(errorCode, errorMessage);
+        console.log(email);
+        console.log(credential);
         Swal.fire({
           text: "此帳號在別的登入端已經使用",
           icon: "warning",
@@ -687,7 +689,7 @@ function Login({ display, setDisplay }) {
   return (
     <>
       <div className={`${style.loginMessage} ${showMessage.welcomeback || ""}`}>
-        <img src={apple} />
+        <img src={apple} alt="apple" />
         <div>歡迎回來</div>
       </div>
       <div className={`${style["login-col"]}`} style={{ display: display }}>
@@ -720,7 +722,7 @@ function Login({ display, setDisplay }) {
 
         <div className={`${style["login-image"]} ${image}`}></div>
         <div className={`${style.login} ${login}`}>
-          <img src={logo} />
+          <img src={logo} alt="logo" />
           <i
             aria-hidden="true"
             className={`${style.close} fa fa-times`}
@@ -839,7 +841,7 @@ function Login({ display, setDisplay }) {
           </form>
         </div>
         <div className={`${style.signup} ${signup}`}>
-          <img src={logo} />
+          <img src={logo} alt="logo" />
           <i
             aria-hidden="true"
             className={`${style.close} fa fa-times`}

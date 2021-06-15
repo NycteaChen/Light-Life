@@ -114,6 +114,8 @@ function DietitianRecord({ date }) {
                   ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
                   : 0;
               break;
+            default:
+              break;
           }
         });
       setInput({

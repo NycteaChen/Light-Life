@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Link,
@@ -486,7 +485,7 @@ function Dietitian() {
           <main className={basic["d-main"]}>
             <nav>
               <a href="/">
-                <img src={logo} id={basic["menu-logo"]} />
+                <img src={logo} id={basic["menu-logo"]} alt="logo" />
               </a>
               <div className={basic["straight-nav"]}>
                 <Link
@@ -721,7 +720,7 @@ function Dietitian() {
                           )
                         ) : (
                           <div className={image.spinner}>
-                            <img src={spinner} />
+                            <img src={spinner} alt="spinner" />
                           </div>
                         )}
                       </div>
@@ -850,7 +849,7 @@ function Dietitian() {
       return (
         <main className="d-main">
           <div className={load}>
-            <img src={loading} />
+            <img src={loading} alt="loading" />
           </div>
         </main>
       );

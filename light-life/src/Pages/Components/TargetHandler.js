@@ -438,12 +438,12 @@ function TargetHandler({ target, setTarget }) {
           )
         ) : (
           <div className={image.nothing}>
-            <img src={nothing} />
+            <img src={nothing} alt="nothing" />
           </div>
         )
       ) : (
         <div className={image.spinner}>
-          <img src={spinner} style={{ display: display }} />
+          <img src={spinner} style={{ display: display }} alt="spinner" />
         </div>
       )}
     </>

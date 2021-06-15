@@ -135,7 +135,7 @@ function ReserveList({ reserve, setReserve }) {
           </>
         ) : (
           <div className={image.nothing}>
-            <img src={nothing} />
+            <img src={nothing} alt="nothing" />
           </div>
         )}
       </div>
@@ -194,7 +194,7 @@ function ReserveList({ reserve, setReserve }) {
             )
           ) : (
             <div className={image.nothing}>
-              <img src={nothing} />
+              <img src={nothing} alt="nothing" />
             </div>
           )}
         </div>

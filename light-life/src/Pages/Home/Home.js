@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import Login from "./Login.js";
@@ -11,7 +11,6 @@ import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import WOW from "wowjs";
 import "animate.css/animate.min.css";
-import $ from "jquery";
 function Home() {
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});
@@ -147,7 +146,7 @@ function Home() {
   return (
     <>
       <div className={load}>
-        <img src={loading} />
+        <img src={loading} alt="loading" />
       </div>
       <div
         className={style.mask}
@@ -159,7 +158,7 @@ function Home() {
       <header className={style["home-header"]}>
         <div>
           <a href="/">
-            <img src={logo} alt="LightLifeLogo" id="logo" id={style.logo} />
+            <img src={logo} alt="LightLifeLogo" id={style.logo} />
           </a>
           <nav className={style["header-nav"]}>
             <a href="#about">關於本站</a>
@@ -170,6 +169,7 @@ function Home() {
                   <img
                     className={style["login-image"]}
                     src={user.image || noImage}
+                    alt="login"
                   />
                 </Link>
                 <a onClick={logoutHandler} className={style.icon}>
