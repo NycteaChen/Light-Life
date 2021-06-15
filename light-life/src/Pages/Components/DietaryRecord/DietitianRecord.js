@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import { useParams } from "react-router-dom";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import getIngrediensData from "../../../utils/IngredientsAPI.js";
 import Analysis from "./Analysis.js";
 import style from "../../../style/dietary.module.scss";
 
-function DietitianRecord({ date, count, setCount }) {
+function DietitianRecord({ date }) {
   const params = useParams();
   const [meal, setMeal] = useState([]);
   const [mealDetails, setMealDetails] = useState("");
@@ -26,20 +27,25 @@ function DietitianRecord({ date, count, setCount }) {
     fiber: 0,
   };
   const [input, setInput] = useState(initInput);
+  const [active, setAcitve] = useState("");
+
   useEffect(async () => {
     await getIngrediensData().then((res) => {
       setIngredients(res);
     });
   }, []);
+
+  useEffect(() => {
+    setMeal([]);
+    setAcitve("");
+  }, [date]);
+
   const getMealHandler = (e) => {
     const mealClass = e.target.className.split(" ")[1];
+    const { id } = e.target;
+    setAcitve({ [id]: style["li-active"] });
     setInput(initInput);
     setIsSelected(false);
-    if (meal[0] !== mealClass) {
-      setCount(2);
-    } else {
-      setCount(count + 1);
-    }
     setMeal([mealClass, e.target.id]);
     firebase
       .firestore()
@@ -151,12 +157,21 @@ function DietitianRecord({ date, count, setCount }) {
   };
 
   const addNewFoodTable = (e) => {
-    if (meal[0] === e.target.className.split(" ")[1]) {
+    // if (meal[0] === e.target.className.split(" ")[1]) {
+    if (e.target.className.includes(meal[0])) {
       if (input.item === "" || !input.item) {
-        alert("請填入食材");
+        Swal.fire({
+          text: "請填入食材",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
         return;
       } else if (input.per === "0" || !input.per) {
-        alert("請填入單位數");
+        Swal.fire({
+          text: "請填入單位數",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       } else {
         firebase
           .firestore()
@@ -188,7 +203,7 @@ function DietitianRecord({ date, count, setCount }) {
   };
 
   window.addEventListener("click", (e) => {
-    if (e.target.className !== "searchBox") {
+    if (!e.target.className.includes("searchBox")) {
       setIsDisplay(false);
       // if (input.item) {
       //   ingredients.find((i) =>
@@ -197,27 +212,37 @@ function DietitianRecord({ date, count, setCount }) {
       // }
     }
   });
-
   const removeItemHandler = (e) => {
-    setDataAnalysis([
-      ...dataAnalysis.filter((d, index) => index !== +e.target.id),
-    ]);
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dID)
-      .collection("customers")
-      .doc(cID)
-      .collection("diet")
-      .doc(date)
-      .set(
-        {
-          [meal[1]]: [
-            ...dataAnalysis.filter((d, index) => index !== +e.target.id),
-          ],
-        },
-        { merge: true }
-      );
+    Swal.fire({
+      text: "確定刪除食材資料嗎?",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "取消",
+      confirmButtonText: "確定",
+      confirmButtonColor: "#1e4d4e",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        setDataAnalysis([
+          ...dataAnalysis.filter((d, index) => index !== +e.target.id),
+        ]);
+        firebase
+          .firestore()
+          .collection("dietitians")
+          .doc(dID)
+          .collection("customers")
+          .doc(cID)
+          .collection("diet")
+          .doc(date)
+          .set(
+            {
+              [meal[1]]: [
+                ...dataAnalysis.filter((d, index) => index !== +e.target.id),
+              ],
+            },
+            { merge: true }
+          );
+      }
+    });
   };
 
   const mealKeywords = [
@@ -229,230 +254,234 @@ function DietitianRecord({ date, count, setCount }) {
     ["晚點", "customerNight-snack", "night-snack"],
   ];
 
+  console.log(mealDetails);
+
   return (
     <>
-      <h3>{date} 飲食記錄</h3>
-      {mealKeywords.map((m) => (
-        <div className={style.meal}>
-          <div
-            className={`${style["meal-title"]} ${m[1]}`}
+      <ul>
+        {mealKeywords.map((m) => (
+          <li
+            className={`${style["meal-title"]} ${m[1]} ${active[m[2]] || ""}`}
             id={`${m[2]}`}
             onClick={getMealHandler}
           >
-            {" "}
             {m[0]}
-          </div>
-          {meal[0] === m[1] && count % 2 === 0 ? (
-            <>
-              <div className={`${style["diet-record"]} ${style.col}`}>
-                <label className={style["eat-time"]}>
-                  <div className={style.title}>進食時間</div>
-                  <div id="eat-time">{mealDetails.eatTime || ""}</div>
-                </label>
+          </li>
+        ))}
+      </ul>
+      <div className={style.mealCol}>
+        <h5>{date} 飲食記錄</h5>
+        {mealKeywords.map((m) => (
+          <div className={style.meal}>
+            {meal[0] === m[1] ? (
+              <>
+                <div className={`${style["diet-record"]} ${style.col}`}>
+                  <label className={style["eat-time"]}>
+                    <div className={style.title}>進食時間</div>
+                    <div id="eat-time">{mealDetails.eatTime || ""}</div>
+                  </label>
 
-                <div className={style.col}>
-                  <div className={style["image-record"]}>照片記錄</div>
-                  <div className={style["food-images"]}>
-                    {mealDetails &&
-                    mealDetails.images &&
-                    mealDetails.images.length > 0 ? (
-                      mealDetails.images.map((i, index) => (
-                        <div className={style["food-image"]} key={index}>
-                          <a href={i} target="_blank" rel="noreferrer noopener">
-                            <img src={i} alt="customer" />
-                          </a>
-                        </div>
-                      ))
-                    ) : (
-                      <div>尚未上傳照片</div>
-                    )}
-                  </div>
-                </div>
-
-                <div className={`${style.col} ${style["meal-content"]}`}>
-                  <div className={style["content-title"]}>飲食內容</div>
-                  <div className={style["content-text"]}>
-                    {mealDetails.description || ""}
-                  </div>
-                </div>
-              </div>
-
-              <div className={style["dietitian-record"]}>
-                <table>
-                  <thead>
-                    <tr className={style["item-title"]}>
-                      <th></th>
-                      <th>品項</th>
-                      <th>單位:100g</th>
-                      <th>熱量(kcal)</th>
-                      <th>蛋白質(g)</th>
-                      <th>脂質(g)</th>
-                      <th>碳水化合物(g)</th>
-                      <th>膳食纖維(g)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataAnalysis
-                      ? dataAnalysis.map((a, index) => (
-                          <tr key={index}>
-                            <th>
-                              <div style={{ width: "30px" }}>
-                                <i
-                                  id={index}
-                                  className="fa fa-trash"
-                                  aria-hidden="true"
-                                  onClick={removeItemHandler}
-                                ></i>
-                              </div>
-                            </th>
-                            <th>{a.item}</th>
-                            <th>{a.per}</th>
-                            <th>{a.kcal}</th>
-                            <th>{a.protein}</th>
-                            <th>{a.lipid}</th>
-                            <th>{a.carbohydrate}</th>
-                            <th>{a.fiber}</th>
-                          </tr>
-                        ))
-                      : null}
-                    <tr className={style["food-input"]}>
-                      <th></th>
-                      <th style={{ position: "relative" }}>
-                        <input
-                          type="text"
-                          name="item"
-                          value={input.item ? input.item : ""}
-                          placeholder="請輸入食材"
-                          autoComplete="off"
-                          className={style["input-item"]}
-                          onBlur={inputItemHandler}
-                          onClick={inputItemHandler}
-                          onChange={getInputHandler}
-                          onInput={getSearchHandler}
-                        />
-                        {inputValue.length > 0 && isDisplay ? (
-                          <div
-                            className="searchBox"
-                            style={{
-                              zIndex: "1",
-                              width: "150px",
-                              maxHeight: "100px",
-                              backgroundColor: "white",
-                              border: "1px solid black",
-                              position: "absolute",
-                              textAlign: "left",
-                              fontWeight: "500",
-                              fontSize: "14px",
-                              overflowY: "scroll",
-                              overflowX: "hidden",
-                              padding: "7px 10px",
-                            }}
-                          >
-                            {inputValue.map((i, index) => (
-                              <div
-                                key={index}
-                                onClick={selectIngredientHandler}
-                              >
-                                {i}
-                              </div>
-                            ))}
+                  <div className={style.col}>
+                    <div className={`${style["image-record"]} ${style.title}`}>
+                      照片記錄
+                    </div>
+                    <div className={style["food-images"]}>
+                      {mealDetails &&
+                      mealDetails.images &&
+                      mealDetails.images.length > 0 ? (
+                        mealDetails.images.map((i, index) => (
+                          <div className={style["food-image"]} key={index}>
+                            <a
+                              href={i}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                            >
+                              <img src={i} alt="customer" />
+                            </a>
                           </div>
-                        ) : null}
-                      </th>
-
-                      <th>
-                        <input
-                          type="number"
-                          name="per"
-                          value={input.per ? input.per : ""}
-                          min="0"
-                          onChange={getInputHandler}
-                          className={style["input-number"]}
-                        />
-                      </th>
-                      {isSelect ? (
-                        <>
-                          <th>{input.kcal}</th>
-                          <th>{input.protein}</th>
-                          <th>{input.lipid}</th>
-                          <th>{input.carbohydrate}</th>
-                          <th>{input.fiber}</th>
-                        </>
+                        ))
                       ) : (
-                        <>
-                          <th>
-                            <input
-                              type="number"
-                              name="kcal"
-                              value={input.kcal ? input.kcal : ""}
-                              min="0"
-                              onChange={getInputHandler}
-                              className={style["input-number"]}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="protein"
-                              value={input.protein ? input.protein : ""}
-                              min="0"
-                              onChange={getInputHandler}
-                              className={style["input-number"]}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="lipid"
-                              value={input.lipid ? input.lipid : ""}
-                              min="0"
-                              onChange={getInputHandler}
-                              className={style["input-number"]}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="carbohydrate"
-                              value={
-                                input.carbohydrate ? input.carbohydrate : ""
-                              }
-                              min="0"
-                              onChange={getInputHandler}
-                              className={style["input-number"]}
-                            />
-                          </th>
-                          <th>
-                            <input
-                              type="number"
-                              name="fiber"
-                              value={input.fiber ? input.fiber : ""}
-                              min="0"
-                              onChange={getInputHandler}
-                              className={style["input-number"]}
-                            />
-                          </th>
-                        </>
+                        <div>尚未上傳照片</div>
                       )}
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th></th>
-                      <th
-                        className={`${style["meal-plus"]} ${m[1]}`}
-                        onClick={addNewFoodTable}
-                      ></th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </>
-          ) : (
-            ""
-          )}
-        </div>
-      ))}
+                    </div>
+                  </div>
+
+                  <div className={`${style.col} ${style["meal-content"]}`}>
+                    <div className={style.title}>飲食內容</div>
+                    <div className={style["content-text"]}>
+                      {mealDetails.description || "尚未有內容"}
+                    </div>
+                  </div>
+                </div>
+
+                <div className={style["dietitian-record"]}>
+                  <table>
+                    <thead>
+                      <tr className={style["item-title"]}>
+                        <th></th>
+                        <th>品項</th>
+                        <th>單位:100g</th>
+                        <th>熱量(kcal)</th>
+                        <th>蛋白質(g)</th>
+                        <th>脂質(g)</th>
+                        <th>碳水化合物(g)</th>
+                        <th>膳食纖維(g)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dataAnalysis
+                        ? dataAnalysis.map((a, index) => (
+                            <tr key={index}>
+                              <th>
+                                <div style={{ width: "30px" }}>
+                                  <i
+                                    id={index}
+                                    className="fa fa-trash"
+                                    aria-hidden="true"
+                                    onClick={removeItemHandler}
+                                  ></i>
+                                </div>
+                              </th>
+                              <th>{a.item}</th>
+                              <th>{a.per}</th>
+                              <th>{a.kcal}</th>
+                              <th>{a.protein}</th>
+                              <th>{a.lipid}</th>
+                              <th>{a.carbohydrate}</th>
+                              <th>{a.fiber}</th>
+                            </tr>
+                          ))
+                        : null}
+                      <tr className={style["food-input"]}>
+                        <th>
+                          <div style={{ width: "30px" }}></div>
+                        </th>
+                        <th style={{ position: "relative" }}>
+                          <input
+                            type="text"
+                            name="item"
+                            value={input.item ? input.item : ""}
+                            placeholder="請輸入食材"
+                            autoComplete="off"
+                            className={style["input-item"]}
+                            onBlur={inputItemHandler}
+                            onClick={inputItemHandler}
+                            onChange={getInputHandler}
+                            onInput={getSearchHandler}
+                          />
+                          {inputValue.length > 0 && isDisplay ? (
+                            <div className={style.searchBox}>
+                              {inputValue.map((i, index) => (
+                                <div
+                                  key={index}
+                                  onClick={selectIngredientHandler}
+                                >
+                                  {i}
+                                </div>
+                              ))}
+                            </div>
+                          ) : null}
+                        </th>
+
+                        <th>
+                          <input
+                            type="number"
+                            name="per"
+                            value={input.per ? input.per : ""}
+                            min="0"
+                            onChange={getInputHandler}
+                            className={style["input-number"]}
+                          />
+                        </th>
+                        {isSelect ? (
+                          <>
+                            <th>{input.kcal}</th>
+                            <th>{input.protein}</th>
+                            <th>{input.lipid}</th>
+                            <th>{input.carbohydrate}</th>
+                            <th>{input.fiber}</th>
+                          </>
+                        ) : (
+                          <>
+                            <th>
+                              <input
+                                type="number"
+                                name="kcal"
+                                value={input.kcal ? input.kcal : ""}
+                                min="0"
+                                onChange={getInputHandler}
+                                className={style["input-number"]}
+                              />
+                            </th>
+                            <th>
+                              <input
+                                type="number"
+                                name="protein"
+                                value={input.protein ? input.protein : ""}
+                                min="0"
+                                onChange={getInputHandler}
+                                className={style["input-number"]}
+                              />
+                            </th>
+                            <th>
+                              <input
+                                type="number"
+                                name="lipid"
+                                value={input.lipid ? input.lipid : ""}
+                                min="0"
+                                onChange={getInputHandler}
+                                className={style["input-number"]}
+                              />
+                            </th>
+                            <th>
+                              <input
+                                type="number"
+                                name="carbohydrate"
+                                value={
+                                  input.carbohydrate ? input.carbohydrate : ""
+                                }
+                                min="0"
+                                onChange={getInputHandler}
+                                className={style["input-number"]}
+                              />
+                            </th>
+                            <th>
+                              <input
+                                type="number"
+                                name="fiber"
+                                value={input.fiber ? input.fiber : ""}
+                                min="0"
+                                onChange={getInputHandler}
+                                className={style["input-number"]}
+                              />
+                            </th>
+                          </>
+                        )}
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th></th>
+                        <th className={`${style["meal-plus"]} ${m[1]}`}>
+                          <div className={m[1]} onClick={addNewFoodTable}>
+                            <i
+                              class={`fa fa-plus ${m[1]}`}
+                              aria-hidden="true"
+                              onClick={addNewFoodTable}
+                            ></i>
+                          </div>
+                        </th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </>
+            ) : (
+              ""
+            )}
+          </div>
+        ))}
+      </div>
       <Analysis date={date} dID={dID} cID={cID} data={dataAnalysis} />
     </>
   );

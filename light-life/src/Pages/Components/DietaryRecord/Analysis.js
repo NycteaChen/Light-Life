@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import style from "../../../style/dietary.module.scss";
-
 function Analysis({ date, cID, data }) {
   const pathName = useLocation().pathname;
   const [breakfast, setBreakfast] = useState({});
@@ -58,7 +58,7 @@ function Analysis({ date, cID, data }) {
             }
           });
       });
-  }, [date, data]);
+  }, [date, data, cID]);
 
   const calculator = (target, setMealNutrients) => {
     const reducer = (acc, cur) => acc + cur;
@@ -118,13 +118,21 @@ function Analysis({ date, cID, data }) {
       .doc(date)
       .update({
         advice: advice,
+      })
+      .then(() => {
+        Swal.fire({
+          text: "儲存建議成功",
+          icon: "success",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        });
       });
   };
 
   return (
     <>
       <div id="diet-analysis" className={style["diet-analysis"]}>
-        <h3>{date} 飲食分析</h3>
+        <h5>{date} 飲食分析</h5>
         <div className={style["analysis-table"]}>
           <table>
             <thead>
@@ -205,32 +213,29 @@ function Analysis({ date, cID, data }) {
                   {parseFloat(getNutrientTotal("fiber").toFixed(1)) || "-"}
                 </th>
               </tr>
-              {/* <tr id="target">
-                <th>目標</th>
-              </tr>
-              <tr id="resr">
-                <th>剩餘</th>
-              </tr> */}
             </tbody>
           </table>
         </div>
         {pathName.includes("dietitian") ? (
           <div className={style.advice}>
             <div>
-              <label>
-                <div>給予建議</div>
-                <textarea
-                  value={advice}
-                  onChange={bindAdviceHandler}
-                ></textarea>
+              <label htmlFor="d-advice">
+                <h5>給予建議</h5>
               </label>
+              <textarea
+                id="d-advice"
+                value={advice}
+                onChange={bindAdviceHandler}
+              ></textarea>
             </div>
-            <button onClick={bindSaveAdviceHandler}>儲存</button>
+            <div className={style.button}>
+              <button onClick={bindSaveAdviceHandler}>儲存</button>
+            </div>
           </div>
         ) : (
           <div className={style.advice}>
-            <div className={style["advice-title"]}>營養師建議</div>
-            <div id="advice">{advice}</div>
+            <h5>營養師建議</h5>
+            <div className={style["c-advice"]}>{advice}</div>
           </div>
         )}
       </div>

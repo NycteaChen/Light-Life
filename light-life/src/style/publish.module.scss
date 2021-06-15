@@ -18,6 +18,19 @@
     align-items: center;
     .buttons {
       button {
+        font-size: 20px;
+        border: 1px solid beige;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        background-color: #87a398;
+        transition: background-color 0.3s;
+        i {
+          color: #ffffff;
+        }
+        &:hover {
+          background-color: #87a39875;
+        }
         &.remove {
           margin-left: 10px;
         }
@@ -46,7 +59,7 @@
     .inviters {
       margin-top: 10px;
       padding: 15px;
-      height: 310px;
+      height: 370px;
       background-color: #edf5f0b2;
       box-shadow: 0 1px 3px #515a56;
       border: 1px solid #515a5670;
@@ -95,7 +108,8 @@
       overflow: auto;
       margin: 20px auto;
       padding: 15px;
-      height: 400px;
+      min-height: 310px;
+      max-height: 400px;
       background-color: #edf5f0b2;
       box-shadow: 0 1px 3px #515a56;
       border: 1px solid #515a5670;
@@ -179,6 +193,10 @@
         padding-left: 5px;
         border-radius: 5px;
         border: 1px solid grey;
+        &:focus {
+          outline: none !important;
+          border: 2px solid #64b795;
+        }
       }
       textarea {
         height: 3rem;
@@ -203,7 +221,7 @@
           color: white;
         }
         &.cancel {
-          background-color: #dadada;
+          background-color: #dbdbdb;
           color: #464444;
         }
         &:hover {
@@ -228,7 +246,7 @@
   }
 
   @media (min-width: 520px) {
-    max-width: 600px;
+    max-width: 580px;
     margin: auto;
 
     .publication {
@@ -380,7 +398,7 @@
       color: #046b40;
     }
     &.decline {
-      background-color: #dadada;
+      background-color: #dbdbdb;
       color: #464444;
     }
     &:hover {

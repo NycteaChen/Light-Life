@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Swal from "sweetalert2";
 import publish from "../../../style/publish.module.scss";
 import style from "../../../style/findDietitian.module.scss";
 
@@ -34,68 +35,88 @@ function Invited({
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":
-        publishData[0].status = "1";
-        publishData[0].whoInvite.forEach((e) => {
-          e.status = "2";
-        });
+        Swal.fire({
+          text: "確定接受嗎",
+          icon: "warning",
+          showCancelButton: true,
+          cancelButtonText: "取消",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        }).then((res) => {
+          if (res.isConfirmed) {
+            publishData[0].status = "1";
+            publishData[0].whoInvite.forEach((e) => {
+              e.status = "2";
+            });
 
-        publishData[0].whoInvite[+idx].status = "1";
-        firebase
-          .firestore()
-          .collection("pending")
-          .add({
-            dietitian: props.dietitianID,
-            customer: publishData[0].id,
-            startDate: publishData[0].startDate,
-            endDate: publishData[0].endDate,
-          })
-          .then((docRef) => {
+            publishData[0].whoInvite[+idx].status = "1";
             firebase
               .firestore()
               .collection("pending")
-              .doc(docRef.id)
-              .update("id", docRef.id);
-          });
+              .add({
+                dietitian: props.dietitianID,
+                customer: publishData[0].id,
+                startDate: publishData[0].startDate,
+                endDate: publishData[0].endDate,
+              })
+              .then((docRef) => {
+                firebase
+                  .firestore()
+                  .collection("pending")
+                  .doc(docRef.id)
+                  .update("id", docRef.id);
+              });
 
-        firebase
-          .firestore()
-          .collection("publish")
-          .doc(publishData[0].publishID)
-          .set({ ...publishData[0] });
-        setPublishData([...publishData]);
-        if (oldPublish) {
-          setOldPublish([publishData[0], ...oldPublish]);
-        } else {
-          setOldPublish([publishData[0]]);
-        }
-        setIsChecked(false);
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(publishData[0].publishID)
+              .set({ ...publishData[0] });
+            setPublishData([...publishData]);
+            if (oldPublish) {
+              setOldPublish([publishData[0], ...oldPublish]);
+            } else {
+              setOldPublish([publishData[0]]);
+            }
+            setIsChecked(false);
+          }
+        });
         break;
       case "decline":
-        if (window.confirm("確定拒絕嗎?")) {
-          setIsChecked(false);
-          publishData[0].whoInvite[+idx].status = "2";
-          firebase
-            .firestore()
-            .collection("publish")
-            .doc(publishData[0].publishID)
-            .set(
-              {
-                whoInvite: [...publishData[0].whoInvite],
-              },
-              { merge: true }
-            );
+        Swal.fire({
+          text: "確定拒絕嗎",
+          icon: "warning",
+          showCancelButton: true,
+          cancelButtonText: "取消",
+          confirmButtonText: "確定",
+          confirmButtonColor: "#1e4d4e",
+        }).then((res) => {
+          if (res.isConfirmed) {
+            setIsChecked(false);
+            publishData[0].whoInvite[+idx].status = "2";
+            firebase
+              .firestore()
+              .collection("publish")
+              .doc(publishData[0].publishID)
+              .set(
+                {
+                  whoInvite: [...publishData[0].whoInvite],
+                },
+                { merge: true }
+              );
 
-          setPublishData([
-            {
-              ...publishData[0],
-              whoInvite: [
-                ...publishData[0].whoInvite.filter(
-                  (i, index) => index !== +idx
-                ),
-              ],
-            },
-          ]);
-        }
+            setPublishData([
+              {
+                ...publishData[0],
+                whoInvite: [
+                  ...publishData[0].whoInvite.filter(
+                    (i, index) => index !== +idx
+                  ),
+                ],
+              },
+            ]);
+          }
+        });
         break;
     }
   };

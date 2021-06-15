@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import React, { useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import noImage from "../../../images/noimage.png";
 import CustomerProfile from "./CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
-import { param } from "jquery";
 
 function EditCustomerProfile({ profile, setProfile }) {
   const db = firebase.firestore();
   const storage = firebase.storage();
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const { cID } = useParams();
-
   const {
     name,
     image,
@@ -76,38 +72,66 @@ function EditCustomerProfile({ profile, setProfile }) {
       const imageUrl = await getImg(input.imageFile);
       delete input.imageFile;
       delete input.previewImg;
-      setProfile({
-        ...profile,
-        ...input,
-        image: imageUrl,
-      });
       setInput({
         ...input,
         image: imageUrl,
       });
-      db.collection("customers")
-        .doc(id)
-        .update({
+      if (!career) {
+        setProfile({ ...profile, ...input, image: imageUrl, career: "軍公教" });
+        db.collection("customers")
+          .doc(id)
+          .update({
+            ...input,
+            image: imageUrl,
+            career: "軍公教",
+          });
+      } else {
+        setProfile({
+          ...profile,
           ...input,
           image: imageUrl,
         });
+        db.collection("customers")
+          .doc(id)
+          .update({
+            ...input,
+            image: imageUrl,
+          });
+      }
+
       setInput({});
     } else {
-      setProfile({
-        ...profile,
-        ...input,
-      });
-      db.collection("customers").doc(id).update(input);
+      if (!career) {
+        setProfile({ ...profile, ...input, career: "軍公教" });
+        db.collection("customers")
+          .doc(id)
+          .update({ ...input, career: "軍公教" });
+      } else {
+        setProfile({
+          ...profile,
+          ...input,
+        });
+        db.collection("customers").doc(id).update(input);
+      }
+
       setInput({});
     }
     setIsEditing(false);
   };
-  const bindEditHandler = () => {
-    setIsEditing(true);
-  };
-  const bindCancelHandler = () => {
-    setIsEditing(false);
-    setInput({});
+
+  const profileButtonHandler = (e) => {
+    const { title } = e.target;
+    switch (title) {
+      case "cancel":
+        setIsEditing(false);
+        setInput({});
+        break;
+      case "edit":
+        setIsEditing(true);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -115,11 +139,29 @@ function EditCustomerProfile({ profile, setProfile }) {
       {isEditing ? (
         <div className={style["edit-mode"]}>
           <div className={style.buttons}>
-            <button onClick={bindSaveHandler} className={style.save}>
-              儲存
+            <button
+              onClick={bindSaveHandler}
+              className={style.save}
+              title="save"
+            >
+              <i
+                class="fa fa-floppy-o"
+                aria-hidden="true"
+                title="save"
+                onClick={bindSaveHandler}
+              ></i>
             </button>
-            <button onClick={bindCancelHandler} className={style.cancel}>
-              取消
+            <button
+              onClick={profileButtonHandler}
+              className={style.cancel}
+              title="cancel"
+            >
+              <i
+                class="fa fa-times"
+                aria-hidden="true"
+                title="cancel"
+                onClick={profileButtonHandler}
+              ></i>
             </button>
           </div>
           <div className={style.flexbox}>
@@ -487,7 +529,14 @@ function EditCustomerProfile({ profile, setProfile }) {
       ) : (
         <div className={style["profile-data"]}>
           <div className={style.edit}>
-            <button onClick={bindEditHandler}>編輯</button>
+            <button onClick={profileButtonHandler} title="edit">
+              <i
+                class="fa fa-pencil"
+                aria-hidden="true"
+                title="edit"
+                onClick={profileButtonHandler}
+              ></i>
+            </button>
           </div>
           <CustomerProfile props={profile} input={input} />
         </div>

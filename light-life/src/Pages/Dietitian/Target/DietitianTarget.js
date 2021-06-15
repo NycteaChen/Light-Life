@@ -5,12 +5,11 @@ import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import TargetHandler from "../../Components/TargetHandler.js";
 import style from "../../../style/target.module.scss";
-import { setMilliseconds } from "date-fns";
 
 function DietitianTarget() {
   const params = useParams();
   const [date, setDate] = useState({});
-  const [target, setTarget] = useState([]);
+  const [target, setTarget] = useState(null);
   const [input, setInput] = useState({});
   const [isClick, setIsClick] = useState(false);
   const [leastEndDate, setLeastEndDate] = useState(false);
@@ -68,7 +67,7 @@ function DietitianTarget() {
           const dateTime = Date.now();
           const timestamp = Math.floor(dateTime);
           Swal.fire({
-            text: "確定新增嗎嗎?",
+            text: "確定新增嗎?",
             showCancelButton: true,
             cancelButtonText: "取消",
             confirmButtonText: "確定",
@@ -90,7 +89,11 @@ function DietitianTarget() {
             }
           });
         } else {
-          alert("請填寫完整");
+          Swal.fire({
+            text: "請填寫完整",
+            confirmButtonText: "確定",
+            confirmButtonColor: "#1e4d4e",
+          });
         }
 
         break;
@@ -106,8 +109,8 @@ function DietitianTarget() {
     <div className={style["target-setting"]} id="dietitian-target">
       <div className={style.flex}>
         <h5>已設立目標</h5>
-        <button onClick={bindAddTarget} id="new" className={style.new}>
-          新增
+        <button onClick={bindAddTarget} id="new">
+          <i class="fa fa-pencil-square-o" aria-hidden="true" id="new"></i>
         </button>
       </div>
       <div className={style["customer-targets"]}>
@@ -182,7 +185,7 @@ function DietitianTarget() {
             </button>
             <button
               onClick={bindAddTarget}
-              className={style.cancle}
+              className={style.cancel}
               id="cancel"
             >
               取消

@@ -2,6 +2,15 @@
   h5 {
     font-size: 20px;
     font-weight: bold;
+    &.customer-h5 {
+      padding: 15px 0 10px;
+      max-width: 580px;
+      margin: auto;
+    }
+  }
+  p {
+    max-width: 580px;
+    margin: auto;
   }
 
   .flex {
@@ -11,7 +20,22 @@
     justify-content: space-between;
     margin: auto;
     button {
+      font-size: 20px;
+      border: 1px solid beige;
+      position: relative;
+      bottom: 6px;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      background-color: #87a39875;
+      transition: background-color 0.3s;
       margin-right: 15px;
+      i {
+        color: #ffffff;
+      }
+      &:hover {
+        background-color: #87a398;
+      }
     }
   }
 
@@ -32,6 +56,10 @@
     border-radius: 5px;
     padding: 2px 5px;
     font-size: 14px;
+    &:focus {
+      outline: none !important;
+      border: 2px solid #64b795;
+    }
   }
 
   .customer-targets,
@@ -57,21 +85,22 @@
       box-shadow: 0 2px 2px #515a56;
       transition: opacity 0.3s;
       .alter-button {
-        margin: 10px 20px auto auto;
         text-align: right;
-
-        i {
-          font-size: 20px;
-          transition: all 0.5s;
-          cursor: pointer;
-          &:hover {
-            transform: scale(1.2);
-            color: #037570;
-          }
-        }
         button {
+          font-size: 20px;
+          border: 1px solid beige;
+          border-radius: 50%;
+          width: 35px;
+          height: 35px;
+          background-color: #87a39875;
+          transition: background-color 0.3s;
           margin-right: 10px;
-          padding: 2px 8px;
+          i {
+            color: #ffffff;
+          }
+          &:hover {
+            background-color: #87a398;
+          }
         }
       }
       .flexbox {
@@ -148,7 +177,7 @@
           color: white;
         }
         &.cancel {
-          background-color: #dadada;
+          background-color: #dbdbdb;
           color: #464444;
         }
         &:hover {
@@ -171,12 +200,23 @@
       }
     }
   }
-
+  @media (min-width: 380px) {
+    .add-new-target {
+      input {
+        width: 150px;
+      }
+      .target-other {
+        .set-content {
+          width: 150px;
+        }
+      }
+    }
+  }
   @media (min-width: 570px) {
     .flexbox > h5 {
       text-align: left;
     }
-    .set-content {
+    .set-content + .set-content {
       width: 130px;
     }
     .customer-targets,
@@ -204,20 +244,6 @@
           padding: 4px 0;
           border-bottom: 2px solid #00753f;
         }
-        .alter-button {
-          margin: 10px 20px auto auto;
-          text-align: right;
-
-          i {
-            font-size: 20px;
-            transition: all 0.5s;
-            cursor: pointer;
-          }
-          button {
-            margin-right: 10px;
-            padding: 0;
-          }
-        }
         .col {
           display: flex;
           white-space: nowrap;
@@ -231,8 +257,10 @@
     }
 
     .add-new-target {
-      max-width: 460px;
+      width: 90%;
+      max-width: 520px;
       height: 310px;
+
       .col {
         display: flex;
       }
@@ -253,6 +281,15 @@
     max-height: unset;
     margin-left: 260px;
     max-width: 800px;
+    h5 {
+      &.customer-h5 {
+        max-width: 580px;
+        margin: 0;
+      }
+    }
+    p {
+      margin: 0;
+    }
     .flex {
       max-width: 700px;
       margin: 0;
@@ -268,6 +305,18 @@
       margin: 0;
       margin-top: 20px;
       max-width: 700px;
+    }
+    .flexbox {
+      .set-content {
+        width: 155px;
+      }
+    }
+    .target-header {
+      .flexbox {
+        .set-content {
+          width: 100px;
+        }
+      }
     }
   }
 }
