@@ -95,7 +95,7 @@ function Dietitian() {
           setNotFound(true);
         }
       });
-  }, []);
+  }, []); //eslint-disable-line
 
   useEffect(() => {
     firebase
@@ -337,7 +337,7 @@ function Dietitian() {
     } else if (keyword.includes("customer") && keyword.includes("target")) {
       setActive({ cTarget: style.active });
     }
-  }, []);
+  }, []); //eslint-disable-line
 
   useEffect(() => {
     if (profile && profile.email && !profile.name) {
@@ -348,7 +348,7 @@ function Dietitian() {
         .doc(dietitianID)
         .update({ isServing: false });
     }
-  }, [profile && profile.name]);
+  }, [profile && profile.name]); //eslint-disable-line
 
   const getSelectedCustomer = (e) => {
     setActive({});
@@ -410,7 +410,6 @@ function Dietitian() {
       }
     });
   };
-  console.log(profile);
   const changeServiceStatusHandler = () => {
     if (
       profile.name &&

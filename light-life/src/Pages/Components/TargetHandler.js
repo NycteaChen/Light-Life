@@ -21,7 +21,8 @@ function TargetHandler({ target, setTarget }) {
     if (target) {
       setDisplay("none");
     }
-  });
+  }, []); //eslint-disable-line
+
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name === "startDate") {

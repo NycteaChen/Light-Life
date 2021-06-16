@@ -13,7 +13,8 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
     if (props) {
       setDisplay("none");
     }
-  });
+  }, []); //eslint-disable-line
+
   const bindCheckHandler = (e) => {
     setCheckIndex(e.target.id);
     setIsChecked(true);

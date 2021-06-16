@@ -97,7 +97,7 @@ function Customer() {
     ) {
       setNotFound(true);
     }
-  }, []);
+  }, []); //eslint-disable-line
 
   useEffect(() => {
     firebase
@@ -330,7 +330,7 @@ function Customer() {
     } else if (keyword.includes("reserve")) {
       setNav({ reserve: style["nav-active"] });
     }
-  }, []);
+  }, []); //eslint-disable-line
   useEffect(() => {
     firebase
       .firestore()
@@ -410,7 +410,7 @@ function Customer() {
               });
           });
       });
-  }, [reserve]);
+  }, [reserve]); //eslint-disable-line
 
   const activeHandler = (e) => {
     const { title } = e.target;

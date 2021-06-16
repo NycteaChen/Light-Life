@@ -98,13 +98,13 @@ function Publish({ reserve }) {
       min: endLessDate.toISOString().substr(0, 10),
       max: endMostDate.toISOString().substr(0, 10),
     });
-  }, []);
+  }, []); //eslint-disable-line
 
   useEffect(() => {
     if (publishData && oldPublish) {
       setSpinnerDisplay("none");
     }
-  });
+  }, []); //eslint-disable-line
 
   const publishModalHandler = (e) => {
     switch (e.target.title) {
@@ -151,6 +151,8 @@ function Publish({ reserve }) {
       case "cancel":
         setInput({});
         setDisplay("none");
+        break;
+      default:
         break;
     }
   };

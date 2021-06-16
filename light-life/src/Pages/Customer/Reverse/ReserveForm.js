@@ -66,14 +66,14 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
         }
         setOccupationTime(occupation);
       });
-  }, []);
+  }, []); //eslint-disable-line
 
   useEffect(() => {
     if (props) {
       const now = reserve.find((r) => r.dietitian === props.id);
       setNowReserve(now);
     }
-  }, [props]);
+  }, [props, reserve]);
 
   const getInputHandler = (e) => {
     const { name } = e.target;
