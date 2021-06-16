@@ -9,13 +9,13 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
+  & > .link {
+    border-right: 2px solid #407e64;
+  }
   .link {
     font-size: 12px;
     width: 50%;
     text-align: center;
-    &:first-of-type {
-      border-right: 2px solid #407e64;
-    }
     img {
       width: 20px;
       margin-right: 10px;
@@ -26,6 +26,11 @@
       opacity: 0.5;
       color: unset;
     }
+  }
+  button {
+    background-color: unset;
+    border: none !important;
+    padding: 3.5px 0;
   }
 
   @media (min-width: 520px) {

@@ -41,13 +41,20 @@ export default function MobileBottom() {
           <img src={user} alt="member" />
           <span>會員主頁</span>
         </Link>
-        <a onClick={logoutHandler} className={style.link}>
+        <button onClick={logoutHandler} className={style.link}>
           <img src={exit} alt="logout" />
           <span>登出</span>
-        </a>
+        </button>
       </div>
       <aside>
-        <a href="#top" id={style.toTop}></a>
+        <a
+          href={
+            params.dID
+              ? `/dietitian/${params.dID}#top`
+              : `/customer/${params.cID}#top`
+          }
+          id={style.toTop}
+        />
       </aside>
     </>
   );
