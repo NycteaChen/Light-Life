@@ -213,6 +213,9 @@
           box-shadow: 0 1px 3px #8a8888;
           opacity: 1;
         }
+        & + span {
+          cursor: pointer;
+        }
       }
 
       .nav-unactive {
@@ -436,7 +439,17 @@
           font-weight: bold;
         }
       }
-
+      .nav-unactive {
+        border-left: 5px solid #4d4d4d;
+        color: #4d4d4d;
+        background-color: #ffffff;
+        opacity: 0.5;
+        cursor: default;
+        &:hover {
+          transform: unset;
+          font-weight: unset;
+        }
+      }
       @media (min-width: 320px) {
         grid-template-columns: repeat(2, 1fr);
         grid-gap: 0 10px;

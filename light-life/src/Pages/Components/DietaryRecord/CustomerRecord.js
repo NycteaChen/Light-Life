@@ -35,7 +35,7 @@ function CustomerRecord({ date, count, setCount }) {
     setInput({});
     setMeal([]);
     setAcitve("");
-  }, [date]);
+  }, [date, cID]);
 
   const getMealHandler = (e) => {
     const mealClass = e.target.className.split(" ")[1];

@@ -29,11 +29,15 @@ function DietitianRecord({ date }) {
   const [input, setInput] = useState(initInput);
   const [active, setAcitve] = useState("");
 
-  useEffect(async () => {
-    await getIngrediensData().then((res) => {
-      setIngredients(res);
-    });
+  useEffect(() => {
+    async function fetchDate() {
+      await getIngrediensData().then((res) => {
+        setIngredients(res);
+      });
+    }
+    fetchDate();
   }, []);
+  console.log(ingredients);
 
   useEffect(() => {
     setMeal([]);

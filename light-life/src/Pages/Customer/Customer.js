@@ -28,7 +28,7 @@ import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 
 function Customer() {
-  const [load, setLoad] = useState(loadStyle.loading);
+  const load = loadStyle.loading;
   const [profile, setProfile] = useState({});
   const [dietitians, setDietitians] = useState(null);
   const [reserve, setReserve] = useState([]);
@@ -487,14 +487,17 @@ function Customer() {
                     <div title="dietary">飲食記錄</div>
                   </Link>
                 ) : (
-                  <a className={style["nav-unactive"]} onClick={alertHandler}>
+                  <span
+                    className={style["nav-unactive"]}
+                    onClick={alertHandler}
+                  >
                     <i
                       class="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
                     <div title="dietary">飲食記錄</div>
-                  </a>
+                  </span>
                 )}
                 <Link
                   title="target"
@@ -559,9 +562,9 @@ function Customer() {
                   <i class="fa fa-arrow-left" aria-hidden="true"></i>
                   <div>會員主頁</div>
                 </Link>
-                <a onClick={logoutHandler}>
+                <span onClick={logoutHandler}>
                   <img src={exit} alt="logout" id={style.logout} />
-                </a>
+                </span>
                 <div className={style["copyright"]}>&copy;2021 Light Life</div>
               </div>
             </nav>
@@ -604,14 +607,17 @@ function Customer() {
                     <div title="dietary">飲食記錄</div>
                   </Link>
                 ) : (
-                  <a onClick={alertHandler} className={style["nav-title"]}>
+                  <span
+                    onClick={alertHandler}
+                    className={`${style["nav-title"]} ${style["nav-unactive"]}`}
+                  >
                     <i
                       class="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
                     <div title="dietary">飲食記錄</div>
-                  </a>
+                  </span>
                 )}
                 <Link
                   title="target"
