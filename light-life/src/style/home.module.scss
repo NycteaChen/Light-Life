@@ -98,8 +98,16 @@
           border-bottom: 2px solid #358867;
           font-weight: 700;
         }
-        &:last-of-type {
-          display: inline-block;
+      }
+      span.login {
+        color: #64b795;
+        cursor: pointer;
+        display: inline-block;
+        margin-top: 10px;
+        &:hover {
+          color: #358867;
+          border-bottom: 2px solid #358867;
+          font-weight: 700;
         }
       }
       .icon {
@@ -107,7 +115,13 @@
           border-bottom: unset;
           font-weight: 700;
         }
+        & + .icon {
+          display: inline-block;
+          margin-top: 17px;
+          cursor: pointer;
+        }
       }
+
       .login-image {
         position: relative;
         bottom: 5px;
@@ -143,6 +157,9 @@
           }
           .logout-image {
             bottom: 1.5px;
+          }
+          span.login {
+            margin-top: 18px;
           }
         }
       }

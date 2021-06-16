@@ -172,16 +172,18 @@ function Home() {
                     alt="login"
                   />
                 </Link>
-                <a onClick={logoutHandler} className={style.icon}>
+                <span onClick={logoutHandler} className={style.icon}>
                   <img
                     src={exit}
                     alt="logout"
                     className={style["logout-image"]}
                   />
-                </a>
+                </span>
               </>
             ) : (
-              <a onClick={bindLoginButton}>登入</a>
+              <span onClick={bindLoginButton} className={style.login}>
+                登入
+              </span>
             )}
           </nav>
         </div>
@@ -196,9 +198,7 @@ function Home() {
                 <button>使用服務</button>
               </Link>
             ) : (
-              <a>
-                <button onClick={bindLoginButton}>使用服務</button>
-              </a>
+              <button onClick={bindLoginButton}>使用服務</button>
             )}
           </div>
         </div>
@@ -296,14 +296,14 @@ function Home() {
               <button>使用服務</button>
             </Link>
           ) : (
-            <a>
-              <button onClick={bindLoginButton}>使用服務</button>
-            </a>
+            <button onClick={bindLoginButton}>使用服務</button>
           )}
         </section>
       </main>
       <aside>
-        <a href="#top" id={style.toTop}></a>
+        <a href="#top" id={style.toTop}>
+          {" "}
+        </a>
       </aside>
       <footer>
         <div>

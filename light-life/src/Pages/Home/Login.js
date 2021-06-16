@@ -735,33 +735,31 @@ function Login({ display, setDisplay }) {
               role="presentation"
               onClick={bindSelectHandler}
             >
-              <a
+              <span
                 className={`nav-link ${dietitian} dietitian`}
                 aria-current="page"
                 data-bs-toggle="tab"
-                href="#"
                 role="tab"
                 aria-selected="true"
                 onClick={bindSelectHandler}
               >
                 營養師
-              </a>
+              </span>
             </li>
             <li
               className="nav-item customer"
               role="presentation"
               onClick={bindSelectHandler}
             >
-              <a
+              <span
                 className={`nav-link ${customer} customer`}
                 data-bs-toggle="tab"
-                href="#"
                 role="tab"
                 aria-selected="false"
                 onClick={bindSelectHandler}
               >
                 客戶
-              </a>
+              </span>
             </li>
           </ul>
           <form action="javascript:void(0);" autocomplete="off">
@@ -818,16 +816,16 @@ function Login({ display, setDisplay }) {
             <div className={style.hints}>
               <div className={style.hint}>
                 還沒
-                <a id="signup" onClick={bindSignupHandler}>
+                <span id="signup" onClick={bindSignupHandler}>
                   註冊
-                </a>
+                </span>
                 ?
               </div>
               <div className={style.hint}>
                 忘記
-                <a id="forget-password" onClick={bindForgetPasswordHandler}>
+                <span id="forget-password" onClick={bindForgetPasswordHandler}>
                   密碼
-                </a>
+                </span>
               </div>
             </div>
             <button onClick={loginHandler}>登入</button>
@@ -855,33 +853,31 @@ function Login({ display, setDisplay }) {
               role="presentation"
               onClick={bindSelectHandler}
             >
-              <a
+              <span
                 className={`nav-link ${dietitian} dietitian`}
                 aria-current="page"
                 data-bs-toggle="tab"
-                href="#"
                 role="tab"
                 aria-selected="true"
                 onClick={bindSelectHandler}
               >
                 營養師
-              </a>
+              </span>
             </li>
             <li
               className="nav-item customer"
               role="presentation"
               onClick={bindSelectHandler}
             >
-              <a
+              <span
                 className={`nav-link ${customer} customer`}
                 data-bs-toggle="tab"
-                href="#"
                 role="tab"
                 aria-selected="false"
                 onClick={bindSelectHandler}
               >
                 客戶
-              </a>
+              </span>
             </li>
           </ul>
 
@@ -950,9 +946,9 @@ function Login({ display, setDisplay }) {
             </div>
             <div className={style.hint}>
               返回
-              <a id="login" onClick={bindLoginHandler}>
+              <span id="login" onClick={bindLoginHandler}>
                 登入頁
-              </a>
+              </span>
             </div>
           </form>
         </div>
