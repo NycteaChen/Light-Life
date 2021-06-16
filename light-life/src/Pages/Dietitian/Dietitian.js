@@ -440,7 +440,7 @@ function Dietitian() {
       userObject[e["name"]] = e.name;
     });
     if (users.length > 0) {
-      const { value: customer } = await Swal.fire({
+      await Swal.fire({
         cancelButtonText: "取消",
         confirmButtonText: "確定",
         confirmButtonColor: "#1e4d4e",
@@ -586,15 +586,18 @@ function Dietitian() {
                   <i class="fa fa-arrow-left" aria-hidden="true"></i>
                   <div>會員主頁</div>
                 </Link>
-                <a onClick={logoutHandler}>
+                <span onClick={logoutHandler}>
                   <img src={exit} alt="logout" id={basic.logout} />
-                </a>
+                </span>
                 <div className={basic.copyright}>&copy;2021 Light Life</div>
               </div>
             </nav>
 
             <div className={basic.profile}>
-              <img src={profile.image ? profile.image : noImage} />
+              <img
+                src={profile.image ? profile.image : noImage}
+                alt="profileImage"
+              />
               <div className={basic.welcome}>
                 <div>{profile.name ? profile.name : ""}，您好</div>
                 <div className={basic["service-status"]}>
@@ -635,7 +638,7 @@ function Dietitian() {
                   <div title="findCustomer">找客戶</div>
                 </Link>
 
-                <a
+                <span
                   className={`${basic["nav-title"]}`}
                   title="customerList"
                   onClick={showMobileCustomerList}
@@ -646,7 +649,7 @@ function Dietitian() {
                     title="customerList"
                   ></i>
                   <div title="customerList">客戶清單</div>
-                </a>
+                </span>
 
                 <Link
                   className={basic["nav-title"]}
@@ -693,7 +696,7 @@ function Dietitian() {
                           )
                         ) : (
                           <div className={image.spinner}>
-                            <img src={spinner} />
+                            <img src={spinner} alt="spinner" />
                           </div>
                         )}
                       </div>

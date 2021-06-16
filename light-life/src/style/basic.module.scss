@@ -444,7 +444,7 @@
         color: #4d4d4d;
         background-color: #ffffff;
         opacity: 0.5;
-        cursor: default;
+        cursor: pointer;
         &:hover {
           transform: unset;
           font-weight: unset;
@@ -468,6 +468,7 @@
 
     .d-List {
       .nav-title {
+        cursor: pointer;
         &:nth-last-of-type(3),
         &:last-of-type {
           div {

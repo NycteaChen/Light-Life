@@ -102,6 +102,7 @@ function DietitianTarget() {
         break;
       case "new":
         setIsClick(true);
+        break;
       default:
         break;
     }
