@@ -50,13 +50,13 @@ function GetPublication() {
         });
         setPublish(res);
       });
-  }, []);
+  }, [date]);
 
   useEffect(() => {
     if (publish) {
       setSpinnerDisplay("none");
     }
-  });
+  }, []); //eslint-disable-line
 
   const checkDetailsHandler = (e) => {
     setIdx(e.target.id);

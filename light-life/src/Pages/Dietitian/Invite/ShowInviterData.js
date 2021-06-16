@@ -28,7 +28,7 @@ function ShowInviterData({
       .then((res) => {
         setInviterData(res.data());
       });
-  }, []);
+  }, []); //eslint-disable-line
   const inviteButtonHandler = (e) => {
     const { id } = e.target;
     console.log(id);

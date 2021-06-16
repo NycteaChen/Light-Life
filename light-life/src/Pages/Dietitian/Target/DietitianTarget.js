@@ -24,7 +24,7 @@ function DietitianTarget() {
       .doc(params.cID)
       .get()
       .then((doc) => setDate(doc.data()));
-  }, []);
+  }, []); //eslint-disable-line
 
   useEffect(() => {
     db.collection("dietitians")
@@ -40,7 +40,7 @@ function DietitianTarget() {
         });
         setTarget(targetArray);
       });
-  }, []);
+  }, []); //eslint-disable-line
 
   const bindChangeDateRange = (e) => {
     const date = new Date(+new Date() + 8 * 3600 * 1000);

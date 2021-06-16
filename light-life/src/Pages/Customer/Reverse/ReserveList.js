@@ -28,7 +28,7 @@ function ReserveList({ reserve, setReserve }) {
             }
           });
       });
-  }, []);
+  }, [reserve]);
   const checkDeclineMessage = (e) => {
     if (e.target.id) {
       setIndex(e.target.id);

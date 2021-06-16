@@ -145,6 +145,7 @@ function DietitianProfile({ profile, setProfile }) {
               <i class="fa fa-times" aria-hidden="true" title="cancel"></i>
             </button>
           </div>
+          {/*eslint-disable-next-line */}
           <form className={style["basic-profile"]} action="javascript:void(0)">
             <div className={style.flexbox}>
               <div className={style.img}>
@@ -387,6 +388,7 @@ function DietitianProfile({ profile, setProfile }) {
               ></i>
             </button>
           </div>
+          {/*eslint-disable-next-line */}
           <form className={style["basic-profile"]} action="javascript:void(0);">
             <div className={style.flexbox}>
               <div className={style.img}>

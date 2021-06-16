@@ -34,7 +34,7 @@ function CustomerTarget() {
             setTarget(targetArray);
           });
       });
-  }, []);
+  }, [params.cID]);
 
   return (
     <>

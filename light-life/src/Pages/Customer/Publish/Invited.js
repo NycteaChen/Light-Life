@@ -24,7 +24,7 @@ function Invited({
       .then((docs) => {
         setProfile(docs.data());
       });
-  }, []);
+  }, []);//eslint-disable-line
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":

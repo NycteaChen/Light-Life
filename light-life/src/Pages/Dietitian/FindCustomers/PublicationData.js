@@ -31,7 +31,7 @@ function PublicationData({ publish, display, setDisplay, setPublish }) {
       .then((doc) => {
         setName(doc.data().name);
       });
-  }, []);
+  }, []); //eslint-disable-line
 
   const messageHandler = (e) => {
     setInvite({

@@ -42,6 +42,13 @@ function Analysis({ date, cID, data }) {
               setAdvice("");
             }
             if (doc.exists) {
+              const getMealAnalysis = (data, setMealNutrients) => {
+                if (data) {
+                  calculator(data, setMealNutrients);
+                } else {
+                  setMealNutrients("");
+                }
+              };
               getMealAnalysis(doc.data()["breakfast"], setBreakfast);
               getMealAnalysis(doc.data()["morning-snack"], setMorning);
               getMealAnalysis(doc.data()["lunch"], setLunch);
@@ -77,14 +84,6 @@ function Analysis({ date, cID, data }) {
       carbohydrate: parseFloat(carbohydrateTotal.toFixed(1)),
       fiber: parseFloat(fiberTotal.toFixed(1)),
     });
-  };
-
-  const getMealAnalysis = (data, setMealNutrients) => {
-    if (data) {
-      calculator(data, setMealNutrients);
-    } else {
-      setMealNutrients("");
-    }
   };
 
   const getNutrientTotal = (item) => {
