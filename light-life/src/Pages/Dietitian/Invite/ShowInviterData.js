@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  getCustomerData,
+  addPending,
+  updateReserve,
+} from "../../../utils/Firebase";
 import Swal from "sweetalert2";
 import noImage from "../../../images/noimage.png";
 import style from "../../../style/whoInvite.module.scss";
@@ -20,14 +23,10 @@ function ShowInviterData({
   const { dID } = useParams();
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(props.inviterID)
-      .get()
-      .then((res) => {
-        setInviterData(res.data());
-      });
+    getCustomerData(props.inviterID).then((res) => {
+      setInviterData(res.data());
+      console.log(res.data());
+    });
   }, []); //eslint-disable-line
   const inviteButtonHandler = (e) => {
     const { id } = e.target;
@@ -42,39 +41,24 @@ function ShowInviterData({
           confirmButtonColor: "#1e4d4e",
         }).then((result) => {
           if (result.isConfirmed) {
-            firebase
-              .firestore()
-              // .collection("dietitians")
-              // .doc(dID)
-              // .collection("customers")
-              // .doc(props.inviterID)
-              // .set({
-              //   startDate: props.reserveStartDate,
-              //   endDate: props.reserveEndDate,
-              //   isServing: false,
-              // })
-              .collection("pending")
-              .add({
-                startDate: props.reserveStartDate,
-                endDate: props.reserveEndDate,
-                dietitian: dID,
-                customer: props.inviterID,
-              })
+            addPending({
+              startDate: props.reserveStartDate,
+              endDate: props.reserveEndDate,
+              dietitian: dID,
+              customer: props.inviterID,
+            })
               .then(() => {
+                console.log("OK");
                 setPending({
                   startDate: props.reserveStartDate,
                   endDate: props.reserveEndDate,
                   dietitian: dID,
                   customer: props.inviterID,
                 });
-                firebase
-                  .firestore()
-                  .collection("reserve")
-                  .doc(props.reserveID)
-                  .update({
-                    ...props,
-                    status: "1",
-                  });
+                updateReserve(props.reserveID, {
+                  ...props,
+                  status: "1",
+                });
               })
               .then(() => {
                 Swal.fire({
@@ -107,19 +91,26 @@ function ShowInviterData({
   };
   const sendDeclineMessageButton = () => {
     if (message && message !== "") {
-      firebase
-        .firestore()
-        .collection("reserve")
-        .doc(props.reserveID)
-        .update({
-          ...props,
-          declineMessage: message,
-          status: "2",
-        })
-        .then(() => {
-          setInvitedList([...invitedList.filter((i, index) => index !== +idx)]);
-          setIsChecked(false);
-        });
+      Swal.fire({
+        text: "確定送出嗎?",
+        showCancelButton: true,
+        cancelButtonText: "取消",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          updateReserve(props.reserveID, {
+            ...props,
+            declineMessage: message,
+            status: "2",
+          }).then(() => {
+            setInvitedList([
+              ...invitedList.filter((i, index) => index !== +idx),
+            ]);
+            setIsChecked(false);
+          });
+        }
+      });
     } else {
       Swal.fire({
         text: "請輸入婉拒訊息",

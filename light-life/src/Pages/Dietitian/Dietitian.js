@@ -9,6 +9,21 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import {
+  authState,
+  getDietitiansData,
+  getTheSameDietitian,
+  getMyCustomerData,
+  updateCustomerData,
+  updateDietitianData,
+  getPendingData,
+  getCustomerData,
+  deletePublication,
+  setMyCustomerData,
+  getCustomerReserve,
+  getDietitianData,
+  logout,
+} from "../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import InvitedList from "./Invite/InvitedList.js";
 import DietitianProfile from "../Dietitian/DietitianProfile/DietitianProfile.js";
@@ -18,7 +33,6 @@ import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
 import GetPublication from "../Dietitian/FindCustomers/GetPublication.js";
 import MobileBottom from "../Components/MobileBottom.js";
 import NotFound from "../NotFound/NotFound.js";
-import { getDietitiansData } from "../../utils/Firebase.js";
 import basic from "../../style/basic.module.scss";
 import style from "../../style/customerData.module.scss";
 import customer from "../../style/customerProfile.module.scss";
@@ -38,7 +52,7 @@ function Dietitian() {
   const [selectedID, setSelectedID] = useState("");
   const [display, setDisplay] = useState("none");
   const [date, setDate] = useState({});
-  const dietitianID = useParams().dID;
+  const { dID } = useParams();
   const path = useLocation().pathname.split("/")[3];
   const customerID = useLocation().pathname.split("/")[4];
   const customerDataPath = useLocation().pathname.split("/")[5];
@@ -49,7 +63,6 @@ function Dietitian() {
     .substr(0, 10);
   const todayTime = new Date(getToday).getTime();
   const [pending, setPending] = useState(null);
-  const input = {};
   const props = {};
   const [nav, setNav] = useState("");
   const [active, setActive] = useState("");
@@ -58,222 +71,136 @@ function Dietitian() {
   let history = useHistory();
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        console.log(user);
-
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .where("email", "==", user.email)
-          .get()
-          .then((docs) => {
-            if (!docs.empty) {
-              docs.forEach((doc) => {
-                if (doc.data().id !== dietitianID) {
-                  history.push("/");
-                }
-              });
-            } else {
-              history.push("/");
-            }
-          });
-      } else {
-        history.push("/");
+    authState("dietitians", history, dID, setNotFound);
+    getDietitiansData().then((docs) => {
+      const memberArray = [];
+      docs.forEach((doc) => memberArray.push(doc.data().id));
+      if (!memberArray.find((m) => m === dID)) {
+        setNotFound(true);
       }
     });
-
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .get()
-      .then((docs) => {
-        console.log(docs);
-        const memberArray = [];
-        docs.forEach((doc) => memberArray.push(doc.data().id));
-        if (!memberArray.find((m) => m === dietitianID)) {
-          setNotFound(true);
-        }
-      });
   }, []); //eslint-disable-line
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .where("dietitian", "==", dietitianID)
-      .get()
-      .then((snapshot) => {
-        const usersArray = [];
-        if (!snapshot.empty) {
-          snapshot.forEach((doc) => {
-            usersArray.push(doc.data());
-          });
-          usersArray.forEach((i, index) => {
-            firebase
-              .firestore()
-              .collection("dietitians")
-              .doc(dietitianID)
-              .collection("customers")
-              .doc(i.id)
-              .get()
-              .then((res) => {
-                if (res.exists) {
-                  const endDate = new Date(res.data().endDate).getTime();
-                  if (endDate < todayTime) {
-                    firebase
-                      .firestore()
-                      .collection("customers")
-                      .doc(i.id)
-                      .update({
-                        dietitian: firebase.firestore.FieldValue.delete(),
-                      });
-                    usersArray.splice(index, 1);
-                  } else {
-                    usersArray[index].endDate = res.data().endDate;
-                    usersArray[index].startDate = res.data().startDate;
-                    setUsers(usersArray);
-                  }
-                }
-              });
-          });
-        } else {
-          setUsers(usersArray);
-          if (customerPath) {
-            history.push(`/dietitian/${dietitianID}`);
-          }
-        }
-
-        firebase
-          .firestore()
-          .collection("pending")
-          .where("dietitian", "==", dietitianID)
-          .get()
-          .then((docs) => {
-            const pendingArray = [];
-            if (!docs.empty) {
-              docs.forEach((doc) => {
-                pendingArray.push(doc.data());
-              });
-              const promises = [];
-              pendingArray.forEach((p) => {
-                const promise = firebase
-                  .firestore()
-                  .collection("customers")
-                  .doc(p.customer)
-                  .get()
-                  .then((res) => {
-                    return {
-                      ...p,
-                      customerName: res.data().name,
-                      customerGender: res.data().gender,
-                    };
-                  });
-                promises.push(promise);
-              });
-              Promise.all(promises).then((res) => {
-                res.sort((a, b) => {
-                  const dateA = new Date(a.startDate).getTime();
-                  const dateB = new Date(b.startDate).getTime();
-                  if (dateA < dateB) {
-                    return -1;
-                  } else if (dateA > dateB) {
-                    return 1;
-                  } else {
-                    return 0;
-                  }
+    getTheSameDietitian(dID).then((snapshot) => {
+      const usersArray = [];
+      if (!snapshot.empty) {
+        snapshot.forEach((doc) => {
+          usersArray.push(doc.data());
+        });
+        usersArray.forEach((i, index) => {
+          getMyCustomerData(dID, i.id).then((res) => {
+            if (res.exists) {
+              const endDate = new Date(res.data().endDate).getTime();
+              if (endDate < todayTime) {
+                updateCustomerData(i.id, {
+                  dietitian: firebase.firestore.FieldValue.delete(),
                 });
-                const newPendingArray = [];
-                res.forEach((r) => {
-                  const start = new Date(r.startDate).getTime();
-                  if (r.startDate === getToday) {
-                    firebase
-                      .firestore()
-                      .collection("customers")
-                      .doc(r.customer)
-                      .update({ dietitian: r.dietitian })
+                usersArray.splice(index, 1);
+              } else {
+                usersArray[index].endDate = res.data().endDate;
+                usersArray[index].startDate = res.data().startDate;
+                setUsers(usersArray);
+              }
+            }
+          });
+        });
+      } else {
+        setUsers(usersArray);
+        if (customerPath) {
+          history.push(`/dietitian/${dID}`);
+        }
+      }
+      getPendingData("dietitian", dID).then((docs) => {
+        const pendingArray = [];
+        if (!docs.empty) {
+          console.log(docs);
+          docs.forEach((doc) => {
+            pendingArray.push(doc.data());
+          });
+          const promises = [];
+          pendingArray.forEach((p) => {
+            const promise = getCustomerData(p.customer).then((res) => {
+              return {
+                ...p,
+                customerName: res.data().name,
+                customerGender: res.data().gender,
+              };
+            });
+            promises.push(promise);
+          });
+          Promise.all(promises).then((res) => {
+            res.sort((a, b) => {
+              const dateA = new Date(a.startDate).getTime();
+              const dateB = new Date(b.startDate).getTime();
+              if (dateA < dateB) {
+                return -1;
+              } else if (dateA > dateB) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
+            const newPendingArray = [];
+            res.forEach((r) => {
+              const start = new Date(r.startDate).getTime();
+              if (r.startDate === getToday) {
+                updateCustomerData(r.customer, { dietitian: r.dietitian }).then(
+                  () => {
+                    getCustomerData(r.customer)
+                      .then((doc) => {
+                        if (
+                          usersArray.length > 0 &&
+                          !usersArray.find((i) => i.id === doc.data().id)
+                        ) {
+                          setUsers([...usersArray, doc.data()]);
+                        } else if (usersArray.length > 0) {
+                          setUsers([...usersArray]);
+                        } else {
+                          setUsers([doc.data()]);
+                        }
+                      })
                       .then(() => {
-                        firebase
-                          .firestore()
-                          .collection("customers")
-                          .doc(r.customer)
-                          .get()
-                          .then((doc) => {
-                            if (
-                              usersArray.length > 0 &&
-                              !usersArray.find((i) => i.id === doc.data().id)
-                            ) {
-                              setUsers([...usersArray, doc.data()]);
-                            } else if (usersArray.length > 0) {
-                              setUsers([...usersArray]);
-                            } else {
-                              setUsers([doc.data()]);
-                            }
-                          })
+                        deletePublication(r.id)
                           .then(() => {
-                            firebase
-                              .firestore()
-                              .collection("pending")
-                              .doc(r.id)
-                              .delete()
-                              .then(() => {
-                                console.log("Document successfully deleted!");
-                              })
-                              .catch((error) => {
-                                console.error(
-                                  "Error removing document: ",
-                                  error
-                                );
-                              });
+                            console.log("Document successfully deleted!");
+                          })
+                          .catch((error) => {
+                            console.error("Error removing document: ", error);
                           });
                       });
-                    firebase
-                      .firestore()
-                      .collection("dietitians")
-                      .doc(r.dietitian)
-                      .collection("customers")
-                      .doc(r.customer)
-                      .set({
-                        startDate: r.startDate,
-                        endDate: r.endDate,
-                      });
-                  } else if (start < todayTime) {
-                    console.log("晚");
-                  } else {
-                    newPendingArray.push(r);
                   }
+                );
+                setMyCustomerData(r.dietitian, r.customer, {
+                  startDate: r.startDate,
+                  endDate: r.endDate,
                 });
-                setPending(newPendingArray);
-              });
-            } else {
-              setPending([]);
-            }
-            // });
+              } else if (start < todayTime) {
+                console.log("晚");
+              } else {
+                newPendingArray.push(r);
+              }
+            });
+            setPending(newPendingArray);
           });
+        } else {
+          setPending([]);
+        }
+        // });
       });
-    firebase
-      .firestore()
-      .collection("reserve")
-      .where("dietitian", "==", dietitianID)
-      .get()
-      .then((docs) => {
-        const invitedArray = [];
-        docs.forEach((doc) => {
-          const startDate = new Date(doc.data().reserveStartDate).getTime();
+    });
 
-          if (startDate > today && doc.data().status === "0") {
-            invitedArray.push(doc.data());
-          }
-        });
-        setInvitedList(invitedArray);
+    getCustomerReserve("dietitian", dID).then((docs) => {
+      const invitedArray = [];
+      docs.forEach((doc) => {
+        const startDate = new Date(doc.data().reserveStartDate).getTime();
+        if (startDate > today && doc.data().status === "0") {
+          invitedArray.push(doc.data());
+        }
       });
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dietitianID)
-      .get()
+      setInvitedList(invitedArray);
+    });
+    getDietitianData(dID)
       .then((res) => setProfile(res.data()))
       .then(() =>
         setTimeout(() => {
@@ -283,23 +210,16 @@ function Dietitian() {
 
     if (customerPath && customerID) {
       if (customerID !== "") {
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(dietitianID)
-          .collection("customers")
-          .doc(customerID)
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              setDate({
-                start: doc.data().startDate,
-                end: doc.data().endDate,
-              });
-            } else {
-              setNotFound(true);
-            }
-          });
+        getMyCustomerData(dID, customerID).then((doc) => {
+          if (doc.exists) {
+            setDate({
+              start: doc.data().startDate,
+              end: doc.data().endDate,
+            });
+          } else {
+            setNotFound(true);
+          }
+        });
       }
     } else if (customerPath && !customerID) {
       setNotFound(true);
@@ -344,30 +264,19 @@ function Dietitian() {
   useEffect(() => {
     if (profile && profile.email && !profile.name) {
       setProfile({ ...profile, isServing: false });
-      firebase
-        .firestore()
-        .collection("dietitians")
-        .doc(dietitianID)
-        .update({ isServing: false });
+      updateDietitianData(dID, { isServing: false });
     }
   }, [profile && profile.name]); //eslint-disable-line
 
   const getSelectedCustomer = (e) => {
     setActive({});
     setSelectedID(e.target.className);
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dietitianID)
-      .collection("customers")
-      .doc(e.target.className)
-      .get()
-      .then((doc) => {
-        setDate({
-          start: doc.data().startDate,
-          end: doc.data().endDate,
-        });
+    getMyCustomerData(dID, e.target.className).then((doc) => {
+      setDate({
+        start: doc.data().startDate,
+        end: doc.data().endDate,
       });
+    });
   };
 
   const bindListHandler = (e) => {
@@ -399,16 +308,7 @@ function Dietitian() {
       showCancelButton: true,
     }).then((res) => {
       if (res.isConfirmed) {
-        firebase
-          .auth()
-          .signOut()
-          .then(function () {
-            // 登出後強制重整一次頁面
-            window.location.href = "/";
-          })
-          .catch(function (error) {
-            console.log(error.message);
-          });
+        logout();
       }
     });
   };
@@ -422,11 +322,7 @@ function Dietitian() {
       profile.gender
     ) {
       setProfile({ ...profile, isServing: !profile.isServing });
-      firebase
-        .firestore()
-        .collection("dietitians")
-        .doc(dietitianID)
-        .update({ isServing: !profile.isServing });
+      updateDietitianData(dID, { isServing: !profile.isServing });
     } else {
       Swal.fire({
         text: "個人資料填寫完整才能開放服務喔",
@@ -492,7 +388,7 @@ function Dietitian() {
                 <Link
                   title="profile"
                   className={`${basic["nav-title"]} ${nav.profile || ""}`}
-                  to={`/dietitian/${dietitianID}/profile`}
+                  to={`/dietitian/${dID}/profile`}
                   onClick={bindListHandler}
                 >
                   <i class="fa fa-user" aria-hidden="true" title="profile"></i>
@@ -556,7 +452,7 @@ function Dietitian() {
                   title="findCustomer"
                   className={`${basic["nav-title"]} ${nav.findCustomer || ""}`}
                   onClick={bindListHandler}
-                  to={`/dietitian/${dietitianID}/findCustomers`}
+                  to={`/dietitian/${dID}/findCustomers`}
                 >
                   <i
                     class="fa fa-search"
@@ -570,7 +466,7 @@ function Dietitian() {
                   title="whoInvite"
                   className={`${basic["nav-title"]} ${nav.whoInvite || ""}`}
                   onClick={bindListHandler}
-                  to={`/dietitian/${dietitianID}/inviteMe`}
+                  to={`/dietitian/${dID}/inviteMe`}
                 >
                   <i
                     class="fa fa-envira"
@@ -582,7 +478,7 @@ function Dietitian() {
                 <Link
                   className={basic["nav-title"]}
                   onClick={bindListHandler}
-                  to={`/dietitian/${dietitianID}`}
+                  to={`/dietitian/${dID}`}
                 >
                   <i class="fa fa-arrow-left" aria-hidden="true"></i>
                   <div>會員主頁</div>
@@ -619,7 +515,7 @@ function Dietitian() {
                 <Link
                   title="profile"
                   className={`${basic["nav-title"]}`}
-                  to={`/dietitian/${dietitianID}/profile`}
+                  to={`/dietitian/${dID}/profile`}
                   onClick={bindListHandler}
                 >
                   <i class="fa fa-user" aria-hidden="true" title="profile"></i>
@@ -628,7 +524,7 @@ function Dietitian() {
                 <Link
                   title="findCustomer"
                   className={basic["nav-title"]}
-                  to={`/dietitian/${dietitianID}/findCustomers`}
+                  to={`/dietitian/${dID}/findCustomers`}
                   onClick={bindListHandler}
                 >
                   <i
@@ -654,7 +550,7 @@ function Dietitian() {
 
                 <Link
                   className={basic["nav-title"]}
-                  to={`/dietitian/${dietitianID}/inviteMe`}
+                  to={`/dietitian/${dID}/inviteMe`}
                   onClick={bindListHandler}
                   title="whoInvite"
                 >
@@ -752,7 +648,7 @@ function Dietitian() {
 
             <Switch>
               <Route
-                path={`/dietitian/${dietitianID}/customer/${
+                path={`/dietitian/${dID}/customer/${
                   customerID ? customerID : selectedID
                 }`}
               >
@@ -763,7 +659,7 @@ function Dietitian() {
                       className={`${style["link-select"]} ${
                         active.cProfile || ""
                       }`}
-                      to={`/dietitian/${dietitianID}/customer/${
+                      to={`/dietitian/${dID}/customer/${
                         customerID ? customerID : selectedID
                       }/profile`}
                       onClick={bindListHandler}
@@ -778,7 +674,7 @@ function Dietitian() {
                       className={`${style["link-select"]} ${
                         active.cDietary || ""
                       }`}
-                      to={`/dietitian/${dietitianID}/customer/${
+                      to={`/dietitian/${dID}/customer/${
                         customerID ? customerID : selectedID
                       }/dietary`}
                       onClick={bindListHandler}
@@ -795,7 +691,7 @@ function Dietitian() {
                       className={`${style["link-select"]} ${
                         active.cTarget || ""
                       }`}
-                      to={`/dietitian/${dietitianID}/customer/${
+                      to={`/dietitian/${dID}/customer/${
                         customerID ? customerID : selectedID
                       }/target`}
                       onClick={bindListHandler}
@@ -830,7 +726,6 @@ function Dietitian() {
                           <CustomerProfile
                             props={props}
                             // id={selectedID}
-                            input={input}
                           />
                         </div>
                       </div>

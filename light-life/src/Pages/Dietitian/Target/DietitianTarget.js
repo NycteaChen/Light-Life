@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  getMyCustomerData,
+  getTargetData,
+  setTargetData,
+} from "../../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import TargetHandler from "../../Components/TargetHandler.js";
 import style from "../../../style/target.module.scss";
 
 function DietitianTarget() {
-  const params = useParams();
+  const { dID } = useParams();
+  const { cID } = useParams();
   const [date, setDate] = useState({});
   const [target, setTarget] = useState(null);
   const [input, setInput] = useState({});
@@ -15,31 +19,22 @@ function DietitianTarget() {
   const [leastEndDate, setLeastEndDate] = useState(false);
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = today.toISOString().substr(0, 10);
-  const db = firebase.firestore();
 
   useEffect(() => {
-    db.collection("dietitians")
-      .doc(params.dID)
-      .collection("customers")
-      .doc(params.cID)
-      .get()
-      .then((doc) => setDate(doc.data()));
+    getMyCustomerData(dID, cID).then((doc) => {
+      setDate(doc.data());
+      console.log(doc.data());
+    });
   }, []); //eslint-disable-line
 
   useEffect(() => {
-    db.collection("dietitians")
-      .doc(params.dID)
-      .collection("customers")
-      .doc(params.cID)
-      .collection("target")
-      .get()
-      .then((docs) => {
-        const targetArray = [];
-        docs.forEach((doc) => {
-          targetArray.push(doc.data());
-        });
-        setTarget(targetArray);
+    getTargetData(dID, cID).then((docs) => {
+      const targetArray = [];
+      docs.forEach((doc) => {
+        targetArray.push(doc.data());
       });
+      setTarget(targetArray);
+    });
   }, []); //eslint-disable-line
 
   const bindChangeDateRange = (e) => {
@@ -74,16 +69,7 @@ function DietitianTarget() {
             confirmButtonColor: "#1e4d4e",
           }).then((result) => {
             if (result.isConfirmed) {
-              db.collection("dietitians")
-                .doc(params.dID)
-                .collection("customers")
-                .doc(params.cID)
-                .collection("target")
-                .doc(`${timestamp}`)
-                .set(input)
-                .catch((error) => {
-                  console.error("Error:", error);
-                });
+              setTargetData(dID, cID, timestamp, input);
               setTarget([...target, input]);
               setIsClick(false);
             }

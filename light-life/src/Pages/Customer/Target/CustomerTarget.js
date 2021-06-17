@@ -1,40 +1,27 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import { getCustomerData, getTargetData } from "../../../utils/Firebase.js";
 import { useParams } from "react-router-dom";
 import TargetHandler from "../../Components/TargetHandler.js";
 import style from "../../../style/target.module.scss";
 
 function CustomerTarget() {
   const [target, setTarget] = useState(null);
-  const params = useParams();
+  const { cID } = useParams();
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(params.cID)
-      .get()
+    getCustomerData(cID)
       .then((doc) => {
         return doc.data().dietitian;
       })
       .then((res) => {
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(res)
-          .collection("customers")
-          .doc(params.cID)
-          .collection("target")
-          .get()
-          .then((docs) => {
-            const targetArray = [];
-            docs.forEach((doc) => {
-              targetArray.push(doc.data());
-            });
-            setTarget(targetArray);
+        getTargetData(res, cID).then((docs) => {
+          const targetArray = [];
+          docs.forEach((doc) => {
+            targetArray.push(doc.data());
           });
+          setTarget(targetArray);
+        });
       });
-  }, [params.cID]);
+  }, [cID]);
 
   return (
     <>

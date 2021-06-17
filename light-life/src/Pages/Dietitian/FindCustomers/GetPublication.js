@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  getPublicationData,
+  updatePublication,
+  setPublicationData,
+} from "../../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import PublicationData from "./PublicationData.js";
 import style from "../../../style/findCustomers.module.scss";
@@ -19,10 +22,7 @@ function GetPublication() {
   const date = new Date(+new Date() + 8 * 3600 * 1000).getTime();
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("publish")
-      .get()
+    getPublicationData()
       .then((docs) => {
         const publishArray = [];
         if (!docs.empty) {
@@ -33,6 +33,7 @@ function GetPublication() {
         return publishArray;
       })
       .then((res) => {
+        console.log(res);
         res.forEach((m, index) => {
           const startDate = new Date(m.startDate).getTime();
           if (startDate < date && m.whoInvite) {
@@ -41,16 +42,12 @@ function GetPublication() {
                 i.status = "3";
               }
             });
-            firebase
-              .firestore()
-              .collection("publish")
-              .doc(res[index].publishID)
-              .update(res[index]);
+            updatePublication(res[index].publishID, res[index]);
           }
         });
         setPublish(res);
       });
-  }, [date]);
+  }, []);
 
   useEffect(() => {
     if (publish) {
@@ -64,8 +61,6 @@ function GetPublication() {
   };
   const cancelInviteHandler = (e) => {
     const { publishID, whoInvite } = publish[+e.target.id];
-    console.log(publish[+e.target.id]);
-    console.log(publish);
     Swal.fire({
       text: "確定取消嗎?",
       confirmButtonText: "確定",
@@ -74,31 +69,23 @@ function GetPublication() {
       showCancelButton: true,
     }).then((res) => {
       if (res.isConfirmed) {
-        firebase
-          .firestore()
-          .collection("publish")
-          .doc(publishID)
-          .set(
-            {
-              whoInvite: [...whoInvite.filter((i) => i.dietitianID !== dID)],
-            },
-            { merge: true }
-          )
-          .then(() => {
-            firebase
-              .firestore()
-              .collection("publish")
-              .get()
-              .then((docs) => {
-                const publishArray = [];
-                if (!docs.empty) {
-                  docs.forEach((doc) => {
-                    publishArray.push(doc.data());
-                  });
-                }
-                setPublish(publishArray);
+        setPublicationData(
+          publishID,
+          {
+            whoInvite: [...whoInvite.filter((i) => i.dietitianID !== dID)],
+          },
+          true
+        ).then(() => {
+          getPublicationData().then((docs) => {
+            const publishArray = [];
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                publishArray.push(doc.data());
               });
+            }
+            setPublish(publishArray);
           });
+        });
       }
     });
   };

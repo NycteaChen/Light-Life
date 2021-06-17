@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import { logout, getUserWithEmail, onAuth } from "../../utils/Firebase.js";
 import Login from "./Login.js";
 import Swal from "sweetalert2";
 import logo from "../../images/lightlife-horizontal.png";
@@ -60,52 +59,37 @@ function Home() {
   };
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    onAuth().onAuthStateChanged((user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        console.log(user);
+        getUserWithEmail("dietitians", user.email).then((docs) => {
+          if (!docs.empty) {
+            docs.forEach((doc) => {
+              setUser({
+                image: doc.data().image,
+                id: doc.data().id,
+                client: "dietitian",
+              });
+            });
+          }
+        });
 
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .where("email", "==", user.email)
-          .get()
-          .then((docs) => {
-            if (!docs.empty) {
-              docs.forEach((doc) => {
-                setUser({
-                  image: doc.data().image,
-                  id: doc.data().id,
-                  client: "dietitian",
-                });
+        getUserWithEmail("customers", user.email).then((docs) => {
+          if (!docs.empty) {
+            docs.forEach((doc) => {
+              setUser({
+                image: doc.data().image,
+                id: doc.data().id,
+                client: "customer",
               });
-            }
-          });
-        firebase
-          .firestore()
-          .collection("customers")
-          .where("email", "==", user.email)
-          .get()
-          .then((docs) => {
-            if (!docs.empty) {
-              docs.forEach((doc) => {
-                setUser({
-                  image: doc.data().image,
-                  id: doc.data().id,
-                  client: "customer",
-                });
-              });
-            }
-          });
+            });
+          }
+        });
 
         setTimeout(() => {
           setLoad(style.loadFadeout);
         }, 1000);
       } else {
         // User is signed out
-        // ...
-        console.log("no one");
         setTimeout(() => {
           setLoad(style.loadFadeout);
         }, 500);
@@ -129,16 +113,7 @@ function Home() {
       showCancelButton: true,
     }).then((res) => {
       if (res.isConfirmed) {
-        firebase
-          .auth()
-          .signOut()
-          .then(function () {
-            // 登出後強制重整一次頁面
-            window.location.href = "/";
-          })
-          .catch(function (error) {
-            console.log(error.message);
-          });
+        logout();
       }
     });
   };

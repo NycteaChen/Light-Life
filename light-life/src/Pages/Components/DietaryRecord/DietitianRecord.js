@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getDietData, updateCustomerDiet } from "../../../utils/Firebase.js";
+import { getDietData, setCustomerDiet } from "../../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import getIngrediensData from "../../../utils/IngredientsAPI.js";
 import Analysis from "./Analysis.js";
@@ -162,7 +162,7 @@ function DietitianRecord({ date }) {
           confirmButtonColor: "#1e4d4e",
         });
       } else {
-        updateCustomerDiet(dID, cID, date, {
+        setCustomerDiet(dID, cID, date, {
           [meal[1]]: [...(dataAnalysis || []), input],
         });
         setIsSelected(false);
@@ -198,7 +198,7 @@ function DietitianRecord({ date }) {
         setDataAnalysis([
           ...dataAnalysis.filter((d, index) => index !== +e.target.id),
         ]);
-        updateCustomerDiet(dID, cID, date, {
+        setCustomerDiet(dID, cID, date, {
           [meal[1]]: [
             ...dataAnalysis.filter((d, index) => index !== +e.target.id),
           ],
