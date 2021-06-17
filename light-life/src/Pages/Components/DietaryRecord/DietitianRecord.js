@@ -147,7 +147,6 @@ function DietitianRecord({ date }) {
   };
 
   const addNewFoodTable = (e) => {
-    // if (meal[0] === e.target.className.split(" ")[1]) {
     if (e.target.className.includes(meal[0])) {
       if (input.item === "" || !input.item) {
         Swal.fire({
@@ -184,11 +183,6 @@ function DietitianRecord({ date }) {
   window.addEventListener("click", (e) => {
     if (!e.target.className.includes("searchBox")) {
       setIsDisplay(false);
-      // if (input.item) {
-      //   ingredients.find((i) =>
-      //     i["樣品名稱"] === e.target.value ? setIsSelected(true) : null
-      //   );
-      // }
     }
   });
   const removeItemHandler = (e) => {
@@ -221,8 +215,6 @@ function DietitianRecord({ date }) {
     ["晚餐", "customerDinner", "dinner"],
     ["晚點", "customerNight-snack", "night-snack"],
   ];
-
-  console.log(mealDetails);
 
   return (
     <>
@@ -328,7 +320,7 @@ function DietitianRecord({ date }) {
                           <input
                             type="text"
                             name="item"
-                            value={input.item ? input.item : ""}
+                            value={input.item || ""}
                             placeholder="請輸入食材"
                             autoComplete="off"
                             className={style["input-item"]}
@@ -355,7 +347,7 @@ function DietitianRecord({ date }) {
                           <input
                             type="number"
                             name="per"
-                            value={input.per ? input.per : ""}
+                            value={input.per || ""}
                             min="0"
                             onChange={getInputHandler}
                             className={style["input-number"]}
@@ -375,7 +367,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="kcal"
-                                value={input.kcal ? input.kcal : ""}
+                                value={input.kcal || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}
@@ -385,7 +377,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="protein"
-                                value={input.protein ? input.protein : ""}
+                                value={input.protein || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}
@@ -395,7 +387,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="lipid"
-                                value={input.lipid ? input.lipid : ""}
+                                value={input.lipid || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}
@@ -405,9 +397,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="carbohydrate"
-                                value={
-                                  input.carbohydrate ? input.carbohydrate : ""
-                                }
+                                value={input.carbohydrate || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}
@@ -417,7 +407,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="fiber"
-                                value={input.fiber ? input.fiber : ""}
+                                value={input.fiber || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}

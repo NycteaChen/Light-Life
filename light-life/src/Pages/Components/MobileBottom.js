@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import { logout } from "../../utils/Firebase";
 import style from "../../style/mobileBottom.module.scss";
 import Swal from "sweetalert2";
 import exit from "../../images/exit.png";
@@ -17,15 +16,7 @@ export default function MobileBottom() {
       showCancelButton: true,
     }).then((res) => {
       if (res.isConfirmed) {
-        firebase
-          .auth()
-          .signOut()
-          .then(function () {
-            window.location.href = "/";
-          })
-          .catch(function (error) {
-            console.log(error.message);
-          });
+        logout();
       }
     });
   };

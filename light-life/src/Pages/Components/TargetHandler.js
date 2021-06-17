@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  getTargetDate,
+  getMyCustomerData,
+  deleteTarget,
+  updateTarget,
+} from "../../utils/Firebase";
 import Swal from "sweetalert2";
 import style from "../../style/target.module.scss";
 import image from "../../style/image.module.scss";
@@ -9,13 +13,13 @@ import spinner from "../../images/loading.gif";
 import nothing from "../../images/nothing.svg";
 
 function TargetHandler({ target, setTarget }) {
-  const db = firebase.firestore();
   const [isEditing, setIsEditing] = useState(false);
   const [targetIndex, setTargetIndex] = useState(null);
   const [input, setInput] = useState({});
   const [date, setDate] = useState({});
   const pathName = useLocation().pathname;
-  const params = useParams();
+  const { dID } = useParams();
+  const { cID } = useParams();
   const [display, setDisplay] = useState("inline-block");
   useEffect(() => {
     if (target) {
@@ -41,32 +45,19 @@ function TargetHandler({ target, setTarget }) {
   const bindEditHandler = (e) => {
     setIsEditing(true);
     setTargetIndex(e.target.id);
-
-    // setInput(target[e.target.id]);
     setInput({});
     if (targetIndex !== e.target.id) {
-      db.collection("dietitians")
-        .doc(params.dID)
-        .collection("customers")
-        .doc(params.cID)
-        .collection("target")
-        .get()
-        .then((docs) => {
-          const targetArray = [];
-          docs.forEach((doc) => {
-            targetArray.push(doc.data());
-          });
-          setTarget(targetArray);
+      getTargetDate(dID, cID).then((docs) => {
+        const targetArray = [];
+        docs.forEach((doc) => {
+          targetArray.push(doc.data());
         });
+        setTarget(targetArray);
+      });
     } else {
       setInput({ ...input });
     }
-    db.collection("dietitians")
-      .doc(params.dID)
-      .collection("customers")
-      .doc(params.cID)
-      .get()
-      .then((doc) => setDate(doc.data()));
+    getMyCustomerData(dID, cID).then((doc) => setDate(doc.data()));
   };
 
   const bindRemoveTarget = (e) => {
@@ -81,12 +72,7 @@ function TargetHandler({ target, setTarget }) {
       if (res.isConfirmed) {
         setTargetIndex(e.target.id);
         setTarget([...target.filter((t, index) => index !== +e.target.id)]);
-        db.collection("dietitians")
-          .doc(params.dID)
-          .collection("customers")
-          .doc(params.cID)
-          .collection("target")
-          .get()
+        getTargetDate(dID, cID)
           .then((docs) => {
             const docsArray = [];
             docs.forEach((doc) => {
@@ -96,32 +82,14 @@ function TargetHandler({ target, setTarget }) {
             return getID;
           })
           .then((res) => {
-            db.collection("dietitians")
-              .doc(params.dID)
-              .collection("customers")
-              .doc(params.cID)
-              .collection("target")
-              .doc(`${res}`)
-              .delete()
-              .then(() => {
-                console.log("delete");
-              })
-              .catch((error) => {
-                console.log("Error:", error);
-              });
+            deleteTarget(dID, cID, res);
           });
       }
     });
   };
 
   const bindSaveHandler = (e) => {
-    console.log(e.target.id);
-    db.collection("dietitians")
-      .doc(params.dID)
-      .collection("customers")
-      .doc(params.cID)
-      .collection("target")
-      .get()
+    getTargetDate(dID, cID)
       .then((docs) => {
         const docsArray = [];
         docs.forEach((doc) => {
@@ -131,34 +99,21 @@ function TargetHandler({ target, setTarget }) {
         return getID;
       })
       .then((res) => {
-        db.collection("dietitians")
-          .doc(params.dID)
-          .collection("customers")
-          .doc(params.cID)
-          .collection("target")
-          .doc(`${res}`)
-          .update(input);
+        updateTarget(dID, cID, res, input);
       })
       .then(() => {
-        db.collection("dietitians")
-          .doc(params.dID)
-          .collection("customers")
-          .doc(params.cID)
-          .collection("target")
-          .get()
-          .then((docs) => {
-            const targetArray = [];
-            docs.forEach((doc) => {
-              targetArray.push(doc.data());
-            });
-            setTarget(targetArray);
+        getTargetDate(dID, cID).then((docs) => {
+          const targetArray = [];
+          docs.forEach((doc) => {
+            targetArray.push(doc.data());
           });
+          setTarget(targetArray);
+        });
       })
       .then(() => {
         setIsEditing(false);
       });
   };
-  console.log(target);
 
   return (
     <>
@@ -176,8 +131,6 @@ function TargetHandler({ target, setTarget }) {
                         id={index}
                       ></i>
                     </button>
-                    {/* <i className="fa fa-trash-o" aria-hidden="true"></i> */}
-                    {/* <i className="fa fa-trash" aria-hidden="true"></i> */}
                   </div>
                   <div className={style.flexbox}>
                     <div className={style.title}>建立時間</div>
@@ -193,7 +146,7 @@ function TargetHandler({ target, setTarget }) {
                       name="startDate"
                       min={date.startDate}
                       max={date.endDate}
-                      value={input.startDate ? input.startDate : t.startDate}
+                      value={input.startDate || t.startDate}
                       onChange={getInputHandler}
                       className={style["set-content"]}
                     />
@@ -203,9 +156,9 @@ function TargetHandler({ target, setTarget }) {
                     <input
                       type="date"
                       name="endDate"
-                      min={input.endDate ? input.endDate : date.startDate}
+                      min={input.endDate || date.startDate}
                       max={date.endDate}
-                      value={input.endDate ? input.endDate : t.endDate}
+                      value={input.endDate || t.endDate}
                       onChange={getInputHandler}
                       className={style["set-content"]}
                     />
@@ -348,13 +301,13 @@ function TargetHandler({ target, setTarget }) {
                     <div className={style.flexbox}>
                       <div className={style.title}>開始日期</div>
                       <div className={style["set-content"]}>
-                        {input.startDate ? input.startDate : t.startDate}
+                        {input.startDate || t.startDate}
                       </div>
                     </div>
                     <div className={style.flexbox}>
                       <div className={style.title}>結束日期</div>
                       <div className={style["set-content"]}>
-                        {input.endDate ? input.endDate : t.endDate}
+                        {input.endDate || t.endDate}
                       </div>
                     </div>
                   </div>
@@ -362,20 +315,20 @@ function TargetHandler({ target, setTarget }) {
                     <div className={style.flexbox}>
                       <div className={style.title}>目標體重</div>
                       <div className={style["set-content"]}>
-                        {input.weight ? input.weight : t.weight} kg
+                        {input.weight || t.weight} kg
                       </div>
                     </div>
                     <div className={style.flexbox}>
                       <div className={style.title}>目標水分</div>
                       <div className={style["set-content"]}>
-                        {input.water ? input.water : t.water} cc
+                        {input.water || t.water} cc
                       </div>
                     </div>
                   </div>
                   <div className={style.flexbox}>
                     <div className={style.title}>其他</div>
                     <div className={style["set-content"]}>
-                      {input.other ? input.other : t.other}
+                      {input.other || t.other}
                     </div>
                   </div>
                 </div>
