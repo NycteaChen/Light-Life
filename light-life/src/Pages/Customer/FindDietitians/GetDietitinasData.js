@@ -5,7 +5,7 @@ import image from "../../../style/image.module.scss";
 import spinner from "../../../images/loading.gif";
 import nothing from "../../../images/nothing.svg";
 
-function GetDietitiansData({ props, setReserve, profile, reserve }) {
+function GetDietitiansData({ props, setReserve, reserve }) {
   const [isChecked, setIsChecked] = useState(false); //false
   const [checkIndex, setCheckIndex] = useState("");
   const [display, setDisplay] = useState("inline-block");

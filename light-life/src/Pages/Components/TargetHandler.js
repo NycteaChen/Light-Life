@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import {
-  getTargetDate,
+  getTargetData,
   getMyCustomerData,
   deleteTarget,
   updateTarget,
@@ -47,7 +47,7 @@ function TargetHandler({ target, setTarget }) {
     setTargetIndex(e.target.id);
     setInput({});
     if (targetIndex !== e.target.id) {
-      getTargetDate(dID, cID).then((docs) => {
+      getTargetData(dID, cID).then((docs) => {
         const targetArray = [];
         docs.forEach((doc) => {
           targetArray.push(doc.data());
@@ -72,7 +72,7 @@ function TargetHandler({ target, setTarget }) {
       if (res.isConfirmed) {
         setTargetIndex(e.target.id);
         setTarget([...target.filter((t, index) => index !== +e.target.id)]);
-        getTargetDate(dID, cID)
+        getTargetData(dID, cID)
           .then((docs) => {
             const docsArray = [];
             docs.forEach((doc) => {
@@ -89,7 +89,7 @@ function TargetHandler({ target, setTarget }) {
   };
 
   const bindSaveHandler = (e) => {
-    getTargetDate(dID, cID)
+    getTargetData(dID, cID)
       .then((docs) => {
         const docsArray = [];
         docs.forEach((doc) => {
@@ -102,7 +102,7 @@ function TargetHandler({ target, setTarget }) {
         updateTarget(dID, cID, res, input);
       })
       .then(() => {
-        getTargetDate(dID, cID).then((docs) => {
+        getTargetData(dID, cID).then((docs) => {
           const targetArray = [];
           docs.forEach((doc) => {
             targetArray.push(doc.data());

@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import {
+  getDietitiansData,
+  getCustomersData,
+  getUserWithEmail,
+  sendPasswordEmail,
+  normalLoginHandler,
+  signUp,
+  initProfileData,
+  providerLogin,
+  onAuth,
+} from "../../utils/Firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from "../../style/login.module.scss";
 import logo from "../../images/lightlife-straight.png";
@@ -31,10 +42,7 @@ function Login({ display, setDisplay }) {
   const [emails, setEmails] = useState([]);
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .get()
+    getDietitiansData()
       .then((docs) => {
         const emailsArray = [];
         docs.forEach((doc) => {
@@ -43,16 +51,12 @@ function Login({ display, setDisplay }) {
         return emailsArray;
       })
       .then((emailsArray) => {
-        firebase
-          .firestore()
-          .collection("customers")
-          .get()
-          .then((docs) => {
-            docs.forEach((doc) => {
-              emailsArray.push(doc.data().email);
-            });
-            setEmails(emailsArray);
+        getCustomersData().then((docs) => {
+          docs.forEach((doc) => {
+            emailsArray.push(doc.data().email);
           });
+          setEmails(emailsArray);
+        });
       });
   }, []);
 
@@ -99,44 +103,34 @@ function Login({ display, setDisplay }) {
       setDietitian(style.active);
       setCustomer("");
       if (valid.email && login === style.appear) {
-        firebase
-          .firestore()
-          .collection(`dietitians`)
-          .where("email", "==", `${valid.email}`)
-          .get()
-          .then((querySnapshot) => {
-            if (querySnapshot.empty) {
-              setValidStyle({
-                email: style.invalid,
-              });
-            } else {
-              setValidStyle({
-                email: style.valid,
-              });
-            }
-          });
+        getUserWithEmail("dietitians", valid.email).then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            setValidStyle({
+              email: style.invalid,
+            });
+          } else {
+            setValidStyle({
+              email: style.valid,
+            });
+          }
+        });
       }
     } else {
       setCustomer(style.active);
       setClient("customer");
       setDietitian("");
       if (valid.email && login === style.appear) {
-        firebase
-          .firestore()
-          .collection(`customers`)
-          .where("email", "==", `${valid.email}`)
-          .get()
-          .then((querySnapshot) => {
-            if (querySnapshot.empty) {
-              setValidStyle({
-                email: style.invalid,
-              });
-            } else {
-              setValidStyle({
-                email: style.valid,
-              });
-            }
-          });
+        getUserWithEmail("customers", valid.email).then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            setValidStyle({
+              email: style.invalid,
+            });
+          } else {
+            setValidStyle({
+              email: style.valid,
+            });
+          }
+        });
       }
     }
   };
@@ -167,10 +161,8 @@ function Login({ display, setDisplay }) {
 
   const bindSendPasswordEmailButton = () => {
     if (email !== "") {
-      firebase
-        .auth()
-        .sendPasswordResetEmail(email)
-        .then(function () {
+      sendPasswordEmail(email)
+        .then(() => {
           Swal.fire({
             title: "已發送信件至信箱",
             text: "請按照信件說明重設密碼",
@@ -216,12 +208,8 @@ function Login({ display, setDisplay }) {
             emails.find((f) => f === e.target.value) &&
             client === "dietitian"
           ) {
-            firebase
-              .firestore()
-              .collection(`dietitians`)
-              .where("email", "==", `${e.target.value}`)
-              .get()
-              .then((querySnapshot) => {
+            getUserWithEmail("dietitians", e.target.value).then(
+              (querySnapshot) => {
                 if (querySnapshot.empty) {
                   setValidStyle({
                     email: style.invalid,
@@ -231,17 +219,14 @@ function Login({ display, setDisplay }) {
                     email: style.valid,
                   });
                 }
-              });
+              }
+            );
           } else if (
             emails.find((f) => f === e.target.value) &&
             client === "customer"
           ) {
-            firebase
-              .firestore()
-              .collection(`customers`)
-              .where("email", "==", `${e.target.value}`)
-              .get()
-              .then((querySnapshot) => {
+            getUserWithEmail("customers", e.target.value).then(
+              (querySnapshot) => {
                 if (querySnapshot.empty) {
                   setValidStyle({
                     email: style.invalid,
@@ -251,7 +236,8 @@ function Login({ display, setDisplay }) {
                     email: style.valid,
                   });
                 }
-              });
+              }
+            );
           } else {
             setValidStyle({ ...validStyle, email: style.invalid });
           }
@@ -300,52 +286,43 @@ function Login({ display, setDisplay }) {
 
   const loginHandler = () => {
     if (valid.email && valid.password) {
-      firebase
-        .firestore()
-        .collection(`${client}s`)
-        .where("email", "==", `${valid.email}`)
-        .get()
-        .then((querySnapshot) => {
-          if (!querySnapshot.empty) {
-            let userID;
-            querySnapshot.forEach((i) => {
-              userID = i.data().id;
-            });
+      getUserWithEmail(client, valid.email).then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          let userID;
+          querySnapshot.forEach((i) => {
+            userID = i.data().id;
+          });
+          normalLoginHandler(valid.email, valid.password)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              console.log(user);
+              setShowMessage({ welcomeback: style.showloginMessage });
 
-            firebase
-              .auth()
-              .signInWithEmailAndPassword(valid.email, valid.password)
-              .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
-                console.log(user);
-                setShowMessage({ welcomeback: style.showloginMessage });
-
-                setTimeout(() => {
-                  setInput({});
-                  setValid({});
-                  setValidStyle({});
-                  window.location.href = `/${client}/${userID}`;
-                }, 1500);
-              })
-              .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode + errorMessage);
-                setShowMessage({ wrongPassword: style.showMessage });
-                setValidStyle({
-                  email: style.valid,
-                  password: style.invalid,
-                });
+              setTimeout(() => {
+                setInput({});
+                setValid({});
+                setValidStyle({});
+                window.location.href = `/${client}/${userID}`;
+              }, 1500);
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log(errorCode + errorMessage);
+              setShowMessage({ wrongPassword: style.showMessage });
+              setValidStyle({
+                email: style.valid,
+                password: style.invalid,
               });
-          } else {
-            setShowMessage({ wrongAccount: style.showMessage });
-            setValidStyle({
-              email: style.invalid,
-              // password: style.invalid,
             });
-          }
-        });
+        } else {
+          setShowMessage({ wrongAccount: style.showMessage });
+          setValidStyle({
+            email: style.invalid,
+            // password: style.invalid,
+          });
+        }
+      });
     } else {
       setShowMessage({
         incomplete: style.showMessage,
@@ -372,14 +349,10 @@ function Login({ display, setDisplay }) {
           confirmButtonColor: "#1e4d4e",
         }).then((res) => {
           if (res.isConfirmed) {
-            firebase
-              .auth()
-              .createUserWithEmailAndPassword(valid.email, valid.password)
-              .then((userCredential) => {
-                // Signed in
+            signUp(valid.email, valid.password)
+              .then(() => {
                 // const user = userCredential.user;
-
-                const { currentUser } = firebase.auth();
+                const { currentUser } = onAuth();
                 currentUser
                   .sendEmailVerification()
                   .then(function () {
@@ -406,18 +379,14 @@ function Login({ display, setDisplay }) {
                     });
                   });
 
-                firebase
-                  .firestore()
-                  .collection(`${client}s`)
+                initProfileData(client)
                   .add({
                     name: valid.name,
                     image: noImage,
                     email: valid.email,
                   })
                   .then((docRef) => {
-                    firebase
-                      .firestore()
-                      .collection(`${client}s`)
+                    initProfileData(client)
                       .doc(docRef.id)
                       .update("id", docRef.id);
                   })
@@ -458,98 +427,81 @@ function Login({ display, setDisplay }) {
 
   const googleLoginHandler = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
+    providerLogin(provider)
       .then((result) => {
         const user = result.user;
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .where("email", "==", user.email)
-          .get()
-          .then((res) => {
-            if (!res.empty) {
-              let id;
-              res.forEach((i) => (id = i.data().id));
+        getUserWithEmail("dietitians", user.email).then((res) => {
+          if (!res.empty) {
+            let id;
+            res.forEach((i) => (id = i.data().id));
+            setShowMessage({ welcomeback: style.showloginMessage });
+            setTimeout(() => {
+              window.location.href = `/dietitian/${id}`;
+            }, 1500);
+          } else {
+            getUserWithEmail("customers", user.email).then((res) => {
+              if (!res.empty) {
+                let id;
+                res.forEach((i) => (id = i.data().id));
+                setShowMessage({ welcomeback: style.showloginMessage });
+                setTimeout(() => {
+                  window.location.href = `/customer/${id}`;
+                }, 1500);
+              } else {
+                Swal.fire({
+                  title: `確定以${
+                    client === "dietitian" ? "營養師" : "客戶"
+                  }身分登入嗎?`,
+                  text: `若您是${
+                    client === "dietitian" ? "客戶" : "營養師"
+                  }，請選擇${client === "dietitian" ? "客戶" : "營養師"}端註冊`,
+                  icon: "warning",
+                  showCancelButton: true,
+                  cancelButtonText: "取消",
+                  confirmButtonText: "確定",
+                  confirmButtonColor: "#1e4d4e",
+                }).then((res) => {
+                  if (res.isConfirmed) {
+                    initProfileData(client)
+                      .add({
+                        name: user.displayName,
+                        image: user.photoURL,
+                        email: user.email,
+                      })
+                      .then((docRef) => {
+                        initProfileData(client)
+                          .doc(docRef.id)
+                          .update("id", docRef.id);
 
-              setShowMessage({ welcomeback: style.showloginMessage });
-              setTimeout(() => {
-                window.location.href = `/dietitian/${id}`;
-              }, 1500);
-            } else {
-              firebase
-                .firestore()
-                .collection("customers")
-                .where("email", "==", user.email)
-                .get()
-                .then((res) => {
-                  if (!res.empty) {
-                    let id;
-                    res.forEach((i) => (id = i.data().id));
-                    setShowMessage({ welcomeback: style.showloginMessage });
-                    setTimeout(() => {
-                      window.location.href = `/customer/${id}`;
-                    }, 1500);
+                        return docRef.id;
+                      })
+                      .then((res) => {
+                        setShowMessage({
+                          welcomeback: style.showloginMessage,
+                        });
+                        setTimeout(() => {
+                          window.location.href = `/${client}/${res}`;
+                        }, 1500);
+                      });
                   } else {
-                    Swal.fire({
-                      title: `確定以${
-                        client === "dietitian" ? "營養師" : "客戶"
-                      }身分登入嗎?`,
-                      text: `若您是${
-                        client === "dietitian" ? "客戶" : "營養師"
-                      }，請選擇${
-                        client === "dietitian" ? "客戶" : "營養師"
-                      }端註冊`,
-                      icon: "warning",
-                      showCancelButton: true,
-                      cancelButtonText: "取消",
-                      confirmButtonText: "確定",
-                      confirmButtonColor: "#1e4d4e",
-                    }).then((res) => {
-                      if (res.isConfirmed) {
-                        firebase
-                          .firestore()
-                          .collection(`${client}s`)
-                          .add({
-                            name: user.displayName,
-                            image: user.photoURL,
-                            email: user.email,
-                          })
-                          .then((docRef) => {
-                            firebase
-                              .firestore()
-                              .collection(`${client}s`)
-                              .doc(docRef.id)
-                              .update("id", docRef.id);
-
-                            return docRef.id;
-                          })
-                          .then((res) => {
-                            setShowMessage({
-                              welcomeback: style.showloginMessage,
-                            });
-                            setTimeout(() => {
-                              window.location.href = `/${client}/${res}`;
-                            }, 1500);
-                          });
-                      } else {
-                        const user = firebase.auth().currentUser;
-                        user
-                          .delete()
-                          .then(() => {
-                            // User deleted.
-                          })
-                          .catch((error) => {
-                            // An error ocurred
-                            // ...
-                          });
-                      }
-                    });
+                    const user = onAuth().currentUser;
+                    user
+                      .delete()
+                      .then(() => {
+                        // User deleted.
+                        console.log("delete user");
+                      })
+                      .catch((error) => {
+                        // An error ocurred
+                        // ...
+                        console.log(error);
+                      });
                   }
                 });
-            }
-          });
+              }
+            });
+          }
+        });
       })
       .catch((error) => {
         // Handle Errors here.
@@ -573,98 +525,81 @@ function Login({ display, setDisplay }) {
   };
   const facebookLoginHandler = () => {
     const provider = new firebase.auth.FacebookAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
+    providerLogin(provider)
       .then((result) => {
         const user = result.user;
 
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .where("email", "==", user.email)
-          .get()
-          .then((res) => {
-            if (!res.empty) {
-              let id;
-              res.forEach((i) => (id = i.data().id));
-              setShowMessage({ welcomeback: style.showloginMessage });
-              setTimeout(() => {
-                window.location.href = `/dietitian/${id}`;
-              }, 1500);
-            } else {
-              firebase
-                .firestore()
-                .collection("customers")
-                .where("email", "==", user.email)
-                .get()
-                .then((res) => {
-                  if (!res.empty) {
-                    let id;
-                    res.forEach((i) => (id = i.data().id));
-                    setShowMessage({ welcomeback: style.showloginMessage });
-                    setTimeout(() => {
-                      window.location.href = `/customer/${id}`;
-                    }, 1500);
-                  } else {
-                    Swal.fire({
-                      title: `確定以${
-                        client === "dietitian" ? "營養師" : "客戶"
-                      }身分登入嗎?`,
-                      text: `若您是${
-                        client === "dietitian" ? "客戶" : "營養師"
-                      }，請選擇${
-                        client === "dietitian" ? "客戶" : "營養師"
-                      }端註冊`,
-                      icon: "warning",
-                      showCancelButton: true,
-                      cancelButtonText: "取消",
-                      confirmButtonText: "確定",
-                      confirmButtonColor: "#1e4d4e",
-                    }).then((res) => {
-                      if (res.isConfirmed) {
-                        firebase
-                          .firestore()
-                          .collection(`${client}s`)
-                          .add({
-                            name: user.displayName,
-                            image: `${user.photoURL}?height=500`,
-                            email: user.email,
-                          })
-                          .then((docRef) => {
-                            firebase
-                              .firestore()
-                              .collection(`${client}s`)
-                              .doc(docRef.id)
-                              .update("id", docRef.id);
+        getUserWithEmail("dietitians", user.email).then((res) => {
+          if (!res.empty) {
+            let id;
+            res.forEach((i) => (id = i.data().id));
+            setShowMessage({ welcomeback: style.showloginMessage });
+            setTimeout(() => {
+              window.location.href = `/dietitian/${id}`;
+            }, 1500);
+          } else {
+            getUserWithEmail("customers", user.email).then((res) => {
+              if (!res.empty) {
+                let id;
+                res.forEach((i) => (id = i.data().id));
+                setShowMessage({ welcomeback: style.showloginMessage });
+                setTimeout(() => {
+                  window.location.href = `/customer/${id}`;
+                }, 1500);
+              } else {
+                Swal.fire({
+                  title: `確定以${
+                    client === "dietitian" ? "營養師" : "客戶"
+                  }身分登入嗎?`,
+                  text: `若您是${
+                    client === "dietitian" ? "客戶" : "營養師"
+                  }，請選擇${client === "dietitian" ? "客戶" : "營養師"}端註冊`,
+                  icon: "warning",
+                  showCancelButton: true,
+                  cancelButtonText: "取消",
+                  confirmButtonText: "確定",
+                  confirmButtonColor: "#1e4d4e",
+                }).then((res) => {
+                  if (res.isConfirmed) {
+                    initProfileData(client)
+                      .add({
+                        name: user.displayName,
+                        image: `${user.photoURL}?height=500`,
+                        email: user.email,
+                      })
+                      .then((docRef) => {
+                        initProfileData(client)
+                          .doc(docRef.id)
+                          .update("id", docRef.id);
 
-                            return docRef.id;
-                          })
-                          .then((res) => {
-                            setShowMessage({
-                              welcomeback: style.showloginMessage,
-                            });
-                            setTimeout(() => {
-                              window.location.href = `/${client}/${res}`;
-                            }, 1500);
-                          });
-                      } else {
-                        const user = firebase.auth().currentUser;
-                        user
-                          .delete()
-                          .then(() => {
-                            // User deleted.
-                          })
-                          .catch((error) => {
-                            // An error ocurred
-                            // ...
-                          });
-                      }
-                    });
+                        return docRef.id;
+                      })
+                      .then((res) => {
+                        setShowMessage({
+                          welcomeback: style.showloginMessage,
+                        });
+                        setTimeout(() => {
+                          window.location.href = `/${client}/${res}`;
+                        }, 1500);
+                      });
+                  } else {
+                    const user = onAuth().currentUser;
+                    user
+                      .delete()
+                      .then(() => {
+                        // User deleted.
+                        console.log("delete user");
+                      })
+                      .catch((error) => {
+                        // An error ocurred
+                        console.log(error);
+                      });
                   }
                 });
-            }
-          });
+              }
+            });
+          }
+        });
       })
       .catch((error) => {
         // Handle Errors here.

@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  getCustomerData,
+  getCustomerPublish,
+  getReserveData,
+  setReservation,
+} from "../../../utils/Firebase";
 import Swal from "sweetalert2";
 import style from "../../../style/findDietitian.module.scss";
 function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
-  const params = useParams();
+  const { cID } = useParams();
   const [input, setInput] = useState({});
-  const db = firebase.firestore();
   const [profile, setProfile] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -30,12 +33,8 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
     return time;
   };
   useEffect(() => {
-    db.collection("customers")
-      .doc(params.cID)
-      .get()
-      .then((doc) => {
-        setProfile(doc.data());
-      });
+    getCustomerData(cID).then((doc) => setProfile(doc.data()));
+
     setStartDate({
       min: initStartDate.toISOString().substr(0, 10),
       max: startMostDate.toISOString().substr(0, 10),
@@ -44,28 +43,25 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       min: endLessDate.toISOString().substr(0, 10),
       max: endMostDate.toISOString().substr(0, 10),
     });
-    db.collection("publish")
-      .where("id", "==", params.cID)
-      .get()
-      .then((docs) => {
-        const occupation = reserve
-          .filter((r) => r.status === "0" || r.status === "1")
-          .map((u) => [
-            transDateToTime(u.reserveStartDate),
-            transDateToTime(u.reserveEndDate),
-          ]);
-        if (!docs.empty) {
-          docs.forEach((doc) => {
-            if (doc.data().status === "1" || doc.data().status === "0") {
-              occupation.push([
-                transDateToTime(doc.data().startDate),
-                transDateToTime(doc.data().endDate),
-              ]);
-            }
-          });
-        }
-        setOccupationTime(occupation);
-      });
+    getCustomerPublish(cID).then((docs) => {
+      const occupation = reserve
+        .filter((r) => r.status === "0" || r.status === "1")
+        .map((u) => [
+          transDateToTime(u.reserveStartDate),
+          transDateToTime(u.reserveEndDate),
+        ]);
+      if (!docs.empty) {
+        docs.forEach((doc) => {
+          if (doc.data().status === "1" || doc.data().status === "0") {
+            occupation.push([
+              transDateToTime(doc.data().startDate),
+              transDateToTime(doc.data().endDate),
+            ]);
+          }
+        });
+      }
+      setOccupationTime(occupation);
+    });
   }, []); //eslint-disable-line
 
   useEffect(() => {
@@ -116,7 +112,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
           dietitian: props.id,
           dietitianName: props.name,
           image: props.image,
-          inviterID: params.cID,
+          inviterID: cID,
           inviterName: profile.name,
           inviterGender: profile.gender,
           status: "0",
@@ -130,7 +126,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
         dietitian: props.id,
         dietitianName: props.name,
         image: props.image,
-        inviterID: params.cID,
+        inviterID: cID,
         inviterName: profile.name,
         inviterGender: profile.gender,
         status: "0",
@@ -171,21 +167,17 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
         confirmButtonColor: "#1e4d4e",
       }).then((res) => {
         if (res.isConfirmed) {
-          db.collection("reserve")
-            .doc(`${timestamp}`)
-            .set({ ...input, reserveID: `${timestamp}` })
+          setReservation(timestamp, { ...input, reserveID: `${timestamp}` })
             .then(() => {
-              db.collection("reserve")
-                .get()
-                .then((docs) => {
-                  const reserveArray = [];
-                  docs.forEach((doc) => {
-                    if (doc.data().inviterID === params.cID) {
-                      reserveArray.push(doc.data());
-                    }
-                  });
-                  setReserve(reserveArray);
+              getReserveData().then((docs) => {
+                const reserveArray = [];
+                docs.forEach((doc) => {
+                  if (doc.data().inviterID === cID) {
+                    reserveArray.push(doc.data());
+                  }
                 });
+                setReserve(reserveArray);
+              });
             })
             .then(() => {
               Swal.fire({
@@ -232,7 +224,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
               <div>開始</div>
               <input
                 type="date"
-                value={input.reserveStartDate ? input.reserveStartDate : ""}
+                value={input.reserveStartDate || ""}
                 min={startDate ? startDate.min : ""}
                 max={startDate ? startDate.max : ""}
                 name="reserveStartDate"
@@ -243,7 +235,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
               <div>結束</div>
               <input
                 type="date"
-                value={input.reserveEndDate ? input.reserveEndDate : ""}
+                value={input.reserveEndDate || ""}
                 min={endDate ? endDate.min : ""}
                 max={endDate ? endDate.max : ""}
                 name="reserveEndDate"

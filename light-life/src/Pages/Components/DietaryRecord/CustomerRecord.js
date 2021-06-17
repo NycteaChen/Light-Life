@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import {
   getCustomerData,
   getDietData,
-  updateCustomerDiet,
+  setCustomerDiet,
 } from "../../../utils/Firebase.js";
 import Analysis from "./Analysis.js";
 import style from "../../../style/dietary.module.scss";
@@ -136,7 +136,7 @@ function CustomerRecord({ date, count, setCount }) {
             ...mealDetails.images.filter((i, idx) => idx !== +e.target.id),
           ],
         });
-        updateCustomerDiet(dID, cID, date, {
+        setCustomerDiet(dID, cID, date, {
           [meal]: {
             images: [
               ...mealDetails.images.filter((i, idx) => idx !== +e.target.id),
@@ -189,7 +189,7 @@ function CustomerRecord({ date, count, setCount }) {
             // delete input.imageUrl;
             // delete mealDetails.images;
 
-            updateCustomerDiet(dID, cID, date, {
+            setCustomerDiet(dID, cID, date, {
               [meal]: { ...input, images: imageUrlsArray },
             });
             setMealDetails({ ...mealDetails, images: imageUrlsArray });
@@ -205,7 +205,7 @@ function CustomerRecord({ date, count, setCount }) {
       } else {
         delete input.imageFile;
         // delete input.imageUrl;
-        updateCustomerDiet(dID, cID, date, { [meal]: input });
+        setCustomerDiet(dID, cID, date, { [meal]: input });
         Swal.fire({
           text: "儲存成功",
           icon: "success",

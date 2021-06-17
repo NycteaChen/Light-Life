@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "firebase/firestore";
+import {
+  getCustomerData,
+  getDietitianData,
+  setPublicationData,
+  getPublicationData,
+} from "../../../utils/Firebase";
 import Swal from "sweetalert2";
 import noImage from "../../../images/noimage.png";
-import firebase from "firebase/app";
 import style from "../../../style/findCustomers.module.scss";
 
 function PublicationData({ publish, display, setDisplay, setPublish }) {
@@ -14,23 +18,12 @@ function PublicationData({ publish, display, setDisplay, setPublish }) {
   const today = date.toISOString().substr(0, 10);
   const [name, setName] = useState("");
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(publish.id)
-      .get()
-      .then((res) => {
-        console.log(res);
-        setProfile(res.data());
-      });
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dID)
-      .get()
-      .then((doc) => {
-        setName(doc.data().name);
-      });
+    getCustomerData(publish.id).then((res) => {
+      setProfile(res.data());
+    });
+    getDietitianData(dID).then((doc) => {
+      setName(doc.data().name);
+    });
   }, []); //eslint-disable-line
 
   const messageHandler = (e) => {
@@ -54,32 +47,25 @@ function PublicationData({ publish, display, setDisplay, setPublish }) {
           showCancelButton: true,
         }).then((res) => {
           if (res.isConfirmed) {
-            firebase
-              .firestore()
-              .collection("publish")
-              .doc(publish.publishID)
-              .set(
-                {
-                  whoInvite: [...publish.whoInvite, invite],
-                },
-                { merge: true }
-              )
-              .then(() => {
-                firebase
-                  .firestore()
-                  .collection("publish")
-                  .get()
-                  .then((docs) => {
-                    const publishArray = [];
-                    if (!docs.empty) {
-                      docs.forEach((doc) => {
-                        publishArray.push(doc.data());
-                      });
-                    }
-                    setPublish(publishArray);
-                  })
-                  .then(() => setDisplay("none"));
-              });
+            setPublicationData(
+              publish.publishID,
+              {
+                whoInvite: [...publish.whoInvite, invite],
+              },
+              true
+            ).then(() => {
+              getPublicationData()
+                .then((docs) => {
+                  const publishArray = [];
+                  if (!docs.empty) {
+                    docs.forEach((doc) => {
+                      publishArray.push(doc.data());
+                    });
+                  }
+                  setPublish(publishArray);
+                })
+                .then(() => setDisplay("none"));
+            });
           }
         });
       } else {
@@ -91,32 +77,25 @@ function PublicationData({ publish, display, setDisplay, setPublish }) {
           showCancelButton: true,
         }).then((res) => {
           if (res.isConfirmed) {
-            firebase
-              .firestore()
-              .collection("publish")
-              .doc(publish.publishID)
-              .set(
-                {
-                  whoInvite: [invite],
-                },
-                { merge: true }
-              )
-              .then(() => {
-                firebase
-                  .firestore()
-                  .collection("publish")
-                  .get()
-                  .then((docs) => {
-                    const publishArray = [];
-                    if (!docs.empty) {
-                      docs.forEach((doc) => {
-                        publishArray.push(doc.data());
-                      });
-                    }
-                    setPublish(publishArray);
-                  })
-                  .then(() => setDisplay("none"));
-              });
+            setPublicationData(
+              publish.publishID,
+              {
+                whoInvite: [invite],
+              },
+              true
+            ).then(() => {
+              getPublicationData()
+                .then((docs) => {
+                  const publishArray = [];
+                  if (!docs.empty) {
+                    docs.forEach((doc) => {
+                      publishArray.push(doc.data());
+                    });
+                  }
+                  setPublish(publishArray);
+                })
+                .then(() => setDisplay("none"));
+            });
           }
         });
       }

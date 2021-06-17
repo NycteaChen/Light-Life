@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "firebase/firestore";
 import ShowInviterData from "./ShowInviterData.js";
 import style from "../../../style/whoInvite.module.scss";
 import image from "../../../style/image.module.scss";

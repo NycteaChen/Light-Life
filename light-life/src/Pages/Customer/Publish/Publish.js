@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  getCustomerPublish,
+  updatePublication,
+  getCustomerData,
+  deletePublication,
+  addPublication,
+} from "../../../utils/Firebase";
 import Swal from "sweetalert2";
 import style from "../../../style/publish.module.scss";
 import image from "../../../style/image.module.scss";
@@ -37,59 +42,45 @@ function Publish({ reserve }) {
   };
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("publish")
-      .where("id", "==", cID)
-      .get()
-      .then((docs) => {
-        const occupation = reserve
-          .filter((r) => r.status === "0" || r.status === "1")
-          .map((u) => [
-            transDateToTime(u.reserveStartDate),
-            transDateToTime(u.reserveEndDate),
-          ]);
-        if (!docs.empty) {
-          const publishArray = [];
-          const oldPublishArray = [];
-          docs.forEach((doc) => {
-            if (doc.data().status === "1" || doc.data().status === "0") {
-              occupation.push([
-                transDateToTime(doc.data().startDate),
-                transDateToTime(doc.data().endDate),
-              ]);
-            }
-            const startDate = new Date(doc.data().startDate).getTime();
-            if (startDate > today && doc.data().status === "0") {
-              publishArray.push(doc.data());
-            } else if (startDate <= today && doc.data().status === "0") {
-              const newData = doc.data();
-              newData.status = "3";
-              oldPublishArray.push(newData);
-              firebase
-                .firestore()
-                .collection("publish")
-                .doc(doc.data().publishID)
-                .update(newData);
-            } else {
-              oldPublishArray.push(doc.data());
-            }
-          });
-          setOccupationTime(occupation);
-          setOldPublish(oldPublishArray);
-          setPublishData(publishArray);
-        } else {
-          setOccupationTime(occupation);
-          setPublishData([]);
-          setOldPublish([]);
-        }
-      });
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(cID)
-      .get()
-      .then((res) => setProfile(res.data()));
+    getCustomerPublish(cID).then((docs) => {
+      const occupation = reserve
+        .filter((r) => r.status === "0" || r.status === "1")
+        .map((u) => [
+          transDateToTime(u.reserveStartDate),
+          transDateToTime(u.reserveEndDate),
+        ]);
+      if (!docs.empty) {
+        const publishArray = [];
+        const oldPublishArray = [];
+        docs.forEach((doc) => {
+          if (doc.data().status === "1" || doc.data().status === "0") {
+            occupation.push([
+              transDateToTime(doc.data().startDate),
+              transDateToTime(doc.data().endDate),
+            ]);
+          }
+          const startDate = new Date(doc.data().startDate).getTime();
+          if (startDate > today && doc.data().status === "0") {
+            publishArray.push(doc.data());
+          } else if (startDate <= today && doc.data().status === "0") {
+            const newData = doc.data();
+            newData.status = "3";
+            oldPublishArray.push(newData);
+            updatePublication(doc.data().publishID, newData);
+          } else {
+            oldPublishArray.push(doc.data());
+          }
+        });
+        setOccupationTime(occupation);
+        setOldPublish(oldPublishArray);
+        setPublishData(publishArray);
+      } else {
+        setOccupationTime(occupation);
+        setPublishData([]);
+        setOldPublish([]);
+      }
+    });
+    getCustomerData(cID).then((res) => setProfile(res.data()));
     setStartDate({
       min: initStartDate.toISOString().substr(0, 10),
       max: startMostDate.toISOString().substr(0, 10),
@@ -130,14 +121,9 @@ function Publish({ reserve }) {
             confirmButtonColor: "#1e4d4e",
           }).then((res) => {
             if (res.isConfirmed) {
-              firebase
-                .firestore()
-                .collection("publish")
-                .doc(publishData[0].publishID)
-                .delete()
-                .then(() => {
-                  setPublishData([]);
-                });
+              deletePublication(publishData[0].publishID).then(() => {
+                setPublishData([]);
+              });
             }
           });
         } else {
@@ -247,16 +233,9 @@ function Publish({ reserve }) {
           confirmButtonColor: "#1e4d4e",
         }).then((res) => {
           if (res.isConfirmed) {
-            firebase
-              .firestore()
-              .collection("publish")
-              .add(input)
+            addPublication(input)
               .then((res) => {
-                firebase
-                  .firestore()
-                  .collection("publish")
-                  .doc(res.id)
-                  .update({ publishID: res.id });
+                updatePublication(res.id, { publishID: res.id });
                 return res.id;
               })
               .then((res) => {
