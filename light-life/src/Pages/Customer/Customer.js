@@ -469,7 +469,11 @@ function Customer() {
                   onClick={activeHandler}
                   to={`/customer/${profile.id}/profile`}
                 >
-                  <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                  <i
+                    className="fa fa-user"
+                    aria-hidden="true"
+                    title="profile"
+                  ></i>
                   <div title="profile">會員資料</div>
                 </Link>
                 {profile.dietitian ? (
@@ -480,7 +484,7 @@ function Customer() {
                     to={`/customer/${profile.id}/dietary`}
                   >
                     <i
-                      class="fa fa-cutlery"
+                      className="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
@@ -492,7 +496,7 @@ function Customer() {
                     onClick={alertHandler}
                   >
                     <i
-                      class="fa fa-cutlery"
+                      className="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
@@ -506,7 +510,7 @@ function Customer() {
                   to={`/customer/${profile.id}/target`}
                 >
                   <i
-                    class="fa fa-bullseye"
+                    className="fa fa-bullseye"
                     aria-hidden="true"
                     title="target"
                   ></i>
@@ -520,7 +524,7 @@ function Customer() {
                   to={`/customer/${customerID}/publish`}
                 >
                   <i
-                    class="fa fa-file-text-o"
+                    className="fa fa-file-text-o"
                     aria-hidden="true"
                     title="publish"
                   ></i>
@@ -534,7 +538,7 @@ function Customer() {
                   to={`/customer/${customerID}/findDietitians`}
                 >
                   <i
-                    class="fa fa-search"
+                    className="fa fa-search"
                     aria-hidden="true"
                     title="findDietitian"
                   ></i>
@@ -548,7 +552,7 @@ function Customer() {
                   to={`/customer/${customerID}/reserve-list`}
                 >
                   <i
-                    class="fa fa-list-alt"
+                    className="fa fa-list-alt"
                     aria-hidden="true"
                     title="reserve"
                   ></i>
@@ -559,7 +563,7 @@ function Customer() {
                   onClick={activeHandler}
                   to={`/customer/${customerID}/`}
                 >
-                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                  <i className="fa fa-arrow-left" aria-hidden="true"></i>
                   <div>會員主頁</div>
                 </Link>
                 <span onClick={logoutHandler}>
@@ -589,7 +593,11 @@ function Customer() {
                   to={`/customer/${profile.id}/profile`}
                   onClick={activeHandler}
                 >
-                  <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                  <i
+                    className="fa fa-user"
+                    aria-hidden="true"
+                    title="profile"
+                  ></i>
                   <div title="profile">會員資料</div>
                 </Link>
                 {profile.dietitian ? (
@@ -600,7 +608,7 @@ function Customer() {
                     onClick={activeHandler}
                   >
                     <i
-                      class="fa fa-cutlery"
+                      className="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
@@ -612,7 +620,7 @@ function Customer() {
                     className={`${style["nav-title"]} ${style["nav-unactive"]}`}
                   >
                     <i
-                      class="fa fa-cutlery"
+                      className="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
@@ -626,7 +634,7 @@ function Customer() {
                   onClick={activeHandler}
                 >
                   <i
-                    class="fa fa-bullseye"
+                    className="fa fa-bullseye"
                     aria-hidden="true"
                     title="target"
                   ></i>
@@ -640,7 +648,7 @@ function Customer() {
                   onClick={activeHandler}
                 >
                   <i
-                    class="fa fa-file-text-o"
+                    className="fa fa-file-text-o"
                     aria-hidden="true"
                     title="publish"
                   ></i>
@@ -654,7 +662,7 @@ function Customer() {
                   to={`/customer/${customerID}/findDietitians`}
                 >
                   <i
-                    class="fa fa-search"
+                    className="fa fa-search"
                     aria-hidden="true"
                     title="findDietitian"
                   ></i>
@@ -668,7 +676,7 @@ function Customer() {
                   to={`/customer/${customerID}/reserve-list`}
                 >
                   <i
-                    class="fa fa-list-alt"
+                    className="fa fa-list-alt"
                     aria-hidden="true"
                     title="reserve"
                   ></i>

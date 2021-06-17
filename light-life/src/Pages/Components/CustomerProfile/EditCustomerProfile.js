@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
+import { updateCustomerData } from "../../../utils/Firebase";
 import noImage from "../../../images/noimage.png";
 import CustomerProfile from "./CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
 
 function EditCustomerProfile({ profile, setProfile }) {
-  const db = firebase.firestore();
   const storage = firebase.storage();
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
@@ -78,40 +78,29 @@ function EditCustomerProfile({ profile, setProfile }) {
       });
       if (!career) {
         setProfile({ ...profile, ...input, image: imageUrl, career: "軍公教" });
-        db.collection("customers")
-          .doc(id)
-          .update({
-            ...input,
-            image: imageUrl,
-            career: "軍公教",
-          });
+        updateCustomerData(id, { ...input, image: imageUrl, career: "軍公教" });
       } else {
         setProfile({
           ...profile,
           ...input,
           image: imageUrl,
         });
-        db.collection("customers")
-          .doc(id)
-          .update({
-            ...input,
-            image: imageUrl,
-          });
+        updateCustomerData(id, {
+          ...input,
+          image: imageUrl,
+        });
       }
-
       setInput({});
     } else {
       if (!career) {
         setProfile({ ...profile, ...input, career: "軍公教" });
-        db.collection("customers")
-          .doc(id)
-          .update({ ...input, career: "軍公教" });
+        updateCustomerData(id, { ...input, career: "軍公教" });
       } else {
         setProfile({
           ...profile,
           ...input,
         });
-        db.collection("customers").doc(id).update(input);
+        updateCustomerData(id, input);
       }
 
       setInput({});

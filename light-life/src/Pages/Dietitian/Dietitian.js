@@ -18,6 +18,7 @@ import DietitianTarget from "../Dietitian/Target/DietitianTarget.js";
 import GetPublication from "../Dietitian/FindCustomers/GetPublication.js";
 import MobileBottom from "../Components/MobileBottom.js";
 import NotFound from "../NotFound/NotFound.js";
+import { getDietitiansData } from "../../utils/Firebase.js";
 import basic from "../../style/basic.module.scss";
 import style from "../../style/customerData.module.scss";
 import customer from "../../style/customerProfile.module.scss";
@@ -89,6 +90,7 @@ function Dietitian() {
       .collection("dietitians")
       .get()
       .then((docs) => {
+        console.log(docs);
         const memberArray = [];
         docs.forEach((doc) => memberArray.push(doc.data().id));
         if (!memberArray.find((m) => m === dietitianID)) {

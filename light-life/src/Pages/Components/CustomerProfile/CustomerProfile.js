@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { getCustomerData } from "../../../utils/Firebase";
 import noImage from "../../../images/noimage.png";
 import spinner from "../../../images/loading.gif";
 import style from "../../../style/customerProfile.module.scss";
@@ -12,13 +13,9 @@ function CustomerProfile({ props, input }) {
   const { cID } = useParams();
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(cID)
-      .get()
-      .then((res) => setProfile(res.data()));
+    getCustomerData(cID).then((res) => setProfile(res.data()));
   }, [cID]);
+
   return (
     <>
       {profile.image ? (
