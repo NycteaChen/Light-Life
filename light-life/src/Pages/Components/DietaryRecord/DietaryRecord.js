@@ -15,31 +15,22 @@ function RenderDietaryRecord() {
   const [recordDate, setRecordDate] = useState();
   const [getRecord, setGetRecord] = useState(false); //false
   const [count, setCount] = useState(1);
-  const [serviceDate, setServiceDate] = useState(null);
+  const [serviceDate, setServiceDate] = useState({});
   const { dID } = useParams();
   const { cID } = useParams();
   useEffect(() => {
-    if (dID) {
-      getMyCustomerData(dID, cID).then((res) => {
-        setServiceDate({
-          startDate: res.data().startDate,
-          endDate: res.data().endDate,
-        });
-      });
-    } else {
-      getCustomerData(cID)
-        .then((res) => {
-          return res.data().dietitian;
-        })
-        .then((res) => {
-          getMyCustomerData(res, cID).then((res) => {
-            setServiceDate({
-              startDate: res.data().startDate,
-              endDate: res.data().endDate,
-            });
+    getCustomerData(cID)
+      .then((res) => {
+        return res.data().dietitian;
+      })
+      .then((res) => {
+        getMyCustomerData(res, cID).then((res) => {
+          setServiceDate({
+            startDate: res.data().startDate,
+            endDate: res.data().endDate,
           });
         });
-    }
+      });
   }, [cID, dID]);
 
   const getDietaryRecordDate = (e) => {
@@ -53,21 +44,12 @@ function RenderDietaryRecord() {
     <div className={style["daily-diet"]}>
       <div className={style["date-selector"]}>
         <h5>選擇飲食記錄日期</h5>
-        {dID ? (
-          <input
-            type="date"
-            min={serviceDate ? serviceDate.startDate : ""}
-            max={serviceDate ? serviceDate.endDate : ""}
-            onChange={getDietaryRecordDate}
-          ></input>
-        ) : (
-          <input
-            type="date"
-            min={serviceDate ? serviceDate.startDate : ""}
-            max={serviceDate ? serviceDate.endDate : ""}
-            onChange={getDietaryRecordDate}
-          />
-        )}
+        <input
+          type="date"
+          min={serviceDate.startDate || ""}
+          max={serviceDate.endDate || ""}
+          onChange={getDietaryRecordDate}
+        ></input>
       </div>
       {dID ? (
         <Router>

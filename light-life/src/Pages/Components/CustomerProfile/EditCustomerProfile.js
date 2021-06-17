@@ -48,6 +48,7 @@ function EditCustomerProfile({ profile, setProfile }) {
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name !== "customerImage") {
+      console.log(e.target.value);
       setInput({ ...input, [name]: e.target.value });
     } else if (e.target.files[0]) {
       const fileReader = new FileReader();
@@ -121,7 +122,6 @@ function EditCustomerProfile({ profile, setProfile }) {
         break;
     }
   };
-
   return (
     <div id="customer-profile" className={style["customer-profile"]}>
       {isEditing ? (
@@ -155,15 +155,7 @@ function EditCustomerProfile({ profile, setProfile }) {
           <div className={style.flexbox}>
             <div className={style.img}>
               <img
-                src={
-                  input.previewImg
-                    ? input.previewImg
-                    : input.image
-                    ? input.image
-                    : image
-                    ? image
-                    : noImage
-                }
+                src={input.previewImg || input.image || image || noImage}
                 alt="customer"
               />
               <div>
@@ -192,11 +184,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                     type="text"
                     id="customerName"
                     value={
-                      input.name || input.name === ""
-                        ? input.name
-                        : name
-                        ? name
-                        : ""
+                      input.name || input.name === "" ? input.name : name || ""
                     }
                     onChange={getInputHandler}
                   />
@@ -256,7 +244,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                     name="age"
                     id="customerAge"
                     value={
-                      input.age || input.age === "" ? input.age : age ? age : ""
+                      input.age || input.age === "" ? input.age : age || ""
                     }
                     onChange={getInputHandler}
                   />
@@ -278,9 +266,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                   value={
                     input.height || input.height === ""
                       ? input.height
-                      : height
-                      ? height
-                      : ""
+                      : height || ""
                   }
                   onChange={getInputHandler}
                 />
@@ -299,9 +285,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                   value={
                     input.weight || input.weight === ""
                       ? input.weight
-                      : weight
-                      ? weight
-                      : ""
+                      : weight || ""
                   }
                   onChange={getInputHandler}
                 />
@@ -453,7 +437,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                 <select
                   id="customerCareer"
                   name="career"
-                  value={input.career ? input.career : career ? career : ""}
+                  value={input.career || career || ""}
                   onChange={getInputHandler}
                 >
                   <option>軍公教</option>
@@ -482,9 +466,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                     value={
                       input.sport || input.sport === ""
                         ? input.sport
-                        : sport
-                        ? sport
-                        : ""
+                        : sport || ""
                     }
                     onChange={getInputHandler}
                   ></textarea>
@@ -503,9 +485,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                     value={
                       input.other || input.other === ""
                         ? input.other
-                        : other
-                        ? other
-                        : ""
+                        : other || ""
                     }
                     onChange={getInputHandler}
                   ></textarea>
@@ -526,7 +506,7 @@ function EditCustomerProfile({ profile, setProfile }) {
               ></i>
             </button>
           </div>
-          <CustomerProfile props={profile} input={input} />
+          <CustomerProfile props={profile} />
         </div>
       )}
     </div>

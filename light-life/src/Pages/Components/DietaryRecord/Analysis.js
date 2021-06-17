@@ -59,7 +59,6 @@ function Analysis({ date, cID, data }) {
 
   const calculator = (target, setMealNutrients) => {
     const reducer = (acc, cur) => acc + cur;
-
     const kcalTotal = target.map((i) => i.kcal).reduce(reducer, 0);
     const proteinTotal = target.map((i) => i.protein).reduce(reducer, 0);
     const lipidTotal = target.map((i) => i.lipid).reduce(reducer, 0);
@@ -77,8 +76,8 @@ function Analysis({ date, cID, data }) {
   };
 
   const getNutrientTotal = (item) => {
-    const nutritiendArray = [];
-    nutritiendArray.push(
+    const nutrientArray = [];
+    nutrientArray.push(
       breakfast[item],
       morning[item],
       lunch[item],
@@ -86,7 +85,7 @@ function Analysis({ date, cID, data }) {
       dinner[item],
       night[item]
     );
-    return nutritiendArray
+    return nutrientArray
       .filter((i) => i !== undefined)
       .map((i) => parseFloat(i))
       .reduce((acc, cur) => acc + cur, 0);
@@ -107,6 +106,16 @@ function Analysis({ date, cID, data }) {
     });
   };
 
+  const mealArray = [
+    ["breakfast", "早餐", breakfast],
+    ["morning-snack", "早點", morning],
+    ["lunch", "午餐", lunch],
+    ["afternoon-snack", "午點", afternoon],
+    ["dinner", "晚餐", dinner],
+    ["night-snack", "晚點", night],
+  ];
+  const nutrient = ["kcal", "protein", "lipid", "carbohydrate", "fiber"];
+
   return (
     <>
       <div id="diet-analysis" className={style["diet-analysis"]}>
@@ -124,72 +133,23 @@ function Analysis({ date, cID, data }) {
               </tr>
             </thead>
             <tbody>
-              <tr id="breakfast">
-                <th>早餐</th>
-                <th>{breakfast.kcal ? breakfast.kcal : "-"}</th>
-                <th>{breakfast.protein ? breakfast.protein : "-"}</th>
-                <th>{breakfast.lipid ? breakfast.lipid : "-"}</th>
-                <th>{breakfast.carbohydrate ? breakfast.carbohydrate : "-"}</th>
-                <th>{breakfast.fiber ? breakfast.fiber : "-"}</th>
-              </tr>
-              <tr id="morning-snack">
-                <th>早點</th>
-                <th>{morning.kcal ? morning.kcal : "-"}</th>
-                <th>{morning.protein ? morning.protein : "-"}</th>
-                <th>{morning.lipid ? morning.lipid : "-"}</th>
-                <th>{morning.carbohydrate ? morning.carbohydrate : "-"}</th>
-                <th>{morning.fiber ? morning.fiber : "-"}</th>
-              </tr>
-              <tr id="lunch">
-                <th>午餐</th>
-                <th>{lunch.kcal ? lunch.kcal : "-"}</th>
-                <th>{lunch.protein ? lunch.protein : "-"}</th>
-                <th>{lunch.lipid ? lunch.lipid : "-"}</th>
-                <th>{lunch.carbohydrate ? lunch.carbohydrate : "-"}</th>
-                <th>{lunch.fiber ? lunch.fiber : "-"}</th>
-              </tr>
-              <tr id="afternoon-snack">
-                <th>午點</th>
-                <th>{afternoon.kcal ? afternoon.kcal : "-"}</th>
-                <th>{afternoon.protein ? afternoon.protein : "-"}</th>
-                <th>{afternoon.lipid ? afternoon.lipid : "-"}</th>
-                <th>{afternoon.carbohydrate ? afternoon.carbohydrate : "-"}</th>
-                <th>{afternoon.fiber ? afternoon.fiber : "-"}</th>
-              </tr>
-              <tr id="dinner">
-                <th>晚餐</th>
-                <th>{dinner.kcal ? dinner.kcal : "-"}</th>
-                <th>{dinner.protein ? dinner.protein : "-"}</th>
-                <th>{dinner.lipid ? dinner.lipid : "-"}</th>
-                <th>{dinner.carbohydrate ? dinner.carbohydrate : "-"}</th>
-                <th>{dinner.fiber ? dinner.fiber : "-"}</th>
-              </tr>
-              <tr id="night-snack">
-                <th>晚點</th>
-                <th>{night.kcal ? night.kcal : "-"}</th>
-                <th>{night.protein ? night.protein : "-"}</th>
-                <th>{night.lipid ? night.lipid : "-"}</th>
-                <th>{night.carbohydrate ? night.carbohydrate : "-"}</th>
-                <th>{night.fiber ? night.fiber : "-"}</th>
-              </tr>
+              {mealArray.map((m) => (
+                <tr id={m[0]}>
+                  <th>{m[1]}</th>
+                  <th>{m[2].kcal || "-"}</th>
+                  <th>{m[2].protein || "-"}</th>
+                  <th>{m[2].lipid || "-"}</th>
+                  <th>{m[2].carbohydrate || "-"}</th>
+                  <th>{m[2].fiber || "-"}</th>
+                </tr>
+              ))}
               <tr id="table-total">
                 <th>總和</th>
-                <th>
-                  {parseFloat(getNutrientTotal("kcal").toFixed(1)) || "-"}
-                </th>
-                <th>
-                  {parseFloat(getNutrientTotal("protein").toFixed(1)) || "-"}
-                </th>
-                <th>
-                  {parseFloat(getNutrientTotal("lipid").toFixed(1)) || "-"}
-                </th>
-                <th>
-                  {parseFloat(getNutrientTotal("carbohydrate").toFixed(1)) ||
-                    "-"}
-                </th>
-                <th>
-                  {parseFloat(getNutrientTotal("fiber").toFixed(1)) || "-"}
-                </th>
+                {nutrient.map((m) => (
+                  <th>
+                    {parseFloat(getNutrientTotal(`${m}`).toFixed(1)) || "-"}
+                  </th>
+                ))}
               </tr>
             </tbody>
           </table>
