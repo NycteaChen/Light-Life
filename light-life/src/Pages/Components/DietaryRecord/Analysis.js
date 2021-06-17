@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
 import { useLocation } from "react-router-dom";
-import "firebase/firestore";
+import {
+  getCustomerData,
+  getDietData,
+  updateDietAdvice,
+} from "../../../utils/Firebase";
 import Swal from "sweetalert2";
 import style from "../../../style/dietary.module.scss";
 function Analysis({ date, cID, data }) {
@@ -16,54 +19,41 @@ function Analysis({ date, cID, data }) {
   const [advice, setAdvice] = useState("");
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(cID)
-      .get()
+    getCustomerData(cID)
       .then((doc) => {
         setDID(doc.data().dietitian);
         return doc.data().dietitian;
       })
       .then((res) => {
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(res)
-          .collection("customers")
-          .doc(cID)
-          .collection("diet")
-          .doc(date)
-          .get()
-          .then((doc) => {
-            if (doc.exists && doc.data()["advice"]) {
-              setAdvice(doc.data()["advice"]);
-            } else {
-              setAdvice("");
-            }
-            if (doc.exists) {
-              const getMealAnalysis = (data, setMealNutrients) => {
-                if (data) {
-                  calculator(data, setMealNutrients);
-                } else {
-                  setMealNutrients("");
-                }
-              };
-              getMealAnalysis(doc.data()["breakfast"], setBreakfast);
-              getMealAnalysis(doc.data()["morning-snack"], setMorning);
-              getMealAnalysis(doc.data()["lunch"], setLunch);
-              getMealAnalysis(doc.data()["afternoon-snack"], setAfternoon);
-              getMealAnalysis(doc.data()["dinner"], setDinner);
-              getMealAnalysis(doc.data()["night-snack"], setNight);
-            } else {
-              setBreakfast("");
-              setMorning("");
-              setLunch("");
-              setAfternoon("");
-              setDinner("");
-              setNight("");
-            }
-          });
+        getDietData(res, cID, date).then((doc) => {
+          if (doc.exists && doc.data()["advice"]) {
+            setAdvice(doc.data()["advice"]);
+          } else {
+            setAdvice("");
+          }
+          if (doc.exists) {
+            const getMealAnalysis = (data, setMealNutrients) => {
+              if (data) {
+                calculator(data, setMealNutrients);
+              } else {
+                setMealNutrients("");
+              }
+            };
+            getMealAnalysis(doc.data()["breakfast"], setBreakfast);
+            getMealAnalysis(doc.data()["morning-snack"], setMorning);
+            getMealAnalysis(doc.data()["lunch"], setLunch);
+            getMealAnalysis(doc.data()["afternoon-snack"], setAfternoon);
+            getMealAnalysis(doc.data()["dinner"], setDinner);
+            getMealAnalysis(doc.data()["night-snack"], setNight);
+          } else {
+            setBreakfast("");
+            setMorning("");
+            setLunch("");
+            setAfternoon("");
+            setDinner("");
+            setNight("");
+          }
+        });
       });
   }, [date, data, cID]);
 
@@ -107,25 +97,14 @@ function Analysis({ date, cID, data }) {
   };
 
   const bindSaveAdviceHandler = () => {
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dID)
-      .collection("customers")
-      .doc(cID)
-      .collection("diet")
-      .doc(date)
-      .update({
-        advice: advice,
-      })
-      .then(() => {
-        Swal.fire({
-          text: "儲存建議成功",
-          icon: "success",
-          confirmButtonText: "確定",
-          confirmButtonColor: "#1e4d4e",
-        });
+    updateDietAdvice(dID, cID, date, { advice: advice }).then(() => {
+      Swal.fire({
+        text: "儲存建議成功",
+        icon: "success",
+        confirmButtonText: "確定",
+        confirmButtonColor: "#1e4d4e",
       });
+    });
   };
 
   return (

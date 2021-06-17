@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import firebase from "firebase/app";
-import "firebase/firestore";
 import "firebase/storage";
 import { updateCustomerData } from "../../../utils/Firebase";
 import noImage from "../../../images/noimage.png";

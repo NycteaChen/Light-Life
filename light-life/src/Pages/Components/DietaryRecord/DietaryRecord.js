@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,73 +6,10 @@ import {
   Link,
   useParams,
 } from "react-router-dom";
-import "firebase/firestore";
+import { getMyCustomerData, getCustomerData } from "../../../utils/Firebase.js";
 import DietitianRecord from "./DietitianRecord.js";
 import CustomerRecord from "./CustomerRecord.js";
 import style from "../../../style/dietary.module.scss";
-// function ShowImages({ mealDetails, input, removeImageHandler }) {
-//   if (!input.images) {
-//     return (
-//       <>
-//         {mealDetails.images.map((i, index) => (
-//           <div key={index}>
-//             <div id={index} onClick={removeImageHandler}>
-//               X
-//             </div>
-//             <a href={i} target="_blank" rel="noreferrer noopener">
-//               <img
-//                 src={i}
-//                 alt="customer"
-//                 style={{ width: "200px", height: "200px" }}
-//               />
-//             </a>
-//           </div>
-//         ))}
-//         {input.imageUrl.map((i, index) => (
-//           <div key={index}>
-//             <a href={i} target="_blank" rel="noreferrer noopener">
-//               <img
-//                 src={i}
-//                 alt="customer"
-//                 style={{ width: "200px", height: "200px" }}
-//               />
-//             </a>
-//           </div>
-//         ))}
-//       </>
-//     );
-//   } else {
-//     return (
-//       <>
-//         {input.images.map((i, index) => (
-//           <div key={index}>
-//             <div id={index} onClick={removeImageHandler}>
-//               X
-//             </div>
-//             <a href={i} target="_blank" rel="noreferrer noopener">
-//               <img
-//                 src={i}
-//                 alt="customer"
-//                 style={{ width: "200px", height: "200px" }}
-//               />
-//             </a>
-//           </div>
-//         ))}
-//         {input.imageUrl.map((i, index) => (
-//           <div key={index}>
-//             <a href={i} target="_blank" rel="noreferrer noopener">
-//               <img
-//                 src={i}
-//                 alt="customer"
-//                 style={{ width: "200px", height: "200px" }}
-//               />
-//             </a>
-//           </div>
-//         ))}
-//       </>
-//     );
-//   }
-// }
 
 function RenderDietaryRecord() {
   const [recordDate, setRecordDate] = useState();
@@ -84,43 +20,24 @@ function RenderDietaryRecord() {
   const { cID } = useParams();
   useEffect(() => {
     if (dID) {
-      firebase
-        .firestore()
-        .collection("dietitians")
-        .doc(dID)
-        .collection("customers")
-        .doc(cID)
-        .get()
-        .then((res) => {
-          setServiceDate({
-            startDate: res.data().startDate,
-            endDate: res.data().endDate,
-          });
+      getMyCustomerData(dID, cID).then((res) => {
+        setServiceDate({
+          startDate: res.data().startDate,
+          endDate: res.data().endDate,
         });
+      });
     } else {
-      firebase
-        .firestore()
-        .collection("customers")
-        .doc(cID)
-        .get()
+      getCustomerData(cID)
         .then((res) => {
-          console.log(res.data().dietitian);
           return res.data().dietitian;
         })
         .then((res) => {
-          firebase
-            .firestore()
-            .collection("dietitians")
-            .doc(res)
-            .collection("customers")
-            .doc(cID)
-            .get()
-            .then((res) => {
-              setServiceDate({
-                startDate: res.data().startDate,
-                endDate: res.data().endDate,
-              });
+          getMyCustomerData(res, cID).then((res) => {
+            setServiceDate({
+              startDate: res.data().startDate,
+              endDate: res.data().endDate,
             });
+          });
         });
     }
   }, [cID, dID]);
@@ -132,8 +49,6 @@ function RenderDietaryRecord() {
       setGetRecord(true);
     }
   };
-  console.log(serviceDate);
-  // if (dID) {
   return (
     <div className={style["daily-diet"]}>
       <div className={style["date-selector"]}>
@@ -187,22 +102,6 @@ function RenderDietaryRecord() {
       )}
     </div>
   );
-  // } else {
-  //   return (
-  //     <div className={style["daily-diet"]}>
-  //       <div className={style["date-selector"]}>
-  //         <input
-  //           type="date"
-  //           min="2021-05-14"
-  //           max="2021-05-26"
-  //           onChange={getDietaryRecordDate}
-  //           required="required"
-  //         ></input>
-  //       </div>
-
-  //     </div>
-  //   );
-  // }
 }
 
 export default RenderDietaryRecord;

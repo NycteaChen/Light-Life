@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
 import { useParams } from "react-router-dom";
-import "firebase/firestore";
+import { getDietData, updateCustomerDiet } from "../../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import getIngrediensData from "../../../utils/IngredientsAPI.js";
 import Analysis from "./Analysis.js";
@@ -37,7 +36,6 @@ function DietitianRecord({ date }) {
     }
     fetchDate();
   }, []);
-  console.log(ingredients);
 
   useEffect(() => {
     setMeal([]);
@@ -51,30 +49,31 @@ function DietitianRecord({ date }) {
     setInput(initInput);
     setIsSelected(false);
     setMeal([mealClass, e.target.id]);
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dID)
-      .collection("customers")
-      .doc(cID)
-      .collection("diet")
-      .doc(date)
-      .get()
-      .then((doc) => {
-        if (doc.exists && doc.data()[mealClass]) {
-          setMealDetails(doc.data()[mealClass]);
-        } else {
-          setMealDetails("");
-        }
-        if (doc.exists && doc.data()[e.target.id]) {
-          setDataAnalysis(doc.data()[e.target.id]);
-        } else {
-          setDataAnalysis(false);
-        }
-      });
+
+    getDietData(dID, cID, date).then((doc) => {
+      if (doc.exists && doc.data()[mealClass]) {
+        setMealDetails(doc.data()[mealClass]);
+      } else {
+        setMealDetails("");
+      }
+      if (doc.exists && doc.data()[e.target.id]) {
+        setDataAnalysis(doc.data()[e.target.id]);
+      } else {
+        setDataAnalysis(false);
+      }
+    });
+  };
+
+  const getInputNumber = (n, per) => {
+    if (parseFloat(n["每單位含量"]) && per > 0) {
+      return parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1);
+    } else {
+      return 0;
+    }
   };
 
   const getInputHandler = (e) => {
+    console.log("here");
     const { name } = e.target;
     const { type } = e.target;
     if (isSelect && type === "number") {
@@ -89,34 +88,19 @@ function DietitianRecord({ date }) {
         .forEach((n) => {
           switch (n["分析項"]) {
             case "修正熱量":
-              kcal =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              kcal = getInputNumber(n, per);
               break;
             case "粗蛋白":
-              protein =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              protein = getInputNumber(n, per);
               break;
             case "粗脂肪":
-              lipid =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              lipid = getInputNumber(n, per);
               break;
             case "總碳水化合物":
-              carbohydrate =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              carbohydrate = getInputNumber(n, per);
               break;
             case "膳食纖維":
-              fiber =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              fiber = getInputNumber(n, per);
               break;
             default:
               break;
@@ -179,20 +163,9 @@ function DietitianRecord({ date }) {
           confirmButtonColor: "#1e4d4e",
         });
       } else {
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(dID)
-          .collection("customers")
-          .doc(cID)
-          .collection("diet")
-          .doc(date)
-          .set(
-            {
-              [meal[1]]: [...(dataAnalysis || []), input],
-            },
-            { merge: true }
-          );
+        updateCustomerDiet(dID, cID, date, {
+          [meal[1]]: [...(dataAnalysis || []), input],
+        });
         setIsSelected(false);
         setDataAnalysis([...(dataAnalysis || []), input]);
         setInput(initInput);
@@ -231,22 +204,11 @@ function DietitianRecord({ date }) {
         setDataAnalysis([
           ...dataAnalysis.filter((d, index) => index !== +e.target.id),
         ]);
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(dID)
-          .collection("customers")
-          .doc(cID)
-          .collection("diet")
-          .doc(date)
-          .set(
-            {
-              [meal[1]]: [
-                ...dataAnalysis.filter((d, index) => index !== +e.target.id),
-              ],
-            },
-            { merge: true }
-          );
+        updateCustomerDiet(dID, cID, date, {
+          [meal[1]]: [
+            ...dataAnalysis.filter((d, index) => index !== +e.target.id),
+          ],
+        });
       }
     });
   };

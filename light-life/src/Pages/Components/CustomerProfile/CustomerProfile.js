@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
 import { getCustomerData } from "../../../utils/Firebase";
 import noImage from "../../../images/noimage.png";
 import spinner from "../../../images/loading.gif";

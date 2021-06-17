@@ -3,6 +3,11 @@ import firebase from "firebase/app";
 import { useParams } from "react-router-dom";
 import "firebase/firestore";
 import Swal from "sweetalert2";
+import {
+  getCustomerData,
+  getDietData,
+  updateCustomerDiet,
+} from "../../../utils/Firebase.js";
 import Analysis from "./Analysis.js";
 import style from "../../../style/dietary.module.scss";
 import styled from "styled-components";
@@ -24,14 +29,9 @@ function CustomerRecord({ date, count, setCount }) {
   const cID = useParams().cID;
   const [active, setAcitve] = useState("");
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(cID)
-      .get()
-      .then((doc) => {
-        setDID(doc.data().dietitian);
-      });
+    getCustomerData(cID).then((doc) => {
+      setDID(doc.data().dietitian);
+    });
     setInput({});
     setMeal([]);
     setAcitve("");
@@ -56,30 +56,20 @@ function CustomerRecord({ date, count, setCount }) {
     //   setMealDetails("");
     // }
     setMealDetails("");
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dID)
-      .collection("customers")
-      .doc(cID)
-      .collection("diet")
-      .doc(date)
-      .get()
-      .then((doc) => {
-        console.log(doc);
-        if (doc.exists && doc.data()[mealClass]) {
-          setMealDetails(doc.data()[mealClass]);
-        } else {
-          console.log("here");
-          setMealDetails("");
-        }
-        if (doc.exists && doc.data()[e.target.id]) {
-          setDataAnalysis(doc.data()[e.target.id]);
-        } else {
-          console.log("here");
-          setDataAnalysis(false);
-        }
-      });
+    getDietData(dID, cID, date).then((doc) => {
+      console.log(mealClass);
+      console.log(e.target.id);
+      if (doc.exists && doc.data()[mealClass]) {
+        setMealDetails(doc.data()[mealClass]);
+      } else {
+        setMealDetails("");
+      }
+      if (doc.exists && doc.data()[e.target.id]) {
+        setDataAnalysis(doc.data()[e.target.id]);
+      } else {
+        setDataAnalysis(false);
+      }
+    });
   };
   async function postImg(image) {
     if (image) {
@@ -146,26 +136,13 @@ function CustomerRecord({ date, count, setCount }) {
             ...mealDetails.images.filter((i, idx) => idx !== +e.target.id),
           ],
         });
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(dID)
-          .collection("customers")
-          .doc(cID)
-          .collection("diet")
-          .doc(date)
-          .set(
-            {
-              [meal]: {
-                images: [
-                  ...mealDetails.images.filter(
-                    (i, idx) => idx !== +e.target.id
-                  ),
-                ],
-              },
-            },
-            { merge: true }
-          );
+        updateCustomerDiet(dID, cID, date, {
+          [meal]: {
+            images: [
+              ...mealDetails.images.filter((i, idx) => idx !== +e.target.id),
+            ],
+          },
+        });
       }
     });
   };
@@ -211,18 +188,10 @@ function CustomerRecord({ date, count, setCount }) {
             delete input.imageFile;
             // delete input.imageUrl;
             // delete mealDetails.images;
-            firebase
-              .firestore()
-              .collection("dietitians")
-              .doc(dID)
-              .collection("customers")
-              .doc(cID)
-              .collection("diet")
-              .doc(date)
-              .set(
-                { [meal]: { ...input, images: imageUrlsArray } },
-                { merge: true }
-              );
+
+            updateCustomerDiet(dID, cID, date, {
+              [meal]: { ...input, images: imageUrlsArray },
+            });
             setMealDetails({ ...mealDetails, images: imageUrlsArray });
           });
           Swal.fire({
@@ -236,15 +205,7 @@ function CustomerRecord({ date, count, setCount }) {
       } else {
         delete input.imageFile;
         // delete input.imageUrl;
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(dID)
-          .collection("customers")
-          .doc(cID)
-          .collection("diet")
-          .doc(date)
-          .set({ [meal]: input }, { merge: true });
+        updateCustomerDiet(dID, cID, date, { [meal]: input });
         Swal.fire({
           text: "儲存成功",
           icon: "success",
