@@ -62,7 +62,7 @@ function Customer() {
   let history = useHistory();
 
   useEffect(() => {
-    authState("customers", history, dID, setNotFound);
+    authState("customers", history, cID, setNotFound);
 
     if (
       path &&

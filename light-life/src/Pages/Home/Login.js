@@ -707,7 +707,7 @@ function Login({ display, setDisplay }) {
                 className={validStyle.email || ""}
                 placeholder="diet@test.com / cus@test.com"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
-                value={input.email ? input.email : ""}
+                value={input.email || ""}
                 onChange={getInputHandler}
               />
             </label>
@@ -720,7 +720,7 @@ function Login({ display, setDisplay }) {
                 placeholder="abc123"
                 minlength="6"
                 maxlength="15"
-                value={input.password ? input.password : ""}
+                value={input.password || ""}
                 onChange={getInputHandler}
               />
               <i
@@ -826,7 +826,7 @@ function Login({ display, setDisplay }) {
                 className={validStyle.name || ""}
                 placeholder="請輸入姓名"
                 pattern="^[\u4e00-\u9fa5]+$|^[a-zA-Z\s]+$"
-                value={input.name ? input.name : ""}
+                value={input.name || ""}
                 onChange={getInputHandler}
               />
             </label>
@@ -838,7 +838,7 @@ function Login({ display, setDisplay }) {
                 className={validStyle.email || ""}
                 placeholder="請輸入e-mail"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
-                value={input.email ? input.email : ""}
+                value={input.email || ""}
                 onChange={getInputHandler}
               />
             </label>
@@ -852,7 +852,7 @@ function Login({ display, setDisplay }) {
                 placeholder="請輸入至少6位字元"
                 minlength="6"
                 maxlength="15"
-                value={input.password ? input.password : ""}
+                value={input.password || ""}
                 onChange={getInputHandler}
               />
               <i

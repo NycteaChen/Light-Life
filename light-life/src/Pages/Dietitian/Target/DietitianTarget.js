@@ -23,7 +23,6 @@ function DietitianTarget() {
   useEffect(() => {
     getMyCustomerData(dID, cID).then((doc) => {
       setDate(doc.data());
-      console.log(doc.data());
     });
   }, []); //eslint-disable-line
 
@@ -117,7 +116,7 @@ function DietitianTarget() {
                 name="startDate"
                 className={style["set-content"]}
                 min={initStartDate}
-                max={date.endDate ? `${date.endDate}` : ""}
+                max={date.endDate || ""}
                 onChange={(e) => {
                   bindChangeDateRange(e);
                   getInputHandler(e);
@@ -131,8 +130,8 @@ function DietitianTarget() {
                 id="target-end"
                 name="endDate"
                 className={style["set-content"]}
-                min={leastEndDate ? leastEndDate : initStartDate}
-                max={date.endDate ? `${date.endDate}` : ""}
+                min={leastEndDate || initStartDate}
+                max={date.endDate || ""}
                 onChange={getInputHandler}
               />
             </label>

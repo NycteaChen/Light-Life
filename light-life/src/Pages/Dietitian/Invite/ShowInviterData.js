@@ -25,7 +25,6 @@ function ShowInviterData({
   useEffect(() => {
     getCustomerData(props.inviterID).then((res) => {
       setInviterData(res.data());
-      console.log(res.data());
     });
   }, []); //eslint-disable-line
   const inviteButtonHandler = (e) => {
@@ -144,10 +143,7 @@ function ShowInviterData({
           </div>
         </div>
         <div className={style["flexbox"]}>
-          <img
-            src={inviterData.image ? inviterData.image : noImage}
-            alt="customer"
-          />
+          <img src={inviterData.image || noImage} alt="customer" />
           <div className={style.basicData}>
             <div className={style["data-item"]}>
               <div className={style.title}>姓名</div>
