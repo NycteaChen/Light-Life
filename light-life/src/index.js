@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-// import Calendar from "react-calendar";
 import "firebase/auth";
 import firebase from "firebase/app";
 
@@ -14,12 +13,11 @@ const config = {
   appId: "1:877092105937:web:1363765ebc0ff241265ff0",
   measurementId: "G-GQVDFHW3BY",
 };
-firebase.initializeApp(config);
+// firebase.initializeApp(config);
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
-    {/* <Calendar /> */}
   </React.StrictMode>,
   document.getElementById("root")
 );
