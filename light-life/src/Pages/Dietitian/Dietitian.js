@@ -491,12 +491,9 @@ function Dietitian() {
             </nav>
 
             <div className={basic.profile}>
-              <img
-                src={profile.image ? profile.image : noImage}
-                alt="profileImage"
-              />
+              <img src={profile.image || noImage} alt="profileImage" />
               <div className={basic.welcome}>
-                <div>{profile.name ? profile.name : ""}，您好</div>
+                <div>{profile.name || ""}，您好</div>
                 <div className={basic["service-status"]}>
                   <div>服務狀態：{profile.isServing ? "公開" : "私人"}</div>
                   <div>
@@ -660,7 +657,7 @@ function Dietitian() {
                         active.cProfile || ""
                       }`}
                       to={`/dietitian/${dID}/customer/${
-                        customerID ? customerID : selectedID
+                        customerID || selectedID
                       }/profile`}
                       onClick={bindListHandler}
                     >
@@ -675,7 +672,7 @@ function Dietitian() {
                         active.cDietary || ""
                       }`}
                       to={`/dietitian/${dID}/customer/${
-                        customerID ? customerID : selectedID
+                        customerID || selectedID
                       }/dietary`}
                       onClick={bindListHandler}
                     >
@@ -692,7 +689,7 @@ function Dietitian() {
                         active.cTarget || ""
                       }`}
                       to={`/dietitian/${dID}/customer/${
-                        customerID ? customerID : selectedID
+                        customerID || selectedID
                       }/target`}
                       onClick={bindListHandler}
                     >
@@ -706,7 +703,6 @@ function Dietitian() {
                   </div>
                 </div>
                 <Switch>
-                  {/* <Route exact path={`/dietitian/:dID/customer/:cID/`}></Route> */}
                   <Route exact path={`/dietitian/:dID/customer/:cID/profile`}>
                     <>
                       <div className={style["service-time"]}>
@@ -714,8 +710,7 @@ function Dietitian() {
                           服務時間<span>：</span>
                         </div>
                         <div>
-                          {date.start ? date.start : ""}~
-                          {date.end ? date.end : ""}
+                          {date.start || ""}~{date.end || ""}
                         </div>
                       </div>
                       <div
@@ -723,10 +718,7 @@ function Dietitian() {
                         className={customer["customer-profile"]}
                       >
                         <div className={customer["profile-data"]}>
-                          <CustomerProfile
-                            props={props}
-                            // id={selectedID}
-                          />
+                          <CustomerProfile props={props} />
                         </div>
                       </div>
                     </>
@@ -738,7 +730,6 @@ function Dietitian() {
                     <DietitianTarget />
                   </Route>
                 </Switch>
-                {/* </Router> */}
               </Route>
             </Switch>
           </main>

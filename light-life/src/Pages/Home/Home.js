@@ -224,7 +224,7 @@ function Home() {
                   <input
                     type="text"
                     name="name"
-                    value={input.name ? input.name : ""}
+                    value={input.name || ""}
                     onChange={getInputHandler}
                     required
                   />
@@ -237,7 +237,7 @@ function Home() {
                     type="email"
                     name="email"
                     pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
-                    value={input.email ? input.email : ""}
+                    value={input.email || ""}
                     onChange={getInputHandler}
                     required
                   />
@@ -250,7 +250,7 @@ function Home() {
                     name="text"
                     rows="6"
                     cols="40"
-                    value={input.text ? input.text : ""}
+                    value={input.text || ""}
                     onChange={getInputHandler}
                     required
                   ></textarea>

@@ -41,7 +41,6 @@ function TargetHandler({ target, setTarget }) {
       setInput({ ...input, [name]: e.target.value });
     }
   };
-  // true會變?
   const bindEditHandler = (e) => {
     setIsEditing(true);
     setTargetIndex(e.target.id);

@@ -25,7 +25,6 @@ function CustomerRecord({ date, count, setCount }) {
   const [mealDetails, setMealDetails] = useState("");
   const [dataAnalysis, setDataAnalysis] = useState(false);
 
-  // const [images, setImages] = useState([]);
   const cID = useParams().cID;
   const [active, setAcitve] = useState("");
   useEffect(() => {
@@ -49,12 +48,6 @@ function CustomerRecord({ date, count, setCount }) {
     setMeal(mealClass);
     setInput("");
 
-    // if (mealDetails.images) {
-    //   setMealDetails({ images: mealDetails.images });
-    // }
-    // else {
-    //   setMealDetails("");
-    // }
     setMealDetails("");
     getDietData(dID, cID, date).then((doc) => {
       console.log(mealClass);
@@ -97,27 +90,15 @@ function CustomerRecord({ date, count, setCount }) {
     if (name !== "image") {
       setInput({ ...input, [name]: e.target.value });
     } else if (e.target.files[0]) {
-      // const imageUrlArray = [];
       const imagesArray = [];
       for (let i = 0; i < e.target.files.length; i++) {
-        // const imageUrl = window.URL.createObjectURL(e.target.files[i]);
-        // imageUrlArray.push(imageUrl);
         imagesArray.push(e.target.files[i]);
       }
-      // if (mealDetails.images) {
-      //   mealDetails.images.forEach((m) => {
-      //     imageUrlArray.push(m);
-      //   });
-      // }
 
       setInput({
         ...input,
-        // imageUrl: imageUrlArray,
         imageFile: imagesArray,
       });
-    } else {
-      // delete input.image;
-      // setInput({ ...input });
     }
   };
   const removeImageHandler = (e) => {
@@ -186,8 +167,6 @@ function CustomerRecord({ date, count, setCount }) {
               images: imageUrlsArray,
             });
             delete input.imageFile;
-            // delete input.imageUrl;
-            // delete mealDetails.images;
 
             setCustomerDiet(dID, cID, date, {
               [meal]: { ...input, images: imageUrlsArray },
@@ -204,7 +183,6 @@ function CustomerRecord({ date, count, setCount }) {
         }
       } else {
         delete input.imageFile;
-        // delete input.imageUrl;
         setCustomerDiet(dID, cID, date, { [meal]: input });
         Swal.fire({
           text: "儲存成功",
@@ -224,8 +202,6 @@ function CustomerRecord({ date, count, setCount }) {
     ["晚餐", "customerDinner", "dinner"],
     ["晚點", "customerNight-snack", "night-snack"],
   ];
-
-  console.log(dataAnalysis);
 
   return (
     <>
@@ -332,9 +308,7 @@ function CustomerRecord({ date, count, setCount }) {
                         儲存
                       </button>
                     ) : (
-                      <Save style={{ cursor: "default" }} className={m[1]}>
-                        儲存
-                      </Save>
+                      <Save className={m[1]}>儲存</Save>
                     )}
                   </div>
                 </div>
