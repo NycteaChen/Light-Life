@@ -5,7 +5,6 @@ import noImage from "../../../images/noimage.png";
 import spinner from "../../../images/loading.gif";
 import style from "../../../style/customerProfile.module.scss";
 import image from "../../../style/image.module.scss";
-import { faUnderline } from "@fortawesome/free-solid-svg-icons";
 
 function CustomerProfile({ props }) {
   const { cID } = useParams();

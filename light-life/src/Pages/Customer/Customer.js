@@ -26,7 +26,7 @@ import {
 import Swal from "sweetalert2";
 import GetDietitiansData from "./FindDietitians/GetDietitinasData.js";
 import ReserveList from "./Reverse/ReserveList.js";
-import CustomerProfile from "../Components/CustomerProfile/EditCustomerProfile.js";
+import EditCustomerProfile from "./EditCustomerProfile/EditCustomerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import CustomerTarget from "./Target/CustomerTarget.js";
 import Publish from "./Publish/Publish.js";
@@ -653,7 +653,10 @@ function Customer() {
                 </div>
               </Route>
               <Route exact path="/customer/:cID/profile">
-                <CustomerProfile profile={profile} setProfile={setProfile} />
+                <EditCustomerProfile
+                  profile={profile}
+                  setProfile={setProfile}
+                />
               </Route>
               <Route exact path="/customer/:cID/dietary">
                 <DietrayRecord />

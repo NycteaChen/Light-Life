@@ -17,6 +17,15 @@ function Analysis({ date, cID, data }) {
   const [night, setNight] = useState({});
   const [dID, setDID] = useState("");
   const [advice, setAdvice] = useState("");
+  const mealArray = [
+    ["breakfast", "早餐", breakfast],
+    ["morning-snack", "早點", morning],
+    ["lunch", "午餐", lunch],
+    ["afternoon-snack", "午點", afternoon],
+    ["dinner", "晚餐", dinner],
+    ["night-snack", "晚點", night],
+  ];
+  const nutrient = ["kcal", "protein", "lipid", "carbohydrate", "fiber"];
 
   useEffect(() => {
     getCustomerData(cID)
@@ -39,12 +48,17 @@ function Analysis({ date, cID, data }) {
                 setMealNutrients("");
               }
             };
-            getMealAnalysis(doc.data()["breakfast"], setBreakfast);
-            getMealAnalysis(doc.data()["morning-snack"], setMorning);
-            getMealAnalysis(doc.data()["lunch"], setLunch);
-            getMealAnalysis(doc.data()["afternoon-snack"], setAfternoon);
-            getMealAnalysis(doc.data()["dinner"], setDinner);
-            getMealAnalysis(doc.data()["night-snack"], setNight);
+            const analysisArray = [
+              ["breakfast", setBreakfast],
+              ["morning-snack", setMorning],
+              ["lunch", setLunch],
+              ["afternoob-snack", setAfternoon],
+              ["dinner", setDinner],
+              ["night-snack", setNight],
+            ];
+            analysisArray.forEach((a) => {
+              getMealAnalysis(doc.data()[a[0]], a[1]);
+            });
           } else {
             setBreakfast("");
             setMorning("");
@@ -57,21 +71,26 @@ function Analysis({ date, cID, data }) {
       });
   }, [date, data, cID]);
 
-  const calculator = (target, setMealNutrients) => {
+  const nutrientReduce = (target, nutrient) => {
     const reducer = (acc, cur) => acc + cur;
-    const kcalTotal = target.map((i) => i.kcal).reduce(reducer, 0);
-    const proteinTotal = target.map((i) => i.protein).reduce(reducer, 0);
-    const lipidTotal = target.map((i) => i.lipid).reduce(reducer, 0);
-    const carbohydrateTotal = target
-      .map((i) => i.carbohydrate)
-      .reduce(reducer, 0);
-    const fiberTotal = target.map((i) => i.fiber).reduce(reducer, 0);
+    return target.map((i) => i[nutrient]).reduce(reducer, 0);
+  };
+  const parseNutrient = (nutrient) => {
+    return parseFloat(nutrient.toFixed(1));
+  };
+
+  const calculator = (target, setMealNutrients) => {
+    const kcalTotal = nutrientReduce(target, "kcal");
+    const proteinTotal = nutrientReduce(target, "protein");
+    const lipidTotal = nutrientReduce(target, "lipid");
+    const carbohydrateTotal = nutrientReduce(target, "carbohydrate");
+    const fiberTotal = nutrientReduce(target, "fiber");
     setMealNutrients({
-      kcal: parseFloat(kcalTotal.toFixed(1)),
-      protein: parseFloat(proteinTotal.toFixed(1)),
-      lipid: parseFloat(lipidTotal.toFixed(1)),
-      carbohydrate: parseFloat(carbohydrateTotal.toFixed(1)),
-      fiber: parseFloat(fiberTotal.toFixed(1)),
+      kcal: parseNutrient(kcalTotal),
+      protein: parseNutrient(proteinTotal),
+      lipid: parseNutrient(lipidTotal),
+      carbohydrate: parseNutrient(carbohydrateTotal),
+      fiber: parseNutrient(fiberTotal),
     });
   };
 
@@ -105,16 +124,6 @@ function Analysis({ date, cID, data }) {
       });
     });
   };
-
-  const mealArray = [
-    ["breakfast", "早餐", breakfast],
-    ["morning-snack", "早點", morning],
-    ["lunch", "午餐", lunch],
-    ["afternoon-snack", "午點", afternoon],
-    ["dinner", "晚餐", dinner],
-    ["night-snack", "晚點", night],
-  ];
-  const nutrient = ["kcal", "protein", "lipid", "carbohydrate", "fiber"];
 
   return (
     <>
