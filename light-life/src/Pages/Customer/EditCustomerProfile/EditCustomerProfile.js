@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import "firebase/storage";
 import { updateCustomerData } from "../../../utils/Firebase";
 import noImage from "../../../images/noimage.png";
-import CustomerProfile from "./CustomerProfile.js";
+import CustomerProfile from "../../Components/CustomerProfile/CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
 
 function EditCustomerProfile({ profile, setProfile }) {
@@ -48,7 +48,6 @@ function EditCustomerProfile({ profile, setProfile }) {
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name !== "customerImage") {
-      console.log(e.target.value);
       setInput({ ...input, [name]: e.target.value });
     } else if (e.target.files[0]) {
       const fileReader = new FileReader();

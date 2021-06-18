@@ -425,8 +425,13 @@ function Login({ display, setDisplay }) {
     }
   };
 
-  const googleLoginHandler = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
+  const providerLoginHandler = (e) => {
+    let provider;
+    if (e.target.id === "google") {
+      provider = new firebase.auth.GoogleAuthProvider();
+    } else {
+      provider = new firebase.auth.FacebookAuthProvider();
+    }
     providerLogin(provider)
       .then((result) => {
         const user = result.user;
@@ -465,106 +470,10 @@ function Login({ display, setDisplay }) {
                     initProfileData(client)
                       .add({
                         name: user.displayName,
-                        image: user.photoURL,
-                        email: user.email,
-                      })
-                      .then((docRef) => {
-                        initProfileData(client)
-                          .doc(docRef.id)
-                          .update("id", docRef.id);
-
-                        return docRef.id;
-                      })
-                      .then((res) => {
-                        setShowMessage({
-                          welcomeback: style.showloginMessage,
-                        });
-                        setTimeout(() => {
-                          window.location.href = `/${client}/${res}`;
-                        }, 1500);
-                      });
-                  } else {
-                    const user = onAuth().currentUser;
-                    user
-                      .delete()
-                      .then(() => {
-                        // User deleted.
-                        console.log("delete user");
-                      })
-                      .catch((error) => {
-                        // An error ocurred
-                        // ...
-                        console.log(error);
-                      });
-                  }
-                });
-              }
-            });
-          }
-        });
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        const credential = error.credential;
-        // ...
-        console.log(errorCode, errorMessage);
-        console.log(email);
-        console.log(credential);
-        Swal.fire({
-          text: "此帳號在別的登入端已經使用",
-          icon: "warning",
-          confirmButtonText: "確定",
-          confirmButtonColor: "#1e4d4e",
-        });
-      });
-  };
-  const facebookLoginHandler = () => {
-    const provider = new firebase.auth.FacebookAuthProvider();
-    providerLogin(provider)
-      .then((result) => {
-        const user = result.user;
-
-        getUserWithEmail("dietitians", user.email).then((res) => {
-          if (!res.empty) {
-            let id;
-            res.forEach((i) => (id = i.data().id));
-            setShowMessage({ welcomeback: style.showloginMessage });
-            setTimeout(() => {
-              window.location.href = `/dietitian/${id}`;
-            }, 1500);
-          } else {
-            getUserWithEmail("customers", user.email).then((res) => {
-              if (!res.empty) {
-                let id;
-                res.forEach((i) => (id = i.data().id));
-                setShowMessage({ welcomeback: style.showloginMessage });
-                setTimeout(() => {
-                  window.location.href = `/customer/${id}`;
-                }, 1500);
-              } else {
-                Swal.fire({
-                  title: `確定以${
-                    client === "dietitian" ? "營養師" : "客戶"
-                  }身分登入嗎?`,
-                  text: `若您是${
-                    client === "dietitian" ? "客戶" : "營養師"
-                  }，請選擇${client === "dietitian" ? "客戶" : "營養師"}端註冊`,
-                  icon: "warning",
-                  showCancelButton: true,
-                  cancelButtonText: "取消",
-                  confirmButtonText: "確定",
-                  confirmButtonColor: "#1e4d4e",
-                }).then((res) => {
-                  if (res.isConfirmed) {
-                    initProfileData(client)
-                      .add({
-                        name: user.displayName,
-                        image: `${user.photoURL}?height=500`,
+                        image:
+                          e.target.id === "google"
+                            ? user.photoURL
+                            : `${user.photoURL}?height=500`,
                         email: user.email,
                       })
                       .then((docRef) => {
@@ -605,14 +514,13 @@ function Login({ display, setDisplay }) {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
         // The email of the user's account used.
         const email = error.email;
-        console.log(email);
         // The firebase.auth.AuthCredential type that was used.
         const credential = error.credential;
+        console.log(errorCode, errorMessage);
+        console.log(email);
         console.log(credential);
-        // ...
         Swal.fire({
           text: "此帳號在別的登入端已經使用",
           icon: "warning",
@@ -621,6 +529,7 @@ function Login({ display, setDisplay }) {
         });
       });
   };
+
   return (
     <>
       <div className={`${style.loginMessage} ${showMessage.welcomeback || ""}`}>
@@ -698,7 +607,7 @@ function Login({ display, setDisplay }) {
             </li>
           </ul>
           {/*eslint-disable-next-line */}
-          <form action="javascript:void(0);" autocomplete="off">
+          <form action="javascript:void(0);" autoComplete="off">
             <label>
               <div>帳號</div>
               <input
@@ -718,19 +627,19 @@ function Login({ display, setDisplay }) {
                 name="password"
                 className={validStyle.password || ""}
                 placeholder="abc123"
-                minlength="6"
-                maxlength="15"
+                minLength="6"
+                maxLength="15"
                 value={input.password || ""}
                 onChange={getInputHandler}
               />
               <i
-                class={`fa fa-eye-slash ${style["eye-slash"]}`}
+                className={`fa fa-eye-slash ${style["eye-slash"]}`}
                 style={{ display: eye.slash }}
                 aria-hidden="true"
                 onClick={switchPasswordModeHandler}
               ></i>
               <i
-                class={`fa fa-eye ${style["eye-on"]}`}
+                className={`fa fa-eye ${style["eye-on"]}`}
                 aria-hidden="true"
                 style={{ display: eye.on }}
                 onClick={switchPasswordModeHandler}
@@ -766,10 +675,10 @@ function Login({ display, setDisplay }) {
             </div>
             <button onClick={loginHandler}>登入</button>
 
-            <button type="button" onClick={googleLoginHandler}>
+            <button type="button" id="google" onClick={providerLoginHandler}>
               Google 登入
             </button>
-            <button type="button" onClick={facebookLoginHandler}>
+            <button type="button" id="facebook" onClick={providerLoginHandler}>
               Facebook 登入
             </button>
           </form>
@@ -817,7 +726,7 @@ function Login({ display, setDisplay }) {
             </li>
           </ul>
           {/*eslint-disable-next-line */}
-          <form action="javascript:void(0);" autocomplete="off">
+          <form action="javascript:void(0);" autoComplete="off">
             <label>
               <div>姓名</div>
               <input
@@ -850,19 +759,19 @@ function Login({ display, setDisplay }) {
                 name="password"
                 className={validStyle.password || ""}
                 placeholder="請輸入至少6位字元"
-                minlength="6"
-                maxlength="15"
+                minLength="6"
+                maxLength="15"
                 value={input.password || ""}
                 onChange={getInputHandler}
               />
               <i
-                class={`fa fa-eye-slash ${style["eye-slash"]}`}
+                className={`fa fa-eye-slash ${style["eye-slash"]}`}
                 style={{ display: eye.slash }}
                 aria-hidden="true"
                 onClick={switchPasswordModeHandler}
               ></i>
               <i
-                class={`fa fa-eye ${style["eye-on"]}`}
+                className={`fa fa-eye ${style["eye-on"]}`}
                 aria-hidden="true"
                 style={{ display: eye.on }}
                 onClick={switchPasswordModeHandler}

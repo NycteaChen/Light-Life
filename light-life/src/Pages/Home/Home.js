@@ -217,7 +217,7 @@ function Home() {
             <p>對本站有任何疑問或回饋請告訴我們！</p>
           </div>
           <section className={`${style.wow} animated animate__fadeInUp`}>
-            <form autocomplete="off">
+            <form autoComplete="off">
               <label>
                 <span>您的大名</span>
                 <div>
