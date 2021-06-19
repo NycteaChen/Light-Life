@@ -1,21 +1,50 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/firestore";
 import "firebase/functions";
 import "firebase/auth";
 import firebaseConfig from "../FirebaseConfig";
 firebase.initializeApp(firebaseConfig);
 
-let db = firebase.firestore();
-let auth = firebase.auth();
-let refDietitians = db.collection("dietitians");
-let refCustomers = db.collection("customers");
-let refPending = db.collection("pending");
-let refPublish = db.collection("publish");
-let refReserve = db.collection("reserve");
+const db = firebase.firestore();
+const auth = firebase.auth();
+const storage = firebase.storage();
+const refDietitians = db.collection("dietitians");
+const refCustomers = db.collection("customers");
+const refPending = db.collection("pending");
+const refPublish = db.collection("publish");
+const refReserve = db.collection("reserve");
+
+// 上傳照片
+export async function getImg(image, ref) {
+  if (image) {
+    const imageName = image.name;
+    const imageStorageRef = storage.ref(`${ref}/` + imageName);
+    await imageStorageRef.put(image);
+    const storageRef = storage.ref();
+    const pathRef = await storageRef
+      .child(`${ref}/` + imageName)
+      .getDownloadURL();
+    console.log(pathRef);
+    return await pathRef;
+  } else {
+    return "";
+  }
+}
 
 // 註冊
 export function signUp(email, password) {
   return auth.createUserWithEmailAndPassword(email, password);
 }
+
+// 第三方
+export function providerHandler(provider) {
+  if (provider === "google") {
+    return new firebase.auth.GoogleAuthProvider();
+  } else if (provider === "facebook") {
+    return new firebase.auth.FacebookAuthProvider();
+  }
+}
+
 // 登出
 export function logout() {
   auth

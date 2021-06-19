@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
-import { updateDietitianData } from "../../../utils/Firebase";
+import { updateDietitianData, getImg } from "../../../utils/Firebase";
 import style from "../../../style/dietitianProfile.module.scss";
 
 function DietitianProfile({ profile, setProfile }) {
-  const storage = firebase.storage();
   const { name, image, id, gender, email, education, skills, other } = profile;
   const [isEditing, setIsEditing] = useState(false);
   const [edu, setEdu] = useState({
@@ -26,28 +23,6 @@ function DietitianProfile({ profile, setProfile }) {
     education: edu,
     skills: skill,
   });
-
-  async function postImg(image) {
-    if (image) {
-      const storageRef = storage.ref(`${id}/` + image.name);
-      await storageRef.put(image);
-      return image.name;
-    } else {
-      return false;
-    }
-  }
-  async function getImg(image) {
-    const imageName = await postImg(image);
-    if (imageName) {
-      const storageRef = storage.ref();
-      const pathRef = await storageRef
-        .child(`${id}/` + imageName)
-        .getDownloadURL();
-      return pathRef;
-    } else {
-      return "";
-    }
-  }
 
   const getInputHandler = (e) => {
     const { name } = e.target;
@@ -88,7 +63,7 @@ function DietitianProfile({ profile, setProfile }) {
     //   edu.degree
     // ) {
     if (input.imageFile) {
-      const imageUrl = await getImg(input.imageFile);
+      const imageUrl = await getImg(input.imageFile, id);
       delete input.imageFile;
       delete input.previewImg;
       setInput({
@@ -101,13 +76,11 @@ function DietitianProfile({ profile, setProfile }) {
       }).then(() => {
         setProfile({ ...profile, ...input, image: imageUrl });
         setIsEditing(false);
-        console.log("e");
       });
     } else {
       setProfile({ ...profile, ...input });
 
       updateDietitianData(id, input).then(() => {
-        console.log("e");
         setIsEditing(false);
       });
     }

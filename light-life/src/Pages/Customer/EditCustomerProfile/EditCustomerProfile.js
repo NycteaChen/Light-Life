@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import firebase from "firebase/app";
-import "firebase/storage";
-import { updateCustomerData } from "../../../utils/Firebase";
+import { updateCustomerData, getImg } from "../../../utils/Firebase";
 import noImage from "../../../images/noimage.png";
 import CustomerProfile from "../../Components/CustomerProfile/CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
 
 function EditCustomerProfile({ profile, setProfile }) {
-  const storage = firebase.storage();
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const {
@@ -23,27 +20,6 @@ function EditCustomerProfile({ profile, setProfile }) {
     sport,
     other,
   } = profile;
-  async function postImg(image) {
-    if (image) {
-      const storageRef = storage.ref(`${id}/` + image.name);
-      await storageRef.put(image);
-      return image.name;
-    } else {
-      return false;
-    }
-  }
-  async function getImg(image) {
-    const imageName = await postImg(image);
-    if (imageName) {
-      const storageRef = storage.ref();
-      const pathRef = await storageRef
-        .child(`${id}/` + imageName)
-        .getDownloadURL();
-      return pathRef;
-    } else {
-      return "";
-    }
-  }
 
   const getInputHandler = (e) => {
     const { name } = e.target;
@@ -68,7 +44,7 @@ function EditCustomerProfile({ profile, setProfile }) {
 
   const bindSaveHandler = async () => {
     if (input.imageFile) {
-      const imageUrl = await getImg(input.imageFile);
+      const imageUrl = await getImg(input.imageFile, id);
       delete input.imageFile;
       delete input.previewImg;
       setInput({

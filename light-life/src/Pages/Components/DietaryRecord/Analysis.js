@@ -4,7 +4,7 @@ import {
   getCustomerData,
   getDietData,
   updateDietAdvice,
-} from "../../../utils/Firebase";
+} from "../../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import style from "../../../style/dietary.module.scss";
 function Analysis({ date, cID, data }) {
