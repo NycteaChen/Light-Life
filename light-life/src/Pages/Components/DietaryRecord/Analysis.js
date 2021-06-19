@@ -69,7 +69,7 @@ function Analysis({ date, cID, data }) {
           }
         });
       });
-  }, [date, data, cID]);
+  }, [date, data, cID]); //eslint-disable-line
 
   const nutrientReduce = (target, nutrient) => {
     const reducer = (acc, cur) => acc + cur;
@@ -155,7 +155,7 @@ function Analysis({ date, cID, data }) {
               <tr id="table-total">
                 <th>總和</th>
                 {nutrient.map((m) => (
-                  <th>
+                  <th key={m}>
                     {parseFloat(getNutrientTotal(`${m}`).toFixed(1)) || "-"}
                   </th>
                 ))}

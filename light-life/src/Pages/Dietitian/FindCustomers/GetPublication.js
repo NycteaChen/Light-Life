@@ -47,7 +47,7 @@ function GetPublication() {
         });
         setPublish(res);
       });
-  }, []);
+  }, []); //eslint-disable-line
 
   useEffect(() => {
     if (publish) {

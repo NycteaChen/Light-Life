@@ -221,6 +221,7 @@ function DietitianRecord({ date }) {
       <ul>
         {mealKeywords.map((m) => (
           <li
+            key={m[0]}
             className={`${style["meal-title"]} ${m[1]} ${active[m[2]] || ""}`}
             id={`${m[2]}`}
             onClick={getMealHandler}
@@ -232,7 +233,7 @@ function DietitianRecord({ date }) {
       <div className={style.mealCol}>
         <h5>{date} 飲食記錄</h5>
         {mealKeywords.map((m) => (
-          <div className={style.meal}>
+          <div className={style.meal} key={m[1]}>
             {meal[0] === m[1] ? (
               <>
                 <div className={`${style["diet-record"]} ${style.col}`}>
@@ -423,7 +424,7 @@ function DietitianRecord({ date }) {
                         <th className={`${style["meal-plus"]} ${m[1]}`}>
                           <div className={m[1]} onClick={addNewFoodTable}>
                             <i
-                              class={`fa fa-plus ${m[1]}`}
+                              className={`fa fa-plus ${m[1]}`}
                               aria-hidden="true"
                               onClick={addNewFoodTable}
                             ></i>

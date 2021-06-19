@@ -261,7 +261,8 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
             </label>
             <div className={style.button}>
               <button onClick={sendReverseHandler}>
-                <i class="fa fa-paper-plane" aria-hidden="true"></i>發送預約邀請
+                <i className="fa fa-paper-plane" aria-hidden="true"></i>
+                發送預約邀請
               </button>
             </div>
           </>
