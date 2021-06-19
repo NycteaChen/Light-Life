@@ -600,7 +600,7 @@ function Login({ display, setDisplay }) {
             </li>
           </ul>
           {/*eslint-disable-next-line */}
-          <form action="javascript:void(0);" autoComplete="off">
+          <form autoComplete="off">
             <label>
               <div>帳號</div>
               <input
@@ -666,7 +666,9 @@ function Login({ display, setDisplay }) {
                 </span>
               </div>
             </div>
-            <button onClick={loginHandler}>登入</button>
+            <button type="button" onClick={loginHandler}>
+              登入
+            </button>
 
             <button type="button" id="google" onClick={providerLoginHandler}>
               Google 登入
@@ -719,7 +721,7 @@ function Login({ display, setDisplay }) {
             </li>
           </ul>
           {/*eslint-disable-next-line */}
-          <form action="javascript:void(0);" autoComplete="off">
+          <form autoComplete="off">
             <label>
               <div>姓名</div>
               <input
@@ -780,7 +782,9 @@ function Login({ display, setDisplay }) {
               此信箱已有人使用
             </div>
             <div>
-              <button onClick={signupHandler}>註冊</button>
+              <button type="button" onClick={signupHandler}>
+                註冊
+              </button>
             </div>
             <div className={style.hint}>
               返回
