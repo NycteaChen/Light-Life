@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
 import { useParams } from "react-router-dom";
-import "firebase/firestore";
 import Swal from "sweetalert2";
 import {
   getCustomerData,
   getDietData,
   setCustomerDiet,
+  getImg,
 } from "../../../utils/Firebase.js";
 import Analysis from "./Analysis.js";
 import style from "../../../style/dietary.module.scss";
@@ -16,17 +15,15 @@ const Save = styled.button`
   cursor: default;
   opacity: 0.7;
 `;
-
 function CustomerRecord({ date, count, setCount }) {
-  const storage = firebase.storage();
   const [input, setInput] = useState("");
   const [meal, setMeal] = useState("");
   const [dID, setDID] = useState();
   const [mealDetails, setMealDetails] = useState("");
   const [dataAnalysis, setDataAnalysis] = useState(false);
-
   const cID = useParams().cID;
   const [active, setAcitve] = useState("");
+
   useEffect(() => {
     getCustomerData(cID).then((doc) => {
       setDID(doc.data().dietitian);
@@ -64,27 +61,7 @@ function CustomerRecord({ date, count, setCount }) {
       }
     });
   };
-  async function postImg(image) {
-    if (image) {
-      const storageRef = storage.ref(`${cID}/${date}/${meal}/` + image.name);
-      await storageRef.put(image);
-      return image.name;
-    } else {
-      return false;
-    }
-  }
-  async function getImg(image) {
-    const imageName = await postImg(image);
-    if (imageName) {
-      const storageRef = storage.ref();
-      const pathRef = await storageRef
-        .child(`${cID}/${date}/${meal}/` + imageName)
-        .getDownloadURL();
-      return await pathRef;
-    } else {
-      return "";
-    }
-  }
+
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name !== "image") {
@@ -159,8 +136,9 @@ function CustomerRecord({ date, count, setCount }) {
             });
             setMealDetails({ ...mealDetails, images: imageUrlsArray });
           }
+          const imageRef = `${cID}/${date}/${meal}`;
           input.imageFile.forEach(async (i) => {
-            const imageUrl = await getImg(i);
+            const imageUrl = await getImg(i, imageRef);
             imageUrlsArray.push(imageUrl);
             setInput({
               ...input,

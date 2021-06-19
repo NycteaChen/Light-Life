@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
 import {
   getDietitiansData,
   getCustomersData,
@@ -11,6 +9,7 @@ import {
   initProfileData,
   providerLogin,
   onAuth,
+  providerHandler,
 } from "../../utils/Firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from "../../style/login.module.scss";
@@ -351,7 +350,6 @@ function Login({ display, setDisplay }) {
           if (res.isConfirmed) {
             signUp(valid.email, valid.password)
               .then(() => {
-                // const user = userCredential.user;
                 const { currentUser } = onAuth();
                 currentUser
                   .sendEmailVerification()
@@ -426,12 +424,7 @@ function Login({ display, setDisplay }) {
   };
 
   const providerLoginHandler = (e) => {
-    let provider;
-    if (e.target.id === "google") {
-      provider = new firebase.auth.GoogleAuthProvider();
-    } else {
-      provider = new firebase.auth.FacebookAuthProvider();
-    }
+    const provider = providerHandler(e.target.id);
     providerLogin(provider)
       .then((result) => {
         const user = result.user;
