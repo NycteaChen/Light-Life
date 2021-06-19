@@ -630,8 +630,8 @@ function Customer() {
                       <div>
                         {pending ? (
                           pending.length > 0 ? (
-                            pending.map((p) => (
-                              <div className={style.each}>
+                            pending.map((p, index) => (
+                              <div className={style.each} key={index}>
                                 <div>{p.dietitianName} 營養師</div>
                                 <div>
                                   <div>開始日期：{p.startDate}</div>

@@ -1,13 +1,13 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
-import "firebase/functions";
+import "firebase/storage";
 import "firebase/auth";
 import firebaseConfig from "../FirebaseConfig";
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
-const auth = firebase.auth();
 const storage = firebase.storage();
+const auth = firebase.auth();
 const refDietitians = db.collection("dietitians");
 const refCustomers = db.collection("customers");
 const refPending = db.collection("pending");
@@ -36,7 +36,7 @@ export function signUp(email, password) {
   return auth.createUserWithEmailAndPassword(email, password);
 }
 
-// 第三方
+// 第三方登入
 export function providerHandler(provider) {
   if (provider === "google") {
     return new firebase.auth.GoogleAuthProvider();
@@ -227,7 +227,6 @@ export function deleteTarget(dID, cID, res) {
     .collection("target")
     .doc(`${res}`)
     .delete()
-    .then(() => console.log("delete"))
     .catch((error) => console.log("Error:", error));
 }
 

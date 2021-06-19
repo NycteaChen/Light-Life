@@ -108,7 +108,7 @@ function EditCustomerProfile({ profile, setProfile }) {
               title="save"
             >
               <i
-                class="fa fa-floppy-o"
+                className="fa fa-floppy-o"
                 aria-hidden="true"
                 title="save"
                 onClick={bindSaveHandler}
@@ -120,7 +120,7 @@ function EditCustomerProfile({ profile, setProfile }) {
               title="cancel"
             >
               <i
-                class="fa fa-times"
+                className="fa fa-times"
                 aria-hidden="true"
                 title="cancel"
                 onClick={profileButtonHandler}
@@ -474,7 +474,7 @@ function EditCustomerProfile({ profile, setProfile }) {
           <div className={style.edit}>
             <button onClick={profileButtonHandler} title="edit">
               <i
-                class="fa fa-pencil"
+                className="fa fa-pencil"
                 aria-hidden="true"
                 title="edit"
                 onClick={profileButtonHandler}

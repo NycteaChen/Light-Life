@@ -114,7 +114,6 @@ function Dietitian() {
       getPendingData("dietitian", dID).then((docs) => {
         const pendingArray = [];
         if (!docs.empty) {
-          console.log(docs);
           docs.forEach((doc) => {
             pendingArray.push(doc.data());
           });
@@ -391,7 +390,11 @@ function Dietitian() {
                   to={`/dietitian/${dID}/profile`}
                   onClick={bindListHandler}
                 >
-                  <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                  <i
+                    className="fa fa-user"
+                    aria-hidden="true"
+                    title="profile"
+                  ></i>
                   <div title="profile">會員資料</div>
                 </Link>
                 <ul>
@@ -404,7 +407,7 @@ function Dietitian() {
                       onClick={bindListHandler}
                     >
                       <i
-                        class="fa fa-users list"
+                        className="fa fa-users list"
                         aria-hidden="true"
                         title="customerList"
                       ></i>
@@ -419,7 +422,7 @@ function Dietitian() {
                   ) : (
                     <div className={basic["nav-unactive"]}>
                       <i
-                        class="fa fa-users list"
+                        className="fa fa-users list"
                         aria-hidden="true"
                         title="customerList"
                       ></i>
@@ -434,10 +437,10 @@ function Dietitian() {
                     style={{ display: display }}
                   >
                     {users && users.length > 0
-                      ? users.map((c, index) => (
+                      ? users.map((c) => (
                           <Link
                             to={`/dietitian/${c.dietitian}/customer/${c.id}/`}
-                            key={index}
+                            key={c.id}
                             className={c.id}
                             onClick={getSelectedCustomer}
                           >
@@ -455,7 +458,7 @@ function Dietitian() {
                   to={`/dietitian/${dID}/findCustomers`}
                 >
                   <i
-                    class="fa fa-search"
+                    className="fa fa-search"
                     aria-hidden="true"
                     title="findCustomer"
                   ></i>
@@ -469,7 +472,7 @@ function Dietitian() {
                   to={`/dietitian/${dID}/inviteMe`}
                 >
                   <i
-                    class="fa fa-envira"
+                    className="fa fa-envira"
                     aria-hidden="true"
                     title="whoInvite"
                   ></i>
@@ -480,7 +483,7 @@ function Dietitian() {
                   onClick={bindListHandler}
                   to={`/dietitian/${dID}`}
                 >
-                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                  <i className="fa fa-arrow-left" aria-hidden="true"></i>
                   <div>會員主頁</div>
                 </Link>
                 <span onClick={logoutHandler}>
@@ -502,9 +505,9 @@ function Dietitian() {
                       id="service"
                       className={`${basic.toggle} ${basic["toggle-round"]}`}
                       checked={profile.isServing ? true : false}
-                      onClick={changeServiceStatusHandler}
+                      onChange={changeServiceStatusHandler}
                     />
-                    <label className={basic.label} for="service"></label>
+                    <label className={basic.label} htmlFor="service"></label>
                   </div>
                 </div>
               </div>
@@ -515,7 +518,11 @@ function Dietitian() {
                   to={`/dietitian/${dID}/profile`}
                   onClick={bindListHandler}
                 >
-                  <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                  <i
+                    className="fa fa-user"
+                    aria-hidden="true"
+                    title="profile"
+                  ></i>
                   <div title="profile">會員資料</div>
                 </Link>
                 <Link
@@ -525,7 +532,7 @@ function Dietitian() {
                   onClick={bindListHandler}
                 >
                   <i
-                    class="fa fa-search"
+                    className="fa fa-search"
                     aria-hidden="true"
                     title="findCustomer"
                   ></i>
@@ -538,7 +545,7 @@ function Dietitian() {
                   onClick={showMobileCustomerList}
                 >
                   <i
-                    class="fa fa-users"
+                    className="fa fa-users"
                     aria-hidden="true"
                     title="customerList"
                   ></i>
@@ -552,7 +559,7 @@ function Dietitian() {
                   title="whoInvite"
                 >
                   <i
-                    class="fa fa-envira"
+                    className="fa fa-envira"
                     aria-hidden="true"
                     title="whoInvite"
                   ></i>
@@ -578,7 +585,7 @@ function Dietitian() {
                         {users ? (
                           users.length > 0 ? (
                             users.map((u) => (
-                              <div className={basic.each}>
+                              <div className={basic.each} key={u.name}>
                                 <div>
                                   {u.name} {u.gender === "男" ? "先生" : "小姐"}
                                 </div>
@@ -601,7 +608,7 @@ function Dietitian() {
                         {pending ? (
                           pending.length > 0 ? (
                             pending.map((p) => (
-                              <div className={basic.each}>
+                              <div className={basic.each} key={p.customerName}>
                                 <div>
                                   {p.customerName}{" "}
                                   {p.customerGender === "男" ? "先生" : "小姐"}
@@ -661,7 +668,10 @@ function Dietitian() {
                       }/profile`}
                       onClick={bindListHandler}
                     >
-                      <i class="fa fa-address-book-o" aria-hidden="true"></i>
+                      <i
+                        className="fa fa-address-book-o"
+                        aria-hidden="true"
+                      ></i>
                       {users && users.length > 0 && customerID
                         ? users.filter((e) => e.id === customerID)[0].name
                         : ""}
@@ -677,7 +687,7 @@ function Dietitian() {
                       onClick={bindListHandler}
                     >
                       <i
-                        class="fa fa-cutlery"
+                        className="fa fa-cutlery"
                         aria-hidden="true"
                         title="dietary"
                       ></i>
@@ -694,7 +704,7 @@ function Dietitian() {
                       onClick={bindListHandler}
                     >
                       <i
-                        class="fa fa-bullseye"
+                        className="fa fa-bullseye"
                         aria-hidden="true"
                         title="target"
                       ></i>

@@ -15,7 +15,7 @@ function CustomerProfile({ props }) {
         setProfile(doc.data());
       });
     }
-  }, []);
+  }, []); //eslint-disable-line
   return (
     <>
       {props.image !== undefined || profile.image ? (

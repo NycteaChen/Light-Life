@@ -125,7 +125,7 @@ function TargetHandler({ target, setTarget }) {
                   <div className={style["alter-button"]}>
                     <button onClick={bindSaveHandler} id={index}>
                       <i
-                        class="fa fa-floppy-o"
+                        className="fa fa-floppy-o"
                         aria-hidden="true"
                         id={index}
                       ></i>
@@ -216,7 +216,7 @@ function TargetHandler({ target, setTarget }) {
                   <div className={style["alter-button"]}>
                     <button onClick={bindEditHandler} id={index}>
                       <i
-                        class="fa fa-pencil"
+                        className="fa fa-pencil"
                         aria-hidden="true"
                         id={index}
                         onClick={bindEditHandler}
@@ -266,72 +266,70 @@ function TargetHandler({ target, setTarget }) {
         ) : target.length > 0 ? (
           target.map((t, index) =>
             index === +targetIndex ? (
-              <>
-                <div key={index} className={style["customer-target"]}>
-                  <div className={style["target-header"]}>
-                    {pathName.includes("dietitian") ? (
-                      <div className={style["alter-button"]}>
-                        <button onClick={bindEditHandler} id={index}>
-                          <i
-                            class="fa fa-pencil"
-                            aria-hidden="true"
-                            id={index}
-                            onClick={bindEditHandler}
-                          ></i>
-                        </button>
-                        <button onClick={bindRemoveTarget} id={index}>
-                          <i
-                            id={index}
-                            className="fa fa-trash-o"
-                            aria-hidden="true"
-                            onClick={bindRemoveTarget}
-                          ></i>
-                        </button>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                    <div className={style.flexbox}>
-                      <div className={style.title}>建立時間</div>
-                      <div className={style["set-content"]}>{t.addDate}</div>
+              <div key={index} className={style["customer-target"]}>
+                <div className={style["target-header"]}>
+                  {pathName.includes("dietitian") ? (
+                    <div className={style["alter-button"]}>
+                      <button onClick={bindEditHandler} id={index}>
+                        <i
+                          className="fa fa-pencil"
+                          aria-hidden="true"
+                          id={index}
+                          onClick={bindEditHandler}
+                        ></i>
+                      </button>
+                      <button onClick={bindRemoveTarget} id={index}>
+                        <i
+                          id={index}
+                          className="fa fa-trash-o"
+                          aria-hidden="true"
+                          onClick={bindRemoveTarget}
+                        ></i>
+                      </button>
                     </div>
+                  ) : (
+                    ""
+                  )}
+                  <div className={style.flexbox}>
+                    <div className={style.title}>建立時間</div>
+                    <div className={style["set-content"]}>{t.addDate}</div>
                   </div>
-                  <div className={style.col}>
-                    <div className={style.flexbox}>
-                      <div className={style.title}>開始日期</div>
-                      <div className={style["set-content"]}>
-                        {input.startDate || t.startDate}
-                      </div>
-                    </div>
-                    <div className={style.flexbox}>
-                      <div className={style.title}>結束日期</div>
-                      <div className={style["set-content"]}>
-                        {input.endDate || t.endDate}
-                      </div>
-                    </div>
-                  </div>
-                  <div className={style.col}>
-                    <div className={style.flexbox}>
-                      <div className={style.title}>目標體重</div>
-                      <div className={style["set-content"]}>
-                        {input.weight || t.weight} kg
-                      </div>
-                    </div>
-                    <div className={style.flexbox}>
-                      <div className={style.title}>目標水分</div>
-                      <div className={style["set-content"]}>
-                        {input.water || t.water} cc
-                      </div>
+                </div>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>開始日期</div>
+                    <div className={style["set-content"]}>
+                      {input.startDate || t.startDate}
                     </div>
                   </div>
                   <div className={style.flexbox}>
-                    <div className={style.title}>其他</div>
+                    <div className={style.title}>結束日期</div>
                     <div className={style["set-content"]}>
-                      {input.other || t.other}
+                      {input.endDate || t.endDate}
                     </div>
                   </div>
                 </div>
-              </>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標體重</div>
+                    <div className={style["set-content"]}>
+                      {input.weight || t.weight} kg
+                    </div>
+                  </div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標水分</div>
+                    <div className={style["set-content"]}>
+                      {input.water || t.water} cc
+                    </div>
+                  </div>
+                </div>
+                <div className={style.flexbox}>
+                  <div className={style.title}>其他</div>
+                  <div className={style["set-content"]}>
+                    {input.other || t.other}
+                  </div>
+                </div>
+              </div>
             ) : (
               <div key={index} className={style["customer-target"]}>
                 <div className={style["target-header"]}>
@@ -339,7 +337,7 @@ function TargetHandler({ target, setTarget }) {
                     <div className={style["alter-button"]}>
                       <button onClick={bindEditHandler} id={index}>
                         <i
-                          class="fa fa-pencil"
+                          className="fa fa-pencil"
                           aria-hidden="true"
                           id={index}
                           onClick={bindEditHandler}

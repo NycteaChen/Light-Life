@@ -273,7 +273,7 @@ function Publish({ reserve }) {
               onClick={publishModalHandler}
             >
               <i
-                class="fa fa-pencil-square-o"
+                className="fa fa-pencil-square-o"
                 aria-hidden="true"
                 title="add"
               ></i>
@@ -283,7 +283,11 @@ function Publish({ reserve }) {
               title="remove"
               onClick={publishModalHandler}
             >
-              <i class="fa fa-trash-o" aria-hidden="true" title="remove"></i>
+              <i
+                className="fa fa-trash-o"
+                aria-hidden="true"
+                title="remove"
+              ></i>
             </button>
           </div>
         </div>
@@ -343,7 +347,7 @@ function Publish({ reserve }) {
               publishData[0].whoInvite.map((i, index) => (
                 <>
                   {i.status === "0" ? (
-                    <div className={style.inviter}>
+                    <div className={style.inviter} key={index}>
                       <div>{i.name} 營養師對您的刊登有興趣</div>
                       <button id={index} onClick={checkDietitianDetails}>
                         查看詳情
@@ -388,7 +392,7 @@ function Publish({ reserve }) {
           {oldPublish ? (
             oldPublish.length > 0 ? (
               oldPublish.map((o) => (
-                <div className={style["published-col"]}>
+                <div className={style["published-col"]} key={o.startDate}>
                   <div>
                     <div className={style.startDate}>
                       預約開始時間：{o.startDate}

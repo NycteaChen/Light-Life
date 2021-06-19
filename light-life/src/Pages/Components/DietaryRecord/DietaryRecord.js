@@ -11,9 +11,9 @@ import DietitianRecord from "./DietitianRecord.js";
 import CustomerRecord from "./CustomerRecord.js";
 import style from "../../../style/dietary.module.scss";
 
-function RenderDietaryRecord() {
+function DietaryRecord() {
   const [recordDate, setRecordDate] = useState();
-  const [getRecord, setGetRecord] = useState(false); //false
+  const [getRecord, setGetRecord] = useState(false);
   const [count, setCount] = useState(1);
   const [serviceDate, setServiceDate] = useState({});
   const { dID } = useParams();
@@ -86,4 +86,4 @@ function RenderDietaryRecord() {
   );
 }
 
-export default RenderDietaryRecord;
+export default DietaryRecord;

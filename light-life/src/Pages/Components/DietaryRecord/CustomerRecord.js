@@ -186,6 +186,7 @@ function CustomerRecord({ date, count, setCount }) {
       <ul>
         {mealKeywords.map((m) => (
           <li
+            key={m[0]}
             className={`${style["meal-title"]} ${m[1]} ${active[m[2]] || ""}`}
             id={`${m[2]}`}
             role="presentation"
@@ -198,7 +199,7 @@ function CustomerRecord({ date, count, setCount }) {
       <div className={style.mealCol}>
         <h5>{date} 飲食記錄</h5>
         {mealKeywords.map((m) => (
-          <div className={style.meal}>
+          <div className={style.meal} key={m[1]}>
             {meal === m[1] && count % 2 === 0 ? (
               <>
                 <div className={`${style["diet-record"]} ${style.col}`}>
@@ -258,7 +259,7 @@ function CustomerRecord({ date, count, setCount }) {
                         multiple="multiple"
                         onChange={getInputHandler}
                       />
-                      <i class="fa fa-picture-o" aria-hidden="true"></i>
+                      <i className="fa fa-picture-o" aria-hidden="true"></i>
                       {input.imageFile
                         ? `選取${input.imageFile.length}張`
                         : "上傳照片"}

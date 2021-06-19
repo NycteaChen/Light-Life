@@ -109,10 +109,10 @@ function DietitianProfile({ profile, setProfile }) {
         <div className={style["edit-mode"]}>
           <div className={style.buttons}>
             <button onClick={saveProfileHandler} title="save">
-              <i class="fa fa-floppy-o" aria-hidden="true" title="save"></i>
+              <i className="fa fa-floppy-o" aria-hidden="true" title="save"></i>
             </button>
             <button onClick={profileButtonHandler} title="cancel">
-              <i class="fa fa-times" aria-hidden="true" title="cancel"></i>
+              <i className="fa fa-times" aria-hidden="true" title="cancel"></i>
             </button>
           </div>
           {/*eslint-disable-next-line */}
@@ -334,7 +334,7 @@ function DietitianProfile({ profile, setProfile }) {
             <button onClick={profileButtonHandler} title="edit">
               <i
                 title="edit"
-                class="fa fa-pencil"
+                className="fa fa-pencil"
                 aria-hidden="true"
                 onClick={profileButtonHandler}
               ></i>

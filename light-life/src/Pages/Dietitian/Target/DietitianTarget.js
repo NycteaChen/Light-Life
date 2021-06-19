@@ -98,7 +98,7 @@ function DietitianTarget() {
       <div className={style.flex}>
         <h5>已設立目標</h5>
         <button onClick={bindAddTarget} id="new">
-          <i class="fa fa-pencil-square-o" aria-hidden="true" id="new"></i>
+          <i className="fa fa-pencil-square-o" aria-hidden="true" id="new"></i>
         </button>
       </div>
       <div className={style["customer-targets"]}>
