@@ -99,7 +99,7 @@ function Home() {
     const wow = new WOW.WOW({
       boxClass: `${style.wow}`,
       offset: 150,
-      live: true,
+      live: false,
     });
     wow.init();
   }, []);
