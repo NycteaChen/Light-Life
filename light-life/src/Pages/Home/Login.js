@@ -318,7 +318,6 @@ function Login({ display, setDisplay }) {
           setShowMessage({ wrongAccount: style.showMessage });
           setValidStyle({
             email: style.invalid,
-            // password: style.invalid,
           });
         }
       });
@@ -600,12 +599,13 @@ function Login({ display, setDisplay }) {
             </li>
           </ul>
           {/*eslint-disable-next-line */}
-          <form autoComplete="off">
+          <form autoComplete="off" title="login-form">
             <label>
               <div>帳號</div>
               <input
                 type="email"
                 name="email"
+                title="login-email"
                 className={validStyle.email || ""}
                 placeholder="diet@test.com / cus@test.com"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
@@ -618,6 +618,7 @@ function Login({ display, setDisplay }) {
               <input
                 type={eye.mode}
                 name="password"
+                title="login-password"
                 className={validStyle.password || ""}
                 placeholder="abc123"
                 minLength="6"
@@ -721,12 +722,13 @@ function Login({ display, setDisplay }) {
             </li>
           </ul>
           {/*eslint-disable-next-line */}
-          <form autoComplete="off">
+          <form autoComplete="off" title="signup-form">
             <label>
               <div>姓名</div>
               <input
                 type="text"
                 name="name"
+                title="signup-name"
                 className={validStyle.name || ""}
                 placeholder="請輸入姓名"
                 pattern="^[\u4e00-\u9fa5]+$|^[a-zA-Z\s]+$"
@@ -739,6 +741,7 @@ function Login({ display, setDisplay }) {
               <input
                 type="email"
                 name="email"
+                title="signup-email"
                 className={validStyle.email || ""}
                 placeholder="請輸入e-mail"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
@@ -752,6 +755,7 @@ function Login({ display, setDisplay }) {
               <input
                 type={eye.mode}
                 name="password"
+                title="signup-password"
                 className={validStyle.password || ""}
                 placeholder="請輸入至少6位字元"
                 minLength="6"

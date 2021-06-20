@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { getDietData, setCustomerDiet } from "../../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import getIngrediensData from "../../../utils/IngredientsAPI.js";
-import Analysis from "./Analysis.js";
+import Analysis from "../../Components/DietaryRecord/Analysis.js";
 import style from "../../../style/dietary.module.scss";
 
 function DietitianRecord({ date }) {

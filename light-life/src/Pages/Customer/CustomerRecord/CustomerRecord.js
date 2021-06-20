@@ -7,7 +7,7 @@ import {
   setCustomerDiet,
   getImg,
 } from "../../../utils/Firebase.js";
-import Analysis from "./Analysis.js";
+import Analysis from "../../Components/DietaryRecord/Analysis.js";
 import style from "../../../style/dietary.module.scss";
 import styled from "styled-components";
 
