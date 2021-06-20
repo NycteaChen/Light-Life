@@ -36,19 +36,14 @@ function CustomerRecord({ date, count, setCount }) {
   const getMealHandler = (e) => {
     const mealClass = e.target.className.split(" ")[1];
     const { id } = e.target;
-    setAcitve({ [id]: style["li-active"] });
-    if (meal !== mealClass) {
-      setCount(2);
-    } else {
-      setCount(count + 1);
-    }
+    setAcitve(
+      meal !== mealClass || count % 2 === 1 ? { [id]: style["li-active"] } : ""
+    );
+    setCount(meal !== mealClass ? 2 : count + 1);
     setMeal(mealClass);
     setInput("");
-
     setMealDetails("");
     getDietData(dID, cID, date).then((doc) => {
-      console.log(mealClass);
-      console.log(e.target.id);
       if (doc.exists && doc.data()[mealClass]) {
         setMealDetails(doc.data()[mealClass]);
       } else {
@@ -110,21 +105,15 @@ function CustomerRecord({ date, count, setCount }) {
         let valid = 0;
         input.imageFile.forEach((i, index) => {
           if (i.size >= 2097152) {
-            if (input.imageFile.length > 1) {
-              Swal.fire({
-                text: `您想上傳的第${index + 1}張圖片超過2MB囉!`,
-                icon: "warning",
-                confirmButtonText: "確定",
-                confirmButtonColor: "#1e4d4e",
-              });
-            } else {
-              Swal.fire({
-                text: "圖片超過2MB囉!",
-                icon: "warning",
-                confirmButtonText: "確定",
-                confirmButtonColor: "#1e4d4e",
-              });
-            }
+            Swal.fire({
+              text:
+                input.imageFile.length > 1
+                  ? `您想上傳的第${index + 1}張圖片超過2MB囉!`
+                  : "圖片超過2MB囉!",
+              icon: "warning",
+              confirmButtonText: "確定",
+              confirmButtonColor: "#1e4d4e",
+            });
             valid++;
           }
         });
