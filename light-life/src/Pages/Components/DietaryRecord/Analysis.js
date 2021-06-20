@@ -75,35 +75,26 @@ function Analysis({ date, cID, data }) {
     const reducer = (acc, cur) => acc + cur;
     return target.map((i) => i[nutrient]).reduce(reducer, 0);
   };
+
   const parseNutrient = (nutrient) => {
     return parseFloat(nutrient.toFixed(1));
   };
 
   const calculator = (target, setMealNutrients) => {
-    const kcalTotal = nutrientReduce(target, "kcal");
-    const proteinTotal = nutrientReduce(target, "protein");
-    const lipidTotal = nutrientReduce(target, "lipid");
-    const carbohydrateTotal = nutrientReduce(target, "carbohydrate");
-    const fiberTotal = nutrientReduce(target, "fiber");
     setMealNutrients({
-      kcal: parseNutrient(kcalTotal),
-      protein: parseNutrient(proteinTotal),
-      lipid: parseNutrient(lipidTotal),
-      carbohydrate: parseNutrient(carbohydrateTotal),
-      fiber: parseNutrient(fiberTotal),
+      [nutrient[0]]: parseNutrient(nutrientReduce(target, nutrient[0])),
+      [nutrient[1]]: parseNutrient(nutrientReduce(target, nutrient[1])),
+      [nutrient[2]]: parseNutrient(nutrientReduce(target, nutrient[2])),
+      [nutrient[3]]: parseNutrient(nutrientReduce(target, nutrient[3])),
+      [nutrient[4]]: parseNutrient(nutrientReduce(target, nutrient[4])),
     });
   };
 
   const getNutrientTotal = (item) => {
     const nutrientArray = [];
-    nutrientArray.push(
-      breakfast[item],
-      morning[item],
-      lunch[item],
-      afternoon[item],
-      dinner[item],
-      night[item]
-    );
+    mealArray.forEach((m) => {
+      nutrientArray.push(m[2][item]);
+    });
     return nutrientArray
       .filter((i) => i !== undefined)
       .map((i) => parseFloat(i))
@@ -143,7 +134,7 @@ function Analysis({ date, cID, data }) {
             </thead>
             <tbody>
               {mealArray.map((m) => (
-                <tr id={m[0]}>
+                <tr id={m[0]} key={m[1]}>
                   <th>{m[1]}</th>
                   <th>{m[2].kcal || "-"}</th>
                   <th>{m[2].protein || "-"}</th>

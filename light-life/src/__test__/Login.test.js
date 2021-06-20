@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import Login from "./Login";
+import Login from "../Pages/Home/Login";
 import "@testing-library/jest-dom/extend-expect";
 
 describe("Login Form Button", () => {
