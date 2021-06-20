@@ -73,7 +73,6 @@ function DietitianRecord({ date }) {
   };
 
   const getInputHandler = (e) => {
-    console.log("here");
     const { name } = e.target;
     const { type } = e.target;
     if (isSelect && type === "number") {
