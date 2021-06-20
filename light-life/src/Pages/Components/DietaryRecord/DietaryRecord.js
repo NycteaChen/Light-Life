@@ -7,8 +7,8 @@ import {
   useParams,
 } from "react-router-dom";
 import { getMyCustomerData, getCustomerData } from "../../../utils/Firebase.js";
-import DietitianRecord from "./DietitianRecord.js";
-import CustomerRecord from "./CustomerRecord.js";
+import DietitianRecord from "../../Dietitian/DietitianRecord/DietitianRecord.js";
+import CustomerRecord from "../../Customer/CustomerRecord/CustomerRecord.js";
 import style from "../../../style/dietary.module.scss";
 
 function DietaryRecord() {
