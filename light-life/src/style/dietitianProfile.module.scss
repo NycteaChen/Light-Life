@@ -670,6 +670,9 @@
               display: flex;
               text-align: left;
               margin-left: 38px;
+              .title {
+                margin-right: 15px;
+              }
               .title + div {
                 max-width: 350px;
               }
@@ -678,9 +681,6 @@
           @media (min-width: 1024px) {
             & {
               margin-left: 58px;
-              .title + div {
-                margin-left: -5px;
-              }
             }
           }
         }

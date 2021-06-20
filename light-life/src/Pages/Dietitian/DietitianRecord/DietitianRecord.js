@@ -247,10 +247,8 @@ function DietitianRecord({ date }) {
                       照片記錄
                     </div>
                     <div className={style["food-images"]}>
-                      {mealDetails &&
-                      mealDetails.images &&
-                      mealDetails.images.length > 0 ? (
-                        mealDetails.images.map((i, index) => (
+                      {mealDetails && mealDetails.images ? (
+                        mealDetails.images?.map((i, index) => (
                           <div className={style["food-image"]} key={index}>
                             <a
                               href={i}
@@ -330,9 +328,9 @@ function DietitianRecord({ date }) {
                             onChange={getInputHandler}
                             onInput={getSearchHandler}
                           />
-                          {inputValue.length > 0 && isDisplay ? (
+                          {isDisplay ? (
                             <div className={style.searchBox}>
-                              {inputValue.map((i, index) => (
+                              {inputValue?.map((i, index) => (
                                 <div
                                   key={index}
                                   onClick={selectIngredientHandler}
