@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { logout, getUserWithEmail, onAuth } from "../../utils/Firebase.js";
+import Footer from "../Components/Footer.js";
 import Login from "./Login.js";
 import Swal from "sweetalert2";
 import logo from "../../images/lightlife-horizontal.png";
@@ -270,22 +271,7 @@ function Home() {
           {" "}
         </a>
       </aside>
-      <footer>
-        <div>
-          <a
-            href="https://github.com/NycteaChen"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <i
-              className={`fa fa-github ${style.gitIcon}`}
-              aria-hidden="true"
-            ></i>
-          </a>
-          <p>jungturn01tw@gmail.com</p>
-        </div>
-        <p>&copy;2021 Light Life</p>
-      </footer>
+      <Footer />
     </>
   );
 }
