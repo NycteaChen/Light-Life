@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import style from "../../../style/findDietitian.module.scss";
 function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   const { cID } = useParams();
+  const { pathname } = useLocation();
   const [input, setInput] = useState({});
   const [profile, setProfile] = useState(null);
   const [startDate, setStartDate] = useState(null);
@@ -26,7 +27,6 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   startMostDate.setDate(startMostDate.getDate() + 14);
   endLessDate.setDate(endLessDate.getDate() + 7);
   endMostDate.setDate(endMostDate.getDate() + 14);
-  const path = useLocation().pathname;
 
   const transDateToTime = (date) => {
     const time = new Date(date).getTime();
@@ -204,10 +204,10 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   return (
     <div className={style["reserve-form"]}>
       <div className={style["form-title"]}>
-        {path.includes("reserve-list") ? "您的預約" : "現在預約"}
+        {pathname.includes("reserve-list") ? "您的預約" : "現在預約"}
       </div>
       <div className={style.form}>
-        {path.includes("reserve-list") ? (
+        {pathname.includes("reserve-list") ? (
           <div className={style.reserveCol}>
             <label className={style.reserveLabel}>
               <div>開始日期</div>
@@ -245,7 +245,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
           </div>
         )}
 
-        {path.includes("reserve-list") ? (
+        {pathname.includes("reserve-list") ? (
           <label className={`${style.reserveLabel} ${style.reserveMessage}`}>
             <div>邀請訊息</div>
             <div>{nowReserve ? nowReserve.reserveMessage : ""}</div>
