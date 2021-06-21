@@ -20,6 +20,7 @@ function Home() {
   const bindLoginButton = () => {
     setDisplay("flex");
   };
+  const clientArray = ["dietitian", "customer"];
 
   const sendContactHandler = () => {
     if (valid.name && valid.email && valid.text) {
@@ -61,35 +62,23 @@ function Home() {
   useEffect(() => {
     onAuth().onAuthStateChanged((user) => {
       if (user) {
-        getUserWithEmail("dietitians", user.email).then((docs) => {
-          if (!docs.empty) {
-            docs.forEach((doc) => {
-              setUser({
-                image: doc.data().image,
-                id: doc.data().id,
-                client: "dietitian",
+        clientArray.forEach((c) => {
+          getUserWithEmail(`${c}s`, user.email).then((docs) => {
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                setUser({
+                  image: doc.data().image,
+                  id: doc.data().id,
+                  client: c,
+                });
               });
-            });
-          }
+            }
+          });
         });
-
-        getUserWithEmail("customers", user.email).then((docs) => {
-          if (!docs.empty) {
-            docs.forEach((doc) => {
-              setUser({
-                image: doc.data().image,
-                id: doc.data().id,
-                client: "customer",
-              });
-            });
-          }
-        });
-
         setTimeout(() => {
           setLoad(style.loadFadeout);
         }, 1000);
       } else {
-        // User is signed out
         setTimeout(() => {
           setLoad(style.loadFadeout);
         }, 500);
