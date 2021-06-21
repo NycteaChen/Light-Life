@@ -5,8 +5,10 @@ import style from "../../style/mobileBottom.module.scss";
 import Swal from "sweetalert2";
 import exit from "../../images/exit.png";
 import user from "../../images/user.png";
+
 export default function MobileBottom() {
-  const params = useParams();
+  const { cID } = useParams();
+  const { dID } = useParams();
   const logoutHandler = () => {
     Swal.fire({
       text: "確定登出嗎?",
@@ -25,9 +27,7 @@ export default function MobileBottom() {
       <div className={style.mobileBottom}>
         <Link
           className={style.link}
-          to={
-            params.dID ? `/dietitian/${params.dID}` : `/customer/${params.cID}`
-          }
+          to={dID ? `/dietitian/${dID}` : `/customer/${cID}`}
         >
           <img src={user} alt="member" />
           <span>會員主頁</span>
@@ -39,11 +39,7 @@ export default function MobileBottom() {
       </div>
       <aside>
         <a
-          href={
-            params.dID
-              ? `/dietitian/${params.dID}#top`
-              : `/customer/${params.cID}#top`
-          }
+          href={dID ? `/dietitian/${dID}#top` : `/customer/${cID}#top`}
           id={style.toTop}
         >
           {" "}

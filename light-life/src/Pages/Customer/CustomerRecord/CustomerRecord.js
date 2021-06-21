@@ -21,7 +21,7 @@ function CustomerRecord({ date, count, setCount }) {
   const [dID, setDID] = useState();
   const [mealDetails, setMealDetails] = useState("");
   const [dataAnalysis, setDataAnalysis] = useState(false);
-  const cID = useParams().cID;
+  const { cID } = useParams();
   const [active, setAcitve] = useState("");
 
   useEffect(() => {

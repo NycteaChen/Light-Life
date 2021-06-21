@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { logout, getUserWithEmail, onAuth } from "../../utils/Firebase.js";
+import Footer from "../Components/Footer.js";
 import Login from "./Login.js";
 import Swal from "sweetalert2";
 import logo from "../../images/lightlife-horizontal.png";
@@ -59,37 +60,27 @@ function Home() {
   };
 
   useEffect(() => {
+    const clientArray = ["dietitian", "customer"];
+
     onAuth().onAuthStateChanged((user) => {
       if (user) {
-        getUserWithEmail("dietitians", user.email).then((docs) => {
-          if (!docs.empty) {
-            docs.forEach((doc) => {
-              setUser({
-                image: doc.data().image,
-                id: doc.data().id,
-                client: "dietitian",
+        clientArray.forEach((c) => {
+          getUserWithEmail(`${c}s`, user.email).then((docs) => {
+            if (!docs.empty) {
+              docs.forEach((doc) => {
+                setUser({
+                  image: doc.data().image,
+                  id: doc.data().id,
+                  client: c,
+                });
               });
-            });
-          }
+            }
+          });
         });
-
-        getUserWithEmail("customers", user.email).then((docs) => {
-          if (!docs.empty) {
-            docs.forEach((doc) => {
-              setUser({
-                image: doc.data().image,
-                id: doc.data().id,
-                client: "customer",
-              });
-            });
-          }
-        });
-
         setTimeout(() => {
           setLoad(style.loadFadeout);
         }, 1000);
       } else {
-        // User is signed out
         setTimeout(() => {
           setLoad(style.loadFadeout);
         }, 500);
@@ -280,22 +271,7 @@ function Home() {
           {" "}
         </a>
       </aside>
-      <footer>
-        <div>
-          <a
-            href="https://github.com/NycteaChen"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <i
-              className={`fa fa-github ${style.gitIcon}`}
-              aria-hidden="true"
-            ></i>
-          </a>
-          <p>jungturn01tw@gmail.com</p>
-        </div>
-        <p>&copy;2021 Light Life</p>
-      </footer>
+      <Footer />
     </>
   );
 }

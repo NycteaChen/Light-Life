@@ -55,13 +55,6 @@ function DietitianProfile({ profile, setProfile }) {
   };
 
   const saveProfileHandler = async () => {
-    // if (
-    //   input.name &&
-    //   input.gender &&
-    //   edu.school &&
-    //   edu.department &&
-    //   edu.degree
-    // ) {
     if (input.imageFile) {
       const imageUrl = await getImg(input.imageFile, id);
       delete input.imageFile;
@@ -84,9 +77,6 @@ function DietitianProfile({ profile, setProfile }) {
         setIsEditing(false);
       });
     }
-    // } else {
-    //   alert("必填資料未填完整");
-    // }
   };
 
   const profileButtonHandler = (e) => {

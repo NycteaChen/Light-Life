@@ -6,12 +6,11 @@ import getIngrediensData from "../../../utils/IngredientsAPI.js";
 import Analysis from "../../Components/DietaryRecord/Analysis.js";
 import style from "../../../style/dietary.module.scss";
 
-function DietitianRecord({ date }) {
-  const params = useParams();
+function DietitianRecord({ date, count, setCount }) {
   const [meal, setMeal] = useState([]);
   const [mealDetails, setMealDetails] = useState("");
-  const dID = params.dID;
-  const cID = params.cID;
+  const { dID } = useParams();
+  const { cID } = useParams();
   const [dataAnalysis, setDataAnalysis] = useState(false);
   const [ingredients, setIngredients] = useState({});
   const [inputValue, setInputValue] = useState([]);
@@ -45,7 +44,12 @@ function DietitianRecord({ date }) {
   const getMealHandler = (e) => {
     const mealClass = e.target.className.split(" ")[1];
     const { id } = e.target;
-    setAcitve({ [id]: style["li-active"] });
+    setAcitve(
+      meal[0] !== mealClass || count % 2 === 1
+        ? { [id]: style["li-active"] }
+        : ""
+    );
+    setCount(meal[0] !== mealClass ? 2 : count + 1);
     setInput(initInput);
     setIsSelected(false);
     setMeal([mealClass, e.target.id]);
@@ -233,7 +237,7 @@ function DietitianRecord({ date }) {
         <h5>{date} 飲食記錄</h5>
         {mealKeywords.map((m) => (
           <div className={style.meal} key={m[1]}>
-            {meal[0] === m[1] ? (
+            {meal[0] === m[1] && count % 2 === 0 ? (
               <>
                 <div className={`${style["diet-record"]} ${style.col}`}>
                   <label className={style["eat-time"]}>

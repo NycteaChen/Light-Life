@@ -57,7 +57,11 @@ function DietaryRecord() {
           {getRecord ? (
             <Switch>
               <Route exact path={`/dietitian/:dID/customer/:cID/dietary/`}>
-                <DietitianRecord date={recordDate} />
+                <DietitianRecord
+                  date={recordDate}
+                  count={count}
+                  setCount={setCount}
+                />
               </Route>
             </Switch>
           ) : (
