@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/storage";
+import { updateCustomerData, getImg } from "../../../utils/Firebase";
 import noImage from "../../../images/noimage.png";
-import CustomerProfile from "./CustomerProfile.js";
+import CustomerProfile from "../../Components/CustomerProfile/CustomerProfile.js";
 import style from "../../../style/customerProfile.module.scss";
 
 function EditCustomerProfile({ profile, setProfile }) {
-  const db = firebase.firestore();
-  const storage = firebase.storage();
   const [input, setInput] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const {
@@ -24,27 +20,6 @@ function EditCustomerProfile({ profile, setProfile }) {
     sport,
     other,
   } = profile;
-  async function postImg(image) {
-    if (image) {
-      const storageRef = storage.ref(`${id}/` + image.name);
-      await storageRef.put(image);
-      return image.name;
-    } else {
-      return false;
-    }
-  }
-  async function getImg(image) {
-    const imageName = await postImg(image);
-    if (imageName) {
-      const storageRef = storage.ref();
-      const pathRef = await storageRef
-        .child(`${id}/` + imageName)
-        .getDownloadURL();
-      return pathRef;
-    } else {
-      return "";
-    }
-  }
 
   const getInputHandler = (e) => {
     const { name } = e.target;
@@ -69,7 +44,7 @@ function EditCustomerProfile({ profile, setProfile }) {
 
   const bindSaveHandler = async () => {
     if (input.imageFile) {
-      const imageUrl = await getImg(input.imageFile);
+      const imageUrl = await getImg(input.imageFile, id);
       delete input.imageFile;
       delete input.previewImg;
       setInput({
@@ -78,40 +53,29 @@ function EditCustomerProfile({ profile, setProfile }) {
       });
       if (!career) {
         setProfile({ ...profile, ...input, image: imageUrl, career: "軍公教" });
-        db.collection("customers")
-          .doc(id)
-          .update({
-            ...input,
-            image: imageUrl,
-            career: "軍公教",
-          });
+        updateCustomerData(id, { ...input, image: imageUrl, career: "軍公教" });
       } else {
         setProfile({
           ...profile,
           ...input,
           image: imageUrl,
         });
-        db.collection("customers")
-          .doc(id)
-          .update({
-            ...input,
-            image: imageUrl,
-          });
+        updateCustomerData(id, {
+          ...input,
+          image: imageUrl,
+        });
       }
-
       setInput({});
     } else {
       if (!career) {
         setProfile({ ...profile, ...input, career: "軍公教" });
-        db.collection("customers")
-          .doc(id)
-          .update({ ...input, career: "軍公教" });
+        updateCustomerData(id, { ...input, career: "軍公教" });
       } else {
         setProfile({
           ...profile,
           ...input,
         });
-        db.collection("customers").doc(id).update(input);
+        updateCustomerData(id, input);
       }
 
       setInput({});
@@ -133,7 +97,6 @@ function EditCustomerProfile({ profile, setProfile }) {
         break;
     }
   };
-
   return (
     <div id="customer-profile" className={style["customer-profile"]}>
       {isEditing ? (
@@ -145,7 +108,7 @@ function EditCustomerProfile({ profile, setProfile }) {
               title="save"
             >
               <i
-                class="fa fa-floppy-o"
+                className="fa fa-floppy-o"
                 aria-hidden="true"
                 title="save"
                 onClick={bindSaveHandler}
@@ -157,7 +120,7 @@ function EditCustomerProfile({ profile, setProfile }) {
               title="cancel"
             >
               <i
-                class="fa fa-times"
+                className="fa fa-times"
                 aria-hidden="true"
                 title="cancel"
                 onClick={profileButtonHandler}
@@ -167,15 +130,7 @@ function EditCustomerProfile({ profile, setProfile }) {
           <div className={style.flexbox}>
             <div className={style.img}>
               <img
-                src={
-                  input.previewImg
-                    ? input.previewImg
-                    : input.image
-                    ? input.image
-                    : image
-                    ? image
-                    : noImage
-                }
+                src={input.previewImg || input.image || image || noImage}
                 alt="customer"
               />
               <div>
@@ -204,11 +159,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                     type="text"
                     id="customerName"
                     value={
-                      input.name || input.name === ""
-                        ? input.name
-                        : name
-                        ? name
-                        : ""
+                      input.name || input.name === "" ? input.name : name || ""
                     }
                     onChange={getInputHandler}
                   />
@@ -268,7 +219,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                     name="age"
                     id="customerAge"
                     value={
-                      input.age || input.age === "" ? input.age : age ? age : ""
+                      input.age || input.age === "" ? input.age : age || ""
                     }
                     onChange={getInputHandler}
                   />
@@ -290,9 +241,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                   value={
                     input.height || input.height === ""
                       ? input.height
-                      : height
-                      ? height
-                      : ""
+                      : height || ""
                   }
                   onChange={getInputHandler}
                 />
@@ -311,9 +260,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                   value={
                     input.weight || input.weight === ""
                       ? input.weight
-                      : weight
-                      ? weight
-                      : ""
+                      : weight || ""
                   }
                   onChange={getInputHandler}
                 />
@@ -465,7 +412,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                 <select
                   id="customerCareer"
                   name="career"
-                  value={input.career ? input.career : career ? career : ""}
+                  value={input.career || career || ""}
                   onChange={getInputHandler}
                 >
                   <option>軍公教</option>
@@ -494,9 +441,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                     value={
                       input.sport || input.sport === ""
                         ? input.sport
-                        : sport
-                        ? sport
-                        : ""
+                        : sport || ""
                     }
                     onChange={getInputHandler}
                   ></textarea>
@@ -515,9 +460,7 @@ function EditCustomerProfile({ profile, setProfile }) {
                     value={
                       input.other || input.other === ""
                         ? input.other
-                        : other
-                        ? other
-                        : ""
+                        : other || ""
                     }
                     onChange={getInputHandler}
                   ></textarea>
@@ -531,14 +474,14 @@ function EditCustomerProfile({ profile, setProfile }) {
           <div className={style.edit}>
             <button onClick={profileButtonHandler} title="edit">
               <i
-                class="fa fa-pencil"
+                className="fa fa-pencil"
                 aria-hidden="true"
                 title="edit"
                 onClick={profileButtonHandler}
               ></i>
             </button>
           </div>
-          <CustomerProfile props={profile} input={input} />
+          <CustomerProfile props={profile} />
         </div>
       )}
     </div>

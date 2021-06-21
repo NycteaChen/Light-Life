@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
 import { useParams } from "react-router-dom";
-import "firebase/firestore";
 import Swal from "sweetalert2";
-import Analysis from "./Analysis.js";
+import {
+  getCustomerData,
+  getDietData,
+  setCustomerDiet,
+  getImg,
+} from "../../../utils/Firebase.js";
+import Analysis from "../../Components/DietaryRecord/Analysis.js";
 import style from "../../../style/dietary.module.scss";
 import styled from "styled-components";
 
@@ -11,123 +15,62 @@ const Save = styled.button`
   cursor: default;
   opacity: 0.7;
 `;
-
 function CustomerRecord({ date, count, setCount }) {
-  const storage = firebase.storage();
   const [input, setInput] = useState("");
   const [meal, setMeal] = useState("");
   const [dID, setDID] = useState();
   const [mealDetails, setMealDetails] = useState("");
   const [dataAnalysis, setDataAnalysis] = useState(false);
-
-  // const [images, setImages] = useState([]);
   const cID = useParams().cID;
   const [active, setAcitve] = useState("");
+
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(cID)
-      .get()
-      .then((doc) => {
-        setDID(doc.data().dietitian);
-      });
+    getCustomerData(cID).then((doc) => {
+      setDID(doc.data().dietitian);
+    });
     setInput({});
     setMeal([]);
     setAcitve("");
-  }, [date]);
+  }, [date, cID]);
 
   const getMealHandler = (e) => {
     const mealClass = e.target.className.split(" ")[1];
     const { id } = e.target;
-    setAcitve({ [id]: style["li-active"] });
-    if (meal !== mealClass) {
-      setCount(2);
-    } else {
-      setCount(count + 1);
-    }
+    setAcitve(
+      meal !== mealClass || count % 2 === 1 ? { [id]: style["li-active"] } : ""
+    );
+    setCount(meal !== mealClass ? 2 : count + 1);
     setMeal(mealClass);
     setInput("");
-
-    // if (mealDetails.images) {
-    //   setMealDetails({ images: mealDetails.images });
-    // }
-    // else {
-    //   setMealDetails("");
-    // }
     setMealDetails("");
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dID)
-      .collection("customers")
-      .doc(cID)
-      .collection("diet")
-      .doc(date)
-      .get()
-      .then((doc) => {
-        console.log(doc);
-        if (doc.exists && doc.data()[mealClass]) {
-          setMealDetails(doc.data()[mealClass]);
-        } else {
-          console.log("here");
-          setMealDetails("");
-        }
-        if (doc.exists && doc.data()[e.target.id]) {
-          setDataAnalysis(doc.data()[e.target.id]);
-        } else {
-          console.log("here");
-          setDataAnalysis(false);
-        }
-      });
+    getDietData(dID, cID, date).then((doc) => {
+      if (doc.exists && doc.data()[mealClass]) {
+        setMealDetails(doc.data()[mealClass]);
+      } else {
+        setMealDetails("");
+      }
+      if (doc.exists && doc.data()[e.target.id]) {
+        setDataAnalysis(doc.data()[e.target.id]);
+      } else {
+        setDataAnalysis(false);
+      }
+    });
   };
-  async function postImg(image) {
-    if (image) {
-      const storageRef = storage.ref(`${cID}/${date}/${meal}/` + image.name);
-      await storageRef.put(image);
-      return image.name;
-    } else {
-      return false;
-    }
-  }
-  async function getImg(image) {
-    const imageName = await postImg(image);
-    if (imageName) {
-      const storageRef = storage.ref();
-      const pathRef = await storageRef
-        .child(`${cID}/${date}/${meal}/` + imageName)
-        .getDownloadURL();
-      return await pathRef;
-    } else {
-      return "";
-    }
-  }
+
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name !== "image") {
       setInput({ ...input, [name]: e.target.value });
     } else if (e.target.files[0]) {
-      // const imageUrlArray = [];
       const imagesArray = [];
       for (let i = 0; i < e.target.files.length; i++) {
-        // const imageUrl = window.URL.createObjectURL(e.target.files[i]);
-        // imageUrlArray.push(imageUrl);
         imagesArray.push(e.target.files[i]);
       }
-      // if (mealDetails.images) {
-      //   mealDetails.images.forEach((m) => {
-      //     imageUrlArray.push(m);
-      //   });
-      // }
 
       setInput({
         ...input,
-        // imageUrl: imageUrlArray,
         imageFile: imagesArray,
       });
-    } else {
-      // delete input.image;
-      // setInput({ ...input });
     }
   };
   const removeImageHandler = (e) => {
@@ -146,26 +89,13 @@ function CustomerRecord({ date, count, setCount }) {
             ...mealDetails.images.filter((i, idx) => idx !== +e.target.id),
           ],
         });
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(dID)
-          .collection("customers")
-          .doc(cID)
-          .collection("diet")
-          .doc(date)
-          .set(
-            {
-              [meal]: {
-                images: [
-                  ...mealDetails.images.filter(
-                    (i, idx) => idx !== +e.target.id
-                  ),
-                ],
-              },
-            },
-            { merge: true }
-          );
+        setCustomerDiet(dID, cID, date, {
+          [meal]: {
+            images: [
+              ...mealDetails.images.filter((i, idx) => idx !== +e.target.id),
+            ],
+          },
+        });
       }
     });
   };
@@ -175,21 +105,15 @@ function CustomerRecord({ date, count, setCount }) {
         let valid = 0;
         input.imageFile.forEach((i, index) => {
           if (i.size >= 2097152) {
-            if (input.imageFile.length > 1) {
-              Swal.fire({
-                text: `您想上傳的第${index + 1}張圖片超過2MB囉!`,
-                icon: "warning",
-                confirmButtonText: "確定",
-                confirmButtonColor: "#1e4d4e",
-              });
-            } else {
-              Swal.fire({
-                text: "圖片超過2MB囉!",
-                icon: "warning",
-                confirmButtonText: "確定",
-                confirmButtonColor: "#1e4d4e",
-              });
-            }
+            Swal.fire({
+              text:
+                input.imageFile.length > 1
+                  ? `您想上傳的第${index + 1}張圖片超過2MB囉!`
+                  : "圖片超過2MB囉!",
+              icon: "warning",
+              confirmButtonText: "確定",
+              confirmButtonColor: "#1e4d4e",
+            });
             valid++;
           }
         });
@@ -201,28 +125,19 @@ function CustomerRecord({ date, count, setCount }) {
             });
             setMealDetails({ ...mealDetails, images: imageUrlsArray });
           }
+          const imageRef = `${cID}/${date}/${meal}`;
           input.imageFile.forEach(async (i) => {
-            const imageUrl = await getImg(i);
+            const imageUrl = await getImg(i, imageRef);
             imageUrlsArray.push(imageUrl);
             setInput({
               ...input,
               images: imageUrlsArray,
             });
             delete input.imageFile;
-            // delete input.imageUrl;
-            // delete mealDetails.images;
-            firebase
-              .firestore()
-              .collection("dietitians")
-              .doc(dID)
-              .collection("customers")
-              .doc(cID)
-              .collection("diet")
-              .doc(date)
-              .set(
-                { [meal]: { ...input, images: imageUrlsArray } },
-                { merge: true }
-              );
+
+            setCustomerDiet(dID, cID, date, {
+              [meal]: { ...input, images: imageUrlsArray },
+            });
             setMealDetails({ ...mealDetails, images: imageUrlsArray });
           });
           Swal.fire({
@@ -235,16 +150,7 @@ function CustomerRecord({ date, count, setCount }) {
         }
       } else {
         delete input.imageFile;
-        // delete input.imageUrl;
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(dID)
-          .collection("customers")
-          .doc(cID)
-          .collection("diet")
-          .doc(date)
-          .set({ [meal]: input }, { merge: true });
+        setCustomerDiet(dID, cID, date, { [meal]: input });
         Swal.fire({
           text: "儲存成功",
           icon: "success",
@@ -264,13 +170,12 @@ function CustomerRecord({ date, count, setCount }) {
     ["晚點", "customerNight-snack", "night-snack"],
   ];
 
-  console.log(dataAnalysis);
-
   return (
     <>
       <ul>
         {mealKeywords.map((m) => (
           <li
+            key={m[0]}
             className={`${style["meal-title"]} ${m[1]} ${active[m[2]] || ""}`}
             id={`${m[2]}`}
             role="presentation"
@@ -283,7 +188,7 @@ function CustomerRecord({ date, count, setCount }) {
       <div className={style.mealCol}>
         <h5>{date} 飲食記錄</h5>
         {mealKeywords.map((m) => (
-          <div className={style.meal}>
+          <div className={style.meal} key={m[1]}>
             {meal === m[1] && count % 2 === 0 ? (
               <>
                 <div className={`${style["diet-record"]} ${style.col}`}>
@@ -343,7 +248,7 @@ function CustomerRecord({ date, count, setCount }) {
                         multiple="multiple"
                         onChange={getInputHandler}
                       />
-                      <i class="fa fa-picture-o" aria-hidden="true"></i>
+                      <i className="fa fa-picture-o" aria-hidden="true"></i>
                       {input.imageFile
                         ? `選取${input.imageFile.length}張`
                         : "上傳照片"}
@@ -371,9 +276,7 @@ function CustomerRecord({ date, count, setCount }) {
                         儲存
                       </button>
                     ) : (
-                      <Save style={{ cursor: "default" }} className={m[1]}>
-                        儲存
-                      </Save>
+                      <Save className={m[1]}>儲存</Save>
                     )}
                   </div>
                 </div>

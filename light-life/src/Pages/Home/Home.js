@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams, useLocation } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import { Link } from "react-router-dom";
+import { logout, getUserWithEmail, onAuth } from "../../utils/Firebase.js";
 import Login from "./Login.js";
 import Swal from "sweetalert2";
 import logo from "../../images/lightlife-horizontal.png";
@@ -11,7 +10,6 @@ import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import WOW from "wowjs";
 import "animate.css/animate.min.css";
-import $ from "jquery";
 function Home() {
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});
@@ -61,52 +59,37 @@ function Home() {
   };
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    onAuth().onAuthStateChanged((user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        console.log(user);
+        getUserWithEmail("dietitians", user.email).then((docs) => {
+          if (!docs.empty) {
+            docs.forEach((doc) => {
+              setUser({
+                image: doc.data().image,
+                id: doc.data().id,
+                client: "dietitian",
+              });
+            });
+          }
+        });
 
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .where("email", "==", user.email)
-          .get()
-          .then((docs) => {
-            if (!docs.empty) {
-              docs.forEach((doc) => {
-                setUser({
-                  image: doc.data().image,
-                  id: doc.data().id,
-                  client: "dietitian",
-                });
+        getUserWithEmail("customers", user.email).then((docs) => {
+          if (!docs.empty) {
+            docs.forEach((doc) => {
+              setUser({
+                image: doc.data().image,
+                id: doc.data().id,
+                client: "customer",
               });
-            }
-          });
-        firebase
-          .firestore()
-          .collection("customers")
-          .where("email", "==", user.email)
-          .get()
-          .then((docs) => {
-            if (!docs.empty) {
-              docs.forEach((doc) => {
-                setUser({
-                  image: doc.data().image,
-                  id: doc.data().id,
-                  client: "customer",
-                });
-              });
-            }
-          });
+            });
+          }
+        });
 
         setTimeout(() => {
           setLoad(style.loadFadeout);
         }, 1000);
       } else {
         // User is signed out
-        // ...
-        console.log("no one");
         setTimeout(() => {
           setLoad(style.loadFadeout);
         }, 500);
@@ -116,7 +99,7 @@ function Home() {
     const wow = new WOW.WOW({
       boxClass: `${style.wow}`,
       offset: 150,
-      live: true,
+      live: false,
     });
     wow.init();
   }, []);
@@ -130,16 +113,7 @@ function Home() {
       showCancelButton: true,
     }).then((res) => {
       if (res.isConfirmed) {
-        firebase
-          .auth()
-          .signOut()
-          .then(function () {
-            // 登出後強制重整一次頁面
-            window.location.href = "/";
-          })
-          .catch(function (error) {
-            console.log(error.message);
-          });
+        logout();
       }
     });
   };
@@ -147,7 +121,7 @@ function Home() {
   return (
     <>
       <div className={load}>
-        <img src={loading} />
+        <img src={loading} alt="loading" />
       </div>
       <div
         className={style.mask}
@@ -159,7 +133,7 @@ function Home() {
       <header className={style["home-header"]}>
         <div>
           <a href="/">
-            <img src={logo} alt="LightLifeLogo" id="logo" id={style.logo} />
+            <img src={logo} alt="LightLifeLogo" id={style.logo} />
           </a>
           <nav className={style["header-nav"]}>
             <a href="#about">關於本站</a>
@@ -170,18 +144,21 @@ function Home() {
                   <img
                     className={style["login-image"]}
                     src={user.image || noImage}
+                    alt="login"
                   />
                 </Link>
-                <a onClick={logoutHandler} className={style.icon}>
+                <span onClick={logoutHandler} className={style.icon}>
                   <img
                     src={exit}
                     alt="logout"
                     className={style["logout-image"]}
                   />
-                </a>
+                </span>
               </>
             ) : (
-              <a onClick={bindLoginButton}>登入</a>
+              <span onClick={bindLoginButton} className={style.login}>
+                登入
+              </span>
             )}
           </nav>
         </div>
@@ -196,9 +173,7 @@ function Home() {
                 <button>使用服務</button>
               </Link>
             ) : (
-              <a>
-                <button onClick={bindLoginButton}>使用服務</button>
-              </a>
+              <button onClick={bindLoginButton}>使用服務</button>
             )}
           </div>
         </div>
@@ -242,14 +217,14 @@ function Home() {
             <p>對本站有任何疑問或回饋請告訴我們！</p>
           </div>
           <section className={`${style.wow} animated animate__fadeInUp`}>
-            <form autocomplete="off">
+            <form autoComplete="off">
               <label>
                 <span>您的大名</span>
                 <div>
                   <input
                     type="text"
                     name="name"
-                    value={input.name ? input.name : ""}
+                    value={input.name || ""}
                     onChange={getInputHandler}
                     required
                   />
@@ -262,7 +237,7 @@ function Home() {
                     type="email"
                     name="email"
                     pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
-                    value={input.email ? input.email : ""}
+                    value={input.email || ""}
                     onChange={getInputHandler}
                     required
                   />
@@ -275,7 +250,7 @@ function Home() {
                     name="text"
                     rows="6"
                     cols="40"
-                    value={input.text ? input.text : ""}
+                    value={input.text || ""}
                     onChange={getInputHandler}
                     required
                   ></textarea>
@@ -296,14 +271,14 @@ function Home() {
               <button>使用服務</button>
             </Link>
           ) : (
-            <a>
-              <button onClick={bindLoginButton}>使用服務</button>
-            </a>
+            <button onClick={bindLoginButton}>使用服務</button>
           )}
         </section>
       </main>
       <aside>
-        <a href="#top" id={style.toTop}></a>
+        <a href="#top" id={style.toTop}>
+          {" "}
+        </a>
       </aside>
       <footer>
         <div>

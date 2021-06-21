@@ -175,7 +175,8 @@
           margin-right: auto;
         }
 
-        & > a {
+        & > span {
+          cursor: pointer;
           color: #929292;
           letter-spacing: 3px;
           transition: all 0.3s;
@@ -248,11 +249,12 @@
       margin-top: 15px;
       font-size: 12px;
       letter-spacing: 2px;
-      a {
-        color: #3b8176 !important;
+      span {
+        cursor: pointer;
+        color: #3b8176;
+        font-weight: bold;
         &:hover {
           color: #022e30;
-          font-weight: 800;
         }
       }
     }

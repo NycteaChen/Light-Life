@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import React, { useState } from "react";
 import ShowInviterData from "./ShowInviterData.js";
 import style from "../../../style/whoInvite.module.scss";
 import image from "../../../style/image.module.scss";
@@ -49,7 +46,7 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
           ))
         ) : (
           <NothingImage className={image.nothing}>
-            <img src={nothing} />
+            <img src={nothing} alt="nothing" />
           </NothingImage>
         )}
       </div>

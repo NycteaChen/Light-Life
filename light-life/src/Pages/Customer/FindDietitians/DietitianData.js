@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReserveForm from "../Reverse/ReserveForm.js";
 import style from "../../../style/findDietitian.module.scss";
 import noImage from "../../../images/noimage.png";

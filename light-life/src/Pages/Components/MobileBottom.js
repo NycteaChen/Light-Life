@@ -1,13 +1,6 @@
-import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import React from "react";
+import { Link, useParams } from "react-router-dom";
+import { logout } from "../../utils/Firebase";
 import style from "../../style/mobileBottom.module.scss";
 import Swal from "sweetalert2";
 import exit from "../../images/exit.png";
@@ -23,15 +16,7 @@ export default function MobileBottom() {
       showCancelButton: true,
     }).then((res) => {
       if (res.isConfirmed) {
-        firebase
-          .auth()
-          .signOut()
-          .then(function () {
-            window.location.href = "/";
-          })
-          .catch(function (error) {
-            console.log(error.message);
-          });
+        logout();
       }
     });
   };
@@ -47,13 +32,22 @@ export default function MobileBottom() {
           <img src={user} alt="member" />
           <span>會員主頁</span>
         </Link>
-        <a onClick={logoutHandler} className={style.link}>
+        <button onClick={logoutHandler} className={style.link}>
           <img src={exit} alt="logout" />
           <span>登出</span>
-        </a>
+        </button>
       </div>
       <aside>
-        <a href="#top" id={style.toTop}></a>
+        <a
+          href={
+            params.dID
+              ? `/dietitian/${params.dID}#top`
+              : `/customer/${params.cID}#top`
+          }
+          id={style.toTop}
+        >
+          {" "}
+        </a>
       </aside>
     </>
   );
