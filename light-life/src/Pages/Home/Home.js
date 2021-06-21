@@ -20,7 +20,6 @@ function Home() {
   const bindLoginButton = () => {
     setDisplay("flex");
   };
-  const clientArray = ["dietitian", "customer"];
 
   const sendContactHandler = () => {
     if (valid.name && valid.email && valid.text) {
@@ -60,6 +59,8 @@ function Home() {
   };
 
   useEffect(() => {
+    const clientArray = ["dietitian", "customer"];
+
     onAuth().onAuthStateChanged((user) => {
       if (user) {
         clientArray.forEach((c) => {

@@ -26,7 +26,13 @@ function Analysis({ date, cID, data }) {
     ["night-snack", "晚點", night],
   ];
   const nutrient = ["kcal", "protein", "lipid", "carbohydrate", "fiber"];
-
+  const getMealAnalysis = (data, setMealNutrients) => {
+    if (data) {
+      calculator(data, setMealNutrients);
+    } else {
+      setMealNutrients("");
+    }
+  };
   useEffect(() => {
     getCustomerData(cID)
       .then((doc) => {
@@ -41,13 +47,6 @@ function Analysis({ date, cID, data }) {
             setAdvice("");
           }
           if (doc.exists) {
-            const getMealAnalysis = (data, setMealNutrients) => {
-              if (data) {
-                calculator(data, setMealNutrients);
-              } else {
-                setMealNutrients("");
-              }
-            };
             const analysisArray = [
               ["breakfast", setBreakfast],
               ["morning-snack", setMorning],
