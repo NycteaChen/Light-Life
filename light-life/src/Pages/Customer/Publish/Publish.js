@@ -6,7 +6,12 @@ import {
   getCustomerData,
   deletePublication,
   addPublication,
-} from "../../../utils/Firebase";
+} from "../../../utils/Firebase.js";
+import {
+  newEndDateRangeHandler,
+  dateToISOString,
+  transDateToTime,
+} from "../../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import style from "../../../style/publish.module.scss";
 import image from "../../../style/image.module.scss";
@@ -36,10 +41,6 @@ function Publish({ reserve }) {
   startMostDate.setDate(startMostDate.getDate() + 21);
   endLessDate.setDate(endLessDate.getDate() + 7);
   endMostDate.setDate(endMostDate.getDate() + 14);
-  const transDateToTime = (date) => {
-    const time = new Date(date).getTime();
-    return time;
-  };
 
   useEffect(() => {
     getCustomerPublish(cID).then((docs) => {
@@ -82,12 +83,12 @@ function Publish({ reserve }) {
     });
     getCustomerData(cID).then((res) => setProfile(res.data()));
     setStartDate({
-      min: initStartDate.toISOString().substr(0, 10),
-      max: startMostDate.toISOString().substr(0, 10),
+      min: dateToISOString(initStartDate),
+      max: dateToISOString(startMostDate),
     });
     setEndDate({
-      min: endLessDate.toISOString().substr(0, 10),
-      max: endMostDate.toISOString().substr(0, 10),
+      min: dateToISOString(endLessDate),
+      max: dateToISOString(endMostDate),
     });
   }, []); //eslint-disable-line
 
@@ -170,28 +171,19 @@ function Publish({ reserve }) {
           confirmButtonColor: "#1e4d4e",
         });
       } else {
-        const newEndLessDate = new Date();
-        const newEndMostDate = new Date();
-        if (name === "startDate") {
-          newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
-          newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
-
-          if (today.getMonth() === newEndLessDate.getMonth()) {
-            newEndLessDate.setMonth(parseInt(today.getMonth()) + 1);
-            newEndMostDate.setMonth(parseInt(today.getMonth()) + 1);
-          }
-          setEndDate({
-            min: newEndLessDate.toISOString().substr(0, 10),
-            max: newEndMostDate.toISOString().substr(0, 10),
-          });
-        }
         setInput({
           ...input,
           [name]: e.target.value,
-          publishDate: today.toISOString().substr(0, 10),
+          publishDate: dateToISOString(today),
           endDate:
             name === "startDate"
-              ? newEndLessDate.toISOString().substr(0, 10)
+              ? newEndDateRangeHandler(
+                  name,
+                  "startDate",
+                  e.target.value,
+                  setEndDate,
+                  dateToISOString
+                )
               : e.target.value,
           name: profile.name,
           gender: profile.gender,
@@ -203,7 +195,7 @@ function Publish({ reserve }) {
       setInput({
         ...input,
         [name]: e.target.value,
-        publishDate: today.toISOString().substr(0, 10),
+        publishDate: dateToISOString(today),
         name: profile.name,
         gender: profile.gender,
         id: cID,

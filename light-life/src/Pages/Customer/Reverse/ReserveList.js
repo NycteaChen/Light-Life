@@ -55,7 +55,6 @@ function ReserveList({ reserve, setReserve }) {
       confirmButtonColor: "#1e4d4e",
     }).then((res) => {
       if (res.isConfirmed) {
-        console.log(docID);
         deleteReserve(docID)
           .then(() => {
             Swal.fire({
@@ -75,6 +74,7 @@ function ReserveList({ reserve, setReserve }) {
       }
     });
   };
+
   return (
     <div className={style["reserve-list"]}>
       <div className={style.waiting}>

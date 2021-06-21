@@ -237,20 +237,10 @@ function Customer() {
             const reserveArray = [];
             if (!docs.empty) {
               docs.forEach((doc) => {
-                if (doc.data().status === "0") {
-                  // || doc.data().status === "1"
+                if (doc.data().status === "0" || doc.data().status === "1") {
                   reserveArray.push(doc.data());
                 }
               });
-              // users.forEach((u) => {
-              //   if (!reserveArray.find((r) => r.dietitian === u.id)) {
-              //     user.push(u);
-              //   }
-              // });
-              // setDietitians(user);
-              // } else {
-              //   setDietitians(users);
-              // }
             }
             return { reserveArray, users };
           })
