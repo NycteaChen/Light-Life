@@ -8,7 +8,7 @@ import {
 import Swal from "sweetalert2";
 import style from "../../../style/dietary.module.scss";
 function Analysis({ date, cID, data }) {
-  const pathName = useLocation().pathname;
+  const { pathname } = useLocation();
   const [breakfast, setBreakfast] = useState({});
   const [morning, setMorning] = useState({});
   const [lunch, setLunch] = useState({});
@@ -139,7 +139,7 @@ function Analysis({ date, cID, data }) {
             </tbody>
           </table>
         </div>
-        {pathName.includes("dietitian") ? (
+        {pathname.includes("dietitian") ? (
           <div className={style.advice}>
             <div>
               <label htmlFor="d-advice">

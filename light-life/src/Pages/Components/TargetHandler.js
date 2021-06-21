@@ -17,7 +17,6 @@ function TargetHandler({ target, setTarget }) {
   const [targetIndex, setTargetIndex] = useState(null);
   const [input, setInput] = useState({});
   const [date, setDate] = useState({});
-  const pathName = useLocation().pathname;
   const { dID } = useParams();
   const { cID } = useParams();
   const [display, setDisplay] = useState("inline-block");
@@ -268,7 +267,7 @@ function TargetHandler({ target, setTarget }) {
             index === +targetIndex ? (
               <div key={index} className={style["customer-target"]}>
                 <div className={style["target-header"]}>
-                  {pathName.includes("dietitian") ? (
+                  {dID ? (
                     <div className={style["alter-button"]}>
                       <button onClick={bindEditHandler} id={index}>
                         <i
@@ -333,7 +332,7 @@ function TargetHandler({ target, setTarget }) {
             ) : (
               <div key={index} className={style["customer-target"]}>
                 <div className={style["target-header"]}>
-                  {pathName.includes("dietitian") ? (
+                  {dID ? (
                     <div className={style["alter-button"]}>
                       <button onClick={bindEditHandler} id={index}>
                         <i

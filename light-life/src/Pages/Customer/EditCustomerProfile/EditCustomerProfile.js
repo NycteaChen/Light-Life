@@ -428,7 +428,7 @@ function EditCustomerProfile({ profile, setProfile }) {
             </div>
           </div>
 
-          <div className={`${style.flexcol} `}>
+          <div className={style.flexcol}>
             <div className={style.col}>
               <div className={style["data-item"]}>
                 <div className={style.title}>
