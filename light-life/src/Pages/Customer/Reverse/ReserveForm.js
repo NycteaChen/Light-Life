@@ -93,13 +93,15 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
           confirmButtonColor: "#1e4d4e",
         });
       } else {
+        const newEndLessDate = new Date();
+        const newEndMostDate = new Date();
         if (name === "reserveStartDate") {
-          const newEndLessDate = new Date();
-          const newEndMostDate = new Date();
-
           newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
           newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
-
+          if (today.getMonth() === newEndLessDate.getMonth()) {
+            newEndLessDate.setMonth(parseInt(today.getMonth()) + 1);
+            newEndMostDate.setMonth(parseInt(today.getMonth()) + 1);
+          }
           setEndDate({
             min: newEndLessDate.toISOString().substr(0, 10),
             max: newEndMostDate.toISOString().substr(0, 10),
@@ -108,6 +110,10 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
         setInput({
           ...input,
           [name]: e.target.value,
+          reserveEndDate:
+            name === "reserveStartDate"
+              ? newEndLessDate.toISOString().substr(0, 10)
+              : e.target.value,
           addDate: addDate,
           dietitian: props.id,
           dietitianName: props.name,

@@ -170,13 +170,16 @@ function Publish({ reserve }) {
           confirmButtonColor: "#1e4d4e",
         });
       } else {
+        const newEndLessDate = new Date();
+        const newEndMostDate = new Date();
         if (name === "startDate") {
-          const newEndLessDate = new Date();
-          const newEndMostDate = new Date();
-
           newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
           newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
 
+          if (today.getMonth() === newEndLessDate.getMonth()) {
+            newEndLessDate.setMonth(parseInt(today.getMonth()) + 1);
+            newEndMostDate.setMonth(parseInt(today.getMonth()) + 1);
+          }
           setEndDate({
             min: newEndLessDate.toISOString().substr(0, 10),
             max: newEndMostDate.toISOString().substr(0, 10),
@@ -186,6 +189,10 @@ function Publish({ reserve }) {
           ...input,
           [name]: e.target.value,
           publishDate: today.toISOString().substr(0, 10),
+          endDate:
+            name === "startDate"
+              ? newEndLessDate.toISOString().substr(0, 10)
+              : e.target.value,
           name: profile.name,
           gender: profile.gender,
           id: cID,
