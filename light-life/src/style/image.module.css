@@ -1,0 +1,18 @@
+.spinner {
+  text-align: center;
+}
+
+.spinner img {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.nothing {
+  text-align: center;
+}
+
+.nothing img {
+  width: 100%;
+  max-width: 500px;
+}
+/*# sourceMappingURL=image.module.css.map */

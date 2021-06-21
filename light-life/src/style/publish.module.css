@@ -1,0 +1,492 @@
+.publish {
+  max-width: 580px;
+  margin: auto;
+  font-size: 14px;
+}
+
+.publish h4 {
+  font-size: 20px;
+  padding: 15px 0 10px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.publish h5 {
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.publish .header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.publish .header .buttons button {
+  font-size: 20px;
+  border: 1px solid beige;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  background-color: #87a398;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+
+.publish .header .buttons button i {
+  color: #ffffff;
+}
+
+.publish .header .buttons button:hover {
+  background-color: #87a39875;
+}
+
+.publish .header .buttons button.remove {
+  margin-left: 10px;
+}
+
+.publish .publication {
+  background-color: #ffffffc5;
+  -webkit-box-shadow: 0 1px 3px #515a56;
+          box-shadow: 0 1px 3px #515a56;
+  border: 1px solid #515a5670;
+  padding: 15px 20px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.publish .publication .title {
+  font-weight: bold;
+}
+
+.publish .publication .para {
+  margin-bottom: 5px;
+}
+
+.publish .invited {
+  margin: 15px 0 0;
+  padding: 15px 0 25px;
+}
+
+.publish .invited .inviters {
+  margin-top: 10px;
+  padding: 15px;
+  height: 370px;
+  background-color: #edf5f0b2;
+  -webkit-box-shadow: 0 1px 3px #515a56;
+          box-shadow: 0 1px 3px #515a56;
+  border: 1px solid #515a5670;
+  overflow: auto;
+}
+
+.publish .invited .inviters .inviter {
+  padding: 15px;
+  background-color: white;
+  opacity: 0.8;
+  text-align: center;
+  border-top: 2px dashed #515a56;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+}
+
+.publish .invited .inviters .inviter:hover {
+  opacity: 1;
+}
+
+.publish .invited .inviters .inviter:first-of-type {
+  border-top: none;
+}
+
+.publish .invited .inviters .inviter div {
+  text-align: left;
+}
+
+.publish .invited .inviters .inviter button {
+  letter-spacing: 2px;
+  font-size: 12px;
+  width: 80px;
+  padding: 3px 7px;
+  margin: 5px 0;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  -webkit-transition: opacity 0.3s, width 0.3s;
+  transition: opacity 0.3s, width 0.3s;
+  margin-right: 5px;
+  background-color: #015830;
+  color: white;
+}
+
+.publish .invited .inviters .inviter button:hover {
+  opacity: 0.7;
+}
+
+.publish .published {
+  padding-top: 15px;
+}
+
+.publish .published .list {
+  overflow: auto;
+  margin: 20px auto;
+  padding: 15px;
+  min-height: 310px;
+  max-height: 400px;
+  background-color: #edf5f0b2;
+  -webkit-box-shadow: 0 1px 3px #515a56;
+          box-shadow: 0 1px 3px #515a56;
+  border: 1px solid #515a5670;
+  text-align: center;
+}
+
+.publish .published .list .published-col {
+  padding: 15px;
+  background-color: white;
+  opacity: 0.8;
+  border-top: 2px dashed #515a56;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+}
+
+.publish .published .list .published-col:first-of-type {
+  border-top: none;
+  margin-top: 2px;
+}
+
+.publish .published .list .published-col:hover {
+  opacity: 1;
+}
+
+.publish .published .list .published-col .subject {
+  margin: 5px 0;
+}
+
+.publish .published .list .published-col span {
+  display: inline-block;
+  width: 60px;
+  margin-left: 15px;
+  margin-right: 10px;
+  text-align: center;
+  letter-spacing: 2px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  line-height: 22px;
+}
+
+.publish .published .list .published-col span.success {
+  background-color: #b5f5d3;
+  color: #046b40;
+}
+
+.publish .published .list .published-col span.expired {
+  background-color: #fcc9b5;
+  color: #661b05;
+}
+
+.publish .form {
+  background-color: #f8f8f8ec;
+  -webkit-box-shadow: 0 1px 2px #515a56;
+          box-shadow: 0 1px 2px #515a56;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  text-align: center;
+  width: 90%;
+  position: fixed;
+  z-index: 3;
+  max-height: 400px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+
+.publish .form h4 {
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  background-color: #015830;
+  padding: 15px 0;
+  color: white;
+}
+
+.publish .form label {
+  display: block;
+  margin: 12px 0;
+}
+
+.publish .form label .title {
+  font-weight: bold;
+}
+
+.publish .form label div {
+  margin-bottom: 5px;
+}
+
+.publish .form label input,
+.publish .form label textarea {
+  width: 150px;
+  padding-top: 2px;
+  padding-left: 5px;
+  border-radius: 5px;
+  border: 1px solid grey;
+}
+
+.publish .form label input:focus,
+.publish .form label textarea:focus {
+  outline: none !important;
+  border: 2px solid #64b795;
+}
+
+.publish .form label textarea {
+  height: 3rem;
+}
+
+.publish .form .buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  margin: 22px auto 8px;
+  max-width: 280px;
+}
+
+.publish .form .buttons button {
+  letter-spacing: 2px;
+  font-size: 12px;
+  width: 80px;
+  padding: 3px 7px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  -webkit-transition: opacity 0.3s, width 0.3s;
+  transition: opacity 0.3s, width 0.3s;
+}
+
+.publish .form .buttons button.send {
+  background-color: #015830;
+  color: white;
+}
+
+.publish .form .buttons button.cancel {
+  background-color: #dbdbdb;
+  color: #464444;
+}
+
+.publish .form .buttons button:hover {
+  opacity: 0.7;
+}
+
+@media (min-width: 320px) {
+  .publish .form {
+    max-width: 400px;
+    max-height: 330px;
+  }
+  .publish .form label {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    max-width: 250px;
+    margin: 20px auto;
+  }
+}
+
+@media (min-width: 520px) {
+  .publish {
+    max-width: 580px;
+    margin: auto;
+  }
+  .publish .publication .col {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+        -ms-flex-direction: row-reverse;
+            flex-direction: row-reverse;
+  }
+  .publish .invited .inviters .inviter {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .publish .published .list .published-col {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .publish .published .list .published-col .subject {
+    text-align: left;
+  }
+  .publish .form {
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+    max-width: 500px;
+    max-height: 350px;
+  }
+  .publish .form > div:first-of-type {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    margin: 30px 15px 0;
+    width: 450px;
+  }
+  .publish .form label {
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    white-space: nowrap;
+    margin: 0 auto;
+  }
+  .publish .form label input,
+  .publish .form label textarea {
+    margin: 0 15px;
+  }
+  .publish .form .subject,
+  .publish .form .content {
+    margin-top: 30px;
+    margin-left: 22px;
+  }
+  .publish .form .subject label,
+  .publish .form .content label {
+    max-width: unset;
+  }
+  .publish .form .subject label input,
+  .publish .form .content label input {
+    width: 250px;
+  }
+  .publish .form .subject label textarea,
+  .publish .form .content label textarea {
+    width: 80%;
+    height: 5rem;
+  }
+  .publish .form .content label {
+    -webkit-box-align: unset;
+        -ms-flex-align: unset;
+            align-items: unset;
+  }
+}
+
+@media (min-width: 1024px) {
+  .publish {
+    margin-left: 260px;
+    padding-bottom: 0px;
+    font-size: 16px;
+    max-width: 800px;
+  }
+  .publish h4 {
+    font-size: 20px;
+  }
+  .publish h5 {
+    font-size: 18px;
+  }
+  .publish .invited .inviters .inviter {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .publish .invited .inviters .inviter button {
+    font-size: 14px;
+  }
+  .publish .published .list .published-col {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .publish .form input {
+    font-size: 14px;
+  }
+  .publish .form .buttons button {
+    width: 100px;
+  }
+}
+
+.invite-message {
+  background-color: white;
+  height: 6rem;
+  overflow: auto;
+  padding: 0 5px;
+  border-radius: 5px;
+}
+
+.form-buttons {
+  text-align: center;
+  margin-top: 20px;
+  width: 100%;
+  background-color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  height: 60px;
+  padding: 15px 0;
+  position: absolute;
+  left: 0;
+}
+
+.form-buttons button {
+  letter-spacing: 2px;
+  width: 80px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  -webkit-transition: opacity 0.3s, width 0.3s;
+  transition: opacity 0.3s, width 0.3s;
+}
+
+.form-buttons button.accept {
+  background-color: #b5f5d3;
+  color: #046b40;
+}
+
+.form-buttons button.decline {
+  background-color: #dbdbdb;
+  color: #464444;
+}
+
+.form-buttons button:hover {
+  opacity: 0.7;
+}
+/*# sourceMappingURL=publish.module.css.map */

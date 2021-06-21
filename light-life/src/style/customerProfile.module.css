@@ -1,0 +1,510 @@
+.customer-profile .profile-data {
+  text-align: center;
+  padding: 15px 5px 30px;
+  background-color: #edf5f0b2;
+  -webkit-box-shadow: 0 1px 3px #515a56;
+          box-shadow: 0 1px 3px #515a56;
+  border: 1px solid #515a5670;
+  border-radius: 5px;
+  position: relative;
+}
+
+.customer-profile .profile-data img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.customer-profile .profile-data .data-item {
+  margin-bottom: 13px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.customer-profile .profile-data .data-item div {
+  width: 50%;
+  text-align: left;
+  margin-right: 50px;
+}
+
+.customer-profile .profile-data .data-item .title {
+  font-weight: bold;
+  text-align: right;
+  margin-right: 20px;
+}
+
+.customer-profile .profile-data .col .title + div {
+  max-height: 100px;
+  overflow: auto;
+}
+
+.customer-profile .profile-data .edit {
+  text-align: right;
+}
+
+.customer-profile .profile-data .edit button {
+  font-size: 20px;
+  border: 1px solid beige;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  background-color: #87a398;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+
+.customer-profile .profile-data .edit button i {
+  color: #ffffff;
+}
+
+.customer-profile .profile-data .edit button:hover {
+  background-color: #87a39875;
+}
+
+@media (min-width: 520px) {
+  .customer-profile .profile-data {
+    max-width: 480px;
+    margin: 20px auto;
+  }
+  .customer-profile .profile-data .data-item div {
+    width: 190px;
+    margin-right: 0px;
+  }
+  .customer-profile .profile-data .data-item .title {
+    width: 70px;
+  }
+  .customer-profile .profile-data .flexbox {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    margin-left: 70px;
+  }
+  .customer-profile .profile-data .flexbox img {
+    margin-left: 30.5px;
+    width: 180px;
+    height: 180px;
+  }
+  .customer-profile .profile-data .flexbox img + div {
+    margin-left: 35.5px;
+  }
+  .customer-profile .profile-data .flexbox .data-item:nth-of-type(2) {
+    margin: 10px 0;
+  }
+  .customer-profile .profile-data .flexbox ~ .flexbox > div:first-child {
+    margin: 0 35px;
+  }
+  .customer-profile .profile-data .flexbox ~ .flexbox > div:first-child .title + div {
+    width: 85px;
+  }
+  .customer-profile .profile-data .col {
+    margin: 10px 0 15px;
+    width: 400px;
+  }
+  .customer-profile .profile-data .col .data-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-left: 44px;
+  }
+  .customer-profile .profile-data .col .data-item .title + div {
+    max-height: 100px;
+    overflow: auto;
+    width: 280px;
+  }
+}
+
+@media (min-width: 768px) {
+  .customer-profile .profile-data {
+    max-width: 580px;
+  }
+  .customer-profile .profile-data .col {
+    margin: 10px 0 15px;
+    margin-left: 47px;
+    width: 450px;
+  }
+  .customer-profile .profile-data .col .data-item .title + div {
+    width: 310px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .customer-profile .profile-data {
+    margin: 0;
+  }
+}
+
+.customer-profile .edit-mode {
+  background-color: #ffffff;
+  -webkit-box-shadow: 0 2px 3px #3f4442;
+          box-shadow: 0 2px 3px #3f4442;
+  border: 1px solid #515a5670;
+  text-align: center;
+  padding: 15px 5px 30px;
+  margin: auto;
+  border-radius: 5px;
+}
+
+.customer-profile .edit-mode .img {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.customer-profile .edit-mode .img img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.customer-profile .edit-mode .img .uploadImg {
+  display: block;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: absolute;
+  left: 100px;
+  right: 0;
+  margin: auto;
+  bottom: 5px;
+  padding: 2px 5px;
+  font-size: 18px;
+  background-color: #9ebeabc9;
+}
+
+.customer-profile .edit-mode .img .uploadImg:hover {
+  background-color: #9ebeab;
+}
+
+.customer-profile .edit-mode .img .uploadImg input[type="file"] {
+  display: none;
+}
+
+.customer-profile .edit-mode .img .uploadImg i {
+  color: #f1fffc;
+}
+
+.customer-profile .edit-mode .title {
+  font-weight: bold;
+}
+
+.customer-profile .edit-mode .data-item {
+  margin: 5px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.customer-profile .edit-mode .data-item div {
+  width: 50%;
+  text-align: left;
+  margin-right: 50px;
+}
+
+.customer-profile .edit-mode .data-item .title {
+  text-align: right;
+  margin-right: 10px;
+}
+
+.customer-profile .edit-mode .data-item .title::after {
+  content: "*";
+  color: red;
+}
+
+.customer-profile .edit-mode .data-item input[type="text"],
+.customer-profile .edit-mode .data-item input[type="number"],
+.customer-profile .edit-mode .data-item select,
+.customer-profile .edit-mode .data-item textarea {
+  width: 120px;
+  padding-left: 5px;
+  outline: none;
+  border: 1px solid grey;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.customer-profile .edit-mode .data-item input[type="text"]:focus,
+.customer-profile .edit-mode .data-item input[type="number"]:focus,
+.customer-profile .edit-mode .data-item select:focus,
+.customer-profile .edit-mode .data-item textarea:focus {
+  outline: none !important;
+  border: 2px solid #64b795;
+}
+
+.customer-profile .edit-mode .data-item .edit-gender {
+  display: -ms-grid;
+  display: grid;
+  font-size: 14px;
+  -ms-grid-columns: 60px 60px;
+      grid-template-columns: 60px 60px;
+}
+
+.customer-profile .edit-mode .data-item .edit-education {
+  display: -ms-grid;
+  display: grid;
+  font-size: 14px;
+  -ms-grid-columns: 120px;
+      grid-template-columns: 120px;
+}
+
+.customer-profile .edit-mode .col .data-item {
+  margin: 5px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.customer-profile .edit-mode .col .data-item .title {
+  text-align: right;
+  margin-right: 10px;
+}
+
+.customer-profile .edit-mode .col .data-item .title + div {
+  max-height: 100px;
+  width: 50%;
+  text-align: left;
+  margin-right: 50px;
+}
+
+.customer-profile .edit-mode .col .data-item textarea {
+  margin-right: 50px;
+  margin: auto;
+  height: 4rem;
+  padding: 3px 5px;
+}
+
+.customer-profile .edit-mode .col:last-of-type .title {
+  margin-right: 15px;
+}
+
+.customer-profile .edit-mode .col:last-of-type .title::after {
+  content: "";
+}
+
+.customer-profile .edit-mode .col:last-of-type .title + div {
+  margin-right: 55px;
+}
+
+.customer-profile .edit-mode .buttons {
+  text-align: right;
+}
+
+.customer-profile .edit-mode .buttons button {
+  font-size: 20px;
+  border: 1px solid beige;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  background-color: #87a398;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+
+.customer-profile .edit-mode .buttons button i {
+  color: white;
+}
+
+.customer-profile .edit-mode .buttons button[title="save"] {
+  margin-right: 5px;
+}
+
+.customer-profile .edit-mode .buttons button[title="cancel"] {
+  margin-left: 5px;
+}
+
+.customer-profile .edit-mode .buttons button:hover {
+  background-color: #87a39875;
+}
+
+@media (min-width: 520px) {
+  .customer-profile .edit-mode {
+    max-width: 480px;
+    margin: 20px auto;
+  }
+  .customer-profile .edit-mode .data-item div {
+    width: unset;
+    margin-right: 0px;
+  }
+  .customer-profile .edit-mode .data-item .title {
+    width: 71px;
+  }
+  .customer-profile .edit-mode .data-item input,
+  .customer-profile .edit-mode .data-item select {
+    outline: none;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 1px 0;
+  }
+  .customer-profile .edit-mode .data-item input[type="text"],
+  .customer-profile .edit-mode .data-item input[type="number"],
+  .customer-profile .edit-mode .data-item select {
+    width: 100px;
+    padding-left: 5px;
+  }
+  .customer-profile .edit-mode .data-item .edit-gender {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 40px 40px;
+        grid-template-columns: 40px 40px;
+  }
+  .customer-profile .edit-mode .data-item .edit-education {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 80px;
+        grid-template-columns: 80px;
+  }
+  .customer-profile .edit-mode .flexbox {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    margin-right: 15px;
+    margin-bottom: 10px !important;
+  }
+  .customer-profile .edit-mode .flexbox .img img {
+    width: 180px;
+    height: 180px;
+    margin-left: 25px;
+  }
+  .customer-profile .edit-mode .flexbox .img .uploadImg {
+    left: 130px;
+  }
+  .customer-profile .edit-mode .flexbox .img + div {
+    margin-bottom: 12px;
+    margin-left: 2px;
+  }
+  .customer-profile .edit-mode .flexbox .data-item {
+    margin-left: 10px;
+  }
+  .customer-profile .edit-mode .flexbox .data-item div {
+    height: 24px;
+  }
+  .customer-profile .edit-mode .flexbox .data-item:nth-of-type(2) {
+    margin: 13px 0 10px 10px;
+  }
+  .customer-profile .edit-mode .flexbox + .flexbox {
+    -webkit-box-align: unset;
+        -ms-flex-align: unset;
+            align-items: unset;
+  }
+  .customer-profile .edit-mode .flexbox ~ .flexbox {
+    margin-right: 0;
+    margin-bottom: 0 !important;
+    margin-left: 15px;
+  }
+  .customer-profile .edit-mode .flexbox ~ .flexbox .data-item {
+    margin: 0;
+    margin-right: 10px;
+  }
+  .customer-profile .edit-mode .flexbox ~ .flexbox .data-item div {
+    height: unset;
+  }
+  .customer-profile .edit-mode .flexbox ~ .flexbox .data-item:nth-of-type(2) {
+    margin: 0 0 13px;
+    margin-left: 25px;
+  }
+  .customer-profile .edit-mode .flexbox ~ .flexbox > div:first-child {
+    margin: 0;
+  }
+  .customer-profile .edit-mode .flexbox ~ .flexbox > div:first-child .title + div {
+    width: 40px;
+  }
+  .customer-profile .edit-mode .col {
+    margin: 8px 0;
+    margin-left: 45px;
+  }
+  .customer-profile .edit-mode .col .data-item .title {
+    width: 71px;
+    text-align: right;
+  }
+  .customer-profile .edit-mode .col .data-item textarea {
+    width: 300px;
+    height: 5rem;
+  }
+  .customer-profile .edit-mode .col:last-of-type .title {
+    width: 65px;
+  }
+}
+
+@media (min-width: 768px) {
+  .customer-profile .edit-mode {
+    max-width: 580px;
+  }
+  .customer-profile .edit-mode .data-item input[type="text"],
+  .customer-profile .edit-mode .data-item input[type="number"],
+  .customer-profile .edit-mode .data-item select {
+    width: 120px;
+  }
+  .customer-profile .edit-mode .data-item .edit-gender {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 48px 72px;
+        grid-template-columns: 48px 72px;
+  }
+  .customer-profile .edit-mode .data-item .edit-education {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 60px 60px;
+        grid-template-columns: 60px 60px;
+  }
+  .customer-profile .edit-mode .flexbox .img img {
+    margin-left: 73px;
+  }
+  .customer-profile .edit-mode .flexbox .img .uploadImg {
+    left: 180px;
+  }
+  .customer-profile .edit-mode .flexbox .img + div {
+    margin-bottom: 12px;
+    margin-left: 0px;
+    margin-right: 28px;
+  }
+  .customer-profile .edit-mode .flexbox ~ .flexbox {
+    margin-left: 52px;
+  }
+  .customer-profile .edit-mode .flexbox ~ .flexbox .data-item {
+    margin-right: 10px;
+  }
+  .customer-profile .edit-mode .flexbox ~ .flexbox .data-item:nth-of-type(2) {
+    margin-left: 0px;
+    margin-right: 17px;
+  }
+  .customer-profile .edit-mode .col {
+    margin-left: 90px;
+  }
+  .customer-profile .edit-mode .col .data-item .title {
+    width: 77px;
+  }
+  .customer-profile .edit-mode .col .data-item textarea {
+    width: 310px;
+  }
+  .customer-profile .edit-mode .col:last-of-type .title {
+    width: 71px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .customer-profile {
+    padding: 5px;
+    margin-top: 20px;
+    margin-left: 260px;
+    overflow-x: hidden;
+  }
+  .customer-profile .edit-mode {
+    margin: 0;
+  }
+}
+/*# sourceMappingURL=customerProfile.module.css.map */
