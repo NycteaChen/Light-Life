@@ -54,17 +54,24 @@ function PublicationData({ publish, display, setDisplay, setPublish }) {
               },
               true
             ).then(() => {
-              getPublicationData()
-                .then((docs) => {
-                  const publishArray = [];
-                  if (!docs.empty) {
-                    docs.forEach((doc) => {
-                      publishArray.push(doc.data());
-                    });
-                  }
-                  setPublish(publishArray);
-                })
-                .then(() => setDisplay("none"));
+              Swal.fire({
+                text: "邀請成功",
+                icon: "success",
+                confirmButtonText: "確定",
+                confirmButtonColor: "#1e4d4e",
+              }).then(() => {
+                getPublicationData()
+                  .then((docs) => {
+                    const publishArray = [];
+                    if (!docs.empty) {
+                      docs.forEach((doc) => {
+                        publishArray.push(doc.data());
+                      });
+                    }
+                    setPublish(publishArray);
+                  })
+                  .then(() => setDisplay("none"));
+              });
             });
           }
         });

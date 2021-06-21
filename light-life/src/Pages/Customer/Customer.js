@@ -77,6 +77,15 @@ function Customer() {
     }
   }, []); //eslint-disable-line
 
+  const navArray = [
+    "profile",
+    "dietary",
+    "target",
+    "publish",
+    "findDietitian",
+    "reserve",
+  ];
+
   useEffect(() => {
     getCustomerData(cID)
       .then((doc) => {
@@ -184,52 +193,6 @@ function Customer() {
             setPending([]);
           }
         });
-        //刪除成功的刊登或預約???
-        // .then(() => {
-        //   firebase
-        //     .firestore()
-        //     .collection("publish")
-        //     .where("id", "==", cID)
-        //     .where("status", "==", "1")
-        //     .where("startDate", "==", getToday)
-        //     .get()
-        //     .then((res) => {
-        //       let docID;
-        //       res.forEach((i) => {
-        //         console.log(i.data());
-        //         docID = i.data().publishID;
-        //       });
-        //       return docID;
-        //     })
-        //     .then((res) => {
-        //       if (res) {
-        //         console.log(res);
-        //         firebase.firestore().collection("publish").doc(res).delete();
-        //       }
-        //     });
-
-        //   firebase
-        //     .firestore()
-        //     .collection("reserve")
-        //     .where("inviterID", "==", cID)
-        //     .where("status", "==", "1")
-        //     .where("reserveStartDate", "==", getToday)
-        //     .get()
-        //     .then((res) => {
-        //       let docID;
-        //       res.forEach((i) => {
-        //         console.log(i.data());
-        //         docID = i.data().reserveID;
-        //       });
-        //       return docID;
-        //     })
-        //     .then((res) => {
-        //       if (res) {
-        //         console.log(res);
-        //         firebase.firestore().collection("publish").doc(res).delete();
-        //       }
-        //     });
-        // });
       });
 
     getCustomerReserve("inviterID", cID).then((docs) => {
@@ -246,19 +209,11 @@ function Customer() {
       });
       setReserve(reserveArray);
     });
-    if (keyword.includes("profile")) {
-      setNav({ profile: style["nav-active"] });
-    } else if (keyword.includes("dietary")) {
-      setNav({ dietary: style["nav-active"] });
-    } else if (keyword.includes("target")) {
-      setNav({ target: style["nav-active"] });
-    } else if (keyword.includes("publish")) {
-      setNav({ publish: style["nav-active"] });
-    } else if (keyword.includes("findDietitian")) {
-      setNav({ findDietitian: style["nav-active"] });
-    } else if (keyword.includes("reserve")) {
-      setNav({ reserve: style["nav-active"] });
-    }
+    navArray.forEach((d) => {
+      if (keyword.includes(d)) {
+        setNav({ [d]: style["nav-active"] });
+      }
+    });
   }, []); //eslint-disable-line
 
   useEffect(() => {

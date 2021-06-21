@@ -10,18 +10,20 @@ function ReserveList({ reserve, setReserve }) {
   const [dietitians, setDietitians] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const [checkDecline, setCheckDecline] = useState(false);
+  const [reserving, setReserving] = useState(
+    reserve.filter((r) => r.status === "0")
+  );
+
   useEffect(() => {
     const dietitianArray = [];
-    reserve
-      .filter((r) => r.status === "0")
-      .forEach((r) => {
-        getDietitianData(r.dietitian).then((doc) => {
-          if (doc.exists) {
-            dietitianArray.push(doc.data());
-            setDietitians(dietitianArray);
-          }
-        });
+    reserving.forEach((r) => {
+      getDietitianData(r.dietitian).then((doc) => {
+        if (doc.exists) {
+          dietitianArray.push(doc.data());
+          setDietitians(dietitianArray);
+        }
       });
+    });
   }, [reserve]);
   const checkDeclineMessage = (e) => {
     if (e.target.id) {
@@ -41,8 +43,9 @@ function ReserveList({ reserve, setReserve }) {
       setIsChecked(false);
     }
   };
+
   const removeReserveHandler = (e) => {
-    const docID = reserve[+e.target.id].reserveID;
+    const docID = reserving[+e.target.id].reserveID;
     Swal.fire({
       text: "確定取消預約嗎?",
       icon: "warning",
@@ -52,6 +55,7 @@ function ReserveList({ reserve, setReserve }) {
       confirmButtonColor: "#1e4d4e",
     }).then((res) => {
       if (res.isConfirmed) {
+        console.log(docID);
         deleteReserve(docID)
           .then(() => {
             Swal.fire({
@@ -60,8 +64,8 @@ function ReserveList({ reserve, setReserve }) {
               confirmButtonText: "確定",
               confirmButtonColor: "#1e4d4e",
             }).then(() => {
-              setReserve([
-                ...reserve.filter((r, index) => index !== +e.target.id),
+              setReserving([
+                ...reserving.filter((r, index) => index !== +e.target.id),
               ]);
             });
           })
@@ -75,59 +79,56 @@ function ReserveList({ reserve, setReserve }) {
     <div className={style["reserve-list"]}>
       <div className={style.waiting}>
         <h4>預約中</h4>
-        {reserve.find((r) => r.status === "0") ? (
-          <>
-            <div className={style.reservations}>
-              {reserve
-                .filter((r) => r.status === "0")
-                .map((r, idx) => (
-                  <div key={idx} className={style.reservation}>
-                    <div className={style.content}>
-                      <div className={style.dietitian}>
-                        營養師：{r.dietitianName}
-                      </div>
-                      <div className={style.startDate}>
-                        預約開始時間：{r.reserveStartDate}
-                      </div>
-                    </div>
-                    <div className={style.buttons}>
-                      <button
-                        onClick={checkReserveMessage}
-                        id={idx}
-                        className={style.check}
-                      >
-                        查看詳情
-                      </button>
-                      <button
-                        onClick={removeReserveHandler}
-                        id={idx}
-                        className={style.cancel}
-                      >
-                        取消預約
-                      </button>
-                    </div>
 
-                    {+index === idx && isChecked ? (
-                      <>
-                        <DietitianData
-                          props={dietitians[idx]}
-                          reserve={reserve}
-                          setIsChecked={setIsChecked}
-                          setReserve={setReserve}
-                        />
-                      </>
-                    ) : (
-                      ""
-                    )}
+        <div className={style.reservations}>
+          {reserving.length > 0 ? (
+            reserving.map((r, idx) => (
+              <div key={idx} className={style.reservation}>
+                <div className={style.content}>
+                  <div className={style.dietitian}>
+                    營養師：{r.dietitianName}
                   </div>
-                ))}
+                  <div className={style.startDate}>
+                    預約開始時間：{r.reserveStartDate}
+                  </div>
+                </div>
+                <div className={style.buttons}>
+                  <button
+                    onClick={checkReserveMessage}
+                    id={idx}
+                    className={style.check}
+                  >
+                    查看詳情
+                  </button>
+                  <button
+                    onClick={removeReserveHandler}
+                    id={idx}
+                    className={style.cancel}
+                  >
+                    取消預約
+                  </button>
+                </div>
+
+                {+index === idx && isChecked ? (
+                  <>
+                    <DietitianData
+                      props={dietitians[idx]}
+                      reserve={reserve}
+                      setIsChecked={setIsChecked}
+                      setReserve={setReserve}
+                    />
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
+            ))
+          ) : (
+            <div className={image.nothing}>
+              <img src={nothing} alt="nothing" />
             </div>
-          </>
-        ) : (
-          <div className={image.nothing}>
-            <img src={nothing} alt="nothing" />
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <div className={style.checked}>
         <h4>已回覆預約</h4>
