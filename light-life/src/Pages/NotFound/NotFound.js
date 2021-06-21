@@ -7,7 +7,7 @@ const NoMatch = () => {
   return (
     <>
       <main className={style.main}>
-        <img src={notFound} />
+        <img src={notFound} alt="404" />
       </main>
       <footer className={style.footer}>
         <div>

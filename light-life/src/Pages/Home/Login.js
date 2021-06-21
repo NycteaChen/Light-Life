@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  getDietitiansData,
+  getCustomersData,
+  getUserWithEmail,
+  sendPasswordEmail,
+  normalLoginHandler,
+  signUp,
+  initProfileData,
+  providerLogin,
+  onAuth,
+  providerHandler,
+} from "../../utils/Firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from "../../style/login.module.scss";
 import logo from "../../images/lightlife-straight.png";
-import { Formik } from "formik";
 import Swal from "sweetalert2";
 import apple from "../../images/apple.gif";
 import "animate.css/animate.min.css";
@@ -32,10 +41,7 @@ function Login({ display, setDisplay }) {
   const [emails, setEmails] = useState([]);
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .get()
+    getDietitiansData()
       .then((docs) => {
         const emailsArray = [];
         docs.forEach((doc) => {
@@ -44,16 +50,12 @@ function Login({ display, setDisplay }) {
         return emailsArray;
       })
       .then((emailsArray) => {
-        firebase
-          .firestore()
-          .collection("customers")
-          .get()
-          .then((docs) => {
-            docs.forEach((doc) => {
-              emailsArray.push(doc.data().email);
-            });
-            setEmails(emailsArray);
+        getCustomersData().then((docs) => {
+          docs.forEach((doc) => {
+            emailsArray.push(doc.data().email);
           });
+          setEmails(emailsArray);
+        });
       });
   }, []);
 
@@ -100,44 +102,34 @@ function Login({ display, setDisplay }) {
       setDietitian(style.active);
       setCustomer("");
       if (valid.email && login === style.appear) {
-        firebase
-          .firestore()
-          .collection(`dietitians`)
-          .where("email", "==", `${valid.email}`)
-          .get()
-          .then((querySnapshot) => {
-            if (querySnapshot.empty) {
-              setValidStyle({
-                email: style.invalid,
-              });
-            } else {
-              setValidStyle({
-                email: style.valid,
-              });
-            }
-          });
+        getUserWithEmail("dietitians", valid.email).then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            setValidStyle({
+              email: style.invalid,
+            });
+          } else {
+            setValidStyle({
+              email: style.valid,
+            });
+          }
+        });
       }
     } else {
       setCustomer(style.active);
       setClient("customer");
       setDietitian("");
       if (valid.email && login === style.appear) {
-        firebase
-          .firestore()
-          .collection(`customers`)
-          .where("email", "==", `${valid.email}`)
-          .get()
-          .then((querySnapshot) => {
-            if (querySnapshot.empty) {
-              setValidStyle({
-                email: style.invalid,
-              });
-            } else {
-              setValidStyle({
-                email: style.valid,
-              });
-            }
-          });
+        getUserWithEmail("customers", valid.email).then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            setValidStyle({
+              email: style.invalid,
+            });
+          } else {
+            setValidStyle({
+              email: style.valid,
+            });
+          }
+        });
       }
     }
   };
@@ -168,10 +160,8 @@ function Login({ display, setDisplay }) {
 
   const bindSendPasswordEmailButton = () => {
     if (email !== "") {
-      firebase
-        .auth()
-        .sendPasswordResetEmail(email)
-        .then(function () {
+      sendPasswordEmail(email)
+        .then(() => {
           Swal.fire({
             title: "已發送信件至信箱",
             text: "請按照信件說明重設密碼",
@@ -217,12 +207,8 @@ function Login({ display, setDisplay }) {
             emails.find((f) => f === e.target.value) &&
             client === "dietitian"
           ) {
-            firebase
-              .firestore()
-              .collection(`dietitians`)
-              .where("email", "==", `${e.target.value}`)
-              .get()
-              .then((querySnapshot) => {
+            getUserWithEmail("dietitians", e.target.value).then(
+              (querySnapshot) => {
                 if (querySnapshot.empty) {
                   setValidStyle({
                     email: style.invalid,
@@ -232,17 +218,14 @@ function Login({ display, setDisplay }) {
                     email: style.valid,
                   });
                 }
-              });
+              }
+            );
           } else if (
             emails.find((f) => f === e.target.value) &&
             client === "customer"
           ) {
-            firebase
-              .firestore()
-              .collection(`customers`)
-              .where("email", "==", `${e.target.value}`)
-              .get()
-              .then((querySnapshot) => {
+            getUserWithEmail("customers", e.target.value).then(
+              (querySnapshot) => {
                 if (querySnapshot.empty) {
                   setValidStyle({
                     email: style.invalid,
@@ -252,7 +235,8 @@ function Login({ display, setDisplay }) {
                     email: style.valid,
                   });
                 }
-              });
+              }
+            );
           } else {
             setValidStyle({ ...validStyle, email: style.invalid });
           }
@@ -301,52 +285,42 @@ function Login({ display, setDisplay }) {
 
   const loginHandler = () => {
     if (valid.email && valid.password) {
-      firebase
-        .firestore()
-        .collection(`${client}s`)
-        .where("email", "==", `${valid.email}`)
-        .get()
-        .then((querySnapshot) => {
-          if (!querySnapshot.empty) {
-            let userID;
-            querySnapshot.forEach((i) => {
-              userID = i.data().id;
-            });
+      getUserWithEmail(client, valid.email).then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          let userID;
+          querySnapshot.forEach((i) => {
+            userID = i.data().id;
+          });
+          normalLoginHandler(valid.email, valid.password)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              console.log(user);
+              setShowMessage({ welcomeback: style.showloginMessage });
 
-            firebase
-              .auth()
-              .signInWithEmailAndPassword(valid.email, valid.password)
-              .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
-                console.log(user);
-                setShowMessage({ welcomeback: style.showloginMessage });
-
-                setTimeout(() => {
-                  setInput({});
-                  setValid({});
-                  setValidStyle({});
-                  window.location.href = `/${client}/${userID}`;
-                }, 1500);
-              })
-              .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode + errorMessage);
-                setShowMessage({ wrongPassword: style.showMessage });
-                setValidStyle({
-                  email: style.valid,
-                  password: style.invalid,
-                });
+              setTimeout(() => {
+                setInput({});
+                setValid({});
+                setValidStyle({});
+                window.location.href = `/${client}/${userID}`;
+              }, 1500);
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log(errorCode + errorMessage);
+              setShowMessage({ wrongPassword: style.showMessage });
+              setValidStyle({
+                email: style.valid,
+                password: style.invalid,
               });
-          } else {
-            setShowMessage({ wrongAccount: style.showMessage });
-            setValidStyle({
-              email: style.invalid,
-              // password: style.invalid,
             });
-          }
-        });
+        } else {
+          setShowMessage({ wrongAccount: style.showMessage });
+          setValidStyle({
+            email: style.invalid,
+          });
+        }
+      });
     } else {
       setShowMessage({
         incomplete: style.showMessage,
@@ -373,14 +347,9 @@ function Login({ display, setDisplay }) {
           confirmButtonColor: "#1e4d4e",
         }).then((res) => {
           if (res.isConfirmed) {
-            firebase
-              .auth()
-              .createUserWithEmailAndPassword(valid.email, valid.password)
-              .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
-
-                const { currentUser } = firebase.auth();
+            signUp(valid.email, valid.password)
+              .then(() => {
+                const { currentUser } = onAuth();
                 currentUser
                   .sendEmailVerification()
                   .then(function () {
@@ -407,18 +376,14 @@ function Login({ display, setDisplay }) {
                     });
                   });
 
-                firebase
-                  .firestore()
-                  .collection(`${client}s`)
+                initProfileData(client)
                   .add({
                     name: valid.name,
                     image: noImage,
                     email: valid.email,
                   })
                   .then((docRef) => {
-                    firebase
-                      .firestore()
-                      .collection(`${client}s`)
+                    initProfileData(client)
                       .doc(docRef.id)
                       .update("id", docRef.id);
                   })
@@ -457,100 +422,85 @@ function Login({ display, setDisplay }) {
     }
   };
 
-  const googleLoginHandler = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
+  const providerLoginHandler = (e) => {
+    const provider = providerHandler(e.target.id);
+    providerLogin(provider)
       .then((result) => {
         const user = result.user;
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .where("email", "==", user.email)
-          .get()
-          .then((res) => {
-            if (!res.empty) {
-              let id;
-              res.forEach((i) => (id = i.data().id));
+        getUserWithEmail("dietitians", user.email).then((res) => {
+          if (!res.empty) {
+            let id;
+            res.forEach((i) => (id = i.data().id));
+            setShowMessage({ welcomeback: style.showloginMessage });
+            setTimeout(() => {
+              window.location.href = `/dietitian/${id}`;
+            }, 1500);
+          } else {
+            getUserWithEmail("customers", user.email).then((res) => {
+              if (!res.empty) {
+                let id;
+                res.forEach((i) => (id = i.data().id));
+                setShowMessage({ welcomeback: style.showloginMessage });
+                setTimeout(() => {
+                  window.location.href = `/customer/${id}`;
+                }, 1500);
+              } else {
+                Swal.fire({
+                  title: `確定以${
+                    client === "dietitian" ? "營養師" : "客戶"
+                  }身分登入嗎?`,
+                  text: `若您是${
+                    client === "dietitian" ? "客戶" : "營養師"
+                  }，請選擇${client === "dietitian" ? "客戶" : "營養師"}端註冊`,
+                  icon: "warning",
+                  showCancelButton: true,
+                  cancelButtonText: "取消",
+                  confirmButtonText: "確定",
+                  confirmButtonColor: "#1e4d4e",
+                }).then((res) => {
+                  if (res.isConfirmed) {
+                    initProfileData(client)
+                      .add({
+                        name: user.displayName,
+                        image:
+                          e.target.id === "google"
+                            ? user.photoURL
+                            : `${user.photoURL}?height=500`,
+                        email: user.email,
+                      })
+                      .then((docRef) => {
+                        initProfileData(client)
+                          .doc(docRef.id)
+                          .update("id", docRef.id);
 
-              setShowMessage({ welcomeback: style.showloginMessage });
-              setTimeout(() => {
-                window.location.href = `/dietitian/${id}`;
-              }, 1500);
-            } else {
-              firebase
-                .firestore()
-                .collection("customers")
-                .where("email", "==", user.email)
-                .get()
-                .then((res) => {
-                  if (!res.empty) {
-                    let id;
-                    res.forEach((i) => (id = i.data().id));
-                    setShowMessage({ welcomeback: style.showloginMessage });
-                    setTimeout(() => {
-                      window.location.href = `/customer/${id}`;
-                    }, 1500);
+                        return docRef.id;
+                      })
+                      .then((res) => {
+                        setShowMessage({
+                          welcomeback: style.showloginMessage,
+                        });
+                        setTimeout(() => {
+                          window.location.href = `/${client}/${res}`;
+                        }, 1500);
+                      });
                   } else {
-                    Swal.fire({
-                      title: `確定以${
-                        client === "dietitian" ? "營養師" : "客戶"
-                      }身分登入嗎?`,
-                      text: `若您是${
-                        client === "dietitian" ? "客戶" : "營養師"
-                      }，請選擇${
-                        client === "dietitian" ? "客戶" : "營養師"
-                      }端註冊`,
-                      icon: "warning",
-                      showCancelButton: true,
-                      cancelButtonText: "取消",
-                      confirmButtonText: "確定",
-                      confirmButtonColor: "#1e4d4e",
-                    }).then((res) => {
-                      if (res.isConfirmed) {
-                        firebase
-                          .firestore()
-                          .collection(`${client}s`)
-                          .add({
-                            name: user.displayName,
-                            image: user.photoURL,
-                            email: user.email,
-                          })
-                          .then((docRef) => {
-                            firebase
-                              .firestore()
-                              .collection(`${client}s`)
-                              .doc(docRef.id)
-                              .update("id", docRef.id);
-
-                            return docRef.id;
-                          })
-                          .then((res) => {
-                            setShowMessage({
-                              welcomeback: style.showloginMessage,
-                            });
-                            setTimeout(() => {
-                              window.location.href = `/${client}/${res}`;
-                            }, 1500);
-                          });
-                      } else {
-                        const user = firebase.auth().currentUser;
-                        user
-                          .delete()
-                          .then(() => {
-                            // User deleted.
-                          })
-                          .catch((error) => {
-                            // An error ocurred
-                            // ...
-                          });
-                      }
-                    });
+                    const user = onAuth().currentUser;
+                    user
+                      .delete()
+                      .then(() => {
+                        // User deleted.
+                        console.log("delete user");
+                      })
+                      .catch((error) => {
+                        // An error ocurred
+                        console.log(error);
+                      });
                   }
                 });
-            }
-          });
+              }
+            });
+          }
+        });
       })
       .catch((error) => {
         // Handle Errors here.
@@ -560,122 +510,9 @@ function Login({ display, setDisplay }) {
         const email = error.email;
         // The firebase.auth.AuthCredential type that was used.
         const credential = error.credential;
-        // ...
-        Swal.fire({
-          text: "此帳號在別的登入端已經使用",
-          icon: "warning",
-          confirmButtonText: "確定",
-          confirmButtonColor: "#1e4d4e",
-        });
-      });
-  };
-  const facebookLoginHandler = () => {
-    const provider = new firebase.auth.FacebookAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((result) => {
-        const user = result.user;
-
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .where("email", "==", user.email)
-          .get()
-          .then((res) => {
-            if (!res.empty) {
-              let id;
-              res.forEach((i) => (id = i.data().id));
-              setShowMessage({ welcomeback: style.showloginMessage });
-              setTimeout(() => {
-                window.location.href = `/dietitian/${id}`;
-              }, 1500);
-            } else {
-              firebase
-                .firestore()
-                .collection("customers")
-                .where("email", "==", user.email)
-                .get()
-                .then((res) => {
-                  if (!res.empty) {
-                    let id;
-                    res.forEach((i) => (id = i.data().id));
-                    setShowMessage({ welcomeback: style.showloginMessage });
-                    setTimeout(() => {
-                      window.location.href = `/customer/${id}`;
-                    }, 1500);
-                  } else {
-                    Swal.fire({
-                      title: `確定以${
-                        client === "dietitian" ? "營養師" : "客戶"
-                      }身分登入嗎?`,
-                      text: `若您是${
-                        client === "dietitian" ? "客戶" : "營養師"
-                      }，請選擇${
-                        client === "dietitian" ? "客戶" : "營養師"
-                      }端註冊`,
-                      icon: "warning",
-                      showCancelButton: true,
-                      cancelButtonText: "取消",
-                      confirmButtonText: "確定",
-                      confirmButtonColor: "#1e4d4e",
-                    }).then((res) => {
-                      if (res.isConfirmed) {
-                        firebase
-                          .firestore()
-                          .collection(`${client}s`)
-                          .add({
-                            name: user.displayName,
-                            image: `${user.photoURL}?height=500`,
-                            email: user.email,
-                          })
-                          .then((docRef) => {
-                            firebase
-                              .firestore()
-                              .collection(`${client}s`)
-                              .doc(docRef.id)
-                              .update("id", docRef.id);
-
-                            return docRef.id;
-                          })
-                          .then((res) => {
-                            setShowMessage({
-                              welcomeback: style.showloginMessage,
-                            });
-                            setTimeout(() => {
-                              window.location.href = `/${client}/${res}`;
-                            }, 1500);
-                          });
-                      } else {
-                        const user = firebase.auth().currentUser;
-                        user
-                          .delete()
-                          .then(() => {
-                            // User deleted.
-                          })
-                          .catch((error) => {
-                            // An error ocurred
-                            // ...
-                          });
-                      }
-                    });
-                  }
-                });
-            }
-          });
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
         console.log(errorCode, errorMessage);
-        // The email of the user's account used.
-        const email = error.email;
         console.log(email);
-        // The firebase.auth.AuthCredential type that was used.
-        const credential = error.credential;
         console.log(credential);
-        // ...
         Swal.fire({
           text: "此帳號在別的登入端已經使用",
           icon: "warning",
@@ -684,10 +521,11 @@ function Login({ display, setDisplay }) {
         });
       });
   };
+
   return (
     <>
       <div className={`${style.loginMessage} ${showMessage.welcomeback || ""}`}>
-        <img src={apple} />
+        <img src={apple} alt="apple" />
         <div>歡迎回來</div>
       </div>
       <div className={`${style["login-col"]}`} style={{ display: display }}>
@@ -720,7 +558,7 @@ function Login({ display, setDisplay }) {
 
         <div className={`${style["login-image"]} ${image}`}></div>
         <div className={`${style.login} ${login}`}>
-          <img src={logo} />
+          <img src={logo} alt="logo" />
           <i
             aria-hidden="true"
             className={`${style.close} fa fa-times`}
@@ -733,45 +571,45 @@ function Login({ display, setDisplay }) {
               role="presentation"
               onClick={bindSelectHandler}
             >
-              <a
+              <span
                 className={`nav-link ${dietitian} dietitian`}
                 aria-current="page"
                 data-bs-toggle="tab"
-                href="#"
                 role="tab"
                 aria-selected="true"
                 onClick={bindSelectHandler}
               >
                 營養師
-              </a>
+              </span>
             </li>
             <li
               className="nav-item customer"
               role="presentation"
               onClick={bindSelectHandler}
             >
-              <a
+              <span
                 className={`nav-link ${customer} customer`}
                 data-bs-toggle="tab"
-                href="#"
                 role="tab"
                 aria-selected="false"
                 onClick={bindSelectHandler}
               >
                 客戶
-              </a>
+              </span>
             </li>
           </ul>
-          <form action="javascript:void(0);" autocomplete="off">
+          {/*eslint-disable-next-line */}
+          <form autoComplete="off" title="login-form">
             <label>
               <div>帳號</div>
               <input
                 type="email"
                 name="email"
+                title="login-email"
                 className={validStyle.email || ""}
                 placeholder="diet@test.com / cus@test.com"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
-                value={input.email ? input.email : ""}
+                value={input.email || ""}
                 onChange={getInputHandler}
               />
             </label>
@@ -780,21 +618,22 @@ function Login({ display, setDisplay }) {
               <input
                 type={eye.mode}
                 name="password"
+                title="login-password"
                 className={validStyle.password || ""}
                 placeholder="abc123"
-                minlength="6"
-                maxlength="15"
-                value={input.password ? input.password : ""}
+                minLength="6"
+                maxLength="15"
+                value={input.password || ""}
                 onChange={getInputHandler}
               />
               <i
-                class={`fa fa-eye-slash ${style["eye-slash"]}`}
+                className={`fa fa-eye-slash ${style["eye-slash"]}`}
                 style={{ display: eye.slash }}
                 aria-hidden="true"
                 onClick={switchPasswordModeHandler}
               ></i>
               <i
-                class={`fa fa-eye ${style["eye-on"]}`}
+                className={`fa fa-eye ${style["eye-on"]}`}
                 aria-hidden="true"
                 style={{ display: eye.on }}
                 onClick={switchPasswordModeHandler}
@@ -816,30 +655,32 @@ function Login({ display, setDisplay }) {
             <div className={style.hints}>
               <div className={style.hint}>
                 還沒
-                <a id="signup" onClick={bindSignupHandler}>
+                <span id="signup" onClick={bindSignupHandler}>
                   註冊
-                </a>
+                </span>
                 ?
               </div>
               <div className={style.hint}>
                 忘記
-                <a id="forget-password" onClick={bindForgetPasswordHandler}>
+                <span id="forget-password" onClick={bindForgetPasswordHandler}>
                   密碼
-                </a>
+                </span>
               </div>
             </div>
-            <button onClick={loginHandler}>登入</button>
+            <button type="button" onClick={loginHandler}>
+              登入
+            </button>
 
-            <button type="button" onClick={googleLoginHandler}>
+            <button type="button" id="google" onClick={providerLoginHandler}>
               Google 登入
             </button>
-            <button type="button" onClick={facebookLoginHandler}>
+            <button type="button" id="facebook" onClick={providerLoginHandler}>
               Facebook 登入
             </button>
           </form>
         </div>
         <div className={`${style.signup} ${signup}`}>
-          <img src={logo} />
+          <img src={logo} alt="logo" />
           <i
             aria-hidden="true"
             className={`${style.close} fa fa-times`}
@@ -853,46 +694,45 @@ function Login({ display, setDisplay }) {
               role="presentation"
               onClick={bindSelectHandler}
             >
-              <a
+              <span
                 className={`nav-link ${dietitian} dietitian`}
                 aria-current="page"
                 data-bs-toggle="tab"
-                href="#"
                 role="tab"
                 aria-selected="true"
                 onClick={bindSelectHandler}
               >
                 營養師
-              </a>
+              </span>
             </li>
             <li
               className="nav-item customer"
               role="presentation"
               onClick={bindSelectHandler}
             >
-              <a
+              <span
                 className={`nav-link ${customer} customer`}
                 data-bs-toggle="tab"
-                href="#"
                 role="tab"
                 aria-selected="false"
                 onClick={bindSelectHandler}
               >
                 客戶
-              </a>
+              </span>
             </li>
           </ul>
-
-          <form action="javascript:void(0);" autocomplete="off">
+          {/*eslint-disable-next-line */}
+          <form autoComplete="off" title="signup-form">
             <label>
               <div>姓名</div>
               <input
                 type="text"
                 name="name"
+                title="signup-name"
                 className={validStyle.name || ""}
                 placeholder="請輸入姓名"
                 pattern="^[\u4e00-\u9fa5]+$|^[a-zA-Z\s]+$"
-                value={input.name ? input.name : ""}
+                value={input.name || ""}
                 onChange={getInputHandler}
               />
             </label>
@@ -901,10 +741,11 @@ function Login({ display, setDisplay }) {
               <input
                 type="email"
                 name="email"
+                title="signup-email"
                 className={validStyle.email || ""}
                 placeholder="請輸入e-mail"
                 pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"
-                value={input.email ? input.email : ""}
+                value={input.email || ""}
                 onChange={getInputHandler}
               />
             </label>
@@ -914,21 +755,22 @@ function Login({ display, setDisplay }) {
               <input
                 type={eye.mode}
                 name="password"
+                title="signup-password"
                 className={validStyle.password || ""}
                 placeholder="請輸入至少6位字元"
-                minlength="6"
-                maxlength="15"
-                value={input.password ? input.password : ""}
+                minLength="6"
+                maxLength="15"
+                value={input.password || ""}
                 onChange={getInputHandler}
               />
               <i
-                class={`fa fa-eye-slash ${style["eye-slash"]}`}
+                className={`fa fa-eye-slash ${style["eye-slash"]}`}
                 style={{ display: eye.slash }}
                 aria-hidden="true"
                 onClick={switchPasswordModeHandler}
               ></i>
               <i
-                class={`fa fa-eye ${style["eye-on"]}`}
+                className={`fa fa-eye ${style["eye-on"]}`}
                 aria-hidden="true"
                 style={{ display: eye.on }}
                 onClick={switchPasswordModeHandler}
@@ -944,13 +786,15 @@ function Login({ display, setDisplay }) {
               此信箱已有人使用
             </div>
             <div>
-              <button onClick={signupHandler}>註冊</button>
+              <button type="button" onClick={signupHandler}>
+                註冊
+              </button>
             </div>
             <div className={style.hint}>
               返回
-              <a id="login" onClick={bindLoginHandler}>
+              <span id="login" onClick={bindLoginHandler}>
                 登入頁
-              </a>
+              </span>
             </div>
           </form>
         </div>

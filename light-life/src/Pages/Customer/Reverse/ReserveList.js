@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
 import Swal from "sweetalert2";
+import { getDietitianData, deleteReserve } from "../../../utils/Firebase.js";
 import DietitianData from "../FindDietitians/DietitianData.js";
 import style from "../../../style/reserveList.module.scss";
 import image from "../../../style/image.module.scss";
@@ -16,19 +15,14 @@ function ReserveList({ reserve, setReserve }) {
     reserve
       .filter((r) => r.status === "0")
       .forEach((r) => {
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(r.dietitian)
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              dietitianArray.push(doc.data());
-              setDietitians(dietitianArray);
-            }
-          });
+        getDietitianData(r.dietitian).then((doc) => {
+          if (doc.exists) {
+            dietitianArray.push(doc.data());
+            setDietitians(dietitianArray);
+          }
+        });
       });
-  }, []);
+  }, [reserve]);
   const checkDeclineMessage = (e) => {
     if (e.target.id) {
       setIndex(e.target.id);
@@ -58,11 +52,7 @@ function ReserveList({ reserve, setReserve }) {
       confirmButtonColor: "#1e4d4e",
     }).then((res) => {
       if (res.isConfirmed) {
-        firebase
-          .firestore()
-          .collection("reserve")
-          .doc(docID)
-          .delete()
+        deleteReserve(docID)
           .then(() => {
             Swal.fire({
               text: "取消成功",
@@ -135,7 +125,7 @@ function ReserveList({ reserve, setReserve }) {
           </>
         ) : (
           <div className={image.nothing}>
-            <img src={nothing} />
+            <img src={nothing} alt="nothing" />
           </div>
         )}
       </div>
@@ -194,7 +184,7 @@ function ReserveList({ reserve, setReserve }) {
             )
           ) : (
             <div className={image.nothing}>
-              <img src={nothing} />
+              <img src={nothing} alt="nothing" />
             </div>
           )}
         </div>

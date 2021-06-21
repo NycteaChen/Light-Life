@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+  getCustomerPublish,
+  updatePublication,
+  getCustomerData,
+  deletePublication,
+  addPublication,
+} from "../../../utils/Firebase";
 import Swal from "sweetalert2";
 import style from "../../../style/publish.module.scss";
 import image from "../../../style/image.module.scss";
@@ -43,59 +42,45 @@ function Publish({ reserve }) {
   };
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("publish")
-      .where("id", "==", cID)
-      .get()
-      .then((docs) => {
-        const occupation = reserve
-          .filter((r) => r.status === "0" || r.status === "1")
-          .map((u) => [
-            transDateToTime(u.reserveStartDate),
-            transDateToTime(u.reserveEndDate),
-          ]);
-        if (!docs.empty) {
-          const publishArray = [];
-          const oldPublishArray = [];
-          docs.forEach((doc) => {
-            if (doc.data().status === "1" || doc.data().status === "0") {
-              occupation.push([
-                transDateToTime(doc.data().startDate),
-                transDateToTime(doc.data().endDate),
-              ]);
-            }
-            const startDate = new Date(doc.data().startDate).getTime();
-            if (startDate > today && doc.data().status === "0") {
-              publishArray.push(doc.data());
-            } else if (startDate <= today && doc.data().status === "0") {
-              const newData = doc.data();
-              newData.status = "3";
-              oldPublishArray.push(newData);
-              firebase
-                .firestore()
-                .collection("publish")
-                .doc(doc.data().publishID)
-                .update(newData);
-            } else {
-              oldPublishArray.push(doc.data());
-            }
-          });
-          setOccupationTime(occupation);
-          setOldPublish(oldPublishArray);
-          setPublishData(publishArray);
-        } else {
-          setOccupationTime(occupation);
-          setPublishData([]);
-          setOldPublish([]);
-        }
-      });
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(cID)
-      .get()
-      .then((res) => setProfile(res.data()));
+    getCustomerPublish(cID).then((docs) => {
+      const occupation = reserve
+        .filter((r) => r.status === "0" || r.status === "1")
+        .map((u) => [
+          transDateToTime(u.reserveStartDate),
+          transDateToTime(u.reserveEndDate),
+        ]);
+      if (!docs.empty) {
+        const publishArray = [];
+        const oldPublishArray = [];
+        docs.forEach((doc) => {
+          if (doc.data().status === "1" || doc.data().status === "0") {
+            occupation.push([
+              transDateToTime(doc.data().startDate),
+              transDateToTime(doc.data().endDate),
+            ]);
+          }
+          const startDate = new Date(doc.data().startDate).getTime();
+          if (startDate > today && doc.data().status === "0") {
+            publishArray.push(doc.data());
+          } else if (startDate <= today && doc.data().status === "0") {
+            const newData = doc.data();
+            newData.status = "3";
+            oldPublishArray.push(newData);
+            updatePublication(doc.data().publishID, newData);
+          } else {
+            oldPublishArray.push(doc.data());
+          }
+        });
+        setOccupationTime(occupation);
+        setOldPublish(oldPublishArray);
+        setPublishData(publishArray);
+      } else {
+        setOccupationTime(occupation);
+        setPublishData([]);
+        setOldPublish([]);
+      }
+    });
+    getCustomerData(cID).then((res) => setProfile(res.data()));
     setStartDate({
       min: initStartDate.toISOString().substr(0, 10),
       max: startMostDate.toISOString().substr(0, 10),
@@ -104,13 +89,13 @@ function Publish({ reserve }) {
       min: endLessDate.toISOString().substr(0, 10),
       max: endMostDate.toISOString().substr(0, 10),
     });
-  }, []);
+  }, []); //eslint-disable-line
 
   useEffect(() => {
     if (publishData && oldPublish) {
       setSpinnerDisplay("none");
     }
-  });
+  }, []); //eslint-disable-line
 
   const publishModalHandler = (e) => {
     switch (e.target.title) {
@@ -136,14 +121,9 @@ function Publish({ reserve }) {
             confirmButtonColor: "#1e4d4e",
           }).then((res) => {
             if (res.isConfirmed) {
-              firebase
-                .firestore()
-                .collection("publish")
-                .doc(publishData[0].publishID)
-                .delete()
-                .then(() => {
-                  setPublishData([]);
-                });
+              deletePublication(publishData[0].publishID).then(() => {
+                setPublishData([]);
+              });
             }
           });
         } else {
@@ -157,6 +137,8 @@ function Publish({ reserve }) {
       case "cancel":
         setInput({});
         setDisplay("none");
+        break;
+      default:
         break;
     }
   };
@@ -251,16 +233,9 @@ function Publish({ reserve }) {
           confirmButtonColor: "#1e4d4e",
         }).then((res) => {
           if (res.isConfirmed) {
-            firebase
-              .firestore()
-              .collection("publish")
-              .add(input)
+            addPublication(input)
               .then((res) => {
-                firebase
-                  .firestore()
-                  .collection("publish")
-                  .doc(res.id)
-                  .update({ publishID: res.id });
+                updatePublication(res.id, { publishID: res.id });
                 return res.id;
               })
               .then((res) => {
@@ -298,7 +273,7 @@ function Publish({ reserve }) {
               onClick={publishModalHandler}
             >
               <i
-                class="fa fa-pencil-square-o"
+                className="fa fa-pencil-square-o"
                 aria-hidden="true"
                 title="add"
               ></i>
@@ -308,7 +283,11 @@ function Publish({ reserve }) {
               title="remove"
               onClick={publishModalHandler}
             >
-              <i class="fa fa-trash-o" aria-hidden="true" title="remove"></i>
+              <i
+                className="fa fa-trash-o"
+                aria-hidden="true"
+                title="remove"
+              ></i>
             </button>
           </div>
         </div>
@@ -344,12 +323,16 @@ function Publish({ reserve }) {
             </>
           ) : (
             <div className={image.nothing}>
-              <img src={nothing} />
+              <img src={nothing} alt="nothing" />
             </div>
           )
         ) : (
           <div className={image.spinner}>
-            <img src={spinner} style={{ display: spinnerDisplay }} />
+            <img
+              src={spinner}
+              style={{ display: spinnerDisplay }}
+              alt="spinner"
+            />
           </div>
         )}
       </div>
@@ -364,7 +347,7 @@ function Publish({ reserve }) {
               publishData[0].whoInvite.map((i, index) => (
                 <>
                   {i.status === "0" ? (
-                    <div className={style.inviter}>
+                    <div className={style.inviter} key={index}>
                       <div>{i.name} 營養師對您的刊登有興趣</div>
                       <button id={index} onClick={checkDietitianDetails}>
                         查看詳情
@@ -377,12 +360,16 @@ function Publish({ reserve }) {
               ))
             ) : (
               <div className={image.nothing}>
-                <img src={nothing} />
+                <img src={nothing} alt="nothing" />
               </div>
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} style={{ display: spinnerDisplay }} />
+              <img
+                src={spinner}
+                style={{ display: spinnerDisplay }}
+                alt="spinner"
+              />
             </div>
           )}
           {publishData && isChecked ? (
@@ -405,7 +392,7 @@ function Publish({ reserve }) {
           {oldPublish ? (
             oldPublish.length > 0 ? (
               oldPublish.map((o) => (
-                <div className={style["published-col"]}>
+                <div className={style["published-col"]} key={o.startDate}>
                   <div>
                     <div className={style.startDate}>
                       預約開始時間：{o.startDate}
@@ -425,12 +412,16 @@ function Publish({ reserve }) {
               ))
             ) : (
               <div className={image.nothing}>
-                <img src={nothing} />
+                <img src={nothing} alt="nothing" />
               </div>
             )
           ) : (
             <div className={image.spinner}>
-              <img src={spinner} style={{ display: spinnerDisplay }} />
+              <img
+                src={spinner}
+                style={{ display: spinnerDisplay }}
+                alt="spinner"
+              />
             </div>
           )}
         </div>

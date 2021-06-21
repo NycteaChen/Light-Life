@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import React, { useState } from "react";
+import { updateDietitianData, getImg } from "../../../utils/Firebase";
 import style from "../../../style/dietitianProfile.module.scss";
 
 function DietitianProfile({ profile, setProfile }) {
-  const db = firebase.firestore();
-  const storage = firebase.storage();
   const { name, image, id, gender, email, education, skills, other } = profile;
   const [isEditing, setIsEditing] = useState(false);
   const [edu, setEdu] = useState({
@@ -26,28 +23,6 @@ function DietitianProfile({ profile, setProfile }) {
     education: edu,
     skills: skill,
   });
-
-  async function postImg(image) {
-    if (image) {
-      const storageRef = storage.ref(`${id}/` + image.name);
-      await storageRef.put(image);
-      return image.name;
-    } else {
-      return false;
-    }
-  }
-  async function getImg(image) {
-    const imageName = await postImg(image);
-    if (imageName) {
-      const storageRef = storage.ref();
-      const pathRef = await storageRef
-        .child(`${id}/` + imageName)
-        .getDownloadURL();
-      return pathRef;
-    } else {
-      return "";
-    }
-  }
 
   const getInputHandler = (e) => {
     const { name } = e.target;
@@ -77,8 +52,6 @@ function DietitianProfile({ profile, setProfile }) {
       delete input.imageFile;
       setInput({ ...input, image: input.image || image });
     }
-    {
-    }
   };
 
   const saveProfileHandler = async () => {
@@ -90,31 +63,26 @@ function DietitianProfile({ profile, setProfile }) {
     //   edu.degree
     // ) {
     if (input.imageFile) {
-      const imageUrl = await getImg(input.imageFile);
+      const imageUrl = await getImg(input.imageFile, id);
       delete input.imageFile;
       delete input.previewImg;
       setInput({
         ...input,
         image: imageUrl,
       });
-      db.collection("dietitians")
-        .doc(id)
-        .update({
-          ...input,
-          image: imageUrl,
-        })
-        .then(() => {
-          setProfile({ ...profile, ...input, image: imageUrl });
-          setIsEditing(false);
-        });
+      updateDietitianData(id, {
+        ...input,
+        image: imageUrl,
+      }).then(() => {
+        setProfile({ ...profile, ...input, image: imageUrl });
+        setIsEditing(false);
+      });
     } else {
       setProfile({ ...profile, ...input });
-      db.collection("dietitians")
-        .doc(id)
-        .update(input)
-        .then(() => {
-          setIsEditing(false);
-        });
+
+      updateDietitianData(id, input).then(() => {
+        setIsEditing(false);
+      });
     }
     // } else {
     //   alert("必填資料未填完整");
@@ -131,6 +99,8 @@ function DietitianProfile({ profile, setProfile }) {
       case "edit":
         setIsEditing(true);
         break;
+      default:
+        break;
     }
   };
   return (
@@ -139,33 +109,23 @@ function DietitianProfile({ profile, setProfile }) {
         <div className={style["edit-mode"]}>
           <div className={style.buttons}>
             <button onClick={saveProfileHandler} title="save">
-              <i class="fa fa-floppy-o" aria-hidden="true" title="save"></i>
+              <i className="fa fa-floppy-o" aria-hidden="true" title="save"></i>
             </button>
             <button onClick={profileButtonHandler} title="cancel">
-              <i class="fa fa-times" aria-hidden="true" title="cancel"></i>
+              <i className="fa fa-times" aria-hidden="true" title="cancel"></i>
             </button>
           </div>
-          <form className={style["basic-profile"]} action="javascript:void(0);">
+          {/*eslint-disable-next-line */}
+          <form className={style["basic-profile"]} action="javascript:void(0)">
             <div className={style.flexbox}>
               <div className={style.img}>
                 <a
-                  href={
-                    input.previewImg
-                      ? input.previewImg
-                      : input.image
-                      ? input.image
-                      : image
-                  }
+                  href={input.previewImg || input.image || image}
                   target="_blank"
+                  rel="noreferrer"
                 >
                   <img
-                    src={
-                      input.previewImg
-                        ? input.previewImg
-                        : input.image
-                        ? input.image
-                        : image
-                    }
+                    src={input.previewImg || input.image || image}
                     alt="profile"
                   />
                 </a>
@@ -197,11 +157,7 @@ function DietitianProfile({ profile, setProfile }) {
                     id={style.name}
                     required
                     value={
-                      input.name || input.name === ""
-                        ? input.name
-                        : name
-                        ? name
-                        : ""
+                      input.name || input.name === "" ? input.name : name || ""
                     }
                     onChange={getInputHandler}
                   />
@@ -256,7 +212,7 @@ function DietitianProfile({ profile, setProfile }) {
                     className="education"
                     name="school"
                     placeholder="學校名稱"
-                    value={edu.school ? edu.school : ""}
+                    value={edu.school || ""}
                     onChange={getInputHandler}
                     required
                   />
@@ -265,7 +221,7 @@ function DietitianProfile({ profile, setProfile }) {
                     className="education"
                     placeholder="系所名稱"
                     name="department"
-                    value={edu.department ? edu.department : ""}
+                    value={edu.department || ""}
                     onChange={getInputHandler}
                     required
                   />
@@ -364,9 +320,7 @@ function DietitianProfile({ profile, setProfile }) {
                   value={
                     input.other || input.other === ""
                       ? input.other
-                      : other
-                      ? other
-                      : ""
+                      : other || ""
                   }
                   onChange={getInputHandler}
                 ></textarea>
@@ -380,33 +334,23 @@ function DietitianProfile({ profile, setProfile }) {
             <button onClick={profileButtonHandler} title="edit">
               <i
                 title="edit"
-                class="fa fa-pencil"
+                className="fa fa-pencil"
                 aria-hidden="true"
                 onClick={profileButtonHandler}
               ></i>
             </button>
           </div>
+          {/*eslint-disable-next-line */}
           <form className={style["basic-profile"]} action="javascript:void(0);">
             <div className={style.flexbox}>
               <div className={style.img}>
                 <a
-                  href={
-                    input.previewImg
-                      ? input.previewImg
-                      : input.image
-                      ? input.image
-                      : image
-                  }
+                  href={input.previewImg || input.image || image}
                   target="_blank"
+                  rel="noreferrer"
                 >
                   <img
-                    src={
-                      input.previewImg
-                        ? input.previewImg
-                        : input.image
-                        ? input.image
-                        : image
-                    }
+                    src={input.previewImg || input.image || image}
                     alt="profile"
                   />
                 </a>
@@ -419,15 +363,11 @@ function DietitianProfile({ profile, setProfile }) {
                 <div className={style.basic}>
                   <label className={style.title}>姓名</label>
                   <div id={style.name}>
-                    {input.name || input.name === ""
-                      ? input.name
-                      : name
-                      ? name
-                      : ""}
+                    {input.name || input.name === "" ? input.name : name || ""}
                   </div>
                   <label className={style.title}>性別</label>
                   <div className={style.gender}>
-                    {input.gender ? input.gender : gender ? gender : ""}
+                    {input.gender || gender || ""}
                   </div>
                 </div>
               </div>
@@ -438,9 +378,9 @@ function DietitianProfile({ profile, setProfile }) {
                   學歷
                 </label>
                 <div className={style["edu-select"]}>
-                  <div>{edu.school ? edu.school : ""}</div>
-                  <div>{edu.department ? edu.department : ""}</div>
-                  <div>{edu.degree ? edu.degree : ""}</div>
+                  <div>{edu.school || ""}</div>
+                  <div>{edu.department || ""}</div>
+                  <div>{edu.degree || ""}</div>
                 </div>
               </div>
               <div className={style.skills}>
@@ -462,9 +402,7 @@ function DietitianProfile({ profile, setProfile }) {
                 <div>
                   {input.other || input.other === ""
                     ? input.other
-                    : other
-                    ? other
-                    : ""}
+                    : other || ""}
                 </div>
               </div>
             </div>

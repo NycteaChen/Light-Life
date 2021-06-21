@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Link,
@@ -10,10 +9,24 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { authState } from "../../utils/Firebase.js";
+import {
+  getCustomerData,
+  getMyCustomerData,
+  updateCustomerData,
+  getDietitianData,
+  getPendingData,
+  setMyCustomerData,
+  deletePending,
+  getCustomerReserve,
+  updateReserve,
+  getDietitiansData,
+  logout,
+} from "../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import GetDietitiansData from "./FindDietitians/GetDietitinasData.js";
 import ReserveList from "./Reverse/ReserveList.js";
-import CustomerProfile from "../Components/CustomerProfile/EditCustomerProfile.js";
+import EditCustomerProfile from "./EditCustomerProfile/EditCustomerProfile.js";
 import DietrayRecord from "../Components/DietaryRecord/DietaryRecord.js";
 import CustomerTarget from "./Target/CustomerTarget.js";
 import Publish from "./Publish/Publish.js";
@@ -29,11 +42,11 @@ import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 
 function Customer() {
-  const [load, setLoad] = useState(loadStyle.loading);
+  const load = loadStyle.loading;
   const [profile, setProfile] = useState({});
   const [dietitians, setDietitians] = useState(null);
   const [reserve, setReserve] = useState([]);
-  const customerID = useParams().cID;
+  const { cID } = useParams();
   const [dName, setDName] = useState("");
   const [serviceDate, setServiceDate] = useState(null);
   const [pending, setPending] = useState(null);
@@ -49,44 +62,8 @@ function Customer() {
   let history = useHistory();
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
+    authState("customers", history, cID, setNotFound);
 
-        firebase
-          .firestore()
-          .collection("customers")
-          .where("email", "==", user.email)
-          .get()
-          .then((docs) => {
-            console.log(docs);
-            if (!docs.empty) {
-              docs.forEach((doc) => {
-                if (doc.data().id !== customerID) {
-                  history.push("/");
-                }
-              });
-            } else {
-              history.push("/");
-            }
-          });
-      } else {
-        history.push("/");
-      }
-    });
-
-    firebase
-      .firestore()
-      .collection("customers")
-      .get()
-      .then((docs) => {
-        const memberArray = [];
-        docs.forEach((doc) => memberArray.push(doc.data().id));
-        if (!memberArray.find((m) => m === customerID)) {
-          setNotFound(true);
-        }
-      });
     if (
       path &&
       path !== "profile" &&
@@ -98,14 +75,10 @@ function Customer() {
     ) {
       setNotFound(true);
     }
-  }, []);
+  }, []); //eslint-disable-line
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("customers")
-      .doc(`${customerID}`)
-      .get()
+    getCustomerData(cID)
       .then((doc) => {
         if (doc.exists) {
           if (doc.data().dietitian) {
@@ -117,142 +90,106 @@ function Customer() {
       .then((doc) => {
         if (doc) {
           if (doc.dietitian) {
-            firebase
-              .firestore()
-              .collection("dietitians")
-              .doc(doc.dietitian)
-              .collection("customers")
-              .doc(customerID)
-              .get()
-              .then((res) => {
-                if (res) {
-                  const end = new Date(res.data().endDate).getTime();
-                  if (end < today) {
-                    setServiceDate({});
-                    setDName("");
-                    setProfile({ ...doc, dietitian: "" });
-                    firebase
-                      .firestore()
-                      .collection("customers")
-                      .doc(`${customerID}`)
-                      .update({
-                        dietitian: firebase.firestore.FieldValue.delete(),
-                      });
-                  } else {
-                    setServiceDate({
-                      startDate: res.data().startDate,
-                      endDate: res.data().endDate,
-                    });
-                    setProfile(doc);
-                  }
+            getMyCustomerData(doc.dietitian, cID).then((res) => {
+              if (res) {
+                const end = new Date(res.data().endDate).getTime();
+                if (end < today) {
+                  updateCustomerData(cID, {
+                    dietitian: firebase.firestore.FieldValue.delete(),
+                  });
                 } else {
-                  setServiceDate({});
+                  setServiceDate({
+                    startDate: res.data().startDate,
+                    endDate: res.data().endDate,
+                  });
                   setProfile(doc);
                 }
-              });
+              } else {
+                setServiceDate({});
+                setProfile(doc);
+              }
+            });
           } else {
             setServiceDate({});
             setProfile(doc);
           }
         }
-        firebase
-          .firestore()
-          .collection("pending")
-          .where("customer", "==", customerID)
-          .get()
-          .then((docs) => {
-            const pendingArray = [];
-            if (!docs.empty) {
-              docs.forEach((doc) => {
-                pendingArray.push(doc.data());
+        getPendingData("customer", cID).then((docs) => {
+          const pendingArray = [];
+          if (!docs.empty) {
+            docs.forEach((doc) => {
+              pendingArray.push(doc.data());
+            });
+            const promises = [];
+            pendingArray.forEach((p) => {
+              const promise = getDietitianData(p.dietitian).then((res) => {
+                return {
+                  ...p,
+                  dietitianName: res.data().name,
+                };
               });
-              const promises = [];
-              pendingArray.forEach((p) => {
-                const promise = firebase
-                  .firestore()
-                  .collection("dietitians")
-                  .doc(p.dietitian)
-                  .get()
-                  .then((res) => {
-                    return {
-                      ...p,
-                      dietitianName: res.data().name,
-                    };
-                  });
-                promises.push(promise);
-              });
-              Promise.all(promises).then((res) => {
-                res.sort((a, b) => {
-                  const dateA = new Date(a.startDate).getTime();
-                  const dateB = new Date(b.startDate).getTime();
-                  if (dateA < dateB) {
-                    return -1;
-                  } else if (dateA > dateB) {
-                    return 1;
-                  } else {
-                    return 0;
-                  }
-                });
-                const start = new Date(res[0].startDate).getTime();
-
-                if (start <= today) {
-                  setProfile({ ...doc, dietitian: res[0].dietitian });
-                  firebase
-                    .firestore()
-                    .collection("customers")
-                    .doc(`${customerID}`)
-                    .update({ ...doc, dietitian: res[0].dietitian });
-                  firebase
-                    .firestore()
-                    .collection("dietitians")
-                    .doc(res[0].dietitian)
-                    .collection("customers")
-                    .doc(`${customerID}`)
-                    .set({
-                      startDate: res[0].startDate,
-                      endDate: res[0].endDate,
-                    })
-                    .then(() => {
-                      setServiceDate({
-                        startDate: res[0].startDate,
-                        endDate: res[0].endDate,
-                      });
-                      setDName(res[0].dietitianName);
-                    })
-                    .then(() => {
-                      if (start < today) {
-                        firebase
-                          .firestore()
-                          .collection("pending")
-                          .doc(res[0].id)
-                          .delete()
-                          .then(() => {
-                            console.log("Document successfully deleted!");
-                          })
-                          .catch((error) => {
-                            console.error("Error removing document: ", error);
-                          });
-                      }
-                    })
-                    .then(() => {
-                      res.shift();
-                      setPending(res);
-                    });
+              promises.push(promise);
+            });
+            Promise.all(promises).then((res) => {
+              res.sort((a, b) => {
+                const dateA = new Date(a.startDate).getTime();
+                const dateB = new Date(b.startDate).getTime();
+                if (dateA < dateB) {
+                  return -1;
+                } else if (dateA > dateB) {
+                  return 1;
                 } else {
-                  setPending(res);
+                  return 0;
                 }
               });
-            } else {
-              setPending([]);
-            }
-          });
-        console.log(pending);
+              const start = new Date(res[0].startDate).getTime();
+
+              if (start <= today) {
+                setProfile({ ...doc, dietitian: res[0].dietitian });
+                updateCustomerData(cID, {
+                  ...doc,
+                  dietitian: res[0].dietitian,
+                });
+                setMyCustomerData(res[0].dietitian, cID, {
+                  startDate: res[0].startDate,
+                  endDate: res[0].endDate,
+                })
+                  .then(() => {
+                    setServiceDate({
+                      startDate: res[0].startDate,
+                      endDate: res[0].endDate,
+                    });
+                    setDName(res[0].dietitianName);
+                  })
+                  .then(() => {
+                    if (start < today) {
+                      deletePending(res[0].id)
+                        .then(() => {
+                          console.log("Pending successfully deleted!");
+                        })
+                        .catch((error) => {
+                          console.error("Error removing document: ", error);
+                        });
+                    }
+                  })
+                  .then(() => {
+                    res.shift();
+                    setPending(res);
+                  });
+              } else {
+                setPending(res);
+              }
+            });
+          } else {
+            setPending([]);
+          }
+        });
         //刪除成功的刊登或預約???
         // .then(() => {
         //   firebase
         //     .firestore()
         //     .collection("publish")
-        //     .where("id", "==", customerID)
+        //     .where("id", "==", cID)
         //     .where("status", "==", "1")
         //     .where("startDate", "==", getToday)
         //     .get()
@@ -274,7 +211,7 @@ function Customer() {
         //   firebase
         //     .firestore()
         //     .collection("reserve")
-        //     .where("inviterID", "==", customerID)
+        //     .where("inviterID", "==", cID)
         //     .where("status", "==", "1")
         //     .where("reserveStartDate", "==", getToday)
         //     .get()
@@ -295,29 +232,20 @@ function Customer() {
         // });
       });
 
-    firebase
-      .firestore()
-      .collection("reserve")
-      .where("inviterID", "==", customerID)
-      .get()
-      .then((docs) => {
-        const reserveArray = [];
-        docs.forEach((doc) => {
-          reserveArray.push(doc.data());
-        });
-        reserveArray.forEach((e) => {
-          const startDate = new Date(e.reserveStartDate).getTime();
-          if (startDate <= today && e.status === "0") {
-            e.status = "3";
-            firebase
-              .firestore()
-              .collection("reserve")
-              .doc(e.reserveID)
-              .update(e);
-          }
-        });
-        setReserve(reserveArray);
+    getCustomerReserve("inviterID", cID).then((docs) => {
+      const reserveArray = [];
+      docs.forEach((doc) => {
+        reserveArray.push(doc.data());
       });
+      reserveArray.forEach((e) => {
+        const startDate = new Date(e.reserveStartDate).getTime();
+        if (startDate <= today && e.status === "0") {
+          e.status = "3";
+          updateReserve(e.reserveID, e);
+        }
+      });
+      setReserve(reserveArray);
+    });
     if (keyword.includes("profile")) {
       setNav({ profile: style["nav-active"] });
     } else if (keyword.includes("dietary")) {
@@ -331,15 +259,13 @@ function Customer() {
     } else if (keyword.includes("reserve")) {
       setNav({ reserve: style["nav-active"] });
     }
-  }, []);
+  }, []); //eslint-disable-line
+
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .get()
-      .then((snapshot) => {
+    getDietitiansData()
+      .then((docs) => {
         const users = [];
-        snapshot.forEach((doc) => {
+        docs.forEach((doc) => {
           if (dID && doc.data().id !== dID && doc.data().isServing) {
             users.push(doc.data());
           } else if (!dID && doc.data().isServing) {
@@ -351,11 +277,7 @@ function Customer() {
         return users;
       })
       .then((users) => {
-        firebase
-          .firestore()
-          .collection("reserve")
-          .where("inviterID", "==", customerID)
-          .get()
+        getCustomerReserve("inviterID", cID)
           .then((docs) => {
             const reserveArray = [];
             if (!docs.empty) {
@@ -379,39 +301,30 @@ function Customer() {
           })
           .then((res) => {
             const user = [];
-            firebase
-              .firestore()
-              .collection("pending")
-              .where("customer", "==", customerID)
-              .get()
-              .then((docs) => {
-                if (!docs.empty) {
-                  docs.forEach((doc) => {
-                    res["reserveArray"].push(doc.data());
-                  });
+            getPendingData("customer", cID).then((docs) => {
+              if (!docs.empty) {
+                docs.forEach((doc) => {
+                  res["reserveArray"].push(doc.data());
+                });
 
-                  res["users"].forEach((u) => {
-                    if (
-                      !res["reserveArray"].find((r) => r.dietitian === u.id)
-                    ) {
-                      user.push(u);
-                    }
-                  });
-                  setDietitians(user);
-                } else {
-                  res["users"].forEach((u) => {
-                    if (
-                      !res["reserveArray"].find((r) => r.dietitian === u.id)
-                    ) {
-                      user.push(u);
-                    }
-                  });
-                  setDietitians(user);
-                }
-              });
+                res["users"].forEach((u) => {
+                  if (!res["reserveArray"].find((r) => r.dietitian === u.id)) {
+                    user.push(u);
+                  }
+                });
+                setDietitians(user);
+              } else {
+                res["users"].forEach((u) => {
+                  if (!res["reserveArray"].find((r) => r.dietitian === u.id)) {
+                    user.push(u);
+                  }
+                });
+                setDietitians(user);
+              }
+            });
           });
       });
-  }, [reserve]);
+  }, [reserve]); //eslint-disable-line
 
   const activeHandler = (e) => {
     const { title } = e.target;
@@ -422,7 +335,7 @@ function Customer() {
     }
   };
 
-  const logoutHandler = () => {
+  const logoutHandler = (e) => {
     Swal.fire({
       text: "確定登出嗎?",
       confirmButtonText: "確定",
@@ -431,16 +344,7 @@ function Customer() {
       showCancelButton: true,
     }).then((res) => {
       if (res.isConfirmed) {
-        firebase
-          .auth()
-          .signOut()
-          .then(function () {
-            // 登出後強制重整一次頁面
-            window.location.href = "/";
-          })
-          .catch(function (error) {
-            console.log(error.message);
-          });
+        logout();
       }
     });
   };
@@ -461,7 +365,7 @@ function Customer() {
           <main className={style["d-main"]}>
             <nav>
               <a href="/">
-                <img src={logo} id={style["menu-logo"]} />
+                <img src={logo} id={style["menu-logo"]} alt="logo" />
               </a>
               <div className={style["straight-nav"]}>
                 <Link
@@ -470,7 +374,11 @@ function Customer() {
                   onClick={activeHandler}
                   to={`/customer/${profile.id}/profile`}
                 >
-                  <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                  <i
+                    className="fa fa-user"
+                    aria-hidden="true"
+                    title="profile"
+                  ></i>
                   <div title="profile">會員資料</div>
                 </Link>
                 {profile.dietitian ? (
@@ -481,21 +389,24 @@ function Customer() {
                     to={`/customer/${profile.id}/dietary`}
                   >
                     <i
-                      class="fa fa-cutlery"
+                      className="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
                     <div title="dietary">飲食記錄</div>
                   </Link>
                 ) : (
-                  <a className={style["nav-unactive"]} onClick={alertHandler}>
+                  <span
+                    className={style["nav-unactive"]}
+                    onClick={alertHandler}
+                  >
                     <i
-                      class="fa fa-cutlery"
+                      className="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
                     <div title="dietary">飲食記錄</div>
-                  </a>
+                  </span>
                 )}
                 <Link
                   title="target"
@@ -504,7 +415,7 @@ function Customer() {
                   to={`/customer/${profile.id}/target`}
                 >
                   <i
-                    class="fa fa-bullseye"
+                    className="fa fa-bullseye"
                     aria-hidden="true"
                     title="target"
                   ></i>
@@ -515,10 +426,10 @@ function Customer() {
                   title="publish"
                   className={`${style["nav-title"]} ${nav.publish || ""}`}
                   onClick={activeHandler}
-                  to={`/customer/${customerID}/publish`}
+                  to={`/customer/${cID}/publish`}
                 >
                   <i
-                    class="fa fa-file-text-o"
+                    className="fa fa-file-text-o"
                     aria-hidden="true"
                     title="publish"
                   ></i>
@@ -529,10 +440,10 @@ function Customer() {
                   title="findDietitian"
                   className={`${style["nav-title"]} ${nav.findDietitian || ""}`}
                   onClick={activeHandler}
-                  to={`/customer/${customerID}/findDietitians`}
+                  to={`/customer/${cID}/findDietitians`}
                 >
                   <i
-                    class="fa fa-search"
+                    className="fa fa-search"
                     aria-hidden="true"
                     title="findDietitian"
                   ></i>
@@ -543,10 +454,10 @@ function Customer() {
                   title="reserve"
                   className={`${style["nav-title"]} ${nav.reserve || ""}`}
                   onClick={activeHandler}
-                  to={`/customer/${customerID}/reserve-list`}
+                  to={`/customer/${cID}/reserve-list`}
                 >
                   <i
-                    class="fa fa-list-alt"
+                    className="fa fa-list-alt"
                     aria-hidden="true"
                     title="reserve"
                   ></i>
@@ -555,20 +466,20 @@ function Customer() {
                 <Link
                   className={style["nav-title"]}
                   onClick={activeHandler}
-                  to={`/customer/${customerID}/`}
+                  to={`/customer/${cID}/`}
                 >
-                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                  <i className="fa fa-arrow-left" aria-hidden="true"></i>
                   <div>會員主頁</div>
                 </Link>
-                <a onClick={logoutHandler}>
+                <span onClick={logoutHandler}>
                   <img src={exit} alt="logout" id={style.logout} />
-                </a>
+                </span>
                 <div className={style["copyright"]}>&copy;2021 Light Life</div>
               </div>
             </nav>
 
             <div className={style.profile}>
-              <img src={profile ? profile.image : noImage} />
+              <img src={profile ? profile.image : noImage} alt="profile" />
               <div className={style.welcome}>
                 <div>{profile.name}，您好！</div>
                 <div className={style["service-status"]}>
@@ -587,7 +498,11 @@ function Customer() {
                   to={`/customer/${profile.id}/profile`}
                   onClick={activeHandler}
                 >
-                  <i class="fa fa-user" aria-hidden="true" title="profile"></i>
+                  <i
+                    className="fa fa-user"
+                    aria-hidden="true"
+                    title="profile"
+                  ></i>
                   <div title="profile">會員資料</div>
                 </Link>
                 {profile.dietitian ? (
@@ -598,21 +513,24 @@ function Customer() {
                     onClick={activeHandler}
                   >
                     <i
-                      class="fa fa-cutlery"
+                      className="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
                     <div title="dietary">飲食記錄</div>
                   </Link>
                 ) : (
-                  <a onClick={alertHandler} className={style["nav-title"]}>
+                  <span
+                    onClick={alertHandler}
+                    className={`${style["nav-title"]} ${style["nav-unactive"]}`}
+                  >
                     <i
-                      class="fa fa-cutlery"
+                      className="fa fa-cutlery"
                       aria-hidden="true"
                       title="dietary"
                     ></i>
                     <div title="dietary">飲食記錄</div>
-                  </a>
+                  </span>
                 )}
                 <Link
                   title="target"
@@ -621,7 +539,7 @@ function Customer() {
                   onClick={activeHandler}
                 >
                   <i
-                    class="fa fa-bullseye"
+                    className="fa fa-bullseye"
                     aria-hidden="true"
                     title="target"
                   ></i>
@@ -631,11 +549,11 @@ function Customer() {
                 <Link
                   title="publish"
                   className={style["nav-title"]}
-                  to={`/customer/${customerID}/publish`}
+                  to={`/customer/${cID}/publish`}
                   onClick={activeHandler}
                 >
                   <i
-                    class="fa fa-file-text-o"
+                    className="fa fa-file-text-o"
                     aria-hidden="true"
                     title="publish"
                   ></i>
@@ -646,10 +564,10 @@ function Customer() {
                   title="findDietitian"
                   className={style["nav-title"]}
                   onClick={activeHandler}
-                  to={`/customer/${customerID}/findDietitians`}
+                  to={`/customer/${cID}/findDietitians`}
                 >
                   <i
-                    class="fa fa-search"
+                    className="fa fa-search"
                     aria-hidden="true"
                     title="findDietitian"
                   ></i>
@@ -660,10 +578,10 @@ function Customer() {
                   title="reserve"
                   className={style["nav-title"]}
                   onClick={activeHandler}
-                  to={`/customer/${customerID}/reserve-list`}
+                  to={`/customer/${cID}/reserve-list`}
                 >
                   <i
-                    class="fa fa-list-alt"
+                    className="fa fa-list-alt"
                     aria-hidden="true"
                     title="reserve"
                   ></i>
@@ -688,11 +606,11 @@ function Customer() {
                                 <div>
                                   <div>
                                     開始日期：
-                                    {serviceDate ? serviceDate.startDate : ""}
+                                    {serviceDate.startDate}
                                   </div>
                                   <div>
                                     結束日期：
-                                    {serviceDate ? serviceDate.endDate : ""}
+                                    {serviceDate.endDate}
                                   </div>
                                 </div>
                               </>
@@ -701,7 +619,7 @@ function Customer() {
                             )
                           ) : (
                             <div className={image.spinner}>
-                              <img src={spinner} />
+                              <img src={spinner} alt="spinner" />
                             </div>
                           )}
                         </div>
@@ -712,8 +630,8 @@ function Customer() {
                       <div>
                         {pending ? (
                           pending.length > 0 ? (
-                            pending.map((p) => (
-                              <div className={style.each}>
+                            pending.map((p, index) => (
+                              <div className={style.each} key={index}>
                                 <div>{p.dietitianName} 營養師</div>
                                 <div>
                                   <div>開始日期：{p.startDate}</div>
@@ -726,7 +644,7 @@ function Customer() {
                           )
                         ) : (
                           <div className={image.spinner}>
-                            <img src={spinner} />
+                            <img src={spinner} alt="spinner" />
                           </div>
                         )}
                       </div>
@@ -735,7 +653,10 @@ function Customer() {
                 </div>
               </Route>
               <Route exact path="/customer/:cID/profile">
-                <CustomerProfile profile={profile} setProfile={setProfile} />
+                <EditCustomerProfile
+                  profile={profile}
+                  setProfile={setProfile}
+                />
               </Route>
               <Route exact path="/customer/:cID/dietary">
                 <DietrayRecord />
@@ -750,7 +671,6 @@ function Customer() {
                 <GetDietitiansData
                   props={dietitians}
                   setReserve={setReserve}
-                  profile={profile}
                   reserve={reserve}
                 />
               </Route>
@@ -765,7 +685,7 @@ function Customer() {
       return (
         <main className="d-main">
           <div className={load}>
-            <img src={loading} />
+            <img src={loading} alt="loading" />
           </div>
         </main>
       );

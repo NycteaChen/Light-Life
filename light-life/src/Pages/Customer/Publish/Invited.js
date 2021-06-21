@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+  getDietitianData,
+  addPending,
+  updatePendingID,
+  setPublicationData,
+} from "../../../utils/Firebase";
 import Swal from "sweetalert2";
 import publish from "../../../style/publish.module.scss";
 import style from "../../../style/findDietitian.module.scss";
@@ -23,18 +20,15 @@ function Invited({
   const props = publishData[0].whoInvite[+idx];
   const [profile, setProfile] = useState(null);
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(props.dietitianID)
-      .get()
-      .then((docs) => {
-        setProfile(docs.data());
-      });
-  }, []);
+    getDietitianData(props.dietitianID).then((docs) => {
+      setProfile(docs.data());
+    });
+  }, []); //eslint-disable-line
+
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":
+        console.log("here");
         Swal.fire({
           text: "確定接受嗎",
           icon: "warning",
@@ -48,30 +42,21 @@ function Invited({
             publishData[0].whoInvite.forEach((e) => {
               e.status = "2";
             });
-
             publishData[0].whoInvite[+idx].status = "1";
-            firebase
-              .firestore()
-              .collection("pending")
-              .add({
-                dietitian: props.dietitianID,
-                customer: publishData[0].id,
-                startDate: publishData[0].startDate,
-                endDate: publishData[0].endDate,
-              })
-              .then((docRef) => {
-                firebase
-                  .firestore()
-                  .collection("pending")
-                  .doc(docRef.id)
-                  .update("id", docRef.id);
-              });
+            addPending({
+              dietitian: props.dietitianID,
+              customer: publishData[0].id,
+              startDate: publishData[0].startDate,
+              endDate: publishData[0].endDate,
+            }).then((docRef) => {
+              updatePendingID(docRef.id);
+            });
 
-            firebase
-              .firestore()
-              .collection("publish")
-              .doc(publishData[0].publishID)
-              .set({ ...publishData[0] });
+            setPublicationData(
+              publishData[0].publishID,
+              { ...publishData[0] },
+              false
+            );
             setPublishData([...publishData]);
             if (oldPublish) {
               setOldPublish([publishData[0], ...oldPublish]);
@@ -94,17 +79,14 @@ function Invited({
           if (res.isConfirmed) {
             setIsChecked(false);
             publishData[0].whoInvite[+idx].status = "2";
-            firebase
-              .firestore()
-              .collection("publish")
-              .doc(publishData[0].publishID)
-              .set(
-                {
-                  whoInvite: [...publishData[0].whoInvite],
-                },
-                { merge: true }
-              );
 
+            setPublicationData(
+              publishData[0].publishID,
+              {
+                whoInvite: [...publishData[0].whoInvite],
+              },
+              true
+            );
             setPublishData([
               {
                 ...publishData[0],
@@ -117,6 +99,8 @@ function Invited({
             ]);
           }
         });
+        break;
+      default:
         break;
     }
   };

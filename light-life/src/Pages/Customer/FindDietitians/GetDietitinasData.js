@@ -5,7 +5,7 @@ import image from "../../../style/image.module.scss";
 import spinner from "../../../images/loading.gif";
 import nothing from "../../../images/nothing.svg";
 
-function GetDietitiansData({ props, setReserve, profile, reserve }) {
+function GetDietitiansData({ props, setReserve, reserve }) {
   const [isChecked, setIsChecked] = useState(false); //false
   const [checkIndex, setCheckIndex] = useState("");
   const [display, setDisplay] = useState("inline-block");
@@ -13,7 +13,8 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
     if (props) {
       setDisplay("none");
     }
-  });
+  }, []); //eslint-disable-line
+
   const bindCheckHandler = (e) => {
     setCheckIndex(e.target.id);
     setIsChecked(true);
@@ -27,7 +28,7 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
           props.length > 0 ? (
             props.map((d, index) => (
               <div key={index} className={style.dietitian}>
-                <img src={props ? d.image : ""} alt="dietitian"></img>
+                <img src={props ? d.image : ""} alt="dietitian" />
                 <div>
                   <div className={style.col}>
                     <div className={style.name}>{d.name}營養師</div>
@@ -71,12 +72,12 @@ function GetDietitiansData({ props, setReserve, profile, reserve }) {
             ))
           ) : (
             <div className={image.nothing} style={{ marginTop: "-3.5px" }}>
-              <img src={nothing} />
+              <img src={nothing} alt="nothing" />
             </div>
           )
         ) : (
           <div className={image.spinner}>
-            <img src={spinner} style={{ display: display }} />
+            <img src={spinner} style={{ display: display }} alt="spinner" />
           </div>
         )}
       </div>

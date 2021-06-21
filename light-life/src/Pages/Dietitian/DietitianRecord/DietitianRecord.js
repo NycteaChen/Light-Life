@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
 import { useParams } from "react-router-dom";
-import "firebase/firestore";
+import { getDietData, setCustomerDiet } from "../../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import getIngrediensData from "../../../utils/IngredientsAPI.js";
-import Analysis from "./Analysis.js";
+import Analysis from "../../Components/DietaryRecord/Analysis.js";
 import style from "../../../style/dietary.module.scss";
 
 function DietitianRecord({ date }) {
@@ -29,10 +28,13 @@ function DietitianRecord({ date }) {
   const [input, setInput] = useState(initInput);
   const [active, setAcitve] = useState("");
 
-  useEffect(async () => {
-    await getIngrediensData().then((res) => {
-      setIngredients(res);
-    });
+  useEffect(() => {
+    async function fetchDate() {
+      await getIngrediensData().then((res) => {
+        setIngredients(res);
+      });
+    }
+    fetchDate();
   }, []);
 
   useEffect(() => {
@@ -47,27 +49,27 @@ function DietitianRecord({ date }) {
     setInput(initInput);
     setIsSelected(false);
     setMeal([mealClass, e.target.id]);
-    firebase
-      .firestore()
-      .collection("dietitians")
-      .doc(dID)
-      .collection("customers")
-      .doc(cID)
-      .collection("diet")
-      .doc(date)
-      .get()
-      .then((doc) => {
-        if (doc.exists && doc.data()[mealClass]) {
-          setMealDetails(doc.data()[mealClass]);
-        } else {
-          setMealDetails("");
-        }
-        if (doc.exists && doc.data()[e.target.id]) {
-          setDataAnalysis(doc.data()[e.target.id]);
-        } else {
-          setDataAnalysis(false);
-        }
-      });
+
+    getDietData(dID, cID, date).then((doc) => {
+      if (doc.exists && doc.data()[mealClass]) {
+        setMealDetails(doc.data()[mealClass]);
+      } else {
+        setMealDetails("");
+      }
+      if (doc.exists && doc.data()[e.target.id]) {
+        setDataAnalysis(doc.data()[e.target.id]);
+      } else {
+        setDataAnalysis(false);
+      }
+    });
+  };
+
+  const getInputNumber = (n, per) => {
+    if (parseFloat(n["每單位含量"]) && per > 0) {
+      return parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1);
+    } else {
+      return 0;
+    }
   };
 
   const getInputHandler = (e) => {
@@ -85,34 +87,21 @@ function DietitianRecord({ date }) {
         .forEach((n) => {
           switch (n["分析項"]) {
             case "修正熱量":
-              kcal =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              kcal = getInputNumber(n, per);
               break;
             case "粗蛋白":
-              protein =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              protein = getInputNumber(n, per);
               break;
             case "粗脂肪":
-              lipid =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              lipid = getInputNumber(n, per);
               break;
             case "總碳水化合物":
-              carbohydrate =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              carbohydrate = getInputNumber(n, per);
               break;
             case "膳食纖維":
-              fiber =
-                parseFloat(n["每單位含量"]) && per > 0
-                  ? parseFloat(parseFloat(n["每單位含量"]) * per).toFixed(1)
-                  : 0;
+              fiber = getInputNumber(n, per);
+              break;
+            default:
               break;
           }
         });
@@ -157,7 +146,6 @@ function DietitianRecord({ date }) {
   };
 
   const addNewFoodTable = (e) => {
-    // if (meal[0] === e.target.className.split(" ")[1]) {
     if (e.target.className.includes(meal[0])) {
       if (input.item === "" || !input.item) {
         Swal.fire({
@@ -173,20 +161,9 @@ function DietitianRecord({ date }) {
           confirmButtonColor: "#1e4d4e",
         });
       } else {
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(dID)
-          .collection("customers")
-          .doc(cID)
-          .collection("diet")
-          .doc(date)
-          .set(
-            {
-              [meal[1]]: [...(dataAnalysis || []), input],
-            },
-            { merge: true }
-          );
+        setCustomerDiet(dID, cID, date, {
+          [meal[1]]: [...(dataAnalysis || []), input],
+        });
         setIsSelected(false);
         setDataAnalysis([...(dataAnalysis || []), input]);
         setInput(initInput);
@@ -205,11 +182,6 @@ function DietitianRecord({ date }) {
   window.addEventListener("click", (e) => {
     if (!e.target.className.includes("searchBox")) {
       setIsDisplay(false);
-      // if (input.item) {
-      //   ingredients.find((i) =>
-      //     i["樣品名稱"] === e.target.value ? setIsSelected(true) : null
-      //   );
-      // }
     }
   });
   const removeItemHandler = (e) => {
@@ -225,22 +197,11 @@ function DietitianRecord({ date }) {
         setDataAnalysis([
           ...dataAnalysis.filter((d, index) => index !== +e.target.id),
         ]);
-        firebase
-          .firestore()
-          .collection("dietitians")
-          .doc(dID)
-          .collection("customers")
-          .doc(cID)
-          .collection("diet")
-          .doc(date)
-          .set(
-            {
-              [meal[1]]: [
-                ...dataAnalysis.filter((d, index) => index !== +e.target.id),
-              ],
-            },
-            { merge: true }
-          );
+        setCustomerDiet(dID, cID, date, {
+          [meal[1]]: [
+            ...dataAnalysis.filter((d, index) => index !== +e.target.id),
+          ],
+        });
       }
     });
   };
@@ -254,13 +215,12 @@ function DietitianRecord({ date }) {
     ["晚點", "customerNight-snack", "night-snack"],
   ];
 
-  console.log(mealDetails);
-
   return (
     <>
       <ul>
         {mealKeywords.map((m) => (
           <li
+            key={m[0]}
             className={`${style["meal-title"]} ${m[1]} ${active[m[2]] || ""}`}
             id={`${m[2]}`}
             onClick={getMealHandler}
@@ -272,7 +232,7 @@ function DietitianRecord({ date }) {
       <div className={style.mealCol}>
         <h5>{date} 飲食記錄</h5>
         {mealKeywords.map((m) => (
-          <div className={style.meal}>
+          <div className={style.meal} key={m[1]}>
             {meal[0] === m[1] ? (
               <>
                 <div className={`${style["diet-record"]} ${style.col}`}>
@@ -286,10 +246,8 @@ function DietitianRecord({ date }) {
                       照片記錄
                     </div>
                     <div className={style["food-images"]}>
-                      {mealDetails &&
-                      mealDetails.images &&
-                      mealDetails.images.length > 0 ? (
-                        mealDetails.images.map((i, index) => (
+                      {mealDetails && mealDetails.images ? (
+                        mealDetails.images?.map((i, index) => (
                           <div className={style["food-image"]} key={index}>
                             <a
                               href={i}
@@ -360,7 +318,7 @@ function DietitianRecord({ date }) {
                           <input
                             type="text"
                             name="item"
-                            value={input.item ? input.item : ""}
+                            value={input.item || ""}
                             placeholder="請輸入食材"
                             autoComplete="off"
                             className={style["input-item"]}
@@ -369,9 +327,9 @@ function DietitianRecord({ date }) {
                             onChange={getInputHandler}
                             onInput={getSearchHandler}
                           />
-                          {inputValue.length > 0 && isDisplay ? (
+                          {isDisplay ? (
                             <div className={style.searchBox}>
-                              {inputValue.map((i, index) => (
+                              {inputValue?.map((i, index) => (
                                 <div
                                   key={index}
                                   onClick={selectIngredientHandler}
@@ -387,7 +345,7 @@ function DietitianRecord({ date }) {
                           <input
                             type="number"
                             name="per"
-                            value={input.per ? input.per : ""}
+                            value={input.per || ""}
                             min="0"
                             onChange={getInputHandler}
                             className={style["input-number"]}
@@ -407,7 +365,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="kcal"
-                                value={input.kcal ? input.kcal : ""}
+                                value={input.kcal || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}
@@ -417,7 +375,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="protein"
-                                value={input.protein ? input.protein : ""}
+                                value={input.protein || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}
@@ -427,7 +385,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="lipid"
-                                value={input.lipid ? input.lipid : ""}
+                                value={input.lipid || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}
@@ -437,9 +395,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="carbohydrate"
-                                value={
-                                  input.carbohydrate ? input.carbohydrate : ""
-                                }
+                                value={input.carbohydrate || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}
@@ -449,7 +405,7 @@ function DietitianRecord({ date }) {
                               <input
                                 type="number"
                                 name="fiber"
-                                value={input.fiber ? input.fiber : ""}
+                                value={input.fiber || ""}
                                 min="0"
                                 onChange={getInputHandler}
                                 className={style["input-number"]}
@@ -465,7 +421,7 @@ function DietitianRecord({ date }) {
                         <th className={`${style["meal-plus"]} ${m[1]}`}>
                           <div className={m[1]} onClick={addNewFoodTable}>
                             <i
-                              class={`fa fa-plus ${m[1]}`}
+                              className={`fa fa-plus ${m[1]}`}
                               aria-hidden="true"
                               onClick={addNewFoodTable}
                             ></i>

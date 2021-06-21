@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  getTargetData,
+  getMyCustomerData,
+  deleteTarget,
+  updateTarget,
+} from "../../utils/Firebase";
 import Swal from "sweetalert2";
 import style from "../../style/target.module.scss";
 import image from "../../style/image.module.scss";
@@ -9,19 +13,20 @@ import spinner from "../../images/loading.gif";
 import nothing from "../../images/nothing.svg";
 
 function TargetHandler({ target, setTarget }) {
-  const db = firebase.firestore();
   const [isEditing, setIsEditing] = useState(false);
   const [targetIndex, setTargetIndex] = useState(null);
   const [input, setInput] = useState({});
   const [date, setDate] = useState({});
   const pathName = useLocation().pathname;
-  const params = useParams();
+  const { dID } = useParams();
+  const { cID } = useParams();
   const [display, setDisplay] = useState("inline-block");
   useEffect(() => {
     if (target) {
       setDisplay("none");
     }
-  });
+  }, []); //eslint-disable-line
+
   const getInputHandler = (e) => {
     const { name } = e.target;
     if (name === "startDate") {
@@ -36,36 +41,22 @@ function TargetHandler({ target, setTarget }) {
       setInput({ ...input, [name]: e.target.value });
     }
   };
-  // true會變?
   const bindEditHandler = (e) => {
     setIsEditing(true);
     setTargetIndex(e.target.id);
-
-    // setInput(target[e.target.id]);
     setInput({});
     if (targetIndex !== e.target.id) {
-      db.collection("dietitians")
-        .doc(params.dID)
-        .collection("customers")
-        .doc(params.cID)
-        .collection("target")
-        .get()
-        .then((docs) => {
-          const targetArray = [];
-          docs.forEach((doc) => {
-            targetArray.push(doc.data());
-          });
-          setTarget(targetArray);
+      getTargetData(dID, cID).then((docs) => {
+        const targetArray = [];
+        docs.forEach((doc) => {
+          targetArray.push(doc.data());
         });
+        setTarget(targetArray);
+      });
     } else {
       setInput({ ...input });
     }
-    db.collection("dietitians")
-      .doc(params.dID)
-      .collection("customers")
-      .doc(params.cID)
-      .get()
-      .then((doc) => setDate(doc.data()));
+    getMyCustomerData(dID, cID).then((doc) => setDate(doc.data()));
   };
 
   const bindRemoveTarget = (e) => {
@@ -80,12 +71,7 @@ function TargetHandler({ target, setTarget }) {
       if (res.isConfirmed) {
         setTargetIndex(e.target.id);
         setTarget([...target.filter((t, index) => index !== +e.target.id)]);
-        db.collection("dietitians")
-          .doc(params.dID)
-          .collection("customers")
-          .doc(params.cID)
-          .collection("target")
-          .get()
+        getTargetData(dID, cID)
           .then((docs) => {
             const docsArray = [];
             docs.forEach((doc) => {
@@ -95,32 +81,14 @@ function TargetHandler({ target, setTarget }) {
             return getID;
           })
           .then((res) => {
-            db.collection("dietitians")
-              .doc(params.dID)
-              .collection("customers")
-              .doc(params.cID)
-              .collection("target")
-              .doc(`${res}`)
-              .delete()
-              .then(() => {
-                console.log("delete");
-              })
-              .catch((error) => {
-                console.log("Error:", error);
-              });
+            deleteTarget(dID, cID, res);
           });
       }
     });
   };
 
   const bindSaveHandler = (e) => {
-    console.log(e.target.id);
-    db.collection("dietitians")
-      .doc(params.dID)
-      .collection("customers")
-      .doc(params.cID)
-      .collection("target")
-      .get()
+    getTargetData(dID, cID)
       .then((docs) => {
         const docsArray = [];
         docs.forEach((doc) => {
@@ -130,34 +98,21 @@ function TargetHandler({ target, setTarget }) {
         return getID;
       })
       .then((res) => {
-        db.collection("dietitians")
-          .doc(params.dID)
-          .collection("customers")
-          .doc(params.cID)
-          .collection("target")
-          .doc(`${res}`)
-          .update(input);
+        updateTarget(dID, cID, res, input);
       })
       .then(() => {
-        db.collection("dietitians")
-          .doc(params.dID)
-          .collection("customers")
-          .doc(params.cID)
-          .collection("target")
-          .get()
-          .then((docs) => {
-            const targetArray = [];
-            docs.forEach((doc) => {
-              targetArray.push(doc.data());
-            });
-            setTarget(targetArray);
+        getTargetData(dID, cID).then((docs) => {
+          const targetArray = [];
+          docs.forEach((doc) => {
+            targetArray.push(doc.data());
           });
+          setTarget(targetArray);
+        });
       })
       .then(() => {
         setIsEditing(false);
       });
   };
-  console.log(target);
 
   return (
     <>
@@ -170,13 +125,11 @@ function TargetHandler({ target, setTarget }) {
                   <div className={style["alter-button"]}>
                     <button onClick={bindSaveHandler} id={index}>
                       <i
-                        class="fa fa-floppy-o"
+                        className="fa fa-floppy-o"
                         aria-hidden="true"
                         id={index}
                       ></i>
                     </button>
-                    {/* <i className="fa fa-trash-o" aria-hidden="true"></i> */}
-                    {/* <i className="fa fa-trash" aria-hidden="true"></i> */}
                   </div>
                   <div className={style.flexbox}>
                     <div className={style.title}>建立時間</div>
@@ -192,7 +145,7 @@ function TargetHandler({ target, setTarget }) {
                       name="startDate"
                       min={date.startDate}
                       max={date.endDate}
-                      value={input.startDate ? input.startDate : t.startDate}
+                      value={input.startDate || t.startDate}
                       onChange={getInputHandler}
                       className={style["set-content"]}
                     />
@@ -202,9 +155,9 @@ function TargetHandler({ target, setTarget }) {
                     <input
                       type="date"
                       name="endDate"
-                      min={input.endDate ? input.endDate : date.startDate}
+                      min={input.endDate || date.startDate}
                       max={date.endDate}
-                      value={input.endDate ? input.endDate : t.endDate}
+                      value={input.endDate || t.endDate}
                       onChange={getInputHandler}
                       className={style["set-content"]}
                     />
@@ -263,7 +216,7 @@ function TargetHandler({ target, setTarget }) {
                   <div className={style["alter-button"]}>
                     <button onClick={bindEditHandler} id={index}>
                       <i
-                        class="fa fa-pencil"
+                        className="fa fa-pencil"
                         aria-hidden="true"
                         id={index}
                         onClick={bindEditHandler}
@@ -313,72 +266,70 @@ function TargetHandler({ target, setTarget }) {
         ) : target.length > 0 ? (
           target.map((t, index) =>
             index === +targetIndex ? (
-              <>
-                <div key={index} className={style["customer-target"]}>
-                  <div className={style["target-header"]}>
-                    {pathName.includes("dietitian") ? (
-                      <div className={style["alter-button"]}>
-                        <button onClick={bindEditHandler} id={index}>
-                          <i
-                            class="fa fa-pencil"
-                            aria-hidden="true"
-                            id={index}
-                            onClick={bindEditHandler}
-                          ></i>
-                        </button>
-                        <button onClick={bindRemoveTarget} id={index}>
-                          <i
-                            id={index}
-                            className="fa fa-trash-o"
-                            aria-hidden="true"
-                            onClick={bindRemoveTarget}
-                          ></i>
-                        </button>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                    <div className={style.flexbox}>
-                      <div className={style.title}>建立時間</div>
-                      <div className={style["set-content"]}>{t.addDate}</div>
+              <div key={index} className={style["customer-target"]}>
+                <div className={style["target-header"]}>
+                  {pathName.includes("dietitian") ? (
+                    <div className={style["alter-button"]}>
+                      <button onClick={bindEditHandler} id={index}>
+                        <i
+                          className="fa fa-pencil"
+                          aria-hidden="true"
+                          id={index}
+                          onClick={bindEditHandler}
+                        ></i>
+                      </button>
+                      <button onClick={bindRemoveTarget} id={index}>
+                        <i
+                          id={index}
+                          className="fa fa-trash-o"
+                          aria-hidden="true"
+                          onClick={bindRemoveTarget}
+                        ></i>
+                      </button>
                     </div>
+                  ) : (
+                    ""
+                  )}
+                  <div className={style.flexbox}>
+                    <div className={style.title}>建立時間</div>
+                    <div className={style["set-content"]}>{t.addDate}</div>
                   </div>
-                  <div className={style.col}>
-                    <div className={style.flexbox}>
-                      <div className={style.title}>開始日期</div>
-                      <div className={style["set-content"]}>
-                        {input.startDate ? input.startDate : t.startDate}
-                      </div>
-                    </div>
-                    <div className={style.flexbox}>
-                      <div className={style.title}>結束日期</div>
-                      <div className={style["set-content"]}>
-                        {input.endDate ? input.endDate : t.endDate}
-                      </div>
-                    </div>
-                  </div>
-                  <div className={style.col}>
-                    <div className={style.flexbox}>
-                      <div className={style.title}>目標體重</div>
-                      <div className={style["set-content"]}>
-                        {input.weight ? input.weight : t.weight} kg
-                      </div>
-                    </div>
-                    <div className={style.flexbox}>
-                      <div className={style.title}>目標水分</div>
-                      <div className={style["set-content"]}>
-                        {input.water ? input.water : t.water} cc
-                      </div>
+                </div>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>開始日期</div>
+                    <div className={style["set-content"]}>
+                      {input.startDate || t.startDate}
                     </div>
                   </div>
                   <div className={style.flexbox}>
-                    <div className={style.title}>其他</div>
+                    <div className={style.title}>結束日期</div>
                     <div className={style["set-content"]}>
-                      {input.other ? input.other : t.other}
+                      {input.endDate || t.endDate}
                     </div>
                   </div>
                 </div>
-              </>
+                <div className={style.col}>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標體重</div>
+                    <div className={style["set-content"]}>
+                      {input.weight || t.weight} kg
+                    </div>
+                  </div>
+                  <div className={style.flexbox}>
+                    <div className={style.title}>目標水分</div>
+                    <div className={style["set-content"]}>
+                      {input.water || t.water} cc
+                    </div>
+                  </div>
+                </div>
+                <div className={style.flexbox}>
+                  <div className={style.title}>其他</div>
+                  <div className={style["set-content"]}>
+                    {input.other || t.other}
+                  </div>
+                </div>
+              </div>
             ) : (
               <div key={index} className={style["customer-target"]}>
                 <div className={style["target-header"]}>
@@ -386,7 +337,7 @@ function TargetHandler({ target, setTarget }) {
                     <div className={style["alter-button"]}>
                       <button onClick={bindEditHandler} id={index}>
                         <i
-                          class="fa fa-pencil"
+                          className="fa fa-pencil"
                           aria-hidden="true"
                           id={index}
                           onClick={bindEditHandler}
@@ -438,12 +389,12 @@ function TargetHandler({ target, setTarget }) {
           )
         ) : (
           <div className={image.nothing}>
-            <img src={nothing} />
+            <img src={nothing} alt="nothing" />
           </div>
         )
       ) : (
         <div className={image.spinner}>
-          <img src={spinner} style={{ display: display }} />
+          <img src={spinner} style={{ display: display }} alt="spinner" />
         </div>
       )}
     </>

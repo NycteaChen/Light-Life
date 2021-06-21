@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  getMyCustomerData,
+  getTargetData,
+  setTargetData,
+} from "../../../utils/Firebase.js";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import TargetHandler from "../../Components/TargetHandler.js";
 import style from "../../../style/target.module.scss";
 
 function DietitianTarget() {
-  const params = useParams();
+  const { dID } = useParams();
+  const { cID } = useParams();
   const [date, setDate] = useState({});
   const [target, setTarget] = useState(null);
   const [input, setInput] = useState({});
@@ -15,32 +19,22 @@ function DietitianTarget() {
   const [leastEndDate, setLeastEndDate] = useState(false);
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = today.toISOString().substr(0, 10);
-  const db = firebase.firestore();
 
   useEffect(() => {
-    db.collection("dietitians")
-      .doc(params.dID)
-      .collection("customers")
-      .doc(params.cID)
-      .get()
-      .then((doc) => setDate(doc.data()));
-  }, []);
+    getMyCustomerData(dID, cID).then((doc) => {
+      setDate(doc.data());
+    });
+  }, []); //eslint-disable-line
 
   useEffect(() => {
-    db.collection("dietitians")
-      .doc(params.dID)
-      .collection("customers")
-      .doc(params.cID)
-      .collection("target")
-      .get()
-      .then((docs) => {
-        const targetArray = [];
-        docs.forEach((doc) => {
-          targetArray.push(doc.data());
-        });
-        setTarget(targetArray);
+    getTargetData(dID, cID).then((docs) => {
+      const targetArray = [];
+      docs.forEach((doc) => {
+        targetArray.push(doc.data());
       });
-  }, []);
+      setTarget(targetArray);
+    });
+  }, []); //eslint-disable-line
 
   const bindChangeDateRange = (e) => {
     const date = new Date(+new Date() + 8 * 3600 * 1000);
@@ -74,16 +68,7 @@ function DietitianTarget() {
             confirmButtonColor: "#1e4d4e",
           }).then((result) => {
             if (result.isConfirmed) {
-              db.collection("dietitians")
-                .doc(params.dID)
-                .collection("customers")
-                .doc(params.cID)
-                .collection("target")
-                .doc(`${timestamp}`)
-                .set(input)
-                .catch((error) => {
-                  console.error("Error:", error);
-                });
+              setTargetData(dID, cID, timestamp, input);
               setTarget([...target, input]);
               setIsClick(false);
             }
@@ -102,6 +87,9 @@ function DietitianTarget() {
         break;
       case "new":
         setIsClick(true);
+        break;
+      default:
+        break;
     }
   };
 
@@ -110,7 +98,7 @@ function DietitianTarget() {
       <div className={style.flex}>
         <h5>已設立目標</h5>
         <button onClick={bindAddTarget} id="new">
-          <i class="fa fa-pencil-square-o" aria-hidden="true" id="new"></i>
+          <i className="fa fa-pencil-square-o" aria-hidden="true" id="new"></i>
         </button>
       </div>
       <div className={style["customer-targets"]}>
@@ -128,7 +116,7 @@ function DietitianTarget() {
                 name="startDate"
                 className={style["set-content"]}
                 min={initStartDate}
-                max={date.endDate ? `${date.endDate}` : ""}
+                max={date.endDate || ""}
                 onChange={(e) => {
                   bindChangeDateRange(e);
                   getInputHandler(e);
@@ -142,8 +130,8 @@ function DietitianTarget() {
                 id="target-end"
                 name="endDate"
                 className={style["set-content"]}
-                min={leastEndDate ? leastEndDate : initStartDate}
-                max={date.endDate ? `${date.endDate}` : ""}
+                min={leastEndDate || initStartDate}
+                max={date.endDate || ""}
                 onChange={getInputHandler}
               />
             </label>
