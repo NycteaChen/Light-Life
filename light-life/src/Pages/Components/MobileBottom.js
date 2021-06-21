@@ -5,6 +5,7 @@ import style from "../../style/mobileBottom.module.scss";
 import Swal from "sweetalert2";
 import exit from "../../images/exit.png";
 import user from "../../images/user.png";
+
 export default function MobileBottom() {
   const { cID } = useParams();
   const { dID } = useParams();

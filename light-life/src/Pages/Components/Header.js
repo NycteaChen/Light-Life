@@ -2,7 +2,7 @@ import React from "react";
 import logo from "../../images/lightlife-horizontal.png";
 import style from "../../style/basic.module.scss";
 
-function Header() {
+export default function Header() {
   return (
     <header className={style["m-header"]}>
       <div className={style["logo-nav"]}>
@@ -13,5 +13,3 @@ function Header() {
     </header>
   );
 }
-
-export default Header;

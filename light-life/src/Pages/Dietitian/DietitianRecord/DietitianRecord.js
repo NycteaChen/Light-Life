@@ -7,11 +7,10 @@ import Analysis from "../../Components/DietaryRecord/Analysis.js";
 import style from "../../../style/dietary.module.scss";
 
 function DietitianRecord({ date, count, setCount }) {
-  const params = useParams();
   const [meal, setMeal] = useState([]);
   const [mealDetails, setMealDetails] = useState("");
-  const dID = params.dID;
-  const cID = params.cID;
+  const { dID } = useParams();
+  const { cID } = useParams();
   const [dataAnalysis, setDataAnalysis] = useState(false);
   const [ingredients, setIngredients] = useState({});
   const [inputValue, setInputValue] = useState([]);
