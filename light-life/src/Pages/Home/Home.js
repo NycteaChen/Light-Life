@@ -128,7 +128,7 @@ function Home() {
           </a>
           <nav className={style["header-nav"]}>
             <a href="#about">關於本站</a>
-            <a href="#contact">聯絡我們</a>
+            <a href="#contact">測試一下</a>
             {user.client ? (
               <>
                 <Link to={`/${user.client}/${user.id}`} className={style.icon}>
