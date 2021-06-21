@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d3071625058339b016d79f13ddde3497f62b59e8fecf087fc45c99cd315c7b68
-size 317
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "hosting": {
+    "site": "light-life",
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
