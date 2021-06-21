@@ -18,21 +18,20 @@ function Analysis({ date, cID, data }) {
   const [dID, setDID] = useState("");
   const [advice, setAdvice] = useState("");
   const mealArray = [
-    ["breakfast", "早餐", breakfast],
-    ["morning-snack", "早點", morning],
-    ["lunch", "午餐", lunch],
-    ["afternoon-snack", "午點", afternoon],
-    ["dinner", "晚餐", dinner],
-    ["night-snack", "晚點", night],
+    ["breakfast", "早餐", breakfast, setBreakfast],
+    ["morning-snack", "早點", morning, setMorning],
+    ["lunch", "午餐", lunch, setLunch],
+    ["afternoon-snack", "午點", afternoon, setAfternoon],
+    ["dinner", "晚餐", dinner, setDinner],
+    ["night-snack", "晚點", night, setNight],
   ];
+
   const nutrient = ["kcal", "protein", "lipid", "carbohydrate", "fiber"];
+
   const getMealAnalysis = (data, setMealNutrients) => {
-    if (data) {
-      calculator(data, setMealNutrients);
-    } else {
-      setMealNutrients("");
-    }
+    data ? calculator(data, setMealNutrients) : setMealNutrients("");
   };
+
   useEffect(() => {
     getCustomerData(cID)
       .then((doc) => {
@@ -46,26 +45,13 @@ function Analysis({ date, cID, data }) {
           } else {
             setAdvice("");
           }
-          if (doc.exists) {
-            const analysisArray = [
-              ["breakfast", setBreakfast],
-              ["morning-snack", setMorning],
-              ["lunch", setLunch],
-              ["afternoob-snack", setAfternoon],
-              ["dinner", setDinner],
-              ["night-snack", setNight],
-            ];
-            analysisArray.forEach((a) => {
-              getMealAnalysis(doc.data()[a[0]], a[1]);
-            });
-          } else {
-            setBreakfast("");
-            setMorning("");
-            setLunch("");
-            setAfternoon("");
-            setDinner("");
-            setNight("");
-          }
+          doc.exists
+            ? mealArray.forEach((a) => {
+                getMealAnalysis(doc.data()[a[0]], a[3]);
+              })
+            : mealArray.forEach((a) => {
+                a[3]("");
+              });
         });
       });
   }, [date, data, cID]); //eslint-disable-line
