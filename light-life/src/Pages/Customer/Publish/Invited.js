@@ -43,7 +43,6 @@ function Invited({
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":
-        console.log("here");
         Swal.fire({
           text: "確定接受嗎",
           icon: "warning",
@@ -54,10 +53,13 @@ function Invited({
         }).then((res) => {
           if (res.isConfirmed) {
             publishData[0].status = "1";
-            publishData[0].whoInvite.forEach((e) => {
-              e.status = "2";
+            publishData[0].whoInvite.forEach((e, index) => {
+              if (index === [+idx]) {
+                e.status = "1";
+              } else {
+                e.status = "2";
+              }
             });
-            publishData[0].whoInvite[+idx].status = "1";
             addPending({
               dietitian: props.dietitianID,
               customer: publishData[0].id,

@@ -20,7 +20,6 @@ function GetPublication() {
   const [idx, setIdx] = useState("");
   const { dID } = useParams();
   const date = new Date(+new Date() + 8 * 3600 * 1000).getTime();
-
   useEffect(() => {
     getPublicationData()
       .then((docs) => {
@@ -36,12 +35,15 @@ function GetPublication() {
         console.log(res);
         res.forEach((m, index) => {
           const startDate = new Date(m.startDate).getTime();
-          if (startDate < date && m.whoInvite) {
+          if (startDate <= date && m.whoInvite) {
             m.whoInvite.forEach((i) => {
               if (i.status === "0") {
                 i.status = "3";
               }
             });
+            updatePublication(res[index].publishID, res[index]);
+          } else if (startDate <= date && m.status === "0") {
+            m.status = "3";
             updatePublication(res[index].publishID, res[index]);
           }
         });
@@ -49,6 +51,7 @@ function GetPublication() {
       });
   }, []); //eslint-disable-line
 
+  console.log(publish);
   useEffect(() => {
     if (publish) {
       setSpinnerDisplay("none");
