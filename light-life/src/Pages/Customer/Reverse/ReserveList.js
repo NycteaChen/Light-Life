@@ -8,7 +8,7 @@ import nothing from "../../../images/nothing.svg";
 function ReserveList({ reserve, setReserve }) {
   const [index, setIndex] = useState();
   const [dietitians, setDietitians] = useState([]);
-  const [isChecked, setIsChecked] = useState(false); //false
+  const [isChecked, setIsChecked] = useState(false);
   const [checkDecline, setCheckDecline] = useState(false);
   useEffect(() => {
     const dietitianArray = [];
