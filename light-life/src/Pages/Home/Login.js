@@ -598,7 +598,6 @@ function Login({ display, setDisplay }) {
               </span>
             </li>
           </ul>
-          {/*eslint-disable-next-line */}
           <form autoComplete="off" title="login-form">
             <label>
               <div>帳號</div>
@@ -721,7 +720,6 @@ function Login({ display, setDisplay }) {
               </span>
             </li>
           </ul>
-          {/*eslint-disable-next-line */}
           <form autoComplete="off" title="signup-form">
             <label>
               <div>姓名</div>
