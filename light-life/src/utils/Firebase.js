@@ -278,7 +278,11 @@ export function setPublicationData(id, set, merge) {
 }
 
 export function addPublication(input) {
-  return refPublish.add(input);
+  const dateTime = Date.now();
+  const timestamp = Math.floor(dateTime);
+  return refPublish
+    .doc(`${timestamp}`)
+    .set({ ...input, publishID: `${timestamp}` });
 }
 
 export function updatePublication(id, update) {
@@ -310,8 +314,12 @@ export function updateReserve(id, update) {
   return refReserve.doc(id).update(update);
 }
 
-export function setReservation(id, set) {
-  return refReserve.doc(`${id}`).set(set);
+export function setReservation(set) {
+  const dateTime = Date.now();
+  const timestamp = Math.floor(dateTime);
+  return refReserve
+    .doc(`${timestamp}`)
+    .set({ ...set, reserveID: `${timestamp}` });
 }
 
 export function deleteReserve(id) {

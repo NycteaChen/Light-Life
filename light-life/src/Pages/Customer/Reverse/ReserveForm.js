@@ -11,6 +11,7 @@ import {
   dateToISOString,
   transDateToTime,
   getToday,
+  setDateHandler,
 } from "../../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import style from "../../../style/findDietitian.module.scss";
@@ -24,14 +25,10 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   const [occupationTime, setOccupationTime] = useState([]);
   const [nowReserve, setNowReserve] = useState({});
   const addDate = dateToISOString(getToday());
-  const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-  initStartDate.setDate(initStartDate.getDate() + 1);
-  startMostDate.setDate(startMostDate.getDate() + 14);
-  endLessDate.setDate(endLessDate.getDate() + 7);
-  endMostDate.setDate(endMostDate.getDate() + 14);
+  const initStartDate = setDateHandler(1);
+  const endLessDate = setDateHandler(7);
+  const endMostDate = setDateHandler(14);
+  const startMostDate = setDateHandler(14);
 
   useEffect(() => {
     getCustomerData(cID).then((doc) => setProfile(doc.data()));
@@ -166,7 +163,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
         confirmButtonColor: "#1e4d4e",
       }).then((res) => {
         if (res.isConfirmed) {
-          setReservation(timestamp, { ...input, reserveID: `${timestamp}` })
+          setReservation(input)
             .then(() => {
               getReserveData().then((docs) => {
                 const reserveArray = [];

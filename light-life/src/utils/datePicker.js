@@ -1,19 +1,12 @@
-const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
-const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
-const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-
-initStartDate.setDate(initStartDate.getDate() + 1);
-endLessDate.setDate(endLessDate.getDate() + 7);
-endMostDate.setDate(endMostDate.getDate() + 14);
-
-// const startMostDateHandler = (date, number) => {
-//   return date.setDate(startMostDate.getDate() + number);
-// };
-
 export const getToday = () => {
   const today = new Date(+new Date() + 8 * 3600 * 1000);
   return today;
+};
+
+export const setDateHandler = (number) => {
+  const date = getToday();
+  date.setDate(date.getDate() + number);
+  return date;
 };
 
 export const dateToISOString = (date) => {

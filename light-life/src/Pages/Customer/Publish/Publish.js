@@ -12,6 +12,7 @@ import {
   dateToISOString,
   transDateToTime,
   getToday,
+  setDateHandler,
 } from "../../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import style from "../../../style/publish.module.scss";
@@ -33,14 +34,10 @@ function Publish({ reserve }) {
   const [endDate, setEndDate] = useState(null);
   const [occupationTime, setOccupationTime] = useState([]);
   const [spinnerDisplay, setSpinnerDisplay] = useState("inline-block");
-  const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-  initStartDate.setDate(initStartDate.getDate() + 1);
-  startMostDate.setDate(startMostDate.getDate() + 21);
-  endLessDate.setDate(endLessDate.getDate() + 7);
-  endMostDate.setDate(endMostDate.getDate() + 14);
+  const initStartDate = setDateHandler(1);
+  const endLessDate = setDateHandler(7);
+  const endMostDate = setDateHandler(14);
+  const startMostDate = setDateHandler(21);
 
   useEffect(() => {
     getCustomerPublish(cID).then((docs) => {
@@ -232,22 +229,17 @@ function Publish({ reserve }) {
           confirmButtonColor: "#1e4d4e",
         }).then((res) => {
           if (res.isConfirmed) {
-            addPublication(input)
-              .then((res) => {
-                updatePublication(res.id, { publishID: res.id });
-                return res.id;
-              })
-              .then((res) => {
-                Swal.fire({
-                  text: "發佈成功",
-                  icon: "success",
-                  confirmButtonText: "確定",
-                  confirmButtonColor: "#1e4d4e",
-                });
-                setPublishData([{ ...input, publishID: res }]);
-                setDisplay("none");
-                setInput({});
+            addPublication(input).then(() => {
+              Swal.fire({
+                text: "發佈成功",
+                icon: "success",
+                confirmButtonText: "確定",
+                confirmButtonColor: "#1e4d4e",
               });
+              setPublishData([{ ...input }]);
+              setDisplay("none");
+              setInput({});
+            });
           }
         });
       } else {
