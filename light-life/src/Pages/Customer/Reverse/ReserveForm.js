@@ -153,8 +153,6 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       input.reserveEndDate &&
       input.reserveMessage
     ) {
-      const dateTime = Date.now();
-      const timestamp = Math.floor(dateTime);
       Swal.fire({
         text: "確定預約嗎?",
         showCancelButton: true,
