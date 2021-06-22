@@ -10,6 +10,7 @@ import {
   newEndDateRangeHandler,
   dateToISOString,
   transDateToTime,
+  getToday,
 } from "../../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import style from "../../../style/findDietitian.module.scss";
@@ -22,8 +23,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   const [endDate, setEndDate] = useState(null);
   const [occupationTime, setOccupationTime] = useState([]);
   const [nowReserve, setNowReserve] = useState({});
-  const today = new Date(+new Date() + 8 * 3600 * 1000);
-  const addDate = dateToISOString(today);
+  const addDate = dateToISOString(getToday());
   const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
   const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
   const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);

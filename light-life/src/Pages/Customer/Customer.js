@@ -23,6 +23,11 @@ import {
   getDietitiansData,
   logout,
 } from "../../utils/Firebase.js";
+import {
+  getToday,
+  dateToISOString,
+  transDateToTime,
+} from "../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import GetDietitiansData from "./FindDietitians/GetDietitinasData.js";
 import ReserveList from "./Reverse/ReserveList.js";
@@ -50,10 +55,7 @@ function Customer() {
   const [dName, setDName] = useState("");
   const [serviceDate, setServiceDate] = useState(null);
   const [pending, setPending] = useState(null);
-  const getToday = new Date(+new Date() + 8 * 3600 * 1000)
-    .toISOString()
-    .substr(0, 10);
-  const today = new Date(getToday).getTime();
+  const today = transDateToTime(dateToISOString(getToday()));
   const [dID, setDID] = useState("");
   const [nav, setNav] = useState("");
   const keyword = useLocation().pathname;
@@ -97,31 +99,29 @@ function Customer() {
         return doc.data();
       })
       .then((doc) => {
-        if (doc) {
-          if (doc.dietitian) {
-            getMyCustomerData(doc.dietitian, cID).then((res) => {
-              if (res) {
-                const end = new Date(res.data().endDate).getTime();
-                if (end < today) {
-                  updateCustomerData(cID, {
-                    dietitian: firebase.firestore.FieldValue.delete(),
-                  });
-                } else {
-                  setServiceDate({
-                    startDate: res.data().startDate,
-                    endDate: res.data().endDate,
-                  });
-                  setProfile(doc);
-                }
+        if (doc && doc.dietitian) {
+          getMyCustomerData(doc.dietitian, cID).then((res) => {
+            if (res) {
+              const end = new Date(res.data().endDate).getTime();
+              if (end < today) {
+                updateCustomerData(cID, {
+                  dietitian: firebase.firestore.FieldValue.delete(),
+                });
               } else {
-                setServiceDate({});
+                setServiceDate({
+                  startDate: res.data().startDate,
+                  endDate: res.data().endDate,
+                });
                 setProfile(doc);
               }
-            });
-          } else {
-            setServiceDate({});
-            setProfile(doc);
-          }
+            } else {
+              setServiceDate({});
+              setProfile(doc);
+            }
+          });
+        } else {
+          setServiceDate({});
+          setProfile(doc);
         }
         getPendingData("customer", cID).then((docs) => {
           const pendingArray = [];
@@ -141,8 +141,9 @@ function Customer() {
             });
             Promise.all(promises).then((res) => {
               res.sort((a, b) => {
-                const dateA = new Date(a.startDate).getTime();
-                const dateB = new Date(b.startDate).getTime();
+                const dateA = transDateToTime(a.startDate);
+                const dateB = transDateToTime(b.startDate);
+
                 if (dateA < dateB) {
                   return -1;
                 } else if (dateA > dateB) {
@@ -151,8 +152,7 @@ function Customer() {
                   return 0;
                 }
               });
-              const start = new Date(res[0].startDate).getTime();
-
+              const start = transDateToTime(res[0].startDate);
               if (start <= today) {
                 setProfile({ ...doc, dietitian: res[0].dietitian });
                 updateCustomerData(cID, {
@@ -201,7 +201,7 @@ function Customer() {
         reserveArray.push(doc.data());
       });
       reserveArray.forEach((e) => {
-        const startDate = new Date(e.reserveStartDate).getTime();
+        const startDate = transDateToTime(e.reserveStartDate);
         if (startDate <= today && e.status === "0") {
           e.status = "3";
           updateReserve(e.reserveID, e);

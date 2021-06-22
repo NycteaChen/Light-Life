@@ -11,6 +11,7 @@ import {
   newEndDateRangeHandler,
   dateToISOString,
   transDateToTime,
+  getToday,
 } from "../../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import style from "../../../style/publish.module.scss";
@@ -32,7 +33,6 @@ function Publish({ reserve }) {
   const [endDate, setEndDate] = useState(null);
   const [occupationTime, setOccupationTime] = useState([]);
   const [spinnerDisplay, setSpinnerDisplay] = useState("inline-block");
-  const today = new Date(+new Date() + 8 * 3600 * 1000);
   const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
   const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
   const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
@@ -60,10 +60,10 @@ function Publish({ reserve }) {
               transDateToTime(doc.data().endDate),
             ]);
           }
-          const startDate = new Date(doc.data().startDate).getTime();
-          if (startDate > today && doc.data().status === "0") {
+          const startDate = transDateToTime(doc.data().startDate);
+          if (startDate > getToday() && doc.data().status === "0") {
             publishArray.push(doc.data());
-          } else if (startDate <= today && doc.data().status === "0") {
+          } else if (startDate <= getToday() && doc.data().status === "0") {
             const newData = doc.data();
             newData.status = "3";
             oldPublishArray.push(newData);
@@ -174,7 +174,7 @@ function Publish({ reserve }) {
         setInput({
           ...input,
           [name]: e.target.value,
-          publishDate: dateToISOString(today),
+          publishDate: dateToISOString(getToday()),
           endDate:
             name === "startDate"
               ? newEndDateRangeHandler(
@@ -195,7 +195,7 @@ function Publish({ reserve }) {
       setInput({
         ...input,
         [name]: e.target.value,
-        publishDate: dateToISOString(today),
+        publishDate: dateToISOString(getToday()),
         name: profile.name,
         gender: profile.gender,
         id: cID,

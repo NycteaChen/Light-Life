@@ -6,6 +6,7 @@ import {
   setPublicationData,
   getPublicationData,
 } from "../../../utils/Firebase";
+import { getToday, dateToISOString } from "../../../utils/DatePicker";
 import Swal from "sweetalert2";
 import noImage from "../../../images/noimage.png";
 import style from "../../../style/findCustomers.module.scss";
@@ -14,8 +15,7 @@ function PublicationData({ publish, display, setDisplay, setPublish }) {
   const [profile, setProfile] = useState({});
   const [invite, setInvite] = useState({});
   const { dID } = useParams();
-  const date = new Date(+new Date() + 8 * 3600 * 1000);
-  const today = date.toISOString().substr(0, 10);
+  const today = dateToISOString(getToday());
   const [name, setName] = useState("");
   useEffect(() => {
     getCustomerData(publish.id).then((res) => {

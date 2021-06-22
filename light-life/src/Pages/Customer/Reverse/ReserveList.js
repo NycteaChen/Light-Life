@@ -24,7 +24,8 @@ function ReserveList({ reserve, setReserve }) {
         }
       });
     });
-  }, [reserve]);
+  }, [reserve]); //eslint-disable-line
+
   const checkDeclineMessage = (e) => {
     if (e.target.id) {
       setIndex(e.target.id);
