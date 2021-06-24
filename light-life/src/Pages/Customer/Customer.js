@@ -23,6 +23,11 @@ import {
   getDietitiansData,
   logout,
 } from "../../utils/Firebase.js";
+import {
+  getToday,
+  dateToISOString,
+  transDateToTime,
+} from "../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import GetDietitiansData from "./FindDietitians/GetDietitinasData.js";
 import ReserveList from "./Reverse/ReserveList.js";
@@ -50,10 +55,7 @@ function Customer() {
   const [dName, setDName] = useState("");
   const [serviceDate, setServiceDate] = useState(null);
   const [pending, setPending] = useState(null);
-  const getToday = new Date(+new Date() + 8 * 3600 * 1000)
-    .toISOString()
-    .substr(0, 10);
-  const today = new Date(getToday).getTime();
+  const today = transDateToTime(dateToISOString(getToday()));
   const [dID, setDID] = useState("");
   const [nav, setNav] = useState("");
   const keyword = useLocation().pathname;
@@ -77,6 +79,15 @@ function Customer() {
     }
   }, []); //eslint-disable-line
 
+  const navArray = [
+    "profile",
+    "dietary",
+    "target",
+    "publish",
+    "findDietitian",
+    "reserve",
+  ];
+
   useEffect(() => {
     getCustomerData(cID)
       .then((doc) => {
@@ -88,31 +99,29 @@ function Customer() {
         return doc.data();
       })
       .then((doc) => {
-        if (doc) {
-          if (doc.dietitian) {
-            getMyCustomerData(doc.dietitian, cID).then((res) => {
-              if (res) {
-                const end = new Date(res.data().endDate).getTime();
-                if (end < today) {
-                  updateCustomerData(cID, {
-                    dietitian: firebase.firestore.FieldValue.delete(),
-                  });
-                } else {
-                  setServiceDate({
-                    startDate: res.data().startDate,
-                    endDate: res.data().endDate,
-                  });
-                  setProfile(doc);
-                }
+        if (doc && doc.dietitian) {
+          getMyCustomerData(doc.dietitian, cID).then((res) => {
+            if (res) {
+              const end = new Date(res.data().endDate).getTime();
+              if (end < today) {
+                updateCustomerData(cID, {
+                  dietitian: firebase.firestore.FieldValue.delete(),
+                });
               } else {
-                setServiceDate({});
+                setServiceDate({
+                  startDate: res.data().startDate,
+                  endDate: res.data().endDate,
+                });
                 setProfile(doc);
               }
-            });
-          } else {
-            setServiceDate({});
-            setProfile(doc);
-          }
+            } else {
+              setServiceDate({});
+              setProfile(doc);
+            }
+          });
+        } else {
+          setServiceDate({});
+          setProfile(doc);
         }
         getPendingData("customer", cID).then((docs) => {
           const pendingArray = [];
@@ -132,8 +141,9 @@ function Customer() {
             });
             Promise.all(promises).then((res) => {
               res.sort((a, b) => {
-                const dateA = new Date(a.startDate).getTime();
-                const dateB = new Date(b.startDate).getTime();
+                const dateA = transDateToTime(a.startDate);
+                const dateB = transDateToTime(b.startDate);
+
                 if (dateA < dateB) {
                   return -1;
                 } else if (dateA > dateB) {
@@ -142,8 +152,7 @@ function Customer() {
                   return 0;
                 }
               });
-              const start = new Date(res[0].startDate).getTime();
-
+              const start = transDateToTime(res[0].startDate);
               if (start <= today) {
                 setProfile({ ...doc, dietitian: res[0].dietitian });
                 updateCustomerData(cID, {
@@ -184,52 +193,6 @@ function Customer() {
             setPending([]);
           }
         });
-        //刪除成功的刊登或預約???
-        // .then(() => {
-        //   firebase
-        //     .firestore()
-        //     .collection("publish")
-        //     .where("id", "==", cID)
-        //     .where("status", "==", "1")
-        //     .where("startDate", "==", getToday)
-        //     .get()
-        //     .then((res) => {
-        //       let docID;
-        //       res.forEach((i) => {
-        //         console.log(i.data());
-        //         docID = i.data().publishID;
-        //       });
-        //       return docID;
-        //     })
-        //     .then((res) => {
-        //       if (res) {
-        //         console.log(res);
-        //         firebase.firestore().collection("publish").doc(res).delete();
-        //       }
-        //     });
-
-        //   firebase
-        //     .firestore()
-        //     .collection("reserve")
-        //     .where("inviterID", "==", cID)
-        //     .where("status", "==", "1")
-        //     .where("reserveStartDate", "==", getToday)
-        //     .get()
-        //     .then((res) => {
-        //       let docID;
-        //       res.forEach((i) => {
-        //         console.log(i.data());
-        //         docID = i.data().reserveID;
-        //       });
-        //       return docID;
-        //     })
-        //     .then((res) => {
-        //       if (res) {
-        //         console.log(res);
-        //         firebase.firestore().collection("publish").doc(res).delete();
-        //       }
-        //     });
-        // });
       });
 
     getCustomerReserve("inviterID", cID).then((docs) => {
@@ -238,7 +201,7 @@ function Customer() {
         reserveArray.push(doc.data());
       });
       reserveArray.forEach((e) => {
-        const startDate = new Date(e.reserveStartDate).getTime();
+        const startDate = transDateToTime(e.reserveStartDate);
         if (startDate <= today && e.status === "0") {
           e.status = "3";
           updateReserve(e.reserveID, e);
@@ -246,19 +209,11 @@ function Customer() {
       });
       setReserve(reserveArray);
     });
-    if (keyword.includes("profile")) {
-      setNav({ profile: style["nav-active"] });
-    } else if (keyword.includes("dietary")) {
-      setNav({ dietary: style["nav-active"] });
-    } else if (keyword.includes("target")) {
-      setNav({ target: style["nav-active"] });
-    } else if (keyword.includes("publish")) {
-      setNav({ publish: style["nav-active"] });
-    } else if (keyword.includes("findDietitian")) {
-      setNav({ findDietitian: style["nav-active"] });
-    } else if (keyword.includes("reserve")) {
-      setNav({ reserve: style["nav-active"] });
-    }
+    navArray.forEach((d) => {
+      if (keyword.includes(d)) {
+        setNav({ [d]: style["nav-active"] });
+      }
+    });
   }, []); //eslint-disable-line
 
   useEffect(() => {
@@ -282,20 +237,10 @@ function Customer() {
             const reserveArray = [];
             if (!docs.empty) {
               docs.forEach((doc) => {
-                if (doc.data().status === "0") {
-                  // || doc.data().status === "1"
+                if (doc.data().status === "0" || doc.data().status === "1") {
                   reserveArray.push(doc.data());
                 }
               });
-              // users.forEach((u) => {
-              //   if (!reserveArray.find((r) => r.dietitian === u.id)) {
-              //     user.push(u);
-              //   }
-              // });
-              // setDietitians(user);
-              // } else {
-              //   setDietitians(users);
-              // }
             }
             return { reserveArray, users };
           })

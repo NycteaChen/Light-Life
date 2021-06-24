@@ -24,6 +24,11 @@ import {
   getDietitianData,
   logout,
 } from "../../utils/Firebase.js";
+import {
+  getToday,
+  dateToISOString,
+  transDateToTime,
+} from "../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import InvitedList from "./Invite/InvitedList.js";
 import DietitianProfile from "../Dietitian/DietitianProfile/DietitianProfile.js";
@@ -58,10 +63,7 @@ function Dietitian() {
   const customerDataPath = useLocation().pathname.split("/")[5];
   const customerPath = useLocation().pathname.includes("customer");
   const today = new Date(+new Date() + 8 * 3600 * 1000).getTime();
-  const getToday = new Date(+new Date() + 8 * 3600 * 1000)
-    .toISOString()
-    .substr(0, 10);
-  const todayTime = new Date(getToday).getTime();
+  const todayTime = transDateToTime(dateToISOString(getToday()));
   const [pending, setPending] = useState(null);
   const props = {};
   const [nav, setNav] = useState("");
@@ -91,7 +93,7 @@ function Dietitian() {
         usersArray.forEach((i, index) => {
           getMyCustomerData(dID, i.id).then((res) => {
             if (res.exists) {
-              const endDate = new Date(res.data().endDate).getTime();
+              const endDate = transDateToTime(res.data().endDate);
               if (endDate < todayTime) {
                 updateCustomerData(i.id, {
                   dietitian: firebase.firestore.FieldValue.delete(),
@@ -130,8 +132,8 @@ function Dietitian() {
           });
           Promise.all(promises).then((res) => {
             res.sort((a, b) => {
-              const dateA = new Date(a.startDate).getTime();
-              const dateB = new Date(b.startDate).getTime();
+              const dateA = transDateToTime(a.startDatenew);
+              const dateB = transDateToTime(b.startDatenew);
               if (dateA < dateB) {
                 return -1;
               } else if (dateA > dateB) {
@@ -142,8 +144,8 @@ function Dietitian() {
             });
             const newPendingArray = [];
             res.forEach((r) => {
-              const start = new Date(r.startDate).getTime();
-              if (r.startDate === getToday) {
+              const start = transDateToTime(r.startDate);
+              if (r.startDate === dateToISOString(getToday())) {
                 updateCustomerData(r.customer, { dietitian: r.dietitian }).then(
                   () => {
                     getCustomerData(r.customer)
@@ -192,7 +194,7 @@ function Dietitian() {
     getCustomerReserve("dietitian", dID).then((docs) => {
       const invitedArray = [];
       docs.forEach((doc) => {
-        const startDate = new Date(doc.data().reserveStartDate).getTime();
+        const startDate = transDateToTime(doc.data().reserveStartDate);
         if (startDate > today && doc.data().status === "0") {
           invitedArray.push(doc.data());
         }

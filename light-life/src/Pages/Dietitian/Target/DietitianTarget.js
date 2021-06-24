@@ -4,6 +4,7 @@ import {
   getTargetData,
   setTargetData,
 } from "../../../utils/Firebase.js";
+import { getToday, dateToISOString } from "../../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import TargetHandler from "../../Components/TargetHandler.js";
@@ -17,8 +18,7 @@ function DietitianTarget() {
   const [input, setInput] = useState({});
   const [isClick, setIsClick] = useState(false);
   const [leastEndDate, setLeastEndDate] = useState(false);
-  const today = new Date(+new Date() + 8 * 3600 * 1000);
-  const initStartDate = today.toISOString().substr(0, 10);
+  const initStartDate = dateToISOString(getToday());
 
   useEffect(() => {
     getMyCustomerData(dID, cID).then((doc) => {

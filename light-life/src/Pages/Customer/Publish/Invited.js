@@ -4,10 +4,12 @@ import {
   addPending,
   updatePendingID,
   setPublicationData,
+  getCustomerPublish,
 } from "../../../utils/Firebase";
 import Swal from "sweetalert2";
 import publish from "../../../style/publish.module.scss";
 import style from "../../../style/findDietitian.module.scss";
+import { useParams } from "react-router-dom";
 
 function Invited({
   publishData,
@@ -17,18 +19,30 @@ function Invited({
   setOldPublish,
   oldPublish,
 }) {
+  const { cID } = useParams();
   const props = publishData[0].whoInvite[+idx];
   const [profile, setProfile] = useState(null);
+  const [inviteData, setInviteData] = useState({});
   useEffect(() => {
     getDietitianData(props.dietitianID).then((docs) => {
       setProfile(docs.data());
     });
+    getCustomerPublish(cID).then((docs) => {
+      if (!docs.empty) {
+        docs.forEach((doc) => {
+          if (doc.data().status === "0") {
+            setInviteData(doc.data());
+          }
+        });
+      }
+    });
   }, []); //eslint-disable-line
+
+  console.log(inviteData);
 
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":
-        console.log("here");
         Swal.fire({
           text: "確定接受嗎",
           icon: "warning",
@@ -39,10 +53,13 @@ function Invited({
         }).then((res) => {
           if (res.isConfirmed) {
             publishData[0].status = "1";
-            publishData[0].whoInvite.forEach((e) => {
-              e.status = "2";
+            publishData[0].whoInvite.forEach((e, index) => {
+              if (index === [+idx]) {
+                e.status = "1";
+              } else {
+                e.status = "2";
+              }
             });
-            publishData[0].whoInvite[+idx].status = "1";
             addPending({
               dietitian: props.dietitianID,
               customer: publishData[0].id,
@@ -79,11 +96,11 @@ function Invited({
           if (res.isConfirmed) {
             setIsChecked(false);
             publishData[0].whoInvite[+idx].status = "2";
-
+            inviteData.whoInvite[+idx].status = "2";
             setPublicationData(
               publishData[0].publishID,
               {
-                whoInvite: [...publishData[0].whoInvite],
+                whoInvite: [...inviteData.whoInvite],
               },
               true
             );

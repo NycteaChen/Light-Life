@@ -6,7 +6,14 @@ import {
   getCustomerData,
   deletePublication,
   addPublication,
-} from "../../../utils/Firebase";
+} from "../../../utils/Firebase.js";
+import {
+  newEndDateRangeHandler,
+  dateToISOString,
+  transDateToTime,
+  getToday,
+  setDateHandler,
+} from "../../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import style from "../../../style/publish.module.scss";
 import image from "../../../style/image.module.scss";
@@ -27,19 +34,10 @@ function Publish({ reserve }) {
   const [endDate, setEndDate] = useState(null);
   const [occupationTime, setOccupationTime] = useState([]);
   const [spinnerDisplay, setSpinnerDisplay] = useState("inline-block");
-  const today = new Date(+new Date() + 8 * 3600 * 1000);
-  const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-  initStartDate.setDate(initStartDate.getDate() + 1);
-  startMostDate.setDate(startMostDate.getDate() + 21);
-  endLessDate.setDate(endLessDate.getDate() + 7);
-  endMostDate.setDate(endMostDate.getDate() + 14);
-  const transDateToTime = (date) => {
-    const time = new Date(date).getTime();
-    return time;
-  };
+  const initStartDate = setDateHandler(1);
+  const endLessDate = setDateHandler(7);
+  const endMostDate = setDateHandler(14);
+  const startMostDate = setDateHandler(21);
 
   useEffect(() => {
     getCustomerPublish(cID).then((docs) => {
@@ -59,10 +57,10 @@ function Publish({ reserve }) {
               transDateToTime(doc.data().endDate),
             ]);
           }
-          const startDate = new Date(doc.data().startDate).getTime();
-          if (startDate > today && doc.data().status === "0") {
+          const startDate = transDateToTime(doc.data().startDate);
+          if (startDate > getToday() && doc.data().status === "0") {
             publishArray.push(doc.data());
-          } else if (startDate <= today && doc.data().status === "0") {
+          } else if (startDate <= getToday() && doc.data().status === "0") {
             const newData = doc.data();
             newData.status = "3";
             oldPublishArray.push(newData);
@@ -82,12 +80,12 @@ function Publish({ reserve }) {
     });
     getCustomerData(cID).then((res) => setProfile(res.data()));
     setStartDate({
-      min: initStartDate.toISOString().substr(0, 10),
-      max: startMostDate.toISOString().substr(0, 10),
+      min: dateToISOString(initStartDate),
+      max: dateToISOString(startMostDate),
     });
     setEndDate({
-      min: endLessDate.toISOString().substr(0, 10),
-      max: endMostDate.toISOString().substr(0, 10),
+      min: dateToISOString(endLessDate),
+      max: dateToISOString(endMostDate),
     });
   }, []); //eslint-disable-line
 
@@ -170,22 +168,20 @@ function Publish({ reserve }) {
           confirmButtonColor: "#1e4d4e",
         });
       } else {
-        if (name === "startDate") {
-          const newEndLessDate = new Date();
-          const newEndMostDate = new Date();
-
-          newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
-          newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
-
-          setEndDate({
-            min: newEndLessDate.toISOString().substr(0, 10),
-            max: newEndMostDate.toISOString().substr(0, 10),
-          });
-        }
         setInput({
           ...input,
           [name]: e.target.value,
-          publishDate: today.toISOString().substr(0, 10),
+          publishDate: dateToISOString(getToday()),
+          endDate:
+            name === "startDate"
+              ? newEndDateRangeHandler(
+                  name,
+                  "startDate",
+                  e.target.value,
+                  setEndDate,
+                  dateToISOString
+                )
+              : e.target.value,
           name: profile.name,
           gender: profile.gender,
           id: cID,
@@ -196,7 +192,7 @@ function Publish({ reserve }) {
       setInput({
         ...input,
         [name]: e.target.value,
-        publishDate: today.toISOString().substr(0, 10),
+        publishDate: dateToISOString(getToday()),
         name: profile.name,
         gender: profile.gender,
         id: cID,
@@ -233,22 +229,17 @@ function Publish({ reserve }) {
           confirmButtonColor: "#1e4d4e",
         }).then((res) => {
           if (res.isConfirmed) {
-            addPublication(input)
-              .then((res) => {
-                updatePublication(res.id, { publishID: res.id });
-                return res.id;
-              })
-              .then((res) => {
-                Swal.fire({
-                  text: "發佈成功",
-                  icon: "success",
-                  confirmButtonText: "確定",
-                  confirmButtonColor: "#1e4d4e",
-                });
-                setPublishData([{ ...input, publishID: res }]);
-                setDisplay("none");
-                setInput({});
+            addPublication(input).then(() => {
+              Swal.fire({
+                text: "發佈成功",
+                icon: "success",
+                confirmButtonText: "確定",
+                confirmButtonColor: "#1e4d4e",
               });
+              setPublishData([{ ...input }]);
+              setDisplay("none");
+              setInput({});
+            });
           }
         });
       } else {

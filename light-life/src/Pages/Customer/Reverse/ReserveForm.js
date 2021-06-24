@@ -6,6 +6,13 @@ import {
   getReserveData,
   setReservation,
 } from "../../../utils/Firebase";
+import {
+  newEndDateRangeHandler,
+  dateToISOString,
+  transDateToTime,
+  getToday,
+  setDateHandler,
+} from "../../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import style from "../../../style/findDietitian.module.scss";
 function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
@@ -17,31 +24,22 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   const [endDate, setEndDate] = useState(null);
   const [occupationTime, setOccupationTime] = useState([]);
   const [nowReserve, setNowReserve] = useState({});
-  const today = new Date(+new Date() + 8 * 3600 * 1000);
-  const addDate = today.toISOString().substr(0, 10);
-  const initStartDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const endLessDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const endMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-  const startMostDate = new Date(+new Date() + 8 * 3600 * 1000);
-  initStartDate.setDate(initStartDate.getDate() + 1);
-  startMostDate.setDate(startMostDate.getDate() + 14);
-  endLessDate.setDate(endLessDate.getDate() + 7);
-  endMostDate.setDate(endMostDate.getDate() + 14);
+  const addDate = dateToISOString(getToday());
+  const initStartDate = setDateHandler(1);
+  const endLessDate = setDateHandler(7);
+  const endMostDate = setDateHandler(14);
+  const startMostDate = setDateHandler(14);
 
-  const transDateToTime = (date) => {
-    const time = new Date(date).getTime();
-    return time;
-  };
   useEffect(() => {
     getCustomerData(cID).then((doc) => setProfile(doc.data()));
 
     setStartDate({
-      min: initStartDate.toISOString().substr(0, 10),
-      max: startMostDate.toISOString().substr(0, 10),
+      min: dateToISOString(initStartDate),
+      max: dateToISOString(startMostDate),
     });
     setEndDate({
-      min: endLessDate.toISOString().substr(0, 10),
-      max: endMostDate.toISOString().substr(0, 10),
+      min: dateToISOString(endLessDate),
+      max: dateToISOString(endMostDate),
     });
     getCustomerPublish(cID).then((docs) => {
       const occupation = reserve
@@ -93,21 +91,19 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
           confirmButtonColor: "#1e4d4e",
         });
       } else {
-        if (name === "reserveStartDate") {
-          const newEndLessDate = new Date();
-          const newEndMostDate = new Date();
-
-          newEndLessDate.setDate(parseInt(e.target.value.split("-")[2]) + 7);
-          newEndMostDate.setDate(parseInt(e.target.value.split("-")[2]) + 14);
-
-          setEndDate({
-            min: newEndLessDate.toISOString().substr(0, 10),
-            max: newEndMostDate.toISOString().substr(0, 10),
-          });
-        }
         setInput({
           ...input,
           [name]: e.target.value,
+          reserveEndDate:
+            name === "reserveStartDate"
+              ? newEndDateRangeHandler(
+                  name,
+                  "reserveStartDate",
+                  e.target.value,
+                  setEndDate,
+                  dateToISOString
+                )
+              : e.target.value,
           addDate: addDate,
           dietitian: props.id,
           dietitianName: props.name,
@@ -157,8 +153,6 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       input.reserveEndDate &&
       input.reserveMessage
     ) {
-      const dateTime = Date.now();
-      const timestamp = Math.floor(dateTime);
       Swal.fire({
         text: "確定預約嗎?",
         showCancelButton: true,
@@ -167,7 +161,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
         confirmButtonColor: "#1e4d4e",
       }).then((res) => {
         if (res.isConfirmed) {
-          setReservation(timestamp, { ...input, reserveID: `${timestamp}` })
+          setReservation(input)
             .then(() => {
               getReserveData().then((docs) => {
                 const reserveArray = [];
