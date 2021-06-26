@@ -84,10 +84,10 @@ function Dietitian() {
   }, []); //eslint-disable-line
 
   useEffect(() => {
-    getTheSameDietitian(dID).then((snapshot) => {
+    getTheSameDietitian(dID).then((docs) => {
       const usersArray = [];
-      if (!snapshot.empty) {
-        snapshot.forEach((doc) => {
+      if (!docs.empty) {
+        docs.forEach((doc) => {
           usersArray.push(doc.data());
         });
         usersArray.forEach((i, index) => {
@@ -162,13 +162,9 @@ function Dietitian() {
                         }
                       })
                       .then(() => {
-                        deletePublication(r.id)
-                          .then(() => {
-                            console.log("Document successfully deleted!");
-                          })
-                          .catch((error) => {
-                            console.error("Error removing document: ", error);
-                          });
+                        deletePublication(r.id).catch((error) => {
+                          console.error("Error removing document: ", error);
+                        });
                       });
                   }
                 );
@@ -586,7 +582,7 @@ function Dietitian() {
                         {users ? (
                           users.length > 0 ? (
                             users.map((u) => (
-                              <div className={basic.each} key={u.name}>
+                              <div className={basic.each} key={u.id}>
                                 <div>
                                   {u.name} {u.gender === "男" ? "先生" : "小姐"}
                                 </div>
@@ -645,6 +641,7 @@ function Dietitian() {
                   <InvitedList
                     invitedList={invitedList}
                     setInvitedList={setInvitedList}
+                    pending={pending}
                     setPending={setPending}
                   />
                 </div>

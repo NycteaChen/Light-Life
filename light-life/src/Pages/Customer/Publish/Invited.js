@@ -18,6 +18,8 @@ function Invited({
   setIsChecked,
   setOldPublish,
   oldPublish,
+  pending,
+  setPending,
 }) {
   const { cID } = useParams();
   const props = publishData[0].whoInvite[+idx];
@@ -38,8 +40,6 @@ function Invited({
     });
   }, []); //eslint-disable-line
 
-  console.log(inviteData);
-
   const buttonHandler = (e) => {
     switch (e.target.id) {
       case "accept":
@@ -54,7 +54,7 @@ function Invited({
           if (res.isConfirmed) {
             publishData[0].status = "1";
             publishData[0].whoInvite.forEach((e, index) => {
-              if (index === [+idx]) {
+              if (index === +idx) {
                 e.status = "1";
               } else {
                 e.status = "2";
@@ -66,6 +66,21 @@ function Invited({
               startDate: publishData[0].startDate,
               endDate: publishData[0].endDate,
             }).then((docRef) => {
+              getDietitianData(props.dietitianID)
+                .then((res) => {
+                  const promise = {
+                    dietitian: props.dietitianID,
+                    customer: publishData[0].id,
+                    startDate: publishData[0].startDate,
+                    endDate: publishData[0].endDate,
+                    dietitianName: res.data().name,
+                  };
+                  return promise;
+                })
+                .then((res) => {
+                  console.log(res);
+                  setPending([...pending, res]);
+                });
               updatePendingID(docRef.id);
             });
 

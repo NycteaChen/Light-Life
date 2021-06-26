@@ -61,6 +61,14 @@ function Customer() {
   const keyword = useLocation().pathname;
   const path = keyword.split("/")[3];
   const [notFound, setNotFound] = useState(false);
+  const navArray = [
+    "profile",
+    "dietary",
+    "target",
+    "publish",
+    "findDietitian",
+    "reserve",
+  ];
   let history = useHistory();
 
   useEffect(() => {
@@ -78,15 +86,6 @@ function Customer() {
       setNotFound(true);
     }
   }, []); //eslint-disable-line
-
-  const navArray = [
-    "profile",
-    "dietary",
-    "target",
-    "publish",
-    "findDietitian",
-    "reserve",
-  ];
 
   useEffect(() => {
     getCustomerData(cID)
@@ -610,7 +609,11 @@ function Customer() {
                 <CustomerTarget />
               </Route>
               <Route exact path="/customer/:cID/publish">
-                <Publish reserve={reserve} />
+                <Publish
+                  reserve={reserve}
+                  pending={pending}
+                  setPending={setPending}
+                />
               </Route>
               <Route exact path="/customer/:cID/findDietitians">
                 <GetDietitiansData

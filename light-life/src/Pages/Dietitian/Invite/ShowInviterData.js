@@ -14,6 +14,7 @@ function ShowInviterData({
   invitedList,
   setInvitedList,
   setIsChecked,
+  pending,
   setPending,
 }) {
   const props = invitedList[+idx];
@@ -29,7 +30,6 @@ function ShowInviterData({
   }, []); //eslint-disable-line
   const inviteButtonHandler = (e) => {
     const { id } = e.target;
-    console.log(id);
     switch (id) {
       case "accept":
         Swal.fire({
@@ -47,13 +47,22 @@ function ShowInviterData({
               customer: props.inviterID,
             })
               .then(() => {
-                console.log("OK");
-                setPending({
-                  startDate: props.reserveStartDate,
-                  endDate: props.reserveEndDate,
-                  dietitian: dID,
-                  customer: props.inviterID,
-                });
+                getCustomerData(props.inviterID)
+                  .then((res) => {
+                    const promise = {
+                      startDate: props.reserveStartDate,
+                      endDate: props.reserveEndDate,
+                      dietitian: dID,
+                      customer: props.inviterID,
+                      customerName: res.data().name,
+                      customerGender: res.data().gender,
+                    };
+                    return promise;
+                  })
+                  .then((res) => {
+                    setPending([...pending, res]);
+                  });
+
                 updateReserve(props.reserveID, {
                   ...props,
                   status: "1",

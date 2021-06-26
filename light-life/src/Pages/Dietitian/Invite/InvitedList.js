@@ -5,7 +5,7 @@ import image from "../../../style/image.module.scss";
 import nothing from "../../../images/nothing.svg";
 import styled from "styled-components";
 
-function InvitedList({ invitedList, setInvitedList, setPending }) {
+function InvitedList({ invitedList, setInvitedList, pending, setPending }) {
   const [isChecked, setIsChecked] = useState(false);
   const [buttonIndex, setButtonIndex] = useState();
 
@@ -13,10 +13,8 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
     if (e.target.id) {
       setButtonIndex(e.target.id);
       setIsChecked(true);
-      console.log("test");
     } else {
       setIsChecked(false);
-      console.log("test");
     }
   };
 
@@ -67,6 +65,7 @@ function InvitedList({ invitedList, setInvitedList, setPending }) {
             invitedList={invitedList}
             setInvitedList={setInvitedList}
             setIsChecked={setIsChecked}
+            pending={pending}
             setPending={setPending}
           />
         </div>

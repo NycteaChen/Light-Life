@@ -21,7 +21,7 @@ import Invited from "./Invited.js";
 import spinner from "../../../images/loading.gif";
 import nothing from "../../../images/nothing.svg";
 
-function Publish({ reserve }) {
+function Publish({ reserve, pending, setPending }) {
   const { cID } = useParams();
   const [display, setDisplay] = useState("none");
   const [profile, setProfile] = useState({});
@@ -148,17 +148,20 @@ function Publish({ reserve }) {
 
   const getInputHandler = (e) => {
     const { name } = e.target;
-    const test = transDateToTime(e.target.value);
+    const selectedDate = transDateToTime(e.target.value);
     if (name === "startDate" || name === "endDate") {
       if (
-        occupationTime.find((r) => test >= r[0] && test <= r[1]) ||
+        occupationTime.find(
+          (r) => selectedDate >= r[0] && selectedDate <= r[1]
+        ) ||
         (name === "startDate" &&
           occupationTime.find(
-            (r) => test < r[0] && transDateToTime(input.endDate) > r[1]
+            (r) => selectedDate < r[0] && transDateToTime(input.endDate) > r[1]
           )) ||
         (name === "endDate" &&
           occupationTime.find(
-            (r) => transDateToTime(input.startDate) < r[0] && test > r[1]
+            (r) =>
+              transDateToTime(input.startDate) < r[0] && selectedDate > r[1]
           ))
       ) {
         Swal.fire({
@@ -338,7 +341,7 @@ function Publish({ reserve }) {
               publishData[0].whoInvite.map((i, index) => (
                 <>
                   {i.status === "0" ? (
-                    <div className={style.inviter} key={index}>
+                    <div className={style.inviter} key={i.name}>
                       <div>{i.name} 營養師對您的刊登有興趣</div>
                       <button id={index} onClick={checkDietitianDetails}>
                         查看詳情
@@ -371,6 +374,8 @@ function Publish({ reserve }) {
               setIsChecked={setIsChecked}
               setOldPublish={setOldPublish}
               oldPublish={oldPublish}
+              pending={pending}
+              setPending={setPending}
             />
           ) : (
             ""
