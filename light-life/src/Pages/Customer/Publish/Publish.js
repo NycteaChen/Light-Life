@@ -98,7 +98,6 @@ function Publish({ reserve, pending, setPending }) {
   const publishModalHandler = (e) => {
     switch (e.target.title) {
       case "add":
-        // if (publishData.status && publishData.status !== "0") {
         if (!publishData.status) {
           setDisplay("block");
         } else {
