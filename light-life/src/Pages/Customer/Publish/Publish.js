@@ -39,6 +39,8 @@ function Publish({ reserve, pending, setPending }) {
   const endMostDate = setDateHandler(14);
   const startMostDate = setDateHandler(21);
 
+  console.log(endDate);
+
   useEffect(() => {
     getCustomerPublish(cID).then((docs) => {
       const occupation = reserve
@@ -150,6 +152,18 @@ function Publish({ reserve, pending, setPending }) {
   const getInputHandler = (e) => {
     const { name } = e.target;
     const selectedDate = transDateToTime(e.target.value);
+    const newEndDate =
+      name === "startDate"
+        ? newEndDateRangeHandler(
+            name,
+            "startDate",
+            e.target.value,
+            setEndDate,
+            dateToISOString
+          )
+        : "";
+
+    const newEndTime = transDateToTime(newEndDate);
     if (name === "startDate" || name === "endDate") {
       if (
         occupationTime.find(
@@ -157,7 +171,12 @@ function Publish({ reserve, pending, setPending }) {
         ) ||
         (name === "startDate" &&
           occupationTime.find(
-            (r) => selectedDate < r[0] && transDateToTime(input.endDate) > r[1]
+            (r) =>
+              (selectedDate < r[0] &&
+                (transDateToTime(input.endDate) > r[1] || newEndTime > r[1])) ||
+              (transDateToTime(input.endDate) >= r[0] &&
+                transDateToTime(input.endDate) <= r[1]) ||
+              (newEndTime >= r[0] && newEndTime <= r[1])
           )) ||
         (name === "endDate" &&
           occupationTime.find(
@@ -176,16 +195,7 @@ function Publish({ reserve, pending, setPending }) {
           ...input,
           [name]: e.target.value,
           publishDate: dateToISOString(getToday()),
-          endDate:
-            name === "startDate"
-              ? newEndDateRangeHandler(
-                  name,
-                  "startDate",
-                  e.target.value,
-                  setEndDate,
-                  dateToISOString
-                )
-              : e.target.value,
+          endDate: name === "startDate" ? newEndDate : e.target.value,
           name: profile.name,
           gender: profile.gender,
           id: cID,
