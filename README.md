@@ -1,7 +1,5 @@
 # Light Life
 
-<img src="https://light-life.web.app/static/media/lightlife-horizontal.04ec5470.png" style = "width:250px"/>
-
 Light Life is a dietitian matchmaking platform with a backstage management system for both dietitians and customers. Through this website, Dietitians can broaden their customer base, and customers can also seek dietitian service.
 
 ### Link : https://light-life.web.app/
@@ -68,11 +66,11 @@ Light Life is a dietitian matchmaking platform with a backstage management syste
 
 ### Login/Signup Interface & Login as a dietitian
 
-![Login](https://imgur.com/3PZIkCV.gif)
+![Login](https://imgur.com/g1l3ZUu.gif)
 
 ### Dietitian: Customer dietary record
 
-![Dietitian's customer dietary record](https://imgur.com/ZONyS4m.gif)
+![Dietitian's customer dietary record](https://imgur.com/QgW3kyz.gif)
 
 ### Dietitian: Customer target handler
 
@@ -80,23 +78,23 @@ Light Life is a dietitian matchmaking platform with a backstage management syste
 
 ### Dietitian: Find customers
 
-![Dietitian find customers](https://imgur.com/QEC0NZs.gif)
+![Dietitian find customers](https://imgur.com/1kbhiXr.gif)
 
 ### Dietitian: Who invited me
 
-![Dietitian's who invited me](https://imgur.com/29LqCCs.gif)
+![Dietitian's who invited me](https://imgur.com/xY37NHe.gif)
 
 ### Customer: Dietary record
 
-![Customer's dietary record](https://imgur.com/S7txvrF.gif)
+![Customer's dietary record](https://imgur.com/XXMToDf.gif)
 
 ### Customer: Pulication handler & Who invited me
 
-![Pulication handler](https://imgur.com/mes41M9.gif)
+![Pulication handler](https://imgur.com/hFhsv8p.gif)
 
 ### Customer: Find dietitians & Reservation handler
 
-![Find dietitians](https://imgur.com/YA4ys8Q.gif)
+![Find dietitians](https://imgur.com/eJhtiD4.gif)
 
 ---
 
