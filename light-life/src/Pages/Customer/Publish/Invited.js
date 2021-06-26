@@ -22,7 +22,7 @@ function Invited({
   setPending,
 }) {
   const { cID } = useParams();
-  const props = publishData[0].whoInvite[+idx];
+  const props = publishData.whoInvite[+idx];
   const [profile, setProfile] = useState(null);
   const [inviteData, setInviteData] = useState({});
   useEffect(() => {
@@ -52,8 +52,8 @@ function Invited({
           confirmButtonColor: "#1e4d4e",
         }).then((res) => {
           if (res.isConfirmed) {
-            publishData[0].status = "1";
-            publishData[0].whoInvite.forEach((e, index) => {
+            publishData.status = "1";
+            publishData.whoInvite.forEach((e, index) => {
               if (index === +idx) {
                 e.status = "1";
               } else {
@@ -62,17 +62,17 @@ function Invited({
             });
             addPending({
               dietitian: props.dietitianID,
-              customer: publishData[0].id,
-              startDate: publishData[0].startDate,
-              endDate: publishData[0].endDate,
+              customer: publishData.id,
+              startDate: publishData.startDate,
+              endDate: publishData.endDate,
             }).then((docRef) => {
               getDietitianData(props.dietitianID)
                 .then((res) => {
                   const promise = {
                     dietitian: props.dietitianID,
-                    customer: publishData[0].id,
-                    startDate: publishData[0].startDate,
-                    endDate: publishData[0].endDate,
+                    customer: publishData.id,
+                    startDate: publishData.startDate,
+                    endDate: publishData.endDate,
                     dietitianName: res.data().name,
                   };
                   return promise;
@@ -84,15 +84,15 @@ function Invited({
             });
 
             setPublicationData(
-              publishData[0].publishID,
-              { ...publishData[0] },
+              publishData.publishID,
+              { ...publishData },
               false
             );
             setPublishData([...publishData]);
             if (oldPublish) {
-              setOldPublish([publishData[0], ...oldPublish]);
+              setOldPublish([publishData, ...oldPublish]);
             } else {
-              setOldPublish([publishData[0]]);
+              setOldPublish([publishData]);
             }
             setIsChecked(false);
           }
@@ -109,10 +109,10 @@ function Invited({
         }).then((res) => {
           if (res.isConfirmed) {
             setIsChecked(false);
-            publishData[0].whoInvite[+idx].status = "2";
+            publishData.whoInvite[+idx].status = "2";
             inviteData.whoInvite[+idx].status = "2";
             setPublicationData(
-              publishData[0].publishID,
+              publishData.publishID,
               {
                 whoInvite: [...inviteData.whoInvite],
               },
@@ -120,11 +120,9 @@ function Invited({
             );
             setPublishData([
               {
-                ...publishData[0],
+                ...publishData,
                 whoInvite: [
-                  ...publishData[0].whoInvite.filter(
-                    (i, index) => index !== +idx
-                  ),
+                  ...publishData.whoInvite.filter((i, index) => index !== +idx),
                 ],
               },
             ]);

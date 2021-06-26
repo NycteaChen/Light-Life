@@ -48,7 +48,7 @@ function Publish({ reserve, pending, setPending }) {
           transDateToTime(u.reserveEndDate),
         ]);
       if (!docs.empty) {
-        const publishArray = [];
+        let publishObject = {};
         const oldPublishArray = [];
         docs.forEach((doc) => {
           if (doc.data().status === "1" || doc.data().status === "0") {
@@ -59,19 +59,19 @@ function Publish({ reserve, pending, setPending }) {
           }
           const startDate = transDateToTime(doc.data().startDate);
           if (startDate > getToday() && doc.data().status === "0") {
-            publishArray.push(doc.data());
+            publishObject = doc.data();
           } else if (startDate <= getToday() && doc.data().status === "0") {
-            const newData = doc.data();
-            newData.status = "3";
-            oldPublishArray.push(newData);
-            updatePublication(doc.data().publishID, newData);
+            const oldPublishData = doc.data();
+            oldPublishData.status = "3";
+            oldPublishArray.push(oldPublishData);
+            updatePublication(doc.data().publishID, oldPublishData);
           } else {
             oldPublishArray.push(doc.data());
           }
         });
         setOccupationTime(occupation);
         setOldPublish(oldPublishArray);
-        setPublishData(publishArray);
+        setPublishData(publishObject);
       } else {
         setOccupationTime(occupation);
         setPublishData([]);
@@ -98,7 +98,8 @@ function Publish({ reserve, pending, setPending }) {
   const publishModalHandler = (e) => {
     switch (e.target.title) {
       case "add":
-        if (publishData.length < 1 || publishData[0].status !== "0") {
+        // if (publishData.status && publishData.status !== "0") {
+        if (!publishData.status) {
           setDisplay("block");
         } else {
           Swal.fire({
@@ -109,7 +110,7 @@ function Publish({ reserve, pending, setPending }) {
         }
         break;
       case "remove":
-        if (publishData.length > 0) {
+        if (publishData.status) {
           Swal.fire({
             text: "確定移除刊登嗎?",
             icon: "warning",
@@ -119,7 +120,7 @@ function Publish({ reserve, pending, setPending }) {
             confirmButtonColor: "#1e4d4e",
           }).then((res) => {
             if (res.isConfirmed) {
-              deletePublication(publishData[0].publishID).then(() => {
+              deletePublication(publishData.publishID).then(() => {
                 setPublishData([]);
               });
             }
@@ -232,14 +233,16 @@ function Publish({ reserve, pending, setPending }) {
           confirmButtonColor: "#1e4d4e",
         }).then((res) => {
           if (res.isConfirmed) {
-            addPublication(input).then(() => {
+            const dateTime = Date.now();
+            const timestamp = Math.floor(dateTime);
+            addPublication(input, timestamp).then(() => {
               Swal.fire({
                 text: "發佈成功",
                 icon: "success",
                 confirmButtonText: "確定",
                 confirmButtonColor: "#1e4d4e",
               });
-              setPublishData([{ ...input }]);
+              setPublishData({ ...input, publishID: `${timestamp}` });
               setDisplay("none");
               setInput({});
             });
@@ -255,6 +258,7 @@ function Publish({ reserve, pending, setPending }) {
       }
     }
   };
+
   return (
     <div className={style.publish}>
       <div className={style.waiting}>
@@ -287,31 +291,31 @@ function Publish({ reserve, pending, setPending }) {
         </div>
         <p>一次僅能發佈一個刊登</p>
         {publishData ? (
-          publishData.length > 0 && publishData[0].status === "0" ? (
+          publishData.status && publishData.status === "0" ? (
             <>
               <h5>您目前的刊登</h5>
               <div className={style.publication}>
                 <div className={style.col}>
                   <div className={style.para}>
                     <span className={style.title}>刊登時間</span>：
-                    {publishData[0].publishDate}
+                    {publishData.publishDate}
                   </div>
                   <div className={style.para}>
                     <div>
                       <span className={style.title}>預約時間：</span>
                       <span>
-                        {publishData[0].startDate}~{publishData[0].endDate}
+                        {publishData.startDate}~{publishData.endDate}
                       </span>
                     </div>
                   </div>
                 </div>
                 <div className={style.para}>
                   <span className={style.title}>主旨：</span>
-                  {publishData[0].subject}
+                  {publishData.subject}
                 </div>
                 <div className={`${style.message} ${style.para}`}>
                   <div className={style.title}>內容：</div>
-                  <div>{publishData[0].content}</div>
+                  <div>{publishData.content}</div>
                 </div>
               </div>
             </>
@@ -334,11 +338,11 @@ function Publish({ reserve, pending, setPending }) {
         <h4>誰來應徵</h4>
         <div className={style.inviters}>
           {publishData ? (
-            publishData[0] &&
-            publishData[0].whoInvite &&
-            publishData[0].status === "0" &&
-            publishData[0].whoInvite.find((i) => i.status === "0") ? (
-              publishData[0].whoInvite.map((i, index) => (
+            publishData.whoInvite &&
+            publishData.status &&
+            publishData.status === "0" &&
+            publishData.whoInvite.find((i) => i.status === "0") ? (
+              publishData.whoInvite.map((i, index) => (
                 <>
                   {i.status === "0" ? (
                     <div className={style.inviter} key={i.name}>
@@ -366,7 +370,7 @@ function Publish({ reserve, pending, setPending }) {
               />
             </div>
           )}
-          {publishData && isChecked ? (
+          {publishData && publishData.status && isChecked ? (
             <Invited
               publishData={publishData}
               idx={idx}

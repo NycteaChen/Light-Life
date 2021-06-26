@@ -277,9 +277,7 @@ export function setPublicationData(id, set, merge) {
   }
 }
 
-export function addPublication(input) {
-  const dateTime = Date.now();
-  const timestamp = Math.floor(dateTime);
+export function addPublication(input, timestamp) {
   return refPublish
     .doc(`${timestamp}`)
     .set({ ...input, publishID: `${timestamp}` });
