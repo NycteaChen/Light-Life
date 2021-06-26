@@ -67,6 +67,10 @@ function ReserveList({ reserve, setReserve }) {
               setReserving([
                 ...reserving.filter((r, index) => index !== +e.target.id),
               ]);
+              setReserve([
+                ...reserve.filter((r) => r.status === "1"),
+                ...reserving.filter((r, index) => index !== +e.target.id),
+              ]);
             });
           })
           .catch((error) => {

@@ -39,8 +39,6 @@ function Publish({ reserve, pending, setPending }) {
   const endMostDate = setDateHandler(14);
   const startMostDate = setDateHandler(21);
 
-  console.log(endDate);
-
   useEffect(() => {
     getCustomerPublish(cID).then((docs) => {
       const occupation = reserve
@@ -89,7 +87,7 @@ function Publish({ reserve, pending, setPending }) {
       min: dateToISOString(endLessDate),
       max: dateToISOString(endMostDate),
     });
-  }, []); //eslint-disable-line
+  }, [reserve]); //eslint-disable-line
 
   useEffect(() => {
     if (publishData && oldPublish) {
