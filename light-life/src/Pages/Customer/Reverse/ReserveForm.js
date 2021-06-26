@@ -71,17 +71,40 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
 
   const getInputHandler = (e) => {
     const { name } = e.target;
-    const test = transDateToTime(e.target.value);
+    const selectedDate = transDateToTime(e.target.value);
+    const newEndDate =
+      name === "reserveStartDate"
+        ? newEndDateRangeHandler(
+            name,
+            "reserveStartDate",
+            e.target.value,
+            setEndDate,
+            dateToISOString
+          )
+        : "";
+
+    const newEndTime = transDateToTime(newEndDate);
+
     if (name === "reserveStartDate" || name === "reserveEndDate") {
       if (
-        occupationTime.find((r) => test >= r[0] && test <= r[1]) ||
+        occupationTime.find(
+          (r) => selectedDate >= r[0] && selectedDate <= r[1]
+        ) ||
         (name === "reserveStartDate" &&
           occupationTime.find(
-            (r) => test < r[0] && transDateToTime(input.reserveEndDate) > r[1]
+            (r) =>
+              (selectedDate < r[0] &&
+                (transDateToTime(input.reserveEndDate) > r[1] ||
+                  newEndTime > r[1])) ||
+              (transDateToTime(input.reserveEndDate) >= r[0] &&
+                transDateToTime(input.reserveEndDate) <= r[1]) ||
+              (newEndTime >= r[0] && newEndTime <= r[1])
           )) ||
         (name === "reserveEndDate" &&
           occupationTime.find(
-            (r) => transDateToTime(input.reserveStartDate) < r[0] && test > r[1]
+            (r) =>
+              transDateToTime(input.reserveStartDate) < r[0] &&
+              selectedDate > r[1]
           ))
       ) {
         Swal.fire({
@@ -95,15 +118,7 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
           ...input,
           [name]: e.target.value,
           reserveEndDate:
-            name === "reserveStartDate"
-              ? newEndDateRangeHandler(
-                  name,
-                  "reserveStartDate",
-                  e.target.value,
-                  setEndDate,
-                  dateToISOString
-                )
-              : e.target.value,
+            name === "reserveStartDate" ? newEndDate : e.target.value,
           addDate: addDate,
           dietitian: props.id,
           dietitianName: props.name,
