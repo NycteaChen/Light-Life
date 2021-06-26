@@ -5,12 +5,12 @@ import {
   getMyCustomerData,
   deleteTarget,
   updateTarget,
-} from "../../utils/Firebase";
+} from "../../../utils/Firebase.js";
 import Swal from "sweetalert2";
-import style from "../../style/target.module.scss";
-import image from "../../style/image.module.scss";
-import spinner from "../../images/loading.gif";
-import nothing from "../../images/nothing.svg";
+import style from "../../../style/target.module.scss";
+import image from "../../../style/image.module.scss";
+import spinner from "../../../images/loading.gif";
+import nothing from "../../../images/nothing.svg";
 
 function TargetHandler({ target, setTarget }) {
   const [isEditing, setIsEditing] = useState(false);

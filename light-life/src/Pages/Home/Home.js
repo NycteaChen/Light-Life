@@ -11,6 +11,7 @@ import noImage from "../../images/noimage.png";
 import exit from "../../images/exit.png";
 import WOW from "wowjs";
 import "animate.css/animate.min.css";
+
 function Home() {
   const [display, setDisplay] = useState("none");
   const [user, setUser] = useState({});

@@ -7,7 +7,7 @@ import {
 import { getToday, dateToISOString } from "../../../utils/DatePicker.js";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
-import TargetHandler from "../../Components/TargetHandler.js";
+import TargetHandler from "../../Components/TargetHandler/TargetHandler.js";
 import style from "../../../style/target.module.scss";
 
 function DietitianTarget() {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getCustomerData, getTargetData } from "../../../utils/Firebase.js";
 import { useParams } from "react-router-dom";
-import TargetHandler from "../../Components/TargetHandler.js";
+import TargetHandler from "../../Components/TargetHandler/TargetHandler.js";
 import style from "../../../style/target.module.scss";
 
 function CustomerTarget() {
