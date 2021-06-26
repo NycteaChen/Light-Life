@@ -31,7 +31,6 @@
   }
 
   .waiting {
-    // padding: 10px 0 20px;
     .buttons {
       margin: 5px auto;
       button {
@@ -63,10 +62,6 @@
 
   .checked {
     margin-top: 20px;
-    .reservations {
-      // max-height: unset;
-      // height: 400px;
-    }
     .reservation-state {
       margin: 5px auto;
       button {
@@ -138,7 +133,6 @@
           width: 80%;
           margin: 5px auto;
           height: 4rem;
-          // background-color: blue;
           border: 1px solid grey;
           border-radius: 5px;
           text-align: left;
@@ -201,7 +195,6 @@
       font-size: 16px;
     }
     .waiting {
-      // padding: 10px 0 20px;
       padding-bottom: 10px;
       .buttons {
         button {

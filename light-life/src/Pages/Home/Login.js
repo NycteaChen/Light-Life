@@ -488,11 +488,9 @@ function Login({ display, setDisplay }) {
                     user
                       .delete()
                       .then(() => {
-                        // User deleted.
                         console.log("delete user");
                       })
                       .catch((error) => {
-                        // An error ocurred
                         console.log(error);
                       });
                   }
@@ -503,12 +501,9 @@ function Login({ display, setDisplay }) {
         });
       })
       .catch((error) => {
-        // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
-        // The email of the user's account used.
         const email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
         const credential = error.credential;
         console.log(errorCode, errorMessage);
         console.log(email);

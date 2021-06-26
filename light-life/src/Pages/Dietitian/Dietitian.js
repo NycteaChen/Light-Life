@@ -187,7 +187,6 @@ function Dietitian() {
         } else {
           setPending([]);
         }
-        // });
       });
     });
 

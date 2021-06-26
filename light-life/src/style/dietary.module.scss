@@ -279,12 +279,6 @@
               }
             }
             .meal-plus::after {
-              // background-image: url("../images/add.svg");
-              // background-size: cover;
-              // display: inline-block;
-              // width: 20px;
-              // height: 20px;
-              // content: "";
               cursor: pointer;
               &:hover {
                 transform: scale(1.3);
@@ -454,9 +448,6 @@
   @media (min-width: 520px) {
     & {
       text-align: left;
-      .date-selector {
-        // text-align: center;
-      }
       ul {
         li.meal-title {
           padding: 8px 10px;

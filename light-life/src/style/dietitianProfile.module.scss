@@ -107,13 +107,6 @@
         }
       }
 
-      // input[type="text"]:focus {
-      //   outline: none;
-      //   &:invalid {
-      //     border: 1px solid red !important;
-      //   }
-      // }
-
       div {
         .determined {
           display: grid;
@@ -336,7 +329,6 @@
         .other {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          // margin: auto 10px;
           .title {
             text-align: right;
             margin-right: 20px;
@@ -351,7 +343,6 @@
             & {
               display: flex;
               text-align: left;
-              // margin-left: 35px;
               .title {
                 margin-left: 38px;
                 margin-right: 17px;
@@ -651,7 +642,6 @@
           }
         }
         .other {
-          // margin: auto 10px;
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           .title {

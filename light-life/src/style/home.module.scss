@@ -71,7 +71,6 @@
   div {
     margin: auto;
     max-width: 1920px;
-    // justify-content: center;
     justify-content: space-between;
     align-items: center;
     display: flex;
@@ -167,8 +166,6 @@
   }
 }
 
-// $header-height: 77px;
-// height: calc(100vh - #{$header-height});
 .home-main {
   overflow-x: hidden;
   background-color: white;
@@ -228,7 +225,6 @@
   .cover {
     margin-top: 76px;
     height: calc(100vh - 150px);
-    // background: url("../images/meal2.jpg") no-repeat center;
     background: linear-gradient(to right, #ffffff59 0 100%, transparent),
       url("../images/meal2.jpg") no-repeat center;
     background-attachment: fixed;
@@ -238,14 +234,12 @@
     z-index: 3;
     display: flex;
     .main-title {
-      // color: white;
       color: #4d4d4d;
       margin: auto;
       text-align: center;
       white-space: nowrap;
       h2 {
         font-family: Selima;
-        // font-family: Monda;
         transition: all 0.5s;
         transition: font-size 0.5s;
         font-size: 20px;
