@@ -78,7 +78,6 @@ function Invited({
                   return promise;
                 })
                 .then((res) => {
-                  console.log(res);
                   setPending([...pending, res]);
                 });
               updatePendingID(docRef.id);

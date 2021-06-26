@@ -485,14 +485,9 @@ function Login({ display, setDisplay }) {
                       });
                   } else {
                     const user = onAuth().currentUser;
-                    user
-                      .delete()
-                      .then(() => {
-                        console.log("delete user");
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                      });
+                    user.delete().catch((error) => {
+                      console.log(error);
+                    });
                   }
                 });
               }

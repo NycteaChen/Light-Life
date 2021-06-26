@@ -171,13 +171,9 @@ function Customer() {
                   })
                   .then(() => {
                     if (start < today) {
-                      deletePending(res[0].id)
-                        .then(() => {
-                          console.log("Pending successfully deleted!");
-                        })
-                        .catch((error) => {
-                          console.error("Error removing document: ", error);
-                        });
+                      deletePending(res[0].id).catch((error) => {
+                        console.error("Error removing document: ", error);
+                      });
                     }
                   })
                   .then(() => {

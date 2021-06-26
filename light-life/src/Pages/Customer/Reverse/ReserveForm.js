@@ -131,7 +131,6 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
   };
 
   const sendReverseHandler = () => {
-    console.log(profile);
     if (
       !profile.gender ||
       !profile.name ||

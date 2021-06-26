@@ -173,7 +173,7 @@ function Dietitian() {
                   endDate: r.endDate,
                 });
               } else if (start < todayTime) {
-                console.log("晚");
+                return true;
               } else {
                 newPendingArray.push(r);
               }

@@ -32,7 +32,6 @@ function GetPublication() {
         return publishArray;
       })
       .then((res) => {
-        console.log(res);
         res.forEach((m, index) => {
           const startDate = new Date(m.startDate).getTime();
           if (startDate <= date && m.whoInvite) {
@@ -51,7 +50,6 @@ function GetPublication() {
       });
   }, []); //eslint-disable-line
 
-  console.log(publish);
   useEffect(() => {
     if (publish) {
       setSpinnerDisplay("none");
