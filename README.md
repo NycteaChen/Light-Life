@@ -1,12 +1,12 @@
 # Light Life
 
-Light Life is a dietitian matchmaking platform with a backstage management system for both dietitians and customers. Through this website, Dietitians can broaden their customer base, and customers can also seek dietitian service.
+Light Life is a dietitian matchmaking platform with a backstage management system for both dietitians and customers. Through this website, dietitians can broaden their customer base, and customers can also seek dietitian service.
 
-### Link : https://light-life.web.app/
+Link : https://light-life.web.app/
 
-### Test Account : diet@test.com (dietitian) / cus@test.com (customer)
+Test Account : diet@test.com (dietitian) / cus@test.com (customer)
 
-### Password : abc123
+Password : abc123
 
 ---
 
