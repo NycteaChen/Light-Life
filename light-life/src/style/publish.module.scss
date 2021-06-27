@@ -161,12 +161,13 @@
     width: 90%;
     position: fixed;
     z-index: 3;
-    max-height: 400px;
+    max-height: 460px;
     top: 0;
     bottom: 0;
     right: 0;
     left: 0;
     margin: auto;
+    animation-duration: 0.5s;
 
     h4 {
       border-top-right-radius: 15px;
@@ -175,9 +176,15 @@
       padding: 15px 0;
       color: white;
     }
+    .description {
+      padding: 5px 10px 0;
+      text-align: left;
+      font-size: 12px;
+      color: #2f5a38;
+    }
     label {
       display: block;
-      margin: 12px 0;
+      margin: 5px 0 12px;
       .title {
         font-weight: bold;
       }
@@ -232,13 +239,16 @@
   @media (min-width: 320px) {
     .form {
       max-width: 400px;
-      max-height: 330px;
+      max-height: 380px;
+      .description {
+        padding: 10px 20px;
+      }
       label {
         display: flex;
         align-items: center;
         justify-content: space-around;
         max-width: 250px;
-        margin: 20px auto;
+        margin: 5px auto 20px;
       }
     }
   }
@@ -276,14 +286,19 @@
         }
       }
     }
+
     .form {
-      transition: all 0.5s;
       max-width: 500px;
-      max-height: 350px;
-      & > div:first-of-type {
+      max-height: 390px;
+
+      .description {
+        font-size: 14px;
+      }
+
+      .datePicker {
         display: flex;
         align-items: center;
-        margin: 30px 15px 0;
+        margin: 10px 15px 0;
         width: 450px;
       }
       label {

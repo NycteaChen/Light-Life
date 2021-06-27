@@ -1,6 +1,6 @@
 import React from "react";
 import style from "../../style/home.module.scss";
-import notFound from "../../style/notFound.module.scss";
+import notFound from "../../style/NotFound.module.scss";
 import { useLocation } from "react-router-dom";
 export default function Footer() {
   const { pathname } = useLocation();

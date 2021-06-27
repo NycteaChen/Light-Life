@@ -1,6 +1,6 @@
 import React from "react";
 import Footer from "../Components/Footer.js";
-import style from "../../style/notFound.module.scss";
+import style from "../../style/NotFound.module.scss";
 import notFound from "../../images/404.png";
 
 const NotFound = () => {

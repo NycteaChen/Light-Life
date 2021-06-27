@@ -439,7 +439,11 @@ function Publish({ reserve, pending, setPending }) {
         style={{ display: display }}
       >
         <h4>刊登</h4>
-        <div>
+        <div className={style.description}>
+          可選擇21天內的日期作為服務開始日期，一次服務最短為7天，最長為14天，無法選擇已有安排的區間
+        </div>
+
+        <div className={style.datePicker}>
           <label>
             <div className={style.title}>開始</div>
             <input
