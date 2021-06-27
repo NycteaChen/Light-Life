@@ -88,7 +88,7 @@ function Invited({
               { ...publishData },
               false
             );
-            setPublishData([...publishData]);
+            setPublishData({ ...publishData });
             if (oldPublish) {
               setOldPublish([publishData, ...oldPublish]);
             } else {
@@ -118,14 +118,10 @@ function Invited({
               },
               true
             );
-            setPublishData([
-              {
-                ...publishData,
-                whoInvite: [
-                  ...publishData.whoInvite.filter((i, index) => index !== +idx),
-                ],
-              },
-            ]);
+            setPublishData({
+              ...publishData,
+              whoInvite: [...inviteData.whoInvite],
+            });
           }
         });
         break;

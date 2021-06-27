@@ -74,7 +74,7 @@ Password : abc123
 
 ### Dietitian: Customer target handler
 
-![Dietitian's customer target handler](https://imgur.com/2twB4jX.gif)
+![Dietitian's customer target handler](https://imgur.com/UfeQnR2.gif)
 
 ### Dietitian: Find customers
 
@@ -90,11 +90,11 @@ Password : abc123
 
 ### Customer: Pulication handler & Who invited me
 
-![Pulication handler](https://imgur.com/jTO1gws.gif)
+![Pulication handler](https://imgur.com/wPEq0uS.gif)
 
 ### Customer: Find dietitians & Reservation handler
 
-![Find dietitians](https://imgur.com/F0fG5FF.gif)
+![Find dietitians](https://imgur.com/0OKJsWa.gif)
 
 ---
 

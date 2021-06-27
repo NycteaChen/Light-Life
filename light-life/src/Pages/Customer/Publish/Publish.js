@@ -74,7 +74,7 @@ function Publish({ reserve, pending, setPending }) {
         setPublishData(publishObject);
       } else {
         setOccupationTime(occupation);
-        setPublishData([]);
+        setPublishData({});
         setOldPublish([]);
       }
     });
@@ -87,7 +87,7 @@ function Publish({ reserve, pending, setPending }) {
       min: dateToISOString(endLessDate),
       max: dateToISOString(endMostDate),
     });
-  }, [reserve]); //eslint-disable-line
+  }, [reserve, publishData ? publishData.status : ""]); //eslint-disable-line
 
   useEffect(() => {
     if (publishData && oldPublish) {
@@ -98,7 +98,7 @@ function Publish({ reserve, pending, setPending }) {
   const publishModalHandler = (e) => {
     switch (e.target.title) {
       case "add":
-        if (!publishData.status) {
+        if (!publishData.status || publishData.status !== "0") {
           setDisplay("block");
         } else {
           Swal.fire({
@@ -120,7 +120,7 @@ function Publish({ reserve, pending, setPending }) {
           }).then((res) => {
             if (res.isConfirmed) {
               deletePublication(publishData.publishID).then(() => {
-                setPublishData([]);
+                setPublishData({});
               });
             }
           });
@@ -265,6 +265,7 @@ function Publish({ reserve, pending, setPending }) {
       }
     }
   };
+  console.log(publishData);
 
   return (
     <div className={style.publish}>
