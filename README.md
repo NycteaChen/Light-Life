@@ -66,11 +66,11 @@ Light Life is a dietitian matchmaking platform with a backstage management syste
 
 ### Login/Signup Interface & Login as a dietitian
 
-![Login](https://imgur.com/g1l3ZUu.gif)
+![Login](https://imgur.com/J7wWfpb.gif)
 
 ### Dietitian: Customer dietary record
 
-![Dietitian's customer dietary record](https://imgur.com/QgW3kyz.gif)
+![Dietitian's customer dietary record](https://imgur.com/3xDrQtZ.gif)
 
 ### Dietitian: Customer target handler
 
@@ -78,23 +78,23 @@ Light Life is a dietitian matchmaking platform with a backstage management syste
 
 ### Dietitian: Find customers
 
-![Dietitian find customers](https://imgur.com/1kbhiXr.gif)
+![Dietitian find customers](https://imgur.com/W7QF3NK.gif)
 
 ### Dietitian: Who invited me
 
-![Dietitian's who invited me](https://imgur.com/xY37NHe.gif)
+![Dietitian's who invited me](https://imgur.com/EeC7b8a.gif)
 
 ### Customer: Dietary record
 
-![Customer's dietary record](https://imgur.com/XXMToDf.gif)
+![Customer's dietary record](https://imgur.com/LFmdnXW.gif)
 
 ### Customer: Pulication handler & Who invited me
 
-![Pulication handler](https://imgur.com/hFhsv8p.gif)
+![Pulication handler](https://imgur.com/jTO1gws.gif)
 
 ### Customer: Find dietitians & Reservation handler
 
-![Find dietitians](https://imgur.com/eJhtiD4.gif)
+![Find dietitians](https://imgur.com/F0fG5FF.gif)
 
 ---
 
