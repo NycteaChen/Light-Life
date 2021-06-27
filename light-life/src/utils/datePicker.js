@@ -30,15 +30,25 @@ export const newEndDateRangeHandler = (
   if (name === target) {
     newEndLessDate.setDate(parseInt(date.split("-")[2]) + 7);
     newEndMostDate.setDate(parseInt(date.split("-")[2]) + 14);
-    if (getToday().getMonth() === newEndLessDate.getMonth()) {
-      newEndLessDate.setMonth(parseInt(getToday().getMonth()) + 1);
-      newEndMostDate.setMonth(parseInt(getToday().getMonth()) + 1);
+    if (newEndLessDate.getMonth() !== newEndMostDate.getMonth()) {
+      newEndLessDate.setMonth(newEndLessDate.getMonth() + 1);
+      newEndMostDate.setMonth(newEndMostDate.getMonth() + 1);
+      if (newEndLessDate.getMonth() === 11) {
+        newEndMostDate.setFullYear(newEndMostDate.getFullYear() + 1);
+        newEndMostDate.setMonth(0);
+      }
+    } else if (getToday().getMonth() === newEndLessDate.getMonth()) {
+      newEndLessDate.setMonth(getToday().getMonth() + 1);
+      newEndMostDate.setMonth(getToday().getMonth() + 1);
+      if (newEndLessDate.getMonth() === 0) {
+        newEndLessDate.setFullYear(newEndLessDate.getFullYear() + 1);
+        newEndMostDate.setFullYear(newEndMostDate.getFullYear() + 1);
+      }
     }
   }
   setEndDate({
     min: callback(newEndLessDate),
     max: callback(newEndMostDate),
   });
-
   return callback(newEndLessDate);
 };

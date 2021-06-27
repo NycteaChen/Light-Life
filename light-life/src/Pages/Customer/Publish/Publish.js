@@ -159,7 +159,6 @@ function Publish({ reserve, pending, setPending }) {
             dateToISOString
           )
         : "";
-
     const newEndTime = transDateToTime(newEndDate);
     if (name === "startDate" || name === "endDate") {
       if (
@@ -265,8 +264,6 @@ function Publish({ reserve, pending, setPending }) {
       }
     }
   };
-  console.log(publishData);
-
   return (
     <div className={style.publish}>
       <div className={style.waiting}>
