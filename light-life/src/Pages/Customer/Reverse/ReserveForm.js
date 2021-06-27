@@ -227,30 +227,35 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
             </label>
           </div>
         ) : (
-          <div className={style.flexbox}>
-            <label>
-              <div>開始</div>
-              <input
-                type="date"
-                value={input.reserveStartDate || ""}
-                min={startDate ? startDate.min : ""}
-                max={startDate ? startDate.max : ""}
-                name="reserveStartDate"
-                onChange={getInputHandler}
-              />
-            </label>
-            <label>
-              <div>結束</div>
-              <input
-                type="date"
-                value={input.reserveEndDate || ""}
-                min={endDate ? endDate.min : ""}
-                max={endDate ? endDate.max : ""}
-                name="reserveEndDate"
-                onChange={getInputHandler}
-              />
-            </label>
-          </div>
+          <>
+            <div className={style.description}>
+              可選擇14天內的日期作為服務開始日期，一次服務最短為7天，最長為14天，無法選擇已有安排的區間
+            </div>
+            <div className={style.flexbox}>
+              <label>
+                <div>開始</div>
+                <input
+                  type="date"
+                  value={input.reserveStartDate || ""}
+                  min={startDate ? startDate.min : ""}
+                  max={startDate ? startDate.max : ""}
+                  name="reserveStartDate"
+                  onChange={getInputHandler}
+                />
+              </label>
+              <label>
+                <div>結束</div>
+                <input
+                  type="date"
+                  value={input.reserveEndDate || ""}
+                  min={endDate ? endDate.min : ""}
+                  max={endDate ? endDate.max : ""}
+                  name="reserveEndDate"
+                  onChange={getInputHandler}
+                />
+              </label>
+            </div>
+          </>
         )}
 
         {pathname.includes("reserve-list") ? (

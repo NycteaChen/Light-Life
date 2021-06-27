@@ -266,6 +266,12 @@
     }
     .form {
       margin-bottom: 10px;
+      .description {
+        padding: 5px 0 15px;
+        text-align: left;
+        font-size: 12px;
+        color: #2f5a38;
+      }
       label {
         width: 100%;
         margin: auto;
@@ -361,6 +367,9 @@
       width: 90%;
       margin: 20px auto;
       .form {
+        .description {
+          font-size: 14px;
+        }
         .flexbox {
           display: flex;
           label {
