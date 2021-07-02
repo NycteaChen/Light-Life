@@ -82,8 +82,8 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
             dateToISOString
           )
         : "";
-
-    const newEndTime = transDateToTime(newEndDate);
+    const newEndLessDate = newEndDate.endLessDate;
+    const newEndTime = transDateToTime(newEndLessDate);
 
     if (name === "reserveStartDate" || name === "reserveEndDate") {
       if (
@@ -112,13 +112,20 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
           icon: "warning",
           confirmButtonText: "確定",
           confirmButtonColor: "#1e4d4e",
+        }).then(() => {
+          setEndDate({
+            min: input.minEndDate || dateToISOString(endLessDate),
+            max: input.maxEndDate || dateToISOString(endMostDate),
+          });
         });
       } else {
         setInput({
           ...input,
           [name]: e.target.value,
           reserveEndDate:
-            name === "reserveStartDate" ? newEndDate : e.target.value,
+            name === "reserveStartDate" ? newEndLessDate : e.target.value,
+          minEndDate: newEndLessDate || input.minEndDate,
+          maxEndDate: newEndDate.endMostDate || input.maxEndDate,
           addDate: addDate,
           dietitian: props.id,
           dietitianName: props.name,

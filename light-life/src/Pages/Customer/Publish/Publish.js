@@ -46,6 +46,8 @@ function Publish({ reserve, pending, setPending }) {
         .map((u) => [
           transDateToTime(u.reserveStartDate),
           transDateToTime(u.reserveEndDate),
+          u.reserveStartDate,
+          u.reserveEndDate,
         ]);
       if (!docs.empty) {
         let publishObject = {};
@@ -55,6 +57,8 @@ function Publish({ reserve, pending, setPending }) {
             occupation.push([
               transDateToTime(doc.data().startDate),
               transDateToTime(doc.data().endDate),
+              doc.data().startDate,
+              doc.data().endDate,
             ]);
           }
           const startDate = transDateToTime(doc.data().startDate);
@@ -145,7 +149,7 @@ function Publish({ reserve, pending, setPending }) {
     setIdx(e.target.id);
     setIsChecked(true);
   };
-
+  console.log(occupationTime);
   const getInputHandler = (e) => {
     const { name } = e.target;
     const selectedDate = transDateToTime(e.target.value);
@@ -159,7 +163,8 @@ function Publish({ reserve, pending, setPending }) {
             dateToISOString
           )
         : "";
-    const newEndTime = transDateToTime(newEndDate);
+    const newEndLessDate = newEndDate.endLessDate;
+    const newEndTime = transDateToTime(newEndLessDate);
     if (name === "startDate" || name === "endDate") {
       if (
         occupationTime.find(
@@ -185,13 +190,20 @@ function Publish({ reserve, pending, setPending }) {
           icon: "warning",
           confirmButtonText: "確定",
           confirmButtonColor: "#1e4d4e",
+        }).then(() => {
+          setEndDate({
+            min: input.minEndDate || dateToISOString(endLessDate),
+            max: input.maxEndDate || dateToISOString(endMostDate),
+          });
         });
       } else {
         setInput({
           ...input,
           [name]: e.target.value,
           publishDate: dateToISOString(getToday()),
-          endDate: name === "startDate" ? newEndDate : e.target.value,
+          endDate: name === "startDate" ? newEndLessDate : e.target.value,
+          minEndDate: newEndLessDate || input.minEndDate,
+          maxEndDate: newEndDate.endMostDate || input.maxEndDate,
           name: profile.name,
           gender: profile.gender,
           id: cID,
@@ -210,7 +222,7 @@ function Publish({ reserve, pending, setPending }) {
       });
     }
   };
-
+  console.log(input.minEndDate);
   const newPublishHandler = (e) => {
     if (
       !profile.gender ||
