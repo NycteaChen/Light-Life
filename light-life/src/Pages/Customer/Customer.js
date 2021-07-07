@@ -102,10 +102,12 @@ function Customer() {
           getMyCustomerData(doc.dietitian, cID).then((res) => {
             if (res) {
               const end = new Date(res.data().endDate).getTime();
+              console.log(end < today);
               if (end < today) {
                 updateCustomerData(cID, {
                   dietitian: firebase.firestore.FieldValue.delete(),
                 });
+                console.log("here");
               } else {
                 setServiceDate({
                   startDate: res.data().startDate,
