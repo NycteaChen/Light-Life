@@ -13,3 +13,10 @@
     max-width: 500px;
   }
 }
+
+.invitedList-nothing {
+  line-height: 350px;
+  @media (min-width: 1024px) {
+    line-height: calc(100vh - 300px);
+  }
+}

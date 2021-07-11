@@ -9,12 +9,7 @@ import {
 } from "../../../utils/Firebase.js";
 import Analysis from "../../Components/DietaryRecord/Analysis.js";
 import style from "../../../style/dietary.module.scss";
-import styled from "styled-components";
 
-const Save = styled.button`
-  cursor: default;
-  opacity: 0.7;
-`;
 function CustomerRecord({ date, count, setCount }) {
   const [input, setInput] = useState("");
   const [meal, setMeal] = useState("");
@@ -276,7 +271,12 @@ function CustomerRecord({ date, count, setCount }) {
                         儲存
                       </button>
                     ) : (
-                      <Save className={m[1]}>儲存</Save>
+                      <button
+                        className={m[1]}
+                        style={{ opacity: 0.7, cursor: "default" }}
+                      >
+                        儲存
+                      </button>
                     )}
                   </div>
                 </div>

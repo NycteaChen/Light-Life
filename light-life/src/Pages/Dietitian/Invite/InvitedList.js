@@ -3,7 +3,6 @@ import ShowInviterData from "./ShowInviterData.js";
 import style from "../../../style/whoInvite.module.scss";
 import image from "../../../style/image.module.scss";
 import nothing from "../../../images/nothing.svg";
-import styled from "styled-components";
 
 function InvitedList({ invitedList, setInvitedList, pending, setPending }) {
   const [isChecked, setIsChecked] = useState(false);
@@ -43,9 +42,9 @@ function InvitedList({ invitedList, setInvitedList, pending, setPending }) {
             </div>
           ))
         ) : (
-          <NothingImage className={image.nothing}>
+          <div className={`${image.nothing} ${image["invitedList-nothing"]}`}>
             <img src={nothing} alt="nothing" />
-          </NothingImage>
+          </div>
         )}
       </div>
       {isChecked && invitedList.length > 0 ? (
@@ -75,12 +74,5 @@ function InvitedList({ invitedList, setInvitedList, pending, setPending }) {
     </div>
   );
 }
-
-const NothingImage = styled.div`
-  line-height: 350px;
-  @media (min-width: 1024px) {
-    line-height: calc(100vh - 300px);
-  }
-`;
 
 export default InvitedList;
