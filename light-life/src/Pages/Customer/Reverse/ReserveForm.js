@@ -64,7 +64,9 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
 
   useEffect(() => {
     if (props) {
-      const now = reserve.find((r) => r.dietitian === props.id);
+      const now = reserve.find(
+        (r) => r.dietitian === props.id && r.status === "0"
+      );
       setNowReserve(now);
     }
   }, [props, reserve]);
@@ -215,6 +217,8 @@ function ReserveForm({ props, setReserve, setIsChecked, reserve }) {
       });
     }
   };
+
+  console.log(nowReserve);
 
   return (
     <div className={style["reserve-form"]}>
