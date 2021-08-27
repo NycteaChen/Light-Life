@@ -16,8 +16,7 @@ function DietaryRecord() {
   const [getRecord, setGetRecord] = useState(false);
   const [count, setCount] = useState(1);
   const [serviceDate, setServiceDate] = useState({});
-  const { dID } = useParams();
-  const { cID } = useParams();
+  const { dID, cID } = useParams();
   useEffect(() => {
     getCustomerData(cID)
       .then((res) => {
